@@ -94,15 +94,12 @@ section{padding:56px 0}
  </div>
 </div></header>
 
-<div class=shotwrap><div class=wrap><div class=shot><img src="preview.png" alt="Главный экран, список с диаграммой Ганта"></div></div></div>
+<div class=shotwrap><div class=wrap>
+ <div class=video><video controls playsinline preload=metadata poster="preview.png"><source src="demo.webm" type="video/webm"><source src="demo.mp4" type="video/mp4">Ваш браузер не воспроизводит видео. <a href="demo.mp4" style="color:#93c5fd">Скачать ролик</a>.</video></div>
+ <div class=vidnote>Короткий обзор на примере проекта, около полуминуты, без звука.</div>
+</div></div>
 
 <section class=alt><div class=wrap>
- <div class=sechead><h2>Быстрый обзор</h2><p>Как выглядит работа с планом на живом примере: виды, честный прогноз сроков и показ руководству.</p></div>
- <div class=video><video controls playsinline preload=metadata poster="preview.png"><source src="demo.webm" type="video/webm"><source src="demo.mp4" type="video/mp4">Ваш браузер не воспроизводит видео. <a href="demo.mp4" style="color:#93c5fd">Скачать ролик</a>.</video></div>
- <div class=vidnote>Демо-режим, пример проекта. Короткий ролик без звука.</div>
-</div></section>
-
-<section><div class=wrap>
  <div class=sechead><h2>Пять представлений одного плана</h2><p>Один и тот же план, под разные задачи. Переключение одним кликом.</p></div>
  <div class=grid>
   <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round d="M4 5a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM14 13a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6zM4 16a1 1 0 011-1h6a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3z"/></svg></div><h3>Сводка</h3><p>Главное одним взглядом: в работе, просрочено, ближайшая дата, сигналы.</p></div>
@@ -110,15 +107,14 @@ section{padding:56px 0}
   <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/></svg></div><h3>Доска-канбан</h3><p>Карточки по столбцам-статусам, удобно на телефоне.</p></div>
   <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><h3>Успеваем?</h3><p>Отдельная страница-ответ по каждой ключевой дате.</p></div>
   <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div><h3>Презентация</h3><p>Витрина роадмапа для показа руководству, экспорт на страницу A4.</p></div>
-  <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><h3>Все под рукой</h3><p>Стратегия, команда, деньги, импорт из Jira, в одном инструменте.</p></div>
  </div>
 </div></section>
 
-<section class=alt><div class=wrap>
+<section><div class=wrap>
  <div class=sechead><h2>Честный прогноз сроков</h2><p>«Успеваем?» отвечает крупно и прямо: да с запасом, под вопросом или нет с опозданием. Считает по оценкам, зависимостям, отпускам и рабочим дням команды. Если данных мало, так и пишет, а не пугает мнимым срывом.</p></div>
  <div class=grid>
   <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div><h3>Что если</h3><p>Подвигали темп, оценку или отпуск, сроки пересчитались сразу. Реальный план не трогается.</p></div>
-  <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div><h3>Зависимости</h3><p>Стрелки связей, критический путь и подсветка нарушений.</p></div>
+  <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round stroke-linejoin=round d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg></div><h3>Связи и зависимости</h3><p>Стрелки связей, критический путь и подсветка нарушений.</p></div>
   <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V7m0 9v1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><h3>Команда и деньги</h3><p>Ставки, занятость, отпуска, свой производственный календарь, бюджеты.</p></div>
   <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></div><h3>Импорт из Jira и CSV</h3><p>Через вашу же открытую сессию, без отдельного входа и ключей.</p></div>
   <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div><h3>Показ руководству</h3><p>Витрина с выгрузкой на одну страницу PDF или в HTML.</p></div>
@@ -126,13 +122,8 @@ section{padding:56px 0}
  </div>
 </div></section>
 
-<section><div class=wrap>
- <div class=sechead><h2>Все функции одной картинкой</h2></div>
- <div class=board><img src="features.png" alt="Все функции продукта"></div>
-</div></section>
-
 <section class=alt><div class=wrap>
- <div class=sechead><h2>Каталог функций</h2><p>Новичку просто, профессионалу глубоко: есть простой и продвинутый режимы, а редкое спрятано, пока не понадобится. Ниже, все 32 функции по разделам, каждая со скриншотом в светлой и темной теме.</p></div>
+ <div class=sechead><h2>Каталог функций</h2><p>Новичку просто, профессионалу глубоко: есть простой и продвинутый режимы, а редкое спрятано, пока не понадобится. Все 32 функции по разделам, каждая со скриншотом в светлой и темной теме.</p></div>
  <div class=catcta>
   <div class=catgrid>
    <div class=catpill><span>Виды плана</span><b>5</b></div>
@@ -148,7 +139,7 @@ section{padding:56px 0}
  </div>
 </div></section>
 
-<section class=alt><div class=wrap>
+<section><div class=wrap>
  <div class=sechead><h2>Как устроено</h2></div>
  <div class=how>
   <div class=card><h3>Один файл</h3><p>Около 3 МБ. Открывается двойным кликом, работает офлайн, в самолете и в переговорке без Wi-Fi.</p></div>
