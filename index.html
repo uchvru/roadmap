@@ -1,5 +1,5 @@
 <!doctype html><html lang=ru><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
-<title>Дорожная карта продукта, план, сроки и прогноз в одном файле</title>
+<title>Дорожная карта продукта, вся в одном файле</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--ink:#0f172a;--mut:#64748b;--brand:#4f46e5;--line:#e6eaf1}
@@ -24,10 +24,13 @@ h1{font-size:clamp(30px,5vw,46px);font-weight:800;letter-spacing:-.7px;margin:22
 .btn.primary:hover{background:#4338ca;transform:translateY(-1px)}
 .btn.ghost{background:#fff;color:#334155;border:1px solid #d6ddec}
 .btn.ghost:hover{border-color:#a5b4fc;color:#3730a3}
-.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
-.stat{background:rgba(255,255,255,.8);border:1px solid #e3e9f4;border-radius:12px;padding:10px 16px;box-shadow:0 6px 16px rgba(15,23,42,.05)}
-.stat b{font-size:22px;font-weight:800;background:linear-gradient(120deg,#4f46e5,#3b82f6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.stat span{display:block;font-size:11px;font-weight:600;color:#64748b;margin-top:1px}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:28px}
+@media(max-width:900px){.stats{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:rgba(255,255,255,.75);backdrop-filter:blur(6px);border:1px solid #e3e9f4;border-radius:14px;padding:13px 15px;box-shadow:0 6px 18px rgba(15,23,42,.05)}
+.stat .v{font-size:23px;font-weight:800;letter-spacing:-.5px;background:linear-gradient(120deg,#4f46e5,#3b82f6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.stat .l{font-size:11px;font-weight:600;color:#64748b;margin-top:2px}
+.statsrc{font-size:11.5px;color:#94a3b8;margin-top:12px}
 /* shot */
 .shotwrap{margin:-24px 0 0}
 .shotwrap .wrap{padding-top:0}
@@ -56,7 +59,8 @@ section{padding:56px 0}
 .finalcta{text-align:center;padding:60px 0}
 .foot{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:#94a3b8;font-size:13px}
 .vcard{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:20px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px 26px;box-shadow:0 12px 30px rgba(15,23,42,.08)}
-.vava{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#4f46e5);color:#fff;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:800;flex:none;box-shadow:0 8px 20px rgba(79,70,229,.3)}
+.vava{position:relative;overflow:hidden;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#4f46e5);color:#fff;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:800;flex:none;box-shadow:0 8px 20px rgba(79,70,229,.3)}
+.vava img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .vname{font-size:20px;font-weight:800;letter-spacing:-.3px}
 .vrole{font-size:13.5px;color:#64748b;margin-top:2px}
 .vlinks{display:flex;gap:18px;flex-wrap:wrap;margin-top:11px}
@@ -80,18 +84,21 @@ section{padding:56px 0}
 
 <header class=hero><div class=wrap>
  <div class=brand><div class=logo><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2.2 stroke-linecap=round><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class=vchip>v12.16</span></div>
- <h1>Дорожная карта продукта, план и сроки в одном файле</h1>
- <p class=lead>Наглядный план продукта: задачи и сроки, честный прогноз <b>«Успеваем?»</b>, стратегия, команда и показ руководству. Один офлайн-файл, без сервера и подписки, данные остаются только у вас.</p>
+ <h1>Дорожная карта продукта, вся в одном файле</h1>
+ <p class=lead>Задачи, сроки, команда и честный прогноз <b>«Успеваем?»</b>, сразу видно, укладываетесь ли в даты. Один файл, работает офлайн, без сервера и подписки, данные остаются только у вас.</p>
  <div class=cta>
   <a class="btn primary" href="app.html">Открыть демо, в браузере</a>
-  <a class="btn ghost" href="https://github.com/uchvru/roadmap" target="_blank" rel="noopener">Смотреть на GitHub</a>
+  <a class="btn ghost" href="catalog.html">Открыть каталог функций</a>
  </div>
  <div class=stats>
-  <div class=stat><b>9.13</b><span>Простота</span></div>
-  <div class=stat><b>9.15</b><span>Удовлетворенность</span></div>
-  <div class=stat><b>+64</b><span>NPS</span></div>
-  <div class=stat><b>79.9%</b><span>Готовность внедрять</span></div>
+  <div class=stat><div class=v>9.13</div><div class=l>Простота</div></div>
+  <div class=stat><div class=v>9.15</div><div class=l>Удовлетворенность</div></div>
+  <div class=stat><div class=v>8.77</div><div class=l>Ценность</div></div>
+  <div class=stat><div class=v>8.99</div><div class=l>Рекомендация</div></div>
+  <div class=stat><div class=v>+64</div><div class=l>NPS</div></div>
+  <div class=stat><div class=v>79.9%</div><div class=l>Готовность внедрять</div></div>
  </div>
+ <div class=statsrc>По итогам синтетического опроса 1000 руководителей проектов и продуктов, версия v12.16.</div>
 </div></header>
 
 <div class=shotwrap><div class=wrap>
@@ -156,7 +163,7 @@ section{padding:56px 0}
 <section class=alt><div class=wrap>
  <div class=sechead><h2>Автор</h2></div>
  <div class=vcard>
-  <div class=vava>ВУ</div>
+  <div class=vava>ВУ<img src="avatar.jpg" alt="Владимир Учинин" onerror="this.remove()"></div>
   <div>
    <div class=vname>Владимир Учинин</div>
    <div class=vrole>Владелец продукта / Product Owner</div>
