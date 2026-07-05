@@ -15,10 +15,11 @@ a{color:inherit;text-decoration:none}
 .logo{width:52px;height:52px;border-radius:15px;background:linear-gradient(135deg,#3b82f6,#4f46e5);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(79,70,229,.32)}
 .logo svg{width:27px;height:27px;color:#fff}
 .vchip{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#4338ca;background:#fff;border:1px solid #c7d2fe;border-radius:999px;padding:4px 10px}
-h1{font-size:clamp(30px,5vw,46px);font-weight:800;letter-spacing:-.7px;margin:22px 0 0;max-width:900px}
+h1{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.6px;margin:0;max-width:680px}
 .lead{font-size:clamp(15px,2.2vw,19px);color:#475569;max-width:760px;margin:14px 0 0}
 .lead b{color:var(--ink);font-weight:600}
 .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.cta .btn{padding:0 18px;font-size:15px}
 .btn{display:inline-flex;align-items:center;gap:8px;height:50px;padding:0 24px;border-radius:13px;font-size:16px;font-weight:700;cursor:pointer;transition:all .15s}
 .btn.primary{background:#4f46e5;color:#fff;box-shadow:0 12px 26px rgba(79,70,229,.32)}
 .btn.primary:hover{background:#4338ca;transform:translateY(-1px)}
@@ -69,7 +70,7 @@ section{padding:56px 0}
 .vlinks a:hover{text-decoration:underline}
 @media(max-width:520px){.vcard{flex-direction:column;text-align:center}.vlinks{justify-content:center}}
 /* hero two-column + author card */
-.herogrid{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+.herogrid{display:grid;grid-template-columns:1.3fr .7fr;gap:44px;align-items:center;margin-top:30px}
 @media(max-width:900px){.herogrid{grid-template-columns:1fr;gap:26px}}
 .heroright{display:flex;justify-content:flex-end}
 @media(max-width:900px){.heroright{justify-content:flex-start}}
@@ -97,9 +98,9 @@ section{padding:56px 0}
 </style></head><body>
 
 <header class=hero><div class=wrap>
+ <div class=brand><div class=logo><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2.2 stroke-linecap=round><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class=vchip>v12.16</span></div>
  <div class=herogrid>
   <div class=heroleft>
-   <div class=brand><div class=logo><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2.2 stroke-linecap=round><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class=vchip>v12.16</span></div>
    <h1>Дорожная карта продукта, вся в одном файле</h1>
    <p class=lead>Дорожная карта, инструмент продакт-оунеров и владельцев продукта: она собирает весь план и сроки <b>в одном месте</b>, чтобы вести продукт, видеть, что и когда будет готово, и вовремя замечать, где что-то отстает. Один файл, работает офлайн, без сервера и подписки, данные остаются только у вас.</p>
    <div class=cta>
