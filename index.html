@@ -68,6 +68,20 @@ section{padding:56px 0}
 .vlinks a svg{width:16px;height:16px}
 .vlinks a:hover{text-decoration:underline}
 @media(max-width:520px){.vcard{flex-direction:column;text-align:center}.vlinks{justify-content:center}}
+/* hero two-column + author card */
+.herogrid{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+@media(max-width:900px){.herogrid{grid-template-columns:1fr;gap:26px}}
+.heroright{display:flex;justify-content:flex-end}
+@media(max-width:900px){.heroright{justify-content:flex-start}}
+.vhero{width:100%;max-width:350px;background:rgba(255,255,255,.72);backdrop-filter:blur(6px);border:1px solid #e3e9f4;border-radius:18px;padding:22px 24px;box-shadow:0 18px 44px rgba(15,23,42,.1)}
+.vhero .hd{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#4338ca;margin-bottom:14px}
+.vhero .rw{display:flex;align-items:center;gap:14px}
+.vhero .nm{font-size:17px;font-weight:800;letter-spacing:-.2px}
+.vhero .rl{font-size:12.5px;color:#64748b;margin-top:2px}
+.vhero .lk{margin-top:15px;padding-top:15px;border-top:1px solid #eaeef6;display:flex;gap:16px}
+.vhero .lk a{font-size:14px;font-weight:600;color:#4f46e5;display:inline-flex;align-items:center;gap:6px}
+.vhero .lk a svg{width:16px;height:16px}
+.vhero .lk a:hover{text-decoration:underline}
 /* video */
 .video{max-width:920px;margin:0 auto;border-radius:18px;overflow:hidden;border:1px solid #1e293b;box-shadow:0 26px 64px rgba(15,23,42,.2);background:#0b1220;line-height:0}
 .video video{display:block;width:100%;height:auto}
@@ -83,12 +97,27 @@ section{padding:56px 0}
 </style></head><body>
 
 <header class=hero><div class=wrap>
- <div class=brand><div class=logo><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2.2 stroke-linecap=round><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class=vchip>v12.16</span></div>
- <h1>Дорожная карта продукта, вся в одном файле</h1>
- <p class=lead>Задачи, сроки, команда и честный прогноз <b>«Успеваем?»</b>, сразу видно, укладываетесь ли в даты. Один файл, работает офлайн, без сервера и подписки, данные остаются только у вас.</p>
- <div class=cta>
-  <a class="btn primary" href="app.html">Открыть демо, в браузере</a>
+ <div class=herogrid>
+  <div class=heroleft>
+   <div class=brand><div class=logo><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2.2 stroke-linecap=round><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class=vchip>v12.16</span></div>
+   <h1>Дорожная карта продукта, вся в одном файле</h1>
+   <p class=lead>Дорожная карта, инструмент продакт-оунеров и владельцев продукта: она собирает весь план и сроки <b>в одном месте</b>, чтобы вести продукт, видеть, что и когда будет готово, и вовремя замечать, где что-то отстает. Один файл, работает офлайн, без сервера и подписки, данные остаются только у вас.</p>
+   <div class=cta>
+    <a class="btn primary" href="app.html">Открыть демо, в браузере</a>
   <a class="btn ghost" href="catalog.html">Открыть каталог функций</a>
+  <a class="btn ghost" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Статья на vc.ru</a>
+   </div>
+  </div>
+  <div class=heroright>
+   <div class=vhero>
+    <div class=hd>Автор проекта</div>
+    <div class=rw>
+     <div class=vava>ВУ<img src="avatar.jpg" alt="Владимир Учинин" onerror="this.remove()"></div>
+     <div><div class=nm>Владимир Учинин</div><div class=rl>Владелец продукта / Product Owner</div></div>
+    </div>
+    <div class=lk><a href="mailto:uchv@ya.ru"><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round stroke-linejoin=round d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>uchv@ya.ru</a></div>
+   </div>
+  </div>
  </div>
  <div class=stats>
   <div class=stat><div class=v>9.13</div><div class=l>Простота</div></div>
@@ -98,7 +127,7 @@ section{padding:56px 0}
   <div class=stat><div class=v>+64</div><div class=l>NPS</div></div>
   <div class=stat><div class=v>79.9%</div><div class=l>Готовность внедрять</div></div>
  </div>
- <div class=statsrc>По итогам синтетического опроса 1000 руководителей проектов и продуктов, версия v12.16.</div>
+ <div class=statsrc>Показаны цифры последнего опроса, 1000 руководителей проектов и продуктов. Всего проведено 24 опроса, более 22 000 участников, версия v12.16.</div>
 </div></header>
 
 <div class=shotwrap><div class=wrap>
@@ -160,19 +189,5 @@ section{padding:56px 0}
  <a class="btn primary" href="app.html">Открыть демо</a>
 </div></div>
 
-<section class=alt><div class=wrap>
- <div class=sechead><h2>Автор</h2></div>
- <div class=vcard>
-  <div class=vava>ВУ<img src="avatar.jpg" alt="Владимир Учинин" onerror="this.remove()"></div>
-  <div>
-   <div class=vname>Владимир Учинин</div>
-   <div class=vrole>Владелец продукта / Product Owner</div>
-   <div class=vlinks>
-    <a href="mailto:uchv@ya.ru"><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round stroke-linejoin=round d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>uchv@ya.ru</a>
-    <a href="https://github.com/uchvru" target=_blank rel=noopener><svg viewBox="0 0 24 24" fill=currentColor><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.36-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05a9.36 9.36 0 015 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.07.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg>github.com/uchvru</a>
-   </div>
-  </div>
- </div>
-</div></section>
 <footer class=foot><div class=wrap>Дорожная карта продукта, v12.16. Один файл, работает офлайн, данные не уходят в облако.</div></footer>
 </body></html>
