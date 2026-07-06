@@ -8,7 +8,11 @@ body{font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#0f172a;
 .lg svg{width:28px;height:28px;color:#fff}
 h1{font-size:22px;font-weight:800;letter-spacing:-.3px}
 p{color:#64748b;font-size:14.5px;margin-top:10px}
+.bg{position:fixed;inset:0;z-index:-2;background:url(../preview.png) center/cover no-repeat;filter:blur(5px) saturate(1.05) brightness(1.02);transform:scale(1.08)}
+.bgov{position:fixed;inset:0;z-index:-1;background:linear-gradient(160deg,rgba(238,242,255,.74),rgba(234,242,254,.8) 45%,rgba(246,248,252,.88))}
+.card,body>div:not(.bg):not(.bgov){position:relative;z-index:1}
 </style></head><body>
+<div class=bg></div><div class=bgov></div>
 <div class=card>
  <div class=lg><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round><path d="M6 10V8a6 6 0 1112 0v2M5 10h14a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2v-7a2 2 0 012-2z"/></svg></div>
  <h1>Закрытый раздел</h1>
