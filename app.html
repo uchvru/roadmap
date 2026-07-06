@@ -7655,6 +7655,7 @@
     // Чистая сборка: при true приложение стартует без демо-данных (пустой проект, дефолтные статусы).
     // Кнопка «Скачать чистый HTML» в меню «Данные» и готовый файл в папке «Чистый файл» ставят этот флаг в true.
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
+    const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
     const APP_VERSION = '13.0';
     const APP_VERSION_DATE = '06.07.2026';
@@ -8639,6 +8640,8 @@
     window.onload = async function() {
       // Read-only общий снимок (демо, «Скачать для просмотра»): сразу рендерим карту и не показываем стартовое окно.
       if (READ_ONLY_MODE) { try { initApp(); } catch (e) { console.error(e); } return; }
+      // Публичное демо (app.html): сразу показываем пример в демо-режиме, минуя экран приветствия и НЕ трогая данные пользователя (демо , только в памяти).
+      if (typeof DEMO_ON_LOAD !== 'undefined' && DEMO_ON_LOAD) { try { startDemo(); var _sm = document.getElementById('startupModal'); if (_sm) _sm.classList.add('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); } catch (e) { console.error(e); } return; }
       refreshCurrentProjectDate();
       // Восстанавливаем выбранный режим сортировки в UI
       applyTaskSortModeUI();
