@@ -6566,7 +6566,7 @@
     </main>
   </div>
 
-  <div id="taskModal" role="dialog" aria-modal="true" aria-label="Карточка задачи" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-[1000]" data-modal-backdrop>
+  <div id="taskModal" role="dialog" aria-modal="true" aria-label="Карточка задачи" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-[1000]" style="z-index:1050" data-modal-backdrop>
     <div class="bg-white rounded-2xl max-w-4xl w-full shadow-2xl border border-slate-200/60 overflow-hidden max-h-[92vh] flex flex-col">
       <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center shrink-0">
         <div class="flex items-center gap-2 min-w-0">
@@ -12458,12 +12458,175 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function goalPct(g){ const b=_gnum(g&&g.base), t=_gnum(g&&g.target), c=goalCur(g); if(b==null||t==null||c==null||t===b) return null; let p=((g&&g.dir)==='down')?((b-c)/(b-t)*100):((c-b)/(t-b)*100); return Math.max(0,Math.min(100,Math.round(p))); }
     function goalSpark(g){ const cs=((g&&g.checkins)||[]); const cv=cs.map(c=>_gnum(c.value)).filter(x=>x!=null); const b=_gnum(g&&g.base), t=_gnum(g&&g.target); const pts=(b!=null?[b]:[]).concat(cv); if(pts.length<1) return ''; const all=pts.concat(t!=null?[t]:[]); const mn=Math.min.apply(null,all), mx=Math.max.apply(null,all), rng=(mx-mn)||1; const W=72,H=20,pad=2; const yOf=v=>(pad+(H-2*pad)*(1-(v-mn)/rng)).toFixed(1); const ttl=(cs.map(c=>(c.at?c.at+': ':'')+c.value+(g.unit||'')).join('; '))||('база '+(b!=null?b:'-')); let tline=''; if(t!=null){ const ty=yOf(t); tline=`<line x1="0" y1="${ty}" x2="${W}" y2="${ty}" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3 2"></line>`; } let body; if(pts.length<2){ body=`<circle cx="${(W/2).toFixed(1)}" cy="${yOf(pts[0])}" r="2.4" fill="#4f46e5"></circle>`; } else { const stp=W/(pts.length-1); const d=pts.map((v,i)=>`${(i*stp).toFixed(1)},${yOf(v)}`).join(' '); body=`<polyline points="${d}" fill="none" stroke="#4f46e5" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"></polyline>`; } return `<svg viewBox="0 0 ${W} ${H}" class="shrink-0" style="width:${W}px;height:${H}px"><title>Динамика: ${ttl}${t!=null?(' | цель пунктиром '+t+(g.unit||'')):''}</title>${tline}${body}</svg>`; }
     function addCheckin(id){ if(_goalsRO())return; const g=(typeof projectGoals!=='undefined'?projectGoals:[]).find(x=>x&&x.id===id); if(!g||typeof openInputModal!=='function')return; openInputModal({title:'Новый замер цели', desc:'Новое значение метрики на сегодня. История сохранится и построит динамику.'+(g.unit?(' Единица: '+g.unit):''), value:(goalCur(g)!=null?String(goalCur(g)):''), okText:'Записать', onOk:(v)=>{ const n=_gnum(v); if(n==null)return; if(!Array.isArray(g.checkins))g.checkins=[]; const at=(typeof toYmdLocal==='function'&&typeof CURRENT_DATE!=='undefined'&&CURRENT_DATE)?toYmdLocal(CURRENT_DATE):''; g.checkins.push({at:at, value:n}); _goalsSave(); renderGoalsList(); }}); }
+    // ===== Вид «Картой» для целей: Цель , Инициатива , Задачи со связями (как карта в «Связях») =====
+    let _goalsView = 'list';
+    function setGoalsView(v){ _goalsView = (v === 'map') ? 'map' : 'list'; renderGoalsList(); }
+    var _gmCollapsed = {};
+    function _gmToggle(id){ if(_gmCollapsed[id]) delete _gmCollapsed[id]; else _gmCollapsed[id] = 1; renderGoalsList(); }
+    function _gmSetAll(collapse){ _gmCollapsed = {}; if(collapse){ (projectGoals||[]).forEach(function(g){ _gmCollapsed[g.id] = 1; }); (projectInitiatives||[]).forEach(function(i){ _gmCollapsed[i.id] = 1; }); } renderGoalsList(); }
+    function _gmChev(id, has){ if(!has) return '<span class="inline-block w-4 shrink-0"></span>'; var open = !_gmCollapsed[id]; return '<button type="button" onclick="event.stopPropagation();_gmToggle(\'' + id + '\')" class="shrink-0 w-4 h-4 flex items-center justify-center text-slate-400 hover:text-indigo-600 cursor-pointer mt-0.5" title="' + (open ? 'Свернуть' : 'Развернуть') + '"><svg aria-hidden="true" class="w-3.5 h-3.5" style="' + (open ? 'transform:rotate(90deg)' : '') + '" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg></button>'; }
+    // Привязка задач к инициативе прямо на карте (как выбор в карте связей): клик по инициативе , выбрать, клик по задачам , привязать.
+    var _gmLinkSel = null;
+    function _gmInitClick(iid){ if(typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE) return; _gmLinkSel = (_gmLinkSel === iid) ? null : iid; renderGoalsList(); }
+    function _gmTaskClick(tid){
+      if(_gmLinkSel){
+        if(typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE){ _gmLinkSel = null; renderGoalsList(); return; }
+        if(typeof requireUnlocked === 'function' && !requireUnlocked()){ return; }
+        var t = (roadmapData || []).find(function(x){ return x && x.id === tid; });
+        var it = (projectInitiatives || []).find(function(x){ return x && x.id === _gmLinkSel; });
+        if(t && it && t.initiativeId !== it.id){ t.initiativeId = it.id; if(typeof _goalsSave === 'function') _goalsSave(); if(typeof showToast === 'function') showToast('«' + (t.name || 'Задача') + '» привязана к «' + (it.name || 'инициатива') + '»', 'ok', 2500); }
+        renderGoalsList();
+        return;
+      }
+      if(typeof openTaskById === 'function') openTaskById(tid);
+    }
+    // Перетаскивание: сменить инициативу задачи (или целой секции) броском на инициативу , как в карте связей.
+    var _gmDragTid = null, _gmDragSec = null;
+    function _gmSecDesc(sec){ var out = {}; out[sec] = 1; var changed = true, guard = 0; var SP = (typeof sectionParents !== 'undefined' && sectionParents) || {}; while(changed && guard < 30){ changed = false; guard++; Object.keys(SP).forEach(function(c){ if(out[SP[c]] && !out[c]){ out[c] = 1; changed = true; } }); } return out; }
+    function _gmDragStartTask(e, tid){ if(typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE){ if(e && e.preventDefault) e.preventDefault(); return; } _gmDragTid = tid; _gmDragSec = null; try{ e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', 'task:' + tid); }catch(er){} }
+    function _gmDragStartSec(e, iidEnc, secEnc){ if(e && e.stopPropagation) e.stopPropagation(); if(typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE){ if(e && e.preventDefault) e.preventDefault(); return; } _gmDragTid = null; try{ _gmDragSec = { iid: decodeURIComponent(iidEnc), sec: decodeURIComponent(secEnc) }; }catch(er){ _gmDragSec = { iid: iidEnc, sec: secEnc }; } try{ e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', 'sec'); }catch(er){} }
+    function _gmDragOver(e, el){ if(_gmDragTid == null && !_gmDragSec) return; if(e && e.preventDefault) e.preventDefault(); try{ e.dataTransfer.dropEffect = 'move'; }catch(er){} if(el) el.style.boxShadow = 'inset 0 0 0 2px #6366f1'; }
+    function _gmDragLeave(e, el){ if(el) el.style.boxShadow = ''; }
+    function _gmDropInit(e, iidEnc){
+      if(e && e.preventDefault) e.preventDefault();
+      var tgt = e && e.currentTarget; if(tgt) tgt.style.boxShadow = '';
+      var toIid = ''; try{ toIid = decodeURIComponent(iidEnc || ''); }catch(er){ toIid = iidEnc || ''; }
+      var dragTid = _gmDragTid, dragSec = _gmDragSec; _gmDragTid = null; _gmDragSec = null;
+      if(typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE) return;
+      if(typeof requireUnlocked === 'function' && !requireUnlocked()){ return; }
+      var it = (projectInitiatives || []).find(function(x){ return x && x.id === toIid; });
+      var toName = toIid ? ('«' + ((it && it.name) || 'инициатива') + '»') : 'без инициативы';
+      var moved = 0, label = '';
+      if(dragTid != null){
+        var t = (roadmapData || []).find(function(x){ return x && x.id === dragTid; });
+        if(t && (t.initiativeId || '') !== (toIid || '')){ t.initiativeId = toIid || ''; moved = 1; label = t.name || 'Задача'; }
+      } else if(dragSec){
+        var descs = _gmSecDesc(dragSec.sec); var fromIid = dragSec.iid || '';
+        (roadmapData || []).forEach(function(t){ if(t && !t.isMilestone && (t.initiativeId || '') === fromIid && descs[t.section || 'Задачи без эпика']){ if((t.initiativeId || '') !== (toIid || '')){ t.initiativeId = toIid || ''; moved++; } } });
+        label = (typeof cleanSectionName === 'function') ? cleanSectionName(dragSec.sec) : dragSec.sec;
+      }
+      if(moved){ if(typeof _goalsSave === 'function') _goalsSave(); renderGoalsList(); if(typeof showToast === 'function'){ var w = (typeof pluralRu === 'function') ? pluralRu(moved, ['задача','задачи','задач']) : 'зд'; showToast((dragSec ? ('«' + label + '»: ' + moved + ' ' + w + ' перенесено в ') : ('«' + label + '» перенесена в ')) + toName, 'ok', 2600); } }
+      else renderGoalsList();
+    }
+    function _goalsViewToggle(){
+      var t = function(v, l){ var on = (_goalsView === v); return '<button type="button" onclick="setGoalsView(\'' + v + '\')" class="px-2.5 py-1 rounded-md text-[11px] ' + (on ? 'font-semibold bg-white text-indigo-700 shadow-sm' : 'font-medium text-slate-500 hover:text-slate-900') + ' cursor-pointer">' + l + '</button>'; };
+      return '<div class="flex items-center justify-between gap-2 mb-3"><span class="inline-flex items-center bg-slate-100 rounded-lg p-0.5">' + t('list', 'Списком') + t('map', 'Картой') + '</span>' + (_goalsView === 'map' ? '<span class="flex items-center gap-2 shrink-0"><button type="button" onclick="_gmSetAll(false)" class="text-[10px] font-semibold text-slate-500 hover:text-indigo-600 cursor-pointer">Развернуть все</button><span class="text-slate-300">·</span><button type="button" onclick="_gmSetAll(true)" class="text-[10px] font-semibold text-slate-500 hover:text-indigo-600 cursor-pointer">Свернуть все</button></span>' : '') + '</div>';
+    }
+    var _gmClamp2 = 'style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden"';
+    var _gmClamp3 = 'style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden"';
+    function _goalsMapHtml(){
+      var T = (roadmapData || []);
+      var ro = (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE);
+      var statInit = function(iid){ var lt = T.filter(function(x){ return x && x.initiativeId === iid; }); if(!lt.length) return {n:0,pct:0}; var dn = lt.filter(function(x){ return x.status === 'completed'; }).length; return {n:lt.length, pct:Math.round(dn/lt.length*100)}; };
+      var nnlChip = function(nnl){ var m = {now:['Сейчас','bg-emerald-50 text-emerald-700 border-emerald-200'], next:['Далее','bg-amber-50 text-amber-700 border-amber-200'], later:['Потом','bg-slate-100 text-slate-500 border-slate-200']}; var c = m[nnl]; return c ? ('<span class="text-[9px] font-semibold px-1 py-0.5 rounded border ' + c[1] + '">' + c[0] + '</span>') : ''; };
+      var bar = function(pct, color){ return '<span class="w-10 h-1.5 rounded-full bg-slate-100 overflow-hidden inline-block align-middle"><span class="block h-full ' + (color || 'bg-indigo-500') + '" style="width:' + pct + '%"></span></span>'; };
+      var pl = function(n){ return (typeof pluralRu === 'function') ? pluralRu(n, ['задача','задачи','задач']) : 'задач'; };
+      var arm = !!_gmLinkSel;
+      var encAttr = function(v){ return encodeURIComponent(String(v == null ? '' : v)).replace(/'/g, '%27'); };
+      var _jbaseGm = (function(){ try{ return (getJiraCfg().base || '').replace(/\/+$/, ''); }catch(e){ return ''; } })();
+      var secKey = function(sec){ var m = (typeof sectionMeta !== 'undefined' && sectionMeta) ? sectionMeta[sec] : null; if(m && m.key) return String(m.key).trim(); var mm = String(sec || '').match(/\[([A-Za-z][A-Za-z0-9]*-\d+)\]/); return mm ? mm[1] : ''; };
+      var GRIDCSS = 'display:flex;flex-wrap:wrap;gap:8px';
+      var _gmHash = function(str){ var h = 5381; str = String(str); for(var i = 0; i < str.length; i++){ h = ((h << 5) + h + str.charCodeAt(i)) >>> 0; } return 'sc' + h.toString(36); };
+      var pOrder = (typeof planSections !== 'undefined' && Array.isArray(planSections)) ? planSections : [];
+      var secIdx = function(s){ var i = pOrder.indexOf(s); return i < 0 ? 99999 : i; };
+      var taskChip = function(t, iid){
+        var hex = (typeof _presHex === 'function') ? _presHex(t) : '#94a3b8';
+        var tl = (typeof taskTypeLabel === 'function') ? taskTypeLabel(t) : 'Задача';
+        var tc = (typeof jiraTypeBadgeClass === 'function') ? jiraTypeBadgeClass(tl) : 'bg-blue-50 text-blue-700 border border-blue-200';
+        var top = '<div class="flex items-center gap-1 mb-0.5"><span class="text-[8px] font-semibold leading-none px-1 py-0.5 rounded ' + tc + '">' + escHtml(tl) + '</span>' + (t.jira ? ('<span class="text-[8px] font-mono text-slate-400 truncate">' + escHtml(t.jira) + '</span>') : '') + '</div>';
+        return '<button type="button" onclick="_gmTaskClick(' + t.id + ')"' + (ro ? '' : ' draggable="true" ondragstart="_gmDragStartTask(event,' + t.id + ')"') + ' data-tid="' + t.id + '" class="gm-task block text-left" style="width:210px;cursor:' + (arm ? 'copy' : (ro ? 'default' : 'grab')) + '"><div class="bg-white border border-slate-200 rounded-lg px-2 py-1.5 ' + (arm ? 'hover:border-indigo-400 hover:bg-indigo-50' : 'hover:shadow-md') + ' transition-all overflow-hidden" style="border-left:4px solid ' + hex + '">' + top + '<div class="text-[10px] font-medium text-slate-700 leading-tight" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">' + escHtml(t.name || '(без названия)') + '</div></div></button>';
+      };
+      // Эпики/стори/разделы , это СЕКЦИИ задачи (t.section). Вложенность Эпик -> Стори/Раздел -> задача берем из sectionParents.
+      var secBadge = function(kind){
+        if(kind==='epic') return '<span class="text-[8px] font-bold text-violet-700 bg-violet-50 border border-violet-200 rounded px-1 py-0.5 mr-1">ЭПИК</span>';
+        if(kind==='story') return '<span class="text-[8px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 mr-1">СТОРИ</span>';
+        if(kind==='none') return '<span class="text-[8px] font-bold text-slate-500 bg-slate-100 border border-slate-200 rounded px-1 py-0.5 mr-1">БЕЗ ЭПИКА</span>';
+        return '<span class="text-[8px] font-bold text-slate-600 bg-slate-50 border border-slate-200 rounded px-1 py-0.5 mr-1">РАЗДЕЛ</span>';
+      };
+      var secInfo = function(sec){ var s = String(sec || ''); var kind = /^Epic:/i.test(s) ? 'epic' : (/^Story:/i.test(s) ? 'story' : ((!s || s === 'Задачи без эпика') ? 'none' : 'stage')); var label = (!s || s === 'Задачи без эпика') ? 'Задачи без эпика' : ((typeof cleanSectionName === 'function') ? cleanSectionName(s) : s.replace(/^(Epic:|Story:)\s*/i, '')); return { kind: kind, label: label || s }; };
+      var buildTree = function(tks){
+        var tById = {}, relevant = {};
+        tks.forEach(function(t){ var s = t.section || 'Задачи без эпика'; (tById[s] = tById[s] || []).push(t); relevant[s] = 1; var cur = s, g = 0; while(typeof sectionParents !== 'undefined' && sectionParents && sectionParents[cur] && sectionParents[cur] !== cur && g < 6){ cur = sectionParents[cur]; relevant[cur] = 1; g++; } });
+        var childrenOf = {}, roots = [];
+        Object.keys(relevant).forEach(function(s){ var p = (typeof sectionParents !== 'undefined' && sectionParents && sectionParents[s] && relevant[sectionParents[s]] && sectionParents[s] !== s) ? sectionParents[s] : null; if(p){ (childrenOf[p] = childrenOf[p] || []).push(s); } else { roots.push(s); } });
+        roots.sort(function(a,b){ return secIdx(a) - secIdx(b); });
+        return { tById: tById, childrenOf: childrenOf, roots: roots };
+      };
+      var countSub = function(s, tr){ var n = (tr.tById[s] || []).length; (tr.childrenOf[s] || []).forEach(function(c){ n += countSub(c, tr); }); return n; };
+      var renderSec = function(iid, s, tr, depth){
+        var si = secInfo(s);
+        var direct = tr.tById[s] || [];
+        var kids = (tr.childrenOf[s] || []).slice().sort(function(a,b){ return secIdx(a) - secIdx(b); });
+        var hasChildren = direct.length > 0 || kids.length > 0;
+        var key = _gmHash(iid + '' + s);
+        var coll = !!_gmCollapsed[key];
+        var pad = depth * 18;
+        var nSub = countSub(s, tr);
+        var secLabel = '<span ' + (ro ? '' : 'draggable="true" ondragstart="_gmDragStartSec(event,\'' + encAttr(iid) + '\',\'' + encAttr(s) + '\')" ') + 'class="text-[11px] font-semibold text-slate-700 truncate" style="max-width:520px' + (ro ? '' : ';cursor:grab') + '" title="' + (ro ? '' : 'Перетащите, чтобы перенести всю секцию в другую инициативу') + '">' + escHtml(si.label) + '</span>';
+        var _k = secKey(s);
+        var secLink = _k ? (_jbaseGm ? ('<a href="' + escAttr((typeof safeUrl === 'function' ? safeUrl(_jbaseGm + '/browse/' + _k) : (_jbaseGm + '/browse/' + _k))) + '" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" draggable="false" class="text-[9px] font-mono text-indigo-500 hover:text-indigo-700 hover:underline shrink-0" title="Открыть ' + escHtml(_k) + ' в Jira">' + escHtml(_k) + '</a>') : ('<span class="text-[9px] font-mono text-slate-400 shrink-0" title="Ключ эпика или стори">' + escHtml(_k) + '</span>')) : '';
+        var header = '<div class="flex items-center gap-1.5 py-1" style="padding-left:' + pad + 'px">' + _gmChev(key, hasChildren) + secBadge(si.kind) + secLabel + secLink + '<span class="text-[9px] text-slate-400 tabular-nums shrink-0">' + nSub + ' ' + pl(nSub) + '</span></div>';
+        if(coll) return header;
+        var body = '';
+        if(direct.length){ body += '<div style="padding-left:' + (pad + 20) + 'px;padding-top:2px;padding-bottom:4px;' + GRIDCSS + '">' + direct.map(function(t){ return taskChip(t, iid); }).join('') + '</div>'; }
+        kids.forEach(function(c){ body += renderSec(iid, c, tr, depth + 1); });
+        return header + body;
+      };
+      var goalsHtml = (projectGoals || []).map(function(g){
+        var inits = projectInitiatives.filter(function(i){ return i.goalId === g.id; });
+        var giIds = {}; inits.forEach(function(i){ giIds[i.id] = 1; });
+        var gt = T.filter(function(x){ return x && giIds[x.initiativeId]; }); var gpct = gt.length ? Math.round(gt.filter(function(x){ return x.status === 'completed'; }).length / gt.length * 100) : 0;
+        var gColl = !!_gmCollapsed[g.id];
+        var goalHdr = '<div class="flex items-center gap-2 py-1.5">' + _gmChev(g.id, inits.length > 0) + '<span class="w-5 h-5 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v16l7-4 7 4V3z"></path></svg></span><span class="text-sm font-bold text-slate-800 truncate" style="max-width:600px">' + escHtml(g.name || '(цель)') + '</span>' + (g.horizon ? ('<span class="text-[9px] font-medium text-slate-500 bg-slate-100 rounded px-1 py-0.5">' + escHtml(g.horizon) + '</span>') : '') + (gt.length ? (bar(gpct, 'bg-indigo-500') + '<span class="text-[9px] text-slate-500 tabular-nums">' + gpct + '%</span>') : '') + '</div>';
+        if(gColl){ var chn = inits.length ? ('<span class="text-[9px] text-slate-400 ml-7">свернуто: ' + inits.length + ' ' + ((typeof pluralRu === 'function') ? pluralRu(inits.length, ['инициатива','инициативы','инициатив']) : 'инициатив') + '</span>') : ''; return '<div class="border-b border-slate-100 pb-2 mb-2">' + goalHdr + chn + '</div>'; }
+        var initsHtml = inits.map(function(it){
+          var tks = T.filter(function(x){ return x && x.initiativeId === it.id; });
+          var st = statInit(it.id);
+          var iColl = !!_gmCollapsed[it.id];
+          var armed = (_gmLinkSel === it.id);
+          var nameSpan = '<span ' + (ro ? '' : 'onclick="_gmInitClick(\'' + it.id + '\')" ') + 'class="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 ' + (armed ? 'bg-indigo-100 ring-1 ring-indigo-300' : '') + (ro ? '' : ' cursor-pointer hover:bg-indigo-50') + '" title="' + (ro ? '' : (armed ? 'Идет привязка, кликайте задачи. Еще раз , отмена' : 'Кликните, чтобы привязать сюда задачи')) + '"><span class="w-2 h-2 rounded-sm bg-indigo-400 shrink-0"></span><span class="text-xs font-semibold text-slate-700 truncate" style="max-width:480px">' + escHtml(it.name || '(инициатива)') + '</span></span>';
+          var initHdr = '<div class="flex items-center gap-1.5 py-1" style="padding-left:18px">' + _gmChev(it.id, tks.length > 0) + nameSpan + nnlChip(it.nnl) + (st.n ? (bar(st.pct, 'bg-emerald-500') + '<span class="text-[9px] text-slate-500 tabular-nums">' + st.n + ' ' + pl(st.n) + '</span>') : '<span class="text-[9px] text-slate-400">нет задач</span>') + '</div>';
+          var body = initHdr;
+          if(!iColl && tks.length){ var tr = buildTree(tks); body += tr.roots.map(function(s){ return renderSec(it.id, s, tr, 2); }).join(''); }
+          return '<div ' + (ro ? '' : 'ondragover="_gmDragOver(event,this)" ondragleave="_gmDragLeave(event,this)" ondrop="_gmDropInit(event,\'' + encAttr(it.id) + '\')"') + ' class="rounded-lg" style="transition:box-shadow .12s">' + body + '</div>';
+        }).join('') || '<div class="text-[10px] text-slate-400 py-2 pl-7">нет инициатив , добавьте в списке</div>';
+        return '<div class="border-b border-slate-100 pb-3 mb-3">' + goalHdr + initsHtml + '</div>';
+      }).join('');
+      var unlinkedTasks = T.filter(function(x){ return x && !x.isMilestone && !x.initiativeId; });
+      var unlHtml = '';
+      if(unlinkedTasks.length || (!ro && (projectInitiatives || []).length)){
+        var uHint = unlinkedTasks.length ? (unlinkedTasks.length + ' ' + pl(unlinkedTasks.length) + (ro ? '' : '. Кликните задачу при выбранной инициативе или перетащите ее, чтобы привязать , перетащите сюда, чтобы отвязать')) : 'перетащите сюда задачу, чтобы отвязать от инициативы';
+        var uHdr = '<div class="flex items-center gap-2 py-1" style="padding-left:18px"><span class="text-xs font-semibold text-slate-500">Без инициативы</span><span class="text-[9px] text-slate-400">' + uHint + '</span></div>';
+        var uBody = uHdr;
+        if(unlinkedTasks.length){ var tru = buildTree(unlinkedTasks); uBody += tru.roots.map(function(s){ return renderSec('', s, tru, 2); }).join(''); }
+        unlHtml = '<div ' + (ro ? '' : 'ondragover="_gmDragOver(event,this)" ondragleave="_gmDragLeave(event,this)" ondrop="_gmDropInit(event,\'\')"') + ' class="pt-2 mt-1 border-t border-slate-100 rounded-lg" style="transition:box-shadow .12s">' + uBody + '</div>';
+      }
+      var hint = (_gmLinkSel && !ro) ? ('<div class="mb-2 px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-[11px] text-indigo-800 flex items-center justify-between gap-2"><span class="min-w-0 truncate">Привязка к «' + escHtml(((projectInitiatives || []).find(function(i){ return i.id === _gmLinkSel; }) || {}).name || '') + '»: кликайте по задачам, чтобы привязать их сюда.</span><button type="button" onclick="_gmInitClick(\'' + _gmLinkSel + '\')" class="shrink-0 font-semibold hover:underline cursor-pointer">Готово</button></div>') : '';
+      return hint + '<div id="goalsMapWrap" class="pb-2">' + goalsHtml + unlHtml + '</div>';
+    }
+    function _goalsMapDrawEdges(){
+      try{
+        var wrap = document.getElementById('goalsMapWrap'), svg = document.getElementById('goalsMapSvg'); if(!wrap || !svg) return;
+        var W = wrap.scrollWidth, H = wrap.scrollHeight;
+        svg.setAttribute('width', W); svg.setAttribute('height', H); svg.style.width = W + 'px'; svg.style.height = H + 'px';
+        var wr = wrap.getBoundingClientRect(), sl = wrap.scrollLeft, stp = wrap.scrollTop;
+        var goalEls = {}, initEls = {};
+        wrap.querySelectorAll('.gm-goal').forEach(function(e){ goalEls[e.getAttribute('data-gid')] = e; });
+        wrap.querySelectorAll('.gm-init').forEach(function(e){ initEls[e.getAttribute('data-iid')] = e; });
+        var paths = '';
+        var edge = function(fromEl, toEl, color, topAnchor){ var a = fromEl.getBoundingClientRect(), b = toEl.getBoundingClientRect(); var x1 = a.right - wr.left + sl, y1 = a.top + a.height/2 - wr.top + stp, x2 = b.left - wr.left + sl - 3, y2 = b.top - wr.top + stp + (topAnchor ? Math.min(b.height/2, 24) : b.height/2); var dx = Math.max(20, (x2 - x1) * 0.5); paths += '<path d="M' + x1 + ' ' + y1 + ' C' + (x1+dx) + ' ' + y1 + ' ' + (x2-dx) + ' ' + y2 + ' ' + x2 + ' ' + y2 + '" fill="none" stroke="' + color + '" stroke-width="1.75" stroke-opacity="0.55"/>'; paths += '<path d="M' + (x2-5) + ' ' + (y2-3.5) + ' L' + x2 + ' ' + y2 + ' L' + (x2-5) + ' ' + (y2+3.5) + '" fill="none" stroke="' + color + '" stroke-width="1.75" stroke-opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/>'; };
+        wrap.querySelectorAll('.gm-init').forEach(function(e){ var g = goalEls[e.getAttribute('data-goal')]; if(g) edge(g, e, '#818cf8'); });
+        wrap.querySelectorAll('.gm-initbody').forEach(function(e){ var i = initEls[e.getAttribute('data-init')]; if(i) edge(i, e, '#cbd5e1', true); });
+        svg.innerHTML = paths;
+      }catch(e){}
+    }
     function renderGoalsList(){ _sanitizeStrategyIds();
       const box=document.getElementById('goalsModalBody'); if(!box) return;
       const ro=(typeof READ_ONLY_MODE!=='undefined'&&READ_ONLY_MODE);
       const _stat=(initId)=>{ const lt=(roadmapData||[]).filter(x=>x&&x.initiativeId===initId); if(!lt.length) return {n:0,pct:0}; const dn=lt.filter(x=>x.status==='completed').length; return {n:lt.length,pct:Math.round(dn/lt.length*100)}; };
       if(!projectGoals.length){ box.innerHTML='<div class="py-12 text-center text-sm text-slate-500">Целей пока нет. Добавьте бизнес-результат внизу, потом привяжите к нему инициативы.</div>'; return; }
-      box.innerHTML = projectGoals.map(g=>{
+      if(_goalsView==='map'){ box.innerHTML = _goalsViewToggle() + _goalsMapHtml(); setTimeout(_goalsMapDrawEdges, 0); return; }
+      box.innerHTML = _goalsViewToggle() + projectGoals.map(g=>{
         const inits = projectInitiatives.filter(i=>i.goalId===g.id);
         const _giIds=new Set(inits.map(i=>i.id)); const _gt=(roadmapData||[]).filter(x=>x&&_giIds.has(x.initiativeId)); const _gd=_gt.filter(x=>x.status==='completed').length; const _gpct=_gt.length?Math.round(_gd/_gt.length*100):0;
         const goalRoll = _gt.length?`<span class="shrink-0 inline-flex items-center gap-1.5 text-[10px] font-semibold tabular-nums text-slate-500 whitespace-nowrap" title="${_gt.length} задач в инициативах цели, ${_gpct}% готово"><span class="w-12 h-1.5 rounded-full bg-slate-100 overflow-hidden inline-block"><span class="block h-full bg-indigo-500" style="width:${_gpct}%"></span></span>задачи ${_gpct}%</span>`:'';
