@@ -8142,7 +8142,10 @@
         selfRows++;
         const k = getTaskKey(t);
         if (k && t.status) epicStatusByKey[k] = t.status;
-        const hasChildren = roadmapData.some(o => o !== t && o.section === t.section);
+        // Контейнер, если есть прямые задачи в его секции ИЛИ (для эпика) есть задачи с его Epic Link ,
+        // потомки, ушедшие в под-истории. Иначе уровень Эпик -> Стори -> Задача рушится и эпик демотится в задачу.
+        const hasChildren = roadmapData.some(o => o !== t && o.section === t.section)
+          || (k && /^Epic:/.test(String(t.section)) && roadmapData.some(o => o && o !== t && String(o.epicLink || '') === k));
         if (hasChildren) dropSelf.add(t); else ungroup.push(t);
       });
       if (dropSelf.size) roadmapData = roadmapData.filter(t => !dropSelf.has(t));
@@ -8155,10 +8158,16 @@
       roadmapData.forEach(t => { if (t.section) counts[t.section] = (counts[t.section] || 0) + 1; });
       // Убираем пустые Epic/Story-секции и пустую «Задачи без эпика»
       let emptySections = 0;
+      // Эпик-РОДИТЕЛЬ держим живым, даже без прямых задач, если есть активные задачи с его Epic Link
+      // (потомки, ушедшие в под-истории) , иначе рушится уровень Эпик -> Стори -> Задача.
+      const _epicKeysWithKids = new Set();
+      roadmapData.forEach(t => { const el = t && String(t.epicLink || '').trim(); if (el) _epicKeysWithKids.add(el); });
+      const _secKeyOf = (s) => { const b = String(s).match(/\[([A-Z][A-Z0-9]+-\d+)\]/); if (b) return b[1]; const all = String(s).match(/[A-Z][A-Z0-9]+-\d+/g); return all ? all[all.length - 1] : ''; };
       if (Array.isArray(planSections)) {
         planSections = planSections.filter(s => {
           const isJira = /^(Epic:|Story:)/.test(s) || s === 'Задачи без эпика';
           if (isJira && !counts[s]) {
+            if (/^Epic:/.test(s) && _epicKeysWithKids.has(_secKeyOf(s))) return true;
             // секция уходит , чистим связанные коллекции
             hiddenSections = (hiddenSections || []).filter(x => x !== s);
             collapsedSections = (collapsedSections || []).filter(x => x !== s);
@@ -23555,7 +23564,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       return pick(/Blocks/i) || pick(/Relates/i);
     }
     function resolveJiraParents(issue) {
-      const issueType = String(firstNonEmpty(issue, ['Тип задачи', 'Issue Type']) || '').toLowerCase();
+      const issueType = String(firstNonEmpty(issue, ['Тип задачи', 'Тип запроса', 'Тип проблемы', 'Issue Type', 'Issue type']) || '').toLowerCase();
       let epicKey = getEpicLinkKey(issue);
       const parentKey = getParentKey(issue);
       let storyKey = '';
@@ -23565,16 +23574,18 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         else if (/story|истор|user story/.test(pt)) { storyKey = parentKey; }
         else { if (isSubtaskType(issueType)) storyKey = parentKey; else if (!epicKey) epicKey = parentKey; }
       }
-      // Fallback: нет Parent Link, но задача (не эпик и не история) связана Blocks/Relates с Историей , она ее родитель.
+      // Fallback: нет Parent Link, но задача (не эпик и не история) , родитель-История через связь.
+      // Приоритет: явная связь «is parent of / is child of» (карта childOf выше), затем Blocks/Relates.
       if (!storyKey && !/epic|эпик|story|истор|user story/.test(issueType)) {
-        const ls = getStoryParentFromLinks(issue);
-        if (ls) storyKey = ls;
+        const selfKey = jiraKeyOf(firstNonEmpty(issue, ['Ключ проблемы', 'Issue key', 'Key']));
+        if (selfKey && window.tempStoryChildOf && window.tempStoryChildOf[selfKey]) storyKey = window.tempStoryChildOf[selfKey];
+        if (!storyKey) { const ls = getStoryParentFromLinks(issue); if (ls) storyKey = ls; }
       }
       return { epicKey, storyKey };
     }
 
     function getJiraEpicSection(issue) {
-      const issueType = (firstNonEmpty(issue, ['Тип задачи', 'Issue Type']) || '').toLowerCase();
+      const issueType = (firstNonEmpty(issue, ['Тип задачи', 'Тип запроса', 'Тип проблемы', 'Issue Type', 'Issue type']) || '').toLowerCase();
       const epicName = getEpicNameField(issue);
       const _hp = resolveJiraParents(issue);
       const epicLink = _hp.epicKey;
@@ -23622,7 +23633,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
     // Возвращает рейтинг типа задачи для приоритизации (меньше = выше)
     function jiraTypeRank(issue) {
-      const t = (firstNonEmpty(issue, ['Тип задачи', 'Issue Type']) || '').toLowerCase();
+      const t = (firstNonEmpty(issue, ['Тип задачи', 'Тип запроса', 'Тип проблемы', 'Issue Type', 'Issue type']) || '').toLowerCase();
       if (t === 'epic' || t === 'эпик') return 0;
       if (t === 'story' || t === 'история' || t === 'user story') return 1;
       return 2; // Task, Bug, Sub-task и пр.
@@ -23667,7 +23678,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const figma = firstNonEmpty(issue, ['Пользовательское поле (link to design)']);
       const notes = firstNonEmpty(issue, ['Описание', 'Description']);
       const components = firstNonEmpty(issue, ['Компоненты', 'Components']);
-      const issueType = firstNonEmpty(issue, ['Тип задачи', 'Issue Type']);
+      const issueType = firstNonEmpty(issue, ['Тип задачи', 'Тип запроса', 'Тип проблемы', 'Issue Type', 'Issue type']);
       const priority = firstNonEmpty(issue, ['Приоритет', 'Priority']);
       const sprint = getJiraSprint(issue);
       const section = getJiraEpicSection(issue);
@@ -23836,7 +23847,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         const k = firstNonEmpty(issue, ['Ключ проблемы', 'Issue key', 'Key']);
         const epicN = getEpicNameField(issue);
         const summary = firstNonEmpty(issue, ['Тема', 'Summary']);
-        if (k) { epicDict[k] = epicN || summary; typeByKey[k] = firstNonEmpty(issue, ['Тип задачи', 'Issue Type']) || ''; }
+        if (k) { epicDict[k] = epicN || summary; typeByKey[k] = firstNonEmpty(issue, ['Тип задачи', 'Тип запроса', 'Тип проблемы', 'Issue Type', 'Issue type']) || ''; }
       });
 
       window.tempEpicDict = epicDict;
@@ -23863,6 +23874,37 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         if (!k) return;
         byName.set(k, byName.has(k) ? 'DUP' : task);
       });
+
+      // Карта «ребенок -> история» из СВЯЗЕЙ (не только Blocks/Relates и не подзадачи).
+      // В Jira иерархию история->задача часто ведут связью с ПРОИЗВОЛЬНЫМ именем типа (в интерфейсе это «is parent of /
+      // is child of»), а CSV называет колонку именем типа связи , угадать его заранее нельзя. Поэтому берем ЛЮБУЮ
+      // колонку связи (Outward/Inward issue link (ИмяТипа), русские «Исходящ.../Входящ...», фразы parent of/child of)
+      // и решаем по ТИПАМ ПАРЫ: История <-> Задача/Баг = вложенность. Пару Эпик <-> История эта карта не трогает
+      // (это делает Epic Link). Связь бывает записана только на строке истории ИЛИ только на строке задачи , читаем
+      // обе стороны. В ячейке может быть несколько ключей (Jira перечисляет) , берем все.
+      {
+        const childOf = {};
+        const typeOfKey = (k) => String((window.tempTypeByKey && window.tempTypeByKey[k]) || '').toLowerCase();
+        const isStoryKey = (k) => /story|истор/.test(typeOfKey(k));
+        const isEpicKey = (k) => /epic|эпик/.test(typeOfKey(k));
+        const isLinkCol = (col) => /issue link|parent of|child of|исходящ|входящ/i.test(col);
+        const allKeysOf = (v) => String(v || '').match(/[A-Z][A-Z0-9]+-\d+/g) || [];
+        issues.forEach(iss => {
+          const self = jiraKeyOf(firstNonEmpty(iss, ['Ключ проблемы', 'Issue key', 'Key']));
+          if (!self) return;
+          const selfStory = isStoryKey(self);
+          const selfPlain = !selfStory && !isEpicKey(self); // обычная задача/баг
+          Object.keys(iss).forEach(col => {
+            if (!isLinkCol(col)) return;
+            allKeysOf(iss[col]).forEach(linked => {
+              if (!linked || linked === self) return;
+              if (selfStory && !isStoryKey(linked) && !isEpicKey(linked)) { if (!childOf[linked]) childOf[linked] = self; } // строка истории: перечислены ее задачи
+              else if (selfPlain && isStoryKey(linked)) { if (!childOf[self]) childOf[self] = linked; }           // строка задачи: указана ее история
+            });
+          });
+        });
+        window.tempStoryChildOf = childOf;
+      }
 
       // Карта «ключ задачи -> ключ ее эпика» (Epic Link) , для вложенности Story под Epic (п.1)
       const epicOfKey = {};
@@ -24167,14 +24209,18 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       // Чистка пустых дефолтных секций + пустых Epic/Story секций (все задачи которых ушли в архив)
       const sectionTaskCount = {};
       roadmapData.forEach(t => { if (t.section) sectionTaskCount[t.section] = (sectionTaskCount[t.section] || 0) + 1; });
+      // Секцию-РОДИТЕЛЯ (Epic над Story) держим живой, даже без прямых задач, если под ней есть секция с задачами ,
+      // иначе рушится уровень Эпик -> Стори -> Задача (все задачи ушли в под-истории, а эпик остался пустым).
+      const keepAsParent = new Set();
+      Object.keys(sectionTaskCount).forEach(s => { if ((sectionTaskCount[s] || 0) > 0) { let cur = sectionParents[s], g = 0; while (cur && !keepAsParent.has(cur) && g++ < 8) { keepAsParent.add(cur); cur = sectionParents[cur]; } } });
       planSections = planSections.filter(s => {
         const isDefaultArtefact = /^(I+\.|IV\.|V\.)\s/.test(s) || s === 'Работы команды';
         const isJiraSection = s.startsWith('Epic:') || s.startsWith('Story:') || s === 'Задачи без эпика';
         const hasTasks = (sectionTaskCount[s] || 0) > 0;
         // Дефолтные артефакты , удаляем, если пустые
         if (isDefaultArtefact && !hasTasks) return false;
-        // Epic/Story секции , удаляем, если пустые (нет активных задач: например, дети ушли в архив)
-        if (isJiraSection && !hasTasks) return false;
+        // Epic/Story секции , удаляем, если пустые И не являются родителем секции с задачами
+        if (isJiraSection && !hasTasks && !keepAsParent.has(s)) return false;
         return true;
       });
 
