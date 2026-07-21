@@ -5271,6 +5271,10 @@
     body.read-only .ro-keep { display: inline-flex !important; }
     body.read-only #newStatusInput, body.read-only #newKindInput { display: none !important; }
     body.read-only #newStatusInput ~ *, body.read-only #newKindInput ~ * { display: none !important; }
+    /* Одинаковая фиксированная высота обязательна с обеих сторон Ганта.
+       Динамический Tailwind-класс h-[44px] не попадал в собранный CSS: слева
+       высоту задавала кнопка, а справа 4px-заглушка, поэтому строки съезжали. */
+    .roadmap-empty-row { height: 44px; min-height: 44px; flex: 0 0 44px; }
     #bars-container [data-task-id] { touch-action: none; } /* палец двигает сроки, а не скроллит */
     #paneSplitter { touch-action: none; }
     .link-handle { position: absolute; }
@@ -7669,8 +7673,8 @@
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '13.2';
-    const APP_VERSION_DATE = '21.07.2026';
+    const APP_VERSION = '13.3';
+    const APP_VERSION_DATE = '22.07.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' , ' + APP_VERSION_DATE; } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'версия ' + APP_VERSION; } catch (e) {}
@@ -16421,8 +16425,31 @@ let resourceView = 'roles'; // 'roles' | 'load'
         } else { fallback(); }
       } catch (e) { fallback(); }
     }
-    // ===== Карточка эпика (секции): мета-поля эпика + сводка по задачам + действия с секцией =====
+    // ===== Карточка секции: подписи зависят от Initiative / Epic / Story / обычного раздела =====
     let _epicCardCtx = null;
+    function _sectionCardCopy(sectionName) {
+      const name = String(sectionName || '');
+      if (/^Initiative:/i.test(name)) return {
+        title: 'Карточка инициативы', nameLabel: 'Название инициативы', typeLabel: 'Тип инициативы',
+        metricLabel: 'Метрика инициативы', object: 'инициативу', subject: 'Инициатива',
+        openTitle: 'карточку инициативы', jiraObject: 'инициативу', descPrompt: 'Зачем нужна инициатива, что в нее входит и как понять, что она завершена'
+      };
+      if (/^Epic:/i.test(name)) return {
+        title: 'Карточка эпика', nameLabel: 'Название эпика', typeLabel: 'Тип эпика',
+        metricLabel: 'Метрика эпика', object: 'эпик', subject: 'Эпик',
+        openTitle: 'карточку эпика', jiraObject: 'эпик', descPrompt: 'Зачем нужен эпик, что в него входит и как понять, что он завершен'
+      };
+      if (/^Story:/i.test(name)) return {
+        title: 'Карточка стори', nameLabel: 'Название стори', typeLabel: 'Тип стори',
+        metricLabel: 'Метрика стори', object: 'стори', subject: 'Стори',
+        openTitle: 'карточку стори', jiraObject: 'стори', descPrompt: 'Зачем нужна стори, что в нее входит и как понять, что она завершена'
+      };
+      return {
+        title: 'Карточка раздела', nameLabel: 'Название раздела', typeLabel: 'Тип раздела',
+        metricLabel: 'Метрика раздела', object: 'раздел', subject: 'Раздел',
+        openTitle: 'карточку раздела', jiraObject: 'раздел', descPrompt: 'Зачем нужен раздел, что в него входит и как понять, что он завершен'
+      };
+    }
     // === Связи эпика (секции): кросс-эпик зависимости задач (pred) + зависимости и вложенность секций. Только показ + навигация. ===
     function _secStatusObj(sec) {
       try {
@@ -16447,11 +16474,12 @@ let resourceView = 'roles'; // 'roles' | 'load'
     }
     function _epicLinkSecRow(sec) {
       if (!sec) return '';
+      var copy = _sectionCardCopy(sec);
       var so = _secStatusObj(sec);
       var m = (typeof sectionMeta !== 'undefined' && sectionMeta) ? sectionMeta[sec] : null;
       var key = m && m.key ? String(m.key).toUpperCase() : '';
       var nm = (typeof cleanSectionName === 'function') ? cleanSectionName(sec) : sec;
-      return '<button type="button" data-epic-link="' + escAttr(sec) + '" class="w-full flex items-center gap-2 text-left px-2 py-1.5 rounded-lg hover:bg-white transition-colors cursor-pointer" title="Открыть карточку эпика">'
+      return '<button type="button" data-epic-link="' + escAttr(sec) + '" class="w-full flex items-center gap-2 text-left px-2 py-1.5 rounded-lg hover:bg-white transition-colors cursor-pointer" title="Открыть ' + escAttr(copy.openTitle) + '">'
         + '<svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0 text-indigo-500" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3v16l7-4 7 4V3z"></path></svg>'
         + (key ? '<span class="text-[10px] font-mono text-slate-400 shrink-0">' + escHtml(key) + '</span>' : '')
         + '<span class="text-[12px] text-slate-700 truncate grow">' + escHtml(nm) + '</span>'
@@ -16485,11 +16513,12 @@ let resourceView = 'roles'; // 'roles' | 'load'
     }
     function _epicLinksHtml(name) {
       var d = _epicLinksData(name);
+      var copy = _sectionCardCopy(name);
       var groups = [];
       function grp(title, hint, rows) { if (!rows) return; groups.push('<div><div class="text-[10px] text-slate-500 mb-1" title="' + escAttr(hint) + '">' + title + '</div><div class="rounded-lg bg-slate-50 border border-slate-100 p-1 flex flex-col gap-0.5">' + rows + '</div></div>'); }
-      grp('Блокирует эпик (нужно раньше)', 'Что должно идти раньше, чтобы эпик мог стартовать: секция-предшественник и задачи-блокеры из других эпиков', d.blockedSec.map(_epicLinkSecRow).join('') + d.blockedTasks.map(_epicLinkTaskRow).join(''));
-      grp('Эпик блокирует', 'Что ждет этот эпик: секции и задачи из других эпиков, которые от него зависят', d.blocksSec.map(_epicLinkSecRow).join('') + d.blocksTasks.map(_epicLinkTaskRow).join(''));
-      grp('Связано (вложенность)', 'Структурные связи: родительский эпик и вложенные подсекции', (d.parent ? _epicLinkSecRow(d.parent) : '') + d.children.map(_epicLinkSecRow).join(''));
+      grp('Блокирует ' + copy.object + ' (нужно раньше)', 'Что должно идти раньше, чтобы ' + copy.object + ' можно было начать: секция-предшественник и задачи-блокеры из других секций', d.blockedSec.map(_epicLinkSecRow).join('') + d.blockedTasks.map(_epicLinkTaskRow).join(''));
+      grp(copy.subject + ' блокирует', 'Какие секции и задачи ждут, пока завершится эта секция', d.blocksSec.map(_epicLinkSecRow).join('') + d.blocksTasks.map(_epicLinkTaskRow).join(''));
+      grp('Связано (вложенность)', 'Структурные связи: родительская и вложенные секции', (d.parent ? _epicLinkSecRow(d.parent) : '') + d.children.map(_epicLinkSecRow).join(''));
       return groups.join('<div class="h-1.5"></div>');
     }
     // Ключ Jira секции (эпик/стори): из sectionMeta или из «[KEY]» в имени секции.
@@ -16541,6 +16570,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function openEpicCard(sectionName) {
       const name = String(sectionName || '');
       if (!planSections.includes(name) && !(hiddenSections || []).includes(name)) return;
+      const copy = _sectionCardCopy(name);
       const ro = (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE);
       const m = (sectionMeta && sectionMeta[name] && typeof sectionMeta[name] === 'object') ? sectionMeta[name] : {};
       // Ключ и проект: у стори (и импортированных секций) в sectionMeta часто пусто, но ключ есть в имени «... [PROJ-123]».
@@ -16550,7 +16580,12 @@ let resourceView = 'roles'; // 'roles' | 'load'
       // Текущий статус эпика: приоритет , статус приложения по ключу, иначе пытаемся сопоставить строку из Jira
       let initStatus = (key && epicStatusByKey[key]) ? epicStatusByKey[key] : '';
       if (!initStatus && m.status) { const byName = (projectStatuses || []).find(x => x && (x.name === m.status || x.id === m.status)); if (byName) initStatus = byName.id; }
-      _epicCardCtx = { name: name, initialStatus: initStatus };
+      _epicCardCtx = { name: name, initialStatus: initStatus, copy: copy };
+      const modal = document.getElementById('epicCardModal');
+      if (modal) modal.setAttribute('aria-label', copy.title);
+      const title = document.getElementById('epicCardTitleText'); if (title) title.textContent = copy.title;
+      const help = document.getElementById('epicCardHelp');
+      if (help) help.title = `${copy.title}: название, ключ Jira, тип, статус, проект, плановое окончание, WSJF, метрика, описание, связи и сводка по задачам.`;
       const sub = document.getElementById('epicCardSubtitle'); if (sub) sub.textContent = name;
       // Сводка по задачам секции (без вех)
       const tasks = (roadmapData || []).filter(t => t && t.section === name && !t.isMilestone);
@@ -16587,7 +16622,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         const row = (l, v) => `<div class="flex items-start gap-2 py-1.5 border-b border-slate-50 last:border-0"><span class="w-44 shrink-0 text-[10px] text-slate-500">${escHtml(l)}</span><span class="text-xs text-slate-700 min-w-0 break-words">${v || '<span class="text-slate-400">не задано</span>'}</span></div>`;
         const keyHtml = key ? `<a href="${escHtml(safeUrl(jiraBrowseBase() + key))}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 font-mono font-semibold text-blue-700 hover:underline">${jiraLinkSvg}${escHtml(key)}</a>` : '';
         const stTxt = initStatus ? statusNameById(initStatus) : String(m.status || '');
-        body.innerHTML = row('Название', escHtml(name)) + row('Ключ Jira', keyHtml) + row('Тип эпика', escHtml(String(m.epicType || ''))) + row('Статус', escHtml(stTxt)) + row('Проект', escHtml(proj)) + row('Плановое окончание', m.plannedEnd ? escHtml(formatDateString(m.plannedEnd)) : '') + row('Приоритет (WSJF)', escHtml(String(m.wsjf || ''))) + row('Метрика', escHtml(String(m.metric || ''))) + row('Описание', escHtml(String(m.desc || '')));
+        body.innerHTML = row(copy.nameLabel, escHtml(name)) + row('Ключ Jira', keyHtml) + row(copy.typeLabel, escHtml(String(m.epicType || ''))) + row('Статус', escHtml(stTxt)) + row('Проект', escHtml(proj)) + row('Плановое окончание', m.plannedEnd ? escHtml(formatDateString(m.plannedEnd)) : '') + row('Приоритет (WSJF)', escHtml(String(m.wsjf || ''))) + row(copy.metricLabel, escHtml(String(m.metric || ''))) + row('Описание', escHtml(String(m.desc || '')));
       } else {
         const inputCls = 'w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all';
         const labelCls = 'block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1';
@@ -16595,7 +16630,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         const stOpts = `<option value="">не задан</option>` + (projectStatuses || []).map(x => `<option value="${escAttr(x.id)}" ${initStatus === x.id ? 'selected' : ''}>${escHtml(x.name)}</option>`).join('');
         body.innerHTML = `
           <div>
-            <label for="epicCardName" class="${labelCls}">Название секции / эпика <span class="text-rose-500">*</span></label>
+            <label for="epicCardName" class="${labelCls}">${escHtml(copy.nameLabel)} <span class="text-rose-500">*</span></label>
             <input type="text" id="epicCardName" maxlength="200" value="${escAttr(name)}" class="${inputCls}">
           </div>
           <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -16603,11 +16638,11 @@ let resourceView = 'roles'; // 'roles' | 'load'
               <label for="epicCardKey" class="${labelCls}">Ключ Jira</label>
               <div class="flex items-center gap-1.5">
                 <input type="text" id="epicCardKey" maxlength="30" value="${escAttr(key)}" placeholder="PAY-100" class="${inputCls} font-mono">
-                ${key ? `<a href="${escHtml(safeUrl(jiraBrowseBase() + key))}" target="_blank" rel="noopener noreferrer" class="shrink-0 w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-blue-50 flex items-center justify-center transition-colors" aria-label="Открыть эпик в Jira" title="Открыть ${escAttr(key)} в Jira">${jiraLinkSvg}</a>` : ''}
+                ${key ? `<a href="${escHtml(safeUrl(jiraBrowseBase() + key))}" target="_blank" rel="noopener noreferrer" class="shrink-0 w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-blue-50 flex items-center justify-center transition-colors" aria-label="Открыть ${escAttr(copy.jiraObject)} в Jira" title="Открыть ${escAttr(key)} в Jira">${jiraLinkSvg}</a>` : ''}
               </div>
             </div>
             <div>
-              <label for="epicCardType" class="${labelCls}">Тип эпика</label>
+              <label for="epicCardType" class="${labelCls}">${escHtml(copy.typeLabel)}</label>
               <select id="epicCardType" class="${inputCls} cursor-pointer">${typeOpts}</select>
             </div>
             <div>
@@ -16629,19 +16664,18 @@ let resourceView = 'roles'; // 'roles' | 'load'
             </div>
           </div>
           <div>
-            <label for="epicCardMetric" class="${labelCls}">Метрика эпика</label>
+            <label for="epicCardMetric" class="${labelCls}">${escHtml(copy.metricLabel)}</label>
             <input type="text" id="epicCardMetric" maxlength="300" value="${escAttr(String(m.metric || ''))}" placeholder="Например, доля платящих пользователей" class="${inputCls}">
           </div>
           <div>
             <label for="epicCardDesc" class="${labelCls}">Описание</label>
-            <textarea id="epicCardDesc" rows="3" maxlength="4000" placeholder="Зачем эпик, что входит, критерии готовности , эти поля проверяет «Аудит эпиков»" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all resize-y min-h-[70px]">${escHtml(String(m.desc || ''))}</textarea>
+            <textarea id="epicCardDesc" rows="3" maxlength="4000" placeholder="${escAttr(copy.descPrompt)}" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all resize-y min-h-[70px]">${escHtml(String(m.desc || ''))}</textarea>
           </div>`;
       }
       // Кнопки: сохранение и действия-мутаторы прячем в режиме просмотра (копирование списка оставляем)
       const saveBtn = document.getElementById('epicCardSaveBtn'); if (saveBtn) saveBtn.classList.toggle('hidden', ro);
       const act = document.getElementById('epicCardActions');
       if (act) act.querySelectorAll('button[data-eca]').forEach(b => { if (b.dataset.eca !== 'copy') b.classList.toggle('hidden', ro); });
-      const modal = document.getElementById('epicCardModal');
       if (modal) { modal.classList.remove('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
     }
     function closeEpicCard() {
@@ -16664,9 +16698,10 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE) { if (typeof showToast === 'function') showToast('Только просмотр', 'info', 2000); return; }
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
       const ctx = _epicCardCtx; if (!ctx) { closeEpicCard(); return; }
+      const copy = ctx.copy || _sectionCardCopy(ctx.name);
       const gv = (id) => { const el = document.getElementById(id); return el ? String(el.value || '').trim() : ''; };
       const newName = gv('epicCardName');
-      if (!newName) { if (typeof showToast === 'function') showToast('Введите название секции', 'warn', 3000); return; }
+      if (!newName) { if (typeof showToast === 'function') showToast('Введите: ' + copy.nameLabel.toLowerCase(), 'warn', 3000); return; }
       if (newName !== ctx.name && (planSections.includes(newName) || (hiddenSections || []).includes(newName))) { showToast('Секция с таким названием уже есть', 'warn'); return; }
       const snap = (typeof captureUndoState === 'function') ? captureUndoState() : null;
       let cur = ctx.name;
@@ -16696,8 +16731,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (typeof populateSectionSelects === 'function') populateSectionSelects();
       renderRoadmap(true);
       if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile();
-      if (snap && typeof offerUndo === 'function') offerUndo('Карточка эпика сохранена', snap);
-      else if (typeof showToast === 'function') showToast('Карточка эпика сохранена', 'ok');
+      if (snap && typeof offerUndo === 'function') offerUndo(copy.title + ' сохранена', snap);
+      else if (typeof showToast === 'function') showToast(copy.title + ' сохранена', 'ok');
     }
     // #18 Линия сгорания (burndown) релиза: остаток задач по датам завершения + идеальная пунктирная к дате релиза
     function _burndownSvg(a, relYmd) {
@@ -20296,7 +20331,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
 
         let subtitleHtml = '';
         const secLabels = (sectionLabels && Array.isArray(sectionLabels[sectionName])) ? sectionLabels[sectionName] : [];
-        const secLabelsHtml = secLabels.length ? `<span class="inline-flex flex-nowrap items-center gap-1 overflow-hidden min-w-0" title="Метки эпика (Jira Labels)">${labelChipsHtml(secLabels)}</span>` : '';
+        const _sectionKindGenitive = sectionKind === 'Initiative' ? 'инициативы' : (sectionKind === 'Epic' ? 'эпика' : (sectionKind === 'Story' ? 'стори' : 'секции'));
+        const secLabelsHtml = secLabels.length ? `<span class="inline-flex flex-nowrap items-center gap-1 overflow-hidden min-w-0" title="Метки ${_sectionKindGenitive} (Jira Labels)">${labelChipsHtml(secLabels)}</span>` : '';
         // Подзаголовок (2-я строка) собираем ниже , после secStatusChip и estChipHtml.
 
         // Кнопка «глазик» , скрыть/показать секцию
@@ -20315,7 +20351,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
           else { const order = ['ready_release','testing','review','in_progress']; sid = order.find(s => active.some(t => t.status === s)) || (active.some(t => t.status === 'on_hold') ? 'on_hold' : 'planned'); }
           secStatusObj = projectStatuses.find(s => s.id === sid) || null;
         }
-        const secStatusChip = secStatusObj ? `<span class="${_clsSafe(secStatusObj.color)} text-[10px] px-1.5 py-0.5 rounded shrink-0 normal-case font-medium" title="Статус эпика">${escHtml(secStatusObj.name)}</span>` : '';
+        const secStatusChip = secStatusObj ? `<span class="${_clsSafe(secStatusObj.color)} text-[10px] px-1.5 py-0.5 rounded shrink-0 normal-case font-medium" title="Статус ${_sectionKindGenitive}">${escHtml(secStatusObj.name)}</span>` : '';
         const secStatusDotClass = secStatusObj ? ((secStatusObj.barTheme || '').split(' ')[0] || 'bg-slate-400') : '';
         // S4: RAG-кружок здоровья секции рядом с названием (виден и в режиме Обзор, где задачи скрыты).
         // Только для обычных секций , в зонах «Скрытые/Архив/На холде» он лишний шум.
@@ -20897,7 +20933,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
           if (sectionTasks.length === 0) {
             const emptyRowLeft = document.createElement('div');
-            emptyRowLeft.className = "h-[44px] px-5 flex items-center bg-slate-50/25 border-b border-slate-100";
+            emptyRowLeft.className = "roadmap-empty-row px-5 flex items-center bg-slate-50/25 border-b border-slate-100";
             emptyRowLeft.dataset.emptySectionRow = sectionName;
             emptyRowLeft.style.paddingLeft = (20 + secDepth * 22 + 30) + 'px';
             const emptyReadOnly = (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE);
@@ -20907,7 +20943,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             listContainer.appendChild(emptyRowLeft);
 
             const emptyRowRight = document.createElement('div');
-            emptyRowRight.className = "h-[44px] relative bg-slate-50/20 border-b border-slate-100 flex items-center";
+            emptyRowRight.className = "roadmap-empty-row relative bg-slate-50/20 border-b border-slate-100 flex items-center";
+            emptyRowRight.dataset.emptySectionRow = sectionName;
             emptyRowRight.innerHTML = `<div data-empty-timeline-placeholder class="sticky left-4 w-20 h-1 rounded-full bg-slate-200/70 pointer-events-none" aria-hidden="true"></div>`;
             barsContainer.appendChild(emptyRowRight);
           }
@@ -21562,7 +21599,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       };
       const sep = () => { const d = document.createElement('div'); d.className = 'my-1 border-t border-slate-100'; m.appendChild(d); };
       if (!ro) add('Добавить задачу', ic.plus, () => openQuickAddForSection(sec));
-      add('Карточка эпика', ic.card, () => openEpicCard(sec));
+      add(_sectionCardCopy(sec).title, ic.card, () => openEpicCard(sec));
       add('Скопировать список задач', ic.copy, () => copySectionTaskList(sec));
       if (!ro) {
         sep();
@@ -26695,7 +26732,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     <h3 class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">
      <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-     <span id="appVersionBadge">v13.2 , 21.07.2026</span>
+     <span id="appVersionBadge">v13.3 , 22.07.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -26761,7 +26798,15 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </div>
 
    <div>
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.2 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.3 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Секции и таймлайн снова совпадают</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ГАНТ</span></div><p class="text-xs text-slate-600">Пустые уровни инициатив, эпиков и стори занимают одинаковую высоту слева и справа. Полосы секций и задачи больше не смещаются после пустых родительских уровней.</p></div>
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Карточка знает свой уровень</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ИЕРАРХИЯ</span></div><p class="text-xs text-slate-600">Заголовок, поля, подсказки и пункт меню теперь соответствуют уровню: карточка инициативы, эпика, стори или обычного раздела.</p></div>
+    </div>
+   </div>
+
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v13.2 <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-100 px-1.5 py-0.5 rounded">21.07.2026</span></h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h13M10 18h10"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Строгая иерархия Jira</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">СТРУКТУРА</span></div><p class="text-xs text-slate-600">Инициатива, эпик и стори теперь всегда отображаются секциями: Initiative → Epic → Story → Task/Bug. Если прямого родителя нет, элемент остается в корне. Поддерживаются произвольные названия и направления Jira-связей.</p></div>
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Пустые секции без визуального шума</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ИНТЕРФЕЙС</span></div><p class="text-xs text-slate-600">Повторяющиеся подписи убраны. В пустой секции остается одна компактная кнопка «Добавить первую задачу», а на таймлайне — спокойный плейсхолдер без лишнего текста.</p></div>
@@ -29870,12 +29915,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     </div>
   </div>
 
-  <div id="epicCardModal" role="dialog" aria-modal="true" aria-label="Карточка эпика" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1001] flex items-center justify-center hidden p-4" data-modal-backdrop>
+  <div id="epicCardModal" role="dialog" aria-modal="true" aria-label="Карточка раздела" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1001] flex items-center justify-center hidden p-4" data-modal-backdrop>
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[88vh] border border-slate-200/60">
       <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <div class="flex items-center gap-3 min-w-0">
           <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6M9 8h6M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg></div>
-          <div class="min-w-0"><h3 class="text-lg font-semibold text-slate-800 leading-tight">Карточка эпика <button type="button" tabindex="-1" class="ml-1 align-middle inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-help shrink-0" aria-label="Об этом окне" title="Карточка секции-эпика: название, ключ Jira, тип, статус, проект, плановое окончание, WSJF, метрика и описание , эти же поля проверяет окно «Аудит эпиков». Ниже , сводка по задачам секции и действия: цвет, дублирование, вложенность, копирование списка задач, удаление."><svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></button></h3><p id="epicCardSubtitle" class="text-[10px] text-slate-500 leading-tight truncate"></p></div>
+          <div class="min-w-0"><h3 class="text-lg font-semibold text-slate-800 leading-tight"><span id="epicCardTitleText">Карточка раздела</span> <button id="epicCardHelp" type="button" tabindex="-1" class="ml-1 align-middle inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-help shrink-0" aria-label="Об этом окне" title="Карточка раздела: название, ключ Jira, тип, статус, проект, плановое окончание, WSJF, метрика, описание, связи и сводка по задачам."><svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></button></h3><p id="epicCardSubtitle" class="text-[10px] text-slate-500 leading-tight truncate"></p></div>
         </div>
         <button type="button" onclick="closeEpicCard()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-all cursor-pointer shrink-0" aria-label="Закрыть" title="Закрыть"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
@@ -30127,7 +30172,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         <p class="text-sm text-slate-500 mt-2 max-w-lg mx-auto leading-relaxed">Откройте готовый пример за минуту или начните со своих данных. План работает локально, без сервера.</p>
         <span class="inline-flex items-center gap-1.5 mt-3 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2.5 py-1 rounded-lg shadow-xs">
           <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-          <span id="appVersionStartup">версия 13.2</span>
+          <span id="appVersionStartup">версия 13.3</span>
         </span>
       </div>
 
