@@ -22,7 +22,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; connect-src 'self' https://*.atlassian.net; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; connect-src 'self' https: http:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self';">
   <meta name="referrer" content="no-referrer">
   <title>Дорожная карта проекта</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzRmNDZlNSIvPjxyZWN0IHg9IjYiIHk9IjkiIHdpZHRoPSIxMyIgaGVpZ2h0PSIzLjQiIHJ4PSIxLjciIGZpbGw9IiNmZmZmZmYiLz48cmVjdCB4PSIxMCIgeT0iMTQuMyIgd2lkdGg9IjE0IiBoZWlnaHQ9IjMuNCIgcng9IjEuNyIgZmlsbD0iI2E1YjRmYyIvPjxyZWN0IHg9IjYiIHk9IjE5LjYiIHdpZHRoPSI5IiBoZWlnaHQ9IjMuNCIgcng9IjEuNyIgZmlsbD0iI2ZmZmZmZiIvPjwvc3ZnPg==">
@@ -6943,9 +6943,10 @@
   </div>
 
   <script>
-    /*! Roadmap , дорожная карта продукта. Copyright (c) 2026 Владимир У. (uchv@ya.ru).
-      Proprietary , all rights reserved. Несанкционированное копирование, изменение
-      или распространение исходного кода и его частей запрещено. Contact: uchv@ya.ru */
+    /*! Roadmap , дорожная карта продукта. Copyright (c) 2026 Владимир Учинин.
+      SPDX-License-Identifier: AGPL-3.0-only
+      This program is free software distributed without any warranty.
+      See LICENSE or https://www.gnu.org/licenses/agpl-3.0.html */
     // === Security helpers ===
     // Экранирование HTML для безопасной вставки пользовательских данных в template literals.
     // белый список символов для CSS-классов из данных (статусы/цвета секций) , защита от инъекции в class=""
@@ -7658,8 +7659,8 @@
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '13.1';
-    const APP_VERSION_DATE = '08.07.2026';
+    const APP_VERSION = '13.2';
+    const APP_VERSION_DATE = '21.07.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' , ' + APP_VERSION_DATE; } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'версия ' + APP_VERSION; } catch (e) {}
@@ -8120,54 +8121,119 @@
     let sectionLabels = safeStorageGet('gantt_section_labels', {});
     // Полные поля эпика из Jira (для «Аудита Epic»): WSJF, метрика, влияние, тип, даты, описание, ответственный , по имени секции.
     let sectionMeta = safeStorageGet('gantt_section_meta', {});
-    // Эпик отображается как СЕКЦИЯ, а не как строка-задача. Строка «сам эпик» , это задача,
-    // чей ключ совпадает с ключом своей же Epic-секции. Такие строки убираем (один раз и при импорте).
-    function isEpicSelfRow(t) {
-      if (!t || !t.jira || !t.section || !/^(Epic:|Story:)/.test(String(t.section))) return false;
-      const secKey = (String(t.section).match(/\[([A-Z]+-\d+)\]/) || [])[1] || (String(t.section).match(/([A-Z]+-\d+)/) || [])[1];
-      return !!secKey && (getTaskKey(t) === secKey);
+    // Jira-иерархия в плане всегда одна: Initiative → Epic → Story → Task/Bug/Sub-task.
+    // Первые три уровня отображаются секциями, обычные типы — строками задач. Тип связи Jira при
+    // этом не важен: направление выводим по типам объектов. Если прямого родителя нет, объект
+    // остается на верхнем уровне, а не перескакивает через отсутствующую ступень.
+    function jiraHierarchyRankFromType(issueType) {
+      const t = String(issueType || '').trim().toLowerCase();
+      if (/initiative|инициатив/.test(t)) return 0;
+      if (/^(epic|эпик)$/.test(t)) return 1;
+      if (/^(story|история|user story|стори)$/.test(t)) return 2;
+      return 3;
     }
+    function jiraContainerKindFromRank(rank) { return rank === 0 ? 'initiative' : (rank === 1 ? 'epic' : (rank === 2 ? 'story' : '')); }
+    function jiraContainerPrefixFromRank(rank) { return rank === 0 ? 'Initiative' : (rank === 1 ? 'Epic' : (rank === 2 ? 'Story' : '')); }
+    function jiraSectionKey(s) {
+      const b = String(s || '').match(/\[([A-Z][A-Z0-9]+-\d+)\]/); if (b) return b[1];
+      const all = String(s || '').match(/[A-Z][A-Z0-9]+-\d+/g); return all ? all[all.length - 1] : '';
+    }
+    function jiraContainerSectionFromTask(t) {
+      if (!t || !t.jira) return '';
+      const rank = jiraHierarchyRankFromType(t.issueType);
+      const prefix = jiraContainerPrefixFromRank(rank);
+      if (!prefix) return '';
+      return `${prefix}: ${String(t.name || t.jira).trim()} [${String(t.jira).trim()}]`;
+    }
+    function isJiraContainerTask(t) { return !!jiraContainerSectionFromTask(t); }
+    // Старое имя оставлено для совместимости с дополнительными модулями файла.
+    function isEpicSelfRow(t) { return isJiraContainerTask(t); }
     // Приводит секции в порядок (вызывается при загрузке, импорте JSON и импорте Jira):
-    // 1) строка «сам эпик/стори»: если у секции есть дети , убираем строку (секция остается);
-    //   если детей нет (лист) , разгруппировываем в «Задачи без эпика», не теряя задачу;
-    // 2) удаляем ПУСТЫЕ Epic/Story-секции (нет активных задач , например, дети ушли в архив);
-    // 3) гарантируем, что секция каждой активной задачи присутствует в списке.
+    // 1) Initiative/Epic/Story всегда превращает в секцию, даже если у контейнера пока нет детей;
+    // 2) восстанавливает прямую вложенность только при наличии нужного уровня;
+    // 3) гарантирует, что секция каждой активной задачи присутствует в списке.
     function reconcileSections(persist) {
       if (!Array.isArray(roadmapData)) return { selfRows: 0, emptySections: 0 };
       let selfRows = 0;
-      const dropSelf = new Set();  // self-rows контейнеров , убрать строку
-      const ungroup = [];      // листовые self-rows , разгруппировать
+      const dropSelf = new Set();
+      const containerRows = [];
+      const metaSectionByKey = {};
+      Object.keys(sectionMeta || {}).forEach(s => {
+        const m = sectionMeta[s] || {};
+        const k = String(m.key || jiraSectionKey(s) || '').trim();
+        if (k) metaSectionByKey[k] = s;
+      });
       roadmapData.forEach(t => {
-        if (!isEpicSelfRow(t)) return;
+        if (!isJiraContainerTask(t)) return;
         selfRows++;
-        const k = getTaskKey(t);
+        const k = String(t.jira || '').trim();
+        const rank = jiraHierarchyRankFromType(t.issueType);
+        const kind = jiraContainerKindFromRank(rank);
+        const sec = jiraContainerSectionFromTask(t);
+        if (!planSections.includes(sec)) planSections.push(sec);
+        if (!sectionColors[sec]) {
+          const palette = ['bg-indigo-500','bg-blue-500','bg-violet-500','bg-emerald-500','bg-amber-500','bg-rose-500','bg-cyan-500','bg-fuchsia-500','bg-teal-500','bg-orange-500','bg-sky-500','bg-purple-500','bg-pink-500','bg-lime-500'];
+          const hash = Array.from(sec).reduce((value, char) => ((value * 33) ^ char.charCodeAt(0)) >>> 0, 5381);
+          sectionColors[sec] = `${palette[hash % palette.length]} text-white`;
+        }
         if (k && t.status) epicStatusByKey[k] = t.status;
-        // Контейнер, если есть прямые задачи в его секции ИЛИ (для эпика) есть задачи с его Epic Link ,
-        // потомки, ушедшие в под-истории. Иначе уровень Эпик -> Стори -> Задача рушится и эпик демотится в задачу.
-        const hasChildren = roadmapData.some(o => o !== t && o.section === t.section)
-          || (k && /^Epic:/.test(String(t.section)) && roadmapData.some(o => o && o !== t && String(o.epicLink || '') === k));
-        if (hasChildren) dropSelf.add(t); else ungroup.push(t);
+        if (Array.isArray(t.labels) && t.labels.length) sectionLabels[sec] = t.labels.slice();
+        const prev = sectionMeta[sec] || {};
+        sectionMeta[sec] = { ...prev, key: k, title: t.name || prev.title || k, status: t.status || prev.status || '', kind, fromJira: true };
+        metaSectionByKey[k] = sec;
+        containerRows.push({ task: t, section: sec, key: k, rank });
+        dropSelf.add(t);
       });
       if (dropSelf.size) roadmapData = roadmapData.filter(t => !dropSelf.has(t));
-      if (ungroup.length) {
-        if (!planSections.includes('Задачи без эпика')) planSections.push('Задачи без эпика');
-        ungroup.forEach(t => { t.section = 'Задачи без эпика'; });
-      }
+      let rootedTasks = 0;
+      roadmapData.forEach(t => {
+        if (!t || t.isMilestone || jiraHierarchyRankFromType(t.issueType) < 3) return;
+        // Обычная задача не может быть прямым ребенком Initiative или Epic: без Story это корень.
+        if (/^(Initiative|Epic):/i.test(String(t.section || ''))) {
+          t.section = 'Задачи без эпика'; rootedTasks++;
+        }
+      });
+      if (rootedTasks && !planSections.includes('Задачи без эпика')) planSections.push('Задачи без эпика');
+
+      // Если активная Story ссылается на Epic, который ранее был ошибочно удален как пустой,
+      // восстанавливаем его из sectionMeta. Не создаем выдуманный родитель без метаданных.
+      containerRows.forEach(x => {
+        if (x.rank !== 2) return;
+        const parentKey = String(x.task._jiraParentKey || x.task.epicLink || '').trim();
+        const parentSec = metaSectionByKey[parentKey];
+        if (parentSec && /^Epic:/i.test(parentSec) && !planSections.includes(parentSec)) planSections.push(parentSec);
+      });
+
+      const sectionByKey = {};
+      planSections.forEach(s => { const k = jiraSectionKey(s); if (k) sectionByKey[k] = s; });
+      containerRows.forEach(x => {
+        if (x.rank === 0) { delete sectionParents[x.section]; return; }
+        let parentKey = String(x.task._jiraParentKey || '').trim();
+        if (!parentKey && x.rank === 2) parentKey = String(x.task.epicLink || '').trim();
+        const parentSec = sectionByKey[parentKey];
+        const valid = x.rank === 1 ? /^Initiative:/i.test(String(parentSec || '')) : /^Epic:/i.test(String(parentSec || ''));
+        if (valid) sectionParents[x.section] = parentSec;
+        else {
+          const old = sectionParents[x.section];
+          const oldValid = x.rank === 1 ? /^Initiative:/i.test(String(old || '')) : /^Epic:/i.test(String(old || ''));
+          if (!oldValid) delete sectionParents[x.section];
+        }
+      });
+      // Для Jira-контейнеров допускаем только соседний тип. Ручные секции не считаем пропущенной Story.
+      Object.keys(sectionParents || {}).forEach(child => {
+        const parent = sectionParents[child];
+        const childRank = /^Initiative:/i.test(child) ? 0 : (/^Epic:/i.test(child) ? 1 : (/^Story:/i.test(child) ? 2 : -1));
+        const parentRank = /^Initiative:/i.test(parent) ? 0 : (/^Epic:/i.test(parent) ? 1 : (/^Story:/i.test(parent) ? 2 : -1));
+        if ((parentRank >= 0 || childRank >= 0) && childRank !== parentRank + 1) delete sectionParents[child];
+      });
       // Считаем активные задачи по секциям
       const counts = {};
       roadmapData.forEach(t => { if (t.section) counts[t.section] = (counts[t.section] || 0) + 1; });
-      // Убираем пустые Epic/Story-секции и пустую «Задачи без эпика»
+      // Контейнерные секции не удаляем из-за отсутствия строк: пустая Story — валидный leaf-уровень.
       let emptySections = 0;
-      // Эпик-РОДИТЕЛЬ держим живым, даже без прямых задач, если есть активные задачи с его Epic Link
-      // (потомки, ушедшие в под-истории) , иначе рушится уровень Эпик -> Стори -> Задача.
-      const _epicKeysWithKids = new Set();
-      roadmapData.forEach(t => { const el = t && String(t.epicLink || '').trim(); if (el) _epicKeysWithKids.add(el); });
-      const _secKeyOf = (s) => { const b = String(s).match(/\[([A-Z][A-Z0-9]+-\d+)\]/); if (b) return b[1]; const all = String(s).match(/[A-Z][A-Z0-9]+-\d+/g); return all ? all[all.length - 1] : ''; };
       if (Array.isArray(planSections)) {
         planSections = planSections.filter(s => {
-          const isJira = /^(Epic:|Story:)/.test(s) || s === 'Задачи без эпика';
-          if (isJira && !counts[s]) {
-            if (/^Epic:/.test(s) && _epicKeysWithKids.has(_secKeyOf(s))) return true;
+          if (s === 'Задачи без эпика' && !counts[s]) {
             // секция уходит , чистим связанные коллекции
             hiddenSections = (hiddenSections || []).filter(x => x !== s);
             collapsedSections = (collapsedSections || []).filter(x => x !== s);
@@ -8182,15 +8248,18 @@
       }
       // Секции скрываются ТОЛЬКО вручную (глазик). Никакого авто-скрытия , чтобы не было сюрпризов.
       const hiddenZoned = 0;
-      if ((selfRows || emptySections) && persist) {
+      if ((selfRows || rootedTasks || emptySections) && persist) {
         storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData));
         storage.set('gantt_sections_list', JSON.stringify(planSections));
         storage.set('gantt_hidden_sections', JSON.stringify(hiddenSections));
         storage.set('gantt_collapsed_sections', JSON.stringify(collapsedSections));
         storage.set('gantt_section_colors', JSON.stringify(sectionColors));
         storage.set('gantt_epic_statuses', JSON.stringify(epicStatusByKey));
+        storage.set('gantt_section_labels', JSON.stringify(sectionLabels));
+        storage.set('gantt_section_meta', JSON.stringify(sectionMeta));
+        storage.set('gantt_section_parents', JSON.stringify(sectionParents));
       }
-      return { selfRows, emptySections, hiddenZoned };
+      return { selfRows, rootedTasks, emptySections, hiddenZoned };
     }
     // Совместимость: старое имя
     function removeSectionSelfRows(persist) { return reconcileSections(persist).selfRows; }
@@ -9317,7 +9386,7 @@
         ['tasks-list-container', 'bars-container', 'timeline-header', 'timeline-footer', 'headerCutoffChips', 'statusOverview']
           .forEach(id => { const el = root.querySelector('#' + id); if (el) el.innerHTML = ''; });
         root.querySelectorAll('[role="dialog"]').forEach(m => m.classList.add('hidden'));
-        const lic = '<!-- Roadmap read-only snapshot. Copyright (c) 2026 Владимир У. (uchv@ya.ru). Proprietary. -->\n';
+        const lic = '<!-- Roadmap read-only snapshot. Copyright (c) 2026 Владимир Учинин. SPDX-License-Identifier: AGPL-3.0-only. -->\n';
         const snapJson = JSON.stringify(buildReadOnlySnapshot(opts)).replace(/</g, '\\u003c');
         const boot = '<scr' + 'ipt>window.__READ_ONLY__=true;window.__SHARE_DATA__=' + snapJson + ';</scr' + 'ipt>';
         let html = '<!DOCTYPE html>\n' + lic + root.outerHTML;
@@ -10082,6 +10151,7 @@
     }
     // ---- Связи эпиков и сторей (секций): sectionDeps {секция: {pred, type, lag}} ----
     function _secKindBadge(name) {
+      if (/^Initiative:/i.test(name)) return '<span class="text-[8px] font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded px-1 mr-1">INITIATIVE</span>';
       if (/^Epic:/i.test(name)) return '<span class="text-[8px] font-bold text-violet-700 bg-violet-50 border border-violet-200 rounded px-1 mr-1">EPIC</span>';
       if (/^Story:/i.test(name)) return '<span class="text-[8px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded px-1 mr-1">STORY</span>';
       return '<span class="text-[8px] font-bold text-slate-600 bg-slate-50 border border-slate-200 rounded px-1 mr-1">ЭТАП</span>';
@@ -10349,8 +10419,8 @@
       var adder = '';
       if (!_roD) {
         var taskOpts = (roadmapData || []).filter(function (t) { return t && !t.isMilestone; }).sort(function (a, b) { return String(a.name || '').localeCompare(String(b.name || ''), 'ru'); }).map(function (t) { return '<option value="' + t.id + '">' + esc(((t.jira ? t.jira + ' , ' : '') + (t.name || '')).slice(0, 70)) + '</option>'; }).join('');
-        var secOpts = (Array.isArray(planSections) ? planSections : []).map(function (sc) { var k = /^Epic:/i.test(sc) ? 'эпик' : (/^Story:/i.test(sc) ? 'стори' : 'этап'); return '<option value="sec:' + escA(encodeURIComponent(sc)) + '">' + esc('[' + k + '] ' + cleanSectionName(sc).slice(0, 60)) + '</option>'; }).join('');
-        var opts = '<optgroup label="Эпики и стори">' + secOpts + '</optgroup><optgroup label="Задачи">' + taskOpts + '</optgroup>';
+        var secOpts = (Array.isArray(planSections) ? planSections : []).map(function (sc) { var k = /^Initiative:/i.test(sc) ? 'инициатива' : (/^Epic:/i.test(sc) ? 'эпик' : (/^Story:/i.test(sc) ? 'стори' : 'этап')); return '<option value="sec:' + escA(encodeURIComponent(sc)) + '">' + esc('[' + k + '] ' + cleanSectionName(sc).slice(0, 60)) + '</option>'; }).join('');
+        var opts = '<optgroup label="Инициативы, эпики и стори">' + secOpts + '</optgroup><optgroup label="Задачи">' + taskOpts + '</optgroup>';
         adder = '<div class="flex items-center gap-2 flex-wrap mb-3 pb-3 border-b border-slate-200">'
           + '<span class="text-[11px] text-slate-500">Задача или эпик</span>'
           + '<select id="depOvSucc" aria-label="Зависимая задача" class="h-8 px-2 bg-white border border-slate-200 rounded-lg text-[11px] text-slate-700 cursor-pointer" style="max-width:250px">' + opts + '</select>'
@@ -12502,14 +12572,15 @@ let resourceView = 'roles'; // 'roles' | 'load'
         var top = '<div class="flex items-center gap-1 mb-0.5"><span class="text-[8px] font-semibold leading-none px-1 py-0.5 rounded ' + tc + '">' + escHtml(tl) + '</span>' + (t.jira ? ('<span class="text-[8px] font-mono text-slate-400 truncate">' + escHtml(t.jira) + '</span>') : '') + '</div>';
         return '<button type="button" onclick="_gmTaskClick(' + t.id + ')"' + (ro ? '' : ' draggable="true" ondragstart="_gmDragStartTask(event,' + t.id + ')"') + ' data-tid="' + t.id + '" class="gm-task block text-left" style="width:210px;cursor:' + (arm ? 'copy' : (ro ? 'default' : 'grab')) + '"><div class="bg-white border border-slate-200 rounded-lg px-2 py-1.5 ' + (arm ? 'hover:border-indigo-400 hover:bg-indigo-50' : 'hover:shadow-md') + ' transition-all overflow-hidden" style="border-left:4px solid ' + hex + '">' + top + '<div class="text-[10px] font-medium text-slate-700 leading-tight" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">' + escHtml(t.name || '(без названия)') + '</div></div></button>';
       };
-      // Эпики/стори/разделы , это СЕКЦИИ задачи (t.section). Вложенность Эпик -> Стори/Раздел -> задача берем из sectionParents.
+      // Initiative/Epic/Story/разделы — секции. Вложенность берем из sectionParents.
       var secBadge = function(kind){
+        if(kind==='initiative') return '<span class="text-[8px] font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded px-1 py-0.5 mr-1">ИНИЦИАТИВА</span>';
         if(kind==='epic') return '<span class="text-[8px] font-bold text-violet-700 bg-violet-50 border border-violet-200 rounded px-1 py-0.5 mr-1">ЭПИК</span>';
         if(kind==='story') return '<span class="text-[8px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 mr-1">СТОРИ</span>';
         if(kind==='none') return '<span class="text-[8px] font-bold text-slate-500 bg-slate-100 border border-slate-200 rounded px-1 py-0.5 mr-1">БЕЗ ЭПИКА</span>';
         return '<span class="text-[8px] font-bold text-slate-600 bg-slate-50 border border-slate-200 rounded px-1 py-0.5 mr-1">РАЗДЕЛ</span>';
       };
-      var secInfo = function(sec){ var s = String(sec || ''); var kind = /^Epic:/i.test(s) ? 'epic' : (/^Story:/i.test(s) ? 'story' : ((!s || s === 'Задачи без эпика') ? 'none' : 'stage')); var label = (!s || s === 'Задачи без эпика') ? 'Задачи без эпика' : ((typeof cleanSectionName === 'function') ? cleanSectionName(s) : s.replace(/^(Epic:|Story:)\s*/i, '')); return { kind: kind, label: label || s }; };
+      var secInfo = function(sec){ var s = String(sec || ''); var kind = /^Initiative:/i.test(s) ? 'initiative' : (/^Epic:/i.test(s) ? 'epic' : (/^Story:/i.test(s) ? 'story' : ((!s || s === 'Задачи без эпика') ? 'none' : 'stage'))); var label = (!s || s === 'Задачи без эпика') ? 'Задачи без эпика' : ((typeof cleanSectionName === 'function') ? cleanSectionName(s) : s.replace(/^(Initiative:|Epic:|Story:)\s*/i, '')); return { kind: kind, label: label || s }; };
       var buildTree = function(tks){
         var tById = {}, relevant = {};
         tks.forEach(function(t){ var s = t.section || 'Задачи без эпика'; (tById[s] = tById[s] || []).push(t); relevant[s] = 1; var cur = s, g = 0; while(typeof sectionParents !== 'undefined' && sectionParents && sectionParents[cur] && sectionParents[cur] !== cur && g < 6){ cur = sectionParents[cur]; relevant[cur] = 1; g++; } });
@@ -12531,7 +12602,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         var secLabel = '<span ' + (ro ? '' : 'draggable="true" ondragstart="_gmDragStartSec(event,\'' + encAttr(iid) + '\',\'' + encAttr(s) + '\')" ') + 'class="text-[11px] font-semibold text-slate-700 truncate" style="max-width:520px' + (ro ? '' : ';cursor:grab') + '" title="' + (ro ? '' : 'Перетащите, чтобы перенести всю секцию в другую инициативу') + '">' + escHtml(si.label) + '</span>';
         var _k = secKey(s);
         var secLink = _k ? (_jbaseGm ? ('<a href="' + escAttr((typeof safeUrl === 'function' ? safeUrl(_jbaseGm + '/browse/' + _k) : (_jbaseGm + '/browse/' + _k))) + '" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" draggable="false" class="text-[9px] font-mono text-indigo-500 hover:text-indigo-700 hover:underline shrink-0" title="Открыть ' + escHtml(_k) + ' в Jira">' + escHtml(_k) + '</a>') : ('<span class="text-[9px] font-mono text-slate-400 shrink-0" title="Ключ эпика или стори">' + escHtml(_k) + '</span>')) : '';
-        var secCopy = (_k && (si.kind === 'epic' || si.kind === 'story')) ? ('<button type="button" onclick="event.stopPropagation();copyEpicJiraLinks(decodeURIComponent(\'' + encAttr(s) + '\'))" draggable="false" class="shrink-0 text-slate-300 hover:text-indigo-600 cursor-pointer" title="Скопировать связи для Jira: родитель (is child of), вложенные (is parent of), блокировки (is blocked by / blocks)"><svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg></button>') : '';
+        var secCopy = (_k && (si.kind === 'initiative' || si.kind === 'epic' || si.kind === 'story')) ? ('<button type="button" onclick="event.stopPropagation();copyEpicJiraLinks(decodeURIComponent(\'' + encAttr(s) + '\'))" draggable="false" class="shrink-0 text-slate-300 hover:text-indigo-600 cursor-pointer" title="Скопировать связи для Jira: родитель (is child of), вложенные (is parent of), блокировки (is blocked by / blocks)"><svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg></button>') : '';
         var header = '<div class="flex items-center gap-1.5 py-1" style="padding-left:' + pad + 'px">' + _gmChev(key, hasChildren) + secBadge(si.kind) + secLabel + secLink + secCopy + '<span class="text-[9px] text-slate-400 tabular-nums shrink-0">' + nSub + ' ' + pl(nSub) + '</span></div>';
         if(coll) return header;
         var body = '';
@@ -15525,7 +15596,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const uid = t => t.jira ? ('J:' + String(t.jira).trim().toLowerCase()) : ('#' + t.id);
       const seen = new Set();
       const takeNew = (arr) => arr.filter(t => { const k = uid(t); if (seen.has(k)) return false; seen.add(k); return true; });
-      const isParentSection = (sec) => /^(Epic:|Story:)/.test(String(sec || ''));
+      const isParentSection = (sec) => /^(Initiative:|Epic:|Story:)/.test(String(sec || ''));
       // Безопасные индексы дней: одна дата заполняет вторую; NaN только если дат нет вовсе.
       const dStart = (t) => { const v = t.start || t.end; return v ? dateToDays(v) : NaN; };
       const dEnd = (t) => { const v = t.end || t.start; return v ? dateToDays(v) : NaN; };
@@ -15579,7 +15650,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       };
       // Хелперы группировки по эпикам/стори и статусам
       const sectionKey = (sec) => (String(sec || '').match(/\[([A-Za-z]+-\d+)\]/) || [])[1] || '';
-      const sectionKind = (sec) => String(sec || '').startsWith('Story:') ? 'Стори' : 'Эпик';
+      const sectionKind = (sec) => String(sec || '').startsWith('Initiative:') ? 'Инициатива' : (String(sec || '').startsWith('Story:') ? 'Стори' : 'Эпик');
       const statusName = (id) => (projectStatuses.find(s => s.id === id) || {}).name || id || 'Без статуса';
       const STATUS_ORDER = ['ready_release', 'review', 'testing', 'in_progress', 'on_hold', 'planned'];
       const taskLine = (t) => `${t.name}${t.jira ? ` (${getTaskKey(t)})` : ''}`;
@@ -16428,7 +16499,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       var rd = (typeof roadmapData !== 'undefined' && roadmapData) ? roadmapData : [];
       var selfKey = _epicSecKey(name);
       var selfNm = (typeof cleanSectionName === 'function') ? cleanSectionName(name) : name;
-      var kindLabel = /^Epic:/i.test(name) ? 'Эпик' : (/^Story:/i.test(name) ? 'Стори' : 'Раздел');
+      var kindLabel = /^Initiative:/i.test(name) ? 'Инициатива' : (/^Epic:/i.test(name) ? 'Эпик' : (/^Story:/i.test(name) ? 'Стори' : 'Раздел'));
       var skipped = 0;
       var uniq = function (arr) { var seen = {}, out = []; arr.forEach(function (k) { if (k && !seen[k]) { seen[k] = 1; out.push(k); } }); return out; };
       var secKeyList = function (secs) { return (secs || []).map(function (s) { var k = _epicSecKey(s); if (!k) skipped++; return k; }).filter(Boolean); };
@@ -16443,7 +16514,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (totalKeys === 0) { if (typeof showToast === 'function') showToast('У «' + selfNm + '» нет связей с ключами Jira', 'info', 3000); return; }
       var lines = [];
       lines.push(kindLabel + (selfKey ? (' ' + selfKey) : '') + ' , ' + selfNm);
-      // Ключи разделяем ПРОБЕЛОМ, а не запятой: поле связи в Jira бьет вставку по пробелам и оставляет запятую внутри токена («RHEAD-595,» , несуществующий ключ).
+      // Ключи разделяем ПРОБЕЛОМ, а не запятой: поле связи в Jira бьет вставку по пробелам и оставляет запятую внутри токена («PROJ-123,» , несуществующий ключ).
       var line = function (label, keys) { if (keys.length) lines.push(label + ': ' + keys.join(' ')); };
       line('is child of (родитель)', childOf);
       line('is parent of (вложенные)', parentOf);
@@ -16462,7 +16533,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (!planSections.includes(name) && !(hiddenSections || []).includes(name)) return;
       const ro = (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE);
       const m = (sectionMeta && sectionMeta[name] && typeof sectionMeta[name] === 'object') ? sectionMeta[name] : {};
-      // Ключ и проект: у стори (и импортированных секций) в sectionMeta часто пусто, но ключ есть в имени «... [RHEAD-575]».
+      // Ключ и проект: у стори (и импортированных секций) в sectionMeta часто пусто, но ключ есть в имени «... [PROJ-123]».
       // Выводим ключ через _epicSecKey (sectionMeta.key или «[KEY]»), проект , из префикса ключа, чтобы ссылка и проект не были пустыми.
       const key = (typeof _epicSecKey === 'function') ? _epicSecKey(name) : String(m.key || '').toUpperCase();
       const proj = String(m.project || (key && key.indexOf('-') > 0 ? key.slice(0, key.indexOf('-')) : ''));
@@ -16799,7 +16870,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       }
     }
     function cleanSectionName(sec) {
-      return String(sec || '').replace(/^(Epic|Story):\s*/i, '').replace(/\s*\[[A-Z]+-\d+\]\s*$/i, '').trim();
+      return String(sec || '').replace(/^(Initiative|Epic|Story):\s*/i, '').replace(/\s*\[[A-Z][A-Z0-9]+-\d+\]\s*$/i, '').trim();
     }
     // ===== S3/S4: единый авто-RAG здоровья секции/эпика (без отдельного зеркалируемого ключа) =====
     // Эвристика (документирована в справке окна «Сводка по секциям»):
@@ -20118,14 +20189,14 @@ let resourceView = 'roles'; // 'roles' | 'load'
 
         let epicKey = null;
         let shortName = sectionName;
-        let sectionKind = ''; // 'Epic' | 'Story' | ''
+        let sectionKind = ''; // 'Initiative' | 'Epic' | 'Story' | ''
 
         // Парсим типовые форматы названия секции:
         //  "Epic: Краткое название [PROJ-123]" → name, key
         //  "Epic: PROJ-123 Краткое название"   → name, key (старый формат)
         //  "Epic: Краткое название"        → name, key=null
         //  аналогично для "Story: ..."
-        const prefixMatch = sectionName.match(/^(Epic|Story):\s*(.+)$/i);
+        const prefixMatch = sectionName.match(/^(Initiative|Epic|Story):\s*(.+)$/i);
         if (prefixMatch) {
           sectionKind = prefixMatch[1].charAt(0).toUpperCase() + prefixMatch[1].slice(1).toLowerCase();
           let rest = prefixMatch[2].trim();
@@ -20181,7 +20252,9 @@ let resourceView = 'roles'; // 'roles' | 'load'
 
         // Бейдж типа секции (задача №3)
         let sectionKindBadgeHtml = '';
-        if (sectionKind === 'Epic') {
+        if (sectionKind === 'Initiative') {
+          sectionKindBadgeHtml = `<button type="button" onclick="event.stopPropagation(); openEpicCard('${escJsArg(sectionName)}')" class="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700 border border-amber-200 cursor-pointer hover:bg-amber-200 transition-colors" title="Открыть карточку инициативы">Initiative</button>`;
+        } else if (sectionKind === 'Epic') {
           sectionKindBadgeHtml = `<button type="button" onclick="event.stopPropagation(); openEpicCard('${escJsArg(sectionName)}')" class="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-violet-100 text-violet-700 border border-violet-200 cursor-pointer hover:bg-violet-200 transition-colors" title="Открыть карточку эпика">Epic</button>`;
         } else if (sectionKind === 'Story') {
           sectionKindBadgeHtml = `<button type="button" onclick="event.stopPropagation(); openEpicCard('${escJsArg(sectionName)}')" class="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 border border-emerald-200 cursor-pointer hover:bg-emerald-200 transition-colors" title="Открыть карточку стори">Story</button>`;
@@ -20210,7 +20283,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         const sectionArchiveBtn = `<button onclick="event.stopPropagation(); ${zoneKind === 'hiddenTasks' ? 'archiveHiddenTasks()' : "archiveSectionTasks('" + sectionNameAttr + "')"}" class="group relative w-5 h-5 rounded-md hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-all cursor-pointer" aria-label="Перенести задачи в архив" title="Перенести задачи в Архив"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg></button>`;
 
         // Статус эпика/секции: приоритет , статус эпика (из карты epicStatusByKey), иначе агрегат по задачам.
-        // Показываем только для Epic/Story-секций (у обычных секций статус не нужен , меньше шума).
+        // Показываем только для Initiative/Epic/Story-секций (у обычных секций статус не нужен).
         let secStatusObj = null;
         if (epicKey && epicStatusByKey[epicKey]) secStatusObj = projectStatuses.find(s => s.id === epicStatusByKey[epicKey]) || null;
         if (!secStatusObj && sectionKind && _aggTasks.length) {
@@ -20306,7 +20379,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
           <div class="flex items-center gap-1.5 shrink-0">
             ${_aggTasks.length > 0
               ? `${progressHtml}<span class="${isCollapsed ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-200 text-slate-600'} text-[10px] px-1.5 py-0.5 rounded-full font-semibold tabular-nums" aria-label="Задач в секции: ${_aggTasks.length}" title="${isCollapsed ? 'Свернуто, нажмите чтобы развернуть' : 'Задач в секции'}">${_aggTasks.length}${isCollapsed ? ' свернуто' : ''}</span>`
-              : `<span class="inline-flex items-center gap-1 text-[10px] text-slate-500 font-medium bg-slate-50 border border-dashed border-slate-300 px-2 py-0.5 rounded-md" title="В этой секции пока нет задач, добавьте кнопкой плюс"><svg aria-hidden="true" class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"></path></svg>Пустая секция</span>`}
+              : ''}
             ${actionsHtml}
           </div>
         `;
@@ -20802,20 +20875,18 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
           if (sectionTasks.length === 0) {
             const emptyRowLeft = document.createElement('div');
-            emptyRowLeft.className = "h-[56px] px-5 flex items-center bg-slate-50/40 border-b border-slate-100";
-            emptyRowLeft.innerHTML = `
-              <div class="flex items-center gap-2.5 w-full">
-                <div class="flex items-center justify-center w-5 h-5 rounded-md bg-slate-100 text-slate-500 shrink-0">
-                  <svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
-                </div>
-                <span class="text-xs text-slate-500">Секция пустая</span>
-                <span class="ml-auto text-[10px] text-slate-500">Добавить , кнопкой <span class="font-semibold text-indigo-500">+</span> в заголовке секции</span>
-              </div>`;
+            emptyRowLeft.className = "h-[44px] px-5 flex items-center bg-slate-50/25 border-b border-slate-100";
+            emptyRowLeft.dataset.emptySectionRow = sectionName;
+            emptyRowLeft.style.paddingLeft = (20 + secDepth * 22 + 30) + 'px';
+            const emptyReadOnly = (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE);
+            emptyRowLeft.innerHTML = emptyReadOnly
+              ? `<span class="inline-flex items-center gap-1.5 text-[11px] text-slate-400"><span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>Задач пока нет</span>`
+              : `<button type="button" data-empty-section-add onclick="event.stopPropagation(); openQuickAddForSection('${sectionNameAttr}')" class="group inline-flex items-center gap-2 h-8 px-3 -ml-3 rounded-lg text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 transition-colors cursor-pointer" aria-label="Добавить первую задачу в секцию ${escAttr(mainTitle)}"><span class="w-5 h-5 rounded-md bg-indigo-50 group-hover:bg-indigo-100 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></span>Добавить первую задачу</button>`;
             listContainer.appendChild(emptyRowLeft);
 
             const emptyRowRight = document.createElement('div');
-            emptyRowRight.className = "h-[56px] relative bg-slate-50/30 border-b border-slate-100 flex items-center";
-            emptyRowRight.innerHTML = `<div class="sticky left-4 h-7 px-3 rounded-md border border-dashed border-slate-200 bg-white/40 flex items-center gap-1.5 pointer-events-none"><svg aria-hidden="true" class="w-3 h-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg><span class="text-[10px] text-slate-500 select-none font-medium tracking-wide">Добавьте задачу , она появится на таймлайне</span></div>`;
+            emptyRowRight.className = "h-[44px] relative bg-slate-50/20 border-b border-slate-100 flex items-center";
+            emptyRowRight.innerHTML = `<div data-empty-timeline-placeholder class="sticky left-4 w-20 h-1 rounded-full bg-slate-200/70 pointer-events-none" aria-hidden="true"></div>`;
             barsContainer.appendChild(emptyRowRight);
           }
         }
@@ -23546,42 +23617,48 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     function getEpicNameField(issue) { return firstNonEmpty(issue, EPIC_NAME_COLS); }
     function getParentKey(issue) { return jiraKeyOf(firstNonEmpty(issue, PARENT_COLS)); }
     function isSubtaskType(t) { return /sub-?task|подзад|саб/i.test(String(t || '')); }
-    // Эпик-ключ и стори-ключ задачи. «Parent» может указывать и на эпик (для стори), и на стори (для подзадачи) , разводим по типу родителя.
-    // Родитель-история через СВЯЗЬ (Blocks/Relates), когда Parent Link не заполнен.
-    // Многие выгрузки выражают иерархию история->задача связью Blocks (история блокирует свои задачи),
-    // а не полем Parent Link. Берем связанную задачу, только если ее тип , История.
+    // Fallback для старых импортов: ищет Story среди именованных связей. Основной путь ниже
+    // использует tempHierarchyParent и принимает ЛЮБОЙ тип Jira-связи, определяя направление по типам пары.
     function getStoryParentFromLinks(issue) {
       const selfKey = firstNonEmpty(issue, ['Ключ проблемы', 'Issue key', 'Key']);
-      const pick = (re) => {
-        for (const k of Object.keys(issue)) {
-          if (!re.test(k)) continue;
-          const kk = jiraKeyOf(issue[k]); if (!kk || kk === selfKey) continue;
-          const t = (window.tempTypeByKey && window.tempTypeByKey[kk]) ? String(window.tempTypeByKey[kk]).toLowerCase() : '';
-          if (/story|истор|user story/.test(t)) return kk;
+      for (const k of Object.keys(issue || {})) {
+        if (!/issue link|linked issues|parent of|child of|исходящ|входящ|связан|block|depend|relate/i.test(k)) continue;
+        const keys = String(issue[k] || '').match(/[A-Z][A-Z0-9]+-\d+/g) || [];
+        for (const kk of keys) {
+          if (!kk || kk === selfKey) continue;
+          const rank = jiraHierarchyRankFromType((window.tempTypeByKey && window.tempTypeByKey[kk]) || '');
+          if (rank === 2) return kk;
         }
-        return '';
-      };
-      return pick(/Blocks/i) || pick(/Relates/i);
+      }
+      return '';
     }
     function resolveJiraParents(issue) {
-      const issueType = String(firstNonEmpty(issue, ['Тип задачи', 'Тип запроса', 'Тип проблемы', 'Issue Type', 'Issue type']) || '').toLowerCase();
+      const issueType = firstNonEmpty(issue, ['Тип задачи', 'Тип запроса', 'Тип проблемы', 'Issue Type', 'Issue type']) || '';
+      const selfRank = jiraHierarchyRankFromType(issueType);
+      const selfKey = jiraKeyOf(firstNonEmpty(issue, ['Ключ проблемы', 'Issue key', 'Key']));
+      const typeRankOf = (k) => jiraHierarchyRankFromType((window.tempTypeByKey && window.tempTypeByKey[k]) || '');
+      let directParent = (selfKey && window.tempHierarchyParent && window.tempHierarchyParent[selfKey]) || '';
+      const explicitParent = getParentKey(issue);
+      if (!directParent && explicitParent && typeRankOf(explicitParent) === selfRank - 1) directParent = explicitParent;
+
+      let initiativeKey = '';
       let epicKey = getEpicLinkKey(issue);
-      const parentKey = getParentKey(issue);
       let storyKey = '';
-      if (parentKey) {
-        const pt = (window.tempTypeByKey && window.tempTypeByKey[parentKey]) ? String(window.tempTypeByKey[parentKey]).toLowerCase() : '';
-        if (/epic|эпик/.test(pt)) { if (!epicKey) epicKey = parentKey; }
-        else if (/story|истор|user story/.test(pt)) { storyKey = parentKey; }
-        else { if (isSubtaskType(issueType)) storyKey = parentKey; else if (!epicKey) epicKey = parentKey; }
+      if (selfRank === 1 && directParent && typeRankOf(directParent) === 0) initiativeKey = directParent;
+      if (selfRank === 2) {
+        if (directParent && typeRankOf(directParent) === 1) epicKey = directParent;
+      } else if (selfRank === 3) {
+        if (directParent && typeRankOf(directParent) === 2) storyKey = directParent;
+        if (!storyKey && window.tempStoryChildOf && window.tempStoryChildOf[selfKey]) storyKey = window.tempStoryChildOf[selfKey];
+        if (!storyKey) storyKey = getStoryParentFromLinks(issue);
+        // Epic Link у обычной задачи — дедушка, а не прямой родитель. Он остается метаданными,
+        // но без Story задача должна быть в корне, а не напрямую внутри Epic.
+        if (storyKey && !epicKey && window.tempHierarchyParent) {
+          const candidate = window.tempHierarchyParent[storyKey];
+          if (candidate && typeRankOf(candidate) === 1) epicKey = candidate;
+        }
       }
-      // Fallback: нет Parent Link, но задача (не эпик и не история) , родитель-История через связь.
-      // Приоритет: явная связь «is parent of / is child of» (карта childOf выше), затем Blocks/Relates.
-      if (!storyKey && !/epic|эпик|story|истор|user story/.test(issueType)) {
-        const selfKey = jiraKeyOf(firstNonEmpty(issue, ['Ключ проблемы', 'Issue key', 'Key']));
-        if (selfKey && window.tempStoryChildOf && window.tempStoryChildOf[selfKey]) storyKey = window.tempStoryChildOf[selfKey];
-        if (!storyKey) { const ls = getStoryParentFromLinks(issue); if (ls) storyKey = ls; }
-      }
-      return { epicKey, storyKey };
+      return { initiativeKey, epicKey, storyKey, directParent };
     }
 
     function getJiraEpicSection(issue) {
@@ -23592,12 +23669,18 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const parentLink = _hp.storyKey;
       const summary = firstNonEmpty(issue, ['Тема', 'Summary']);
 
-      // Порядок проверок: эпик-сам -> story-сам -> родитель-story -> Epic Link.
+      // Порядок проверок: initiative-сам -> epic-сам -> story-сам -> родитель-story.
       // ВАЖНО: Story и задача с родителем-Story проверяются РАНЬШЕ Epic Link, иначе история
       // (у нее обычно тоже есть Epic Link) попадала бы плоско в секцию эпика, а дети , рядом с ней.
 
+      // 0) Сама Initiative становится корневой секцией.
+      if (jiraHierarchyRankFromType(issueType) === 0) {
+        const key = firstNonEmpty(issue, ['Ключ проблемы', 'Issue key', 'Key']);
+        return `Initiative: ${summary || key}${key ? ' [' + key + ']' : ''}`;
+      }
+
       // 1) Сама задача , Epic: дает свою секцию
-      if (issueType === 'epic' || issueType === 'эпик') {
+      if (jiraHierarchyRankFromType(issueType) === 1) {
         const key = firstNonEmpty(issue, ['Ключ проблемы', 'Issue key', 'Key']);
         const name = epicName || summary;
         return `Epic: ${name}${key ? ' [' + key + ']' : ''}`;
@@ -23605,7 +23688,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
       // 2) Сама задача , Story: становится своей секцией (даже при наличии Epic Link).
       //    Под Epic она вложится отдельно по Epic Link , тогда дети встают ПОД историю.
-      if (issueType === 'story' || issueType === 'история' || issueType === 'user story') {
+      if (jiraHierarchyRankFromType(issueType) === 2) {
         const key = firstNonEmpty(issue, ['Ключ проблемы', 'Issue key', 'Key']);
         return `Story: ${summary || key}${key ? ' [' + key + ']' : ''}`;
       }
@@ -23619,24 +23702,15 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         return `Story: ${parentLink}`;
       }
 
-      // 4) Прямая связь с эпиком (Epic Link / Epic Name), без родителя-истории
-      if (epicName && epicLink) return `Epic: ${epicName} [${epicLink}]`;
-      if (epicName) return `Epic: ${epicName}`;
-      if (epicLink && window.tempEpicDict && window.tempEpicDict[epicLink]) {
-        return `Epic: ${window.tempEpicDict[epicLink]} [${epicLink}]`;
-      }
-      if (epicLink) return `Epic: ${epicLink}`;
-
-      // 5) Без иерархии
+      // 4) Нет прямого родителя-Story: задача/баг остается в корне. Epic Link не позволяет
+      // перепрыгнуть через отсутствующий уровень Story.
       return 'Задачи без эпика';
     }
 
     // Возвращает рейтинг типа задачи для приоритизации (меньше = выше)
     function jiraTypeRank(issue) {
       const t = (firstNonEmpty(issue, ['Тип задачи', 'Тип запроса', 'Тип проблемы', 'Issue Type', 'Issue type']) || '').toLowerCase();
-      if (t === 'epic' || t === 'эпик') return 0;
-      if (t === 'story' || t === 'история' || t === 'user story') return 1;
-      return 2; // Task, Bug, Sub-task и пр.
+      return jiraHierarchyRankFromType(t);
     }
 
     // Связи-зависимости из Jira (п.1): ключи задач, от которых текущая зависит (предшественники).
@@ -23685,6 +23759,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const _hp2 = resolveJiraParents(issue);
       const epicLink = _hp2.epicKey;
       const parentLink = _hp2.storyKey;
+      const _hierRank = jiraHierarchyRankFromType(issueType);
+      const _jiraParentKey = _hp2.directParent || (_hierRank === 1 ? _hp2.initiativeKey : (_hierRank === 2 ? epicLink : (_hierRank === 3 ? parentLink : '')));
       let epicName = getEpicNameField(issue);
       const linkedEpic = epicLink || parentLink;
       if (!epicName && linkedEpic && window.tempEpicDict && window.tempEpicDict[linkedEpic]) {
@@ -23699,6 +23775,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         epic: epicName || epicLink,
         epicName: epicName || '',
         epicLink: epicLink || epicName,
+        _jiraParentKey: _jiraParentKey || '',
         status,
         blocked: isBlockerRaw(jiraStatus),
         release,
@@ -23875,42 +23952,67 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         byName.set(k, byName.has(k) ? 'DUP' : task);
       });
 
-      // Карта «ребенок -> история» из СВЯЗЕЙ (не только Blocks/Relates и не подзадачи).
-      // В Jira иерархию история->задача часто ведут связью с ПРОИЗВОЛЬНЫМ именем типа (в интерфейсе это «is parent of /
-      // is child of»), а CSV называет колонку именем типа связи , угадать его заранее нельзя. Поэтому берем ЛЮБУЮ
-      // колонку связи (Outward/Inward issue link (ИмяТипа), русские «Исходящ.../Входящ...», фразы parent of/child of)
-      // и решаем по ТИПАМ ПАРЫ: История <-> Задача/Баг = вложенность. Пару Эпик <-> История эта карта не трогает
-      // (это делает Epic Link). Связь бывает записана только на строке истории ИЛИ только на строке задачи , читаем
-      // обе стороны. В ячейке может быть несколько ключей (Jira перечисляет) , берем все.
+      // Универсальная карта прямых родителей по ЛЮБЫМ Jira issue links.
+      // Название и направление связи не используем: для пары разных соседних уровней более высокий тип всегда
+      // родитель (Initiative→Epic, Epic→Story, Story→Task/Bug). Так работают кастомные «relates», «blocks»,
+      // русские названия и любые корпоративные link type. Связи через уровень намеренно не схлопываем.
       {
-        const childOf = {};
-        const typeOfKey = (k) => String((window.tempTypeByKey && window.tempTypeByKey[k]) || '').toLowerCase();
-        const isStoryKey = (k) => /story|истор/.test(typeOfKey(k));
-        const isEpicKey = (k) => /epic|эпик/.test(typeOfKey(k));
-        const isLinkCol = (col) => /issue link|parent of|child of|исходящ|входящ/i.test(col);
+        // Типы отсутствующих в текущем CSV родителей можно восстановить по уже существующим секциям.
+        planSections.forEach(s => {
+          const k = jiraSectionKey(s); if (!k || typeByKey[k]) return;
+          if (/^Initiative:/i.test(s)) typeByKey[k] = 'Initiative';
+          else if (/^Epic:/i.test(s)) typeByKey[k] = 'Epic';
+          else if (/^Story:/i.test(s)) typeByKey[k] = 'Story';
+        });
+        const parentOf = {};
+        const parentPriority = {};
+        const rankOfKey = (k) => jiraHierarchyRankFromType(typeByKey[k] || '');
+        const setParent = (child, parent, priority) => {
+          if (!child || !parent || child === parent) return;
+          const cr = rankOfKey(child), pr = rankOfKey(parent);
+          if (cr !== pr + 1) return;
+          if (parentPriority[child] === undefined || priority > parentPriority[child]) {
+            parentOf[child] = parent; parentPriority[child] = priority;
+          }
+        };
+        const isLinkCol = (col) => /issue link|linked issues|parent of|child of|исходящ|входящ|связан|block|depend|relate/i.test(String(col || ''));
         const allKeysOf = (v) => String(v || '').match(/[A-Z][A-Z0-9]+-\d+/g) || [];
+
+        // Явные Parent/Epic Link приоритетнее произвольных связей.
         issues.forEach(iss => {
           const self = jiraKeyOf(firstNonEmpty(iss, ['Ключ проблемы', 'Issue key', 'Key']));
           if (!self) return;
-          const selfStory = isStoryKey(self);
-          const selfPlain = !selfStory && !isEpicKey(self); // обычная задача/баг
+          const pk = getParentKey(iss); if (pk) setParent(self, pk, 30);
+          const ek = getEpicLinkKey(iss); if (ek) setParent(self, ek, 40);
+        });
+
+        issues.forEach(iss => {
+          const self = jiraKeyOf(firstNonEmpty(iss, ['Ключ проблемы', 'Issue key', 'Key']));
+          if (!self) return;
           Object.keys(iss).forEach(col => {
             if (!isLinkCol(col)) return;
             allKeysOf(iss[col]).forEach(linked => {
               if (!linked || linked === self) return;
-              if (selfStory && !isStoryKey(linked) && !isEpicKey(linked)) { if (!childOf[linked]) childOf[linked] = self; } // строка истории: перечислены ее задачи
-              else if (selfPlain && isStoryKey(linked)) { if (!childOf[self]) childOf[self] = linked; }           // строка задачи: указана ее история
+              const sr = rankOfKey(self), lr = rankOfKey(linked);
+              if (sr === lr + 1) setParent(self, linked, 10);
+              else if (lr === sr + 1) setParent(linked, self, 10);
             });
           });
         });
-        window.tempStoryChildOf = childOf;
+        window.tempHierarchyParent = parentOf;
+        window.tempStoryChildOf = Object.fromEntries(Object.entries(parentOf).filter(([child, parent]) => rankOfKey(child) === 3 && rankOfKey(parent) === 2));
       }
 
       // Карта «ключ задачи -> ключ ее эпика» (Epic Link) , для вложенности Story под Epic (п.1)
       const epicOfKey = {};
       issues.forEach(iss => {
         const k = firstNonEmpty(iss, ['Ключ проблемы', 'Issue key', 'Key']);
-        const ek = resolveJiraParents(iss).epicKey;
+        const hp = resolveJiraParents(iss);
+        let ek = hp.epicKey;
+        if (!ek && hp.storyKey && window.tempHierarchyParent) {
+          const p = window.tempHierarchyParent[hp.storyKey];
+          if (p && jiraHierarchyRankFromType(typeByKey[p] || '') === 1) ek = p;
+        }
         if (k && ek) epicOfKey[k] = ek;
       });
       const sortedIssues = [...issues].sort((a, b) => jiraTypeRank(a) - jiraTypeRank(b));
@@ -23937,9 +24039,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         // Завершенная задача: дата закрытия из Jira , фактический конец на таймлайне (первичнее планового).
         if (mapped.status === 'completed' && mapped._jiraResolved) { mapped.end = mapped._jiraResolved; mapped._jiraHasRealEnd = true; if (!mapped.start) mapped.start = mapped.end; else if (String(mapped.end) < String(mapped.start)) mapped.start = mapped.end; }
 
-        // 0) Эпик , это СЕКЦИЯ, а не строка-задача. Запоминаем его статус, создаем секцию,
-        //  но в список задач не добавляем (иначе эпик дублируется: и заголовок, и строка).
-        if (jiraTypeRank(issue) === 0) {
+        // 0) Initiative/Epic/Story — СЕКЦИИ, а не строки задач. Даже leaf-Story без детей
+        // остается пустой секцией: это валидный уровень иерархии, а не задача «без эпика».
+        const _containerRank = jiraTypeRank(issue);
+        if (_containerRank <= 2) {
           if (mapped.jira) epicStatusByKey[mapped.jira] = mapped.status;
           if (mapped.section) {
             const canonical = findCanonicalSection(mapped.section);
@@ -23963,9 +24066,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
               created: firstNonEmpty(issue, ['Создано', 'Created']) || '',
               desc: firstNonEmpty(issue, ['Описание', 'Description']) || ''
             };
+            sectionMeta[secName].kind = jiraContainerKindFromRank(_containerRank);
+            sectionMeta[secName].fromJira = true;
+            sectionMeta[secName]._jiraParentKey = mapped._jiraParentKey || '';
           }
-          // Если эпик уже был добавлен задачей в прошлый раз , убираем дубль
-          const dupIdx = roadmapData.findIndex(t => t.jira === mapped.jira && String(t.section || '').startsWith('Epic:'));
+          // Если контейнер был добавлен задачей старой версией — убираем дубль независимо от секции.
+          const dupIdx = roadmapData.findIndex(t => t.jira === mapped.jira);
           if (dupIdx >= 0) roadmapData.splice(dupIdx, 1);
           return;
         }
@@ -24083,6 +24189,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           existing.epic = mapped.epic || existing.epic;
           existing.epicName = mapped.epicName || existing.epicName;
           existing.epicLink = mapped.epicLink || existing.epicLink;
+          existing._jiraParentKey = mapped._jiraParentKey || '';
           existing._predKeys = mapped._predKeys || [];
           if (mapped.release && existing.release !== mapped.release) { chgRelease++; _chg = true; _cf.push('релиз'); }
           if (mapped.release) existing.release = mapped.release;
@@ -24154,10 +24261,9 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       }
 
       // Существующие секции сохраняют свой порядок; НОВЫЕ из этого импорта уходят в НИЗ списка
-      // (перед разделом «Скрытые»), упорядоченные иерархически между собой: Epic → Story → задачи → «Задачи без эпика».
+      // (перед разделом «Скрытые»), упорядоченные иерархически между собой: Initiative → Epic → Story → корневые задачи.
       {
-        // п.7: «Задачи без эпика» , первыми, затем эпики/проектные и стори-секции.
-        const rank = s => s === 'Задачи без эпика' ? 0 : s.startsWith('Epic:') ? 1 : s.startsWith('Story:') ? 2 : 3;
+        const rank = s => s.startsWith('Initiative:') ? 0 : s.startsWith('Epic:') ? 1 : s.startsWith('Story:') ? 2 : s === 'Задачи без эпика' ? 3 : 4;
         const existing = planSections.filter(s => sectionsBeforeImport.has(s));
         const fresh = planSections.filter(s => !sectionsBeforeImport.has(s))
           .sort((a, b) => { const r = rank(a) - rank(b); return r !== 0 ? r : a.localeCompare(b, 'ru'); });
@@ -24171,7 +24277,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         const _dk = (s) => { const m = String(s).match(/\[([A-Z][A-Z0-9]+-\d+)\]/); return m ? m[1] : null; };
         const firstByKey = {}, renameDup = {};
         planSections.forEach(s => {
-          if (!/^(Epic|Story):/.test(s)) return;
+          if (!/^(Initiative|Epic|Story):/.test(s)) return;
           const k = _dk(s); if (!k) return;
           if (firstByKey[k]) { if (s !== firstByKey[k]) renameDup[s] = firstByKey[k]; }
           else firstByKey[k] = s;
@@ -24191,22 +24297,30 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         }
       }
 
-      // Вложенность (п.1): связываем Story-секции с родительским Epic по Epic Link , для отступов в отрисовке.
+      // Вложенность: только прямые соседние уровни Initiative → Epic → Story.
+      // Если родитель нужного типа отсутствует среди секций, ребенок остается корнем.
       {
-        // Ключ секции: из скобок [KEY], иначе последний Jira-ключ в названии (формат секций бывает разным).
-        const _secKey = (s) => { const b = String(s).match(/\[([A-Z][A-Z0-9]+-\d+)\]/); if (b) return b[1]; const all = String(s).match(/[A-Z][A-Z0-9]+-\d+/g); return all ? all[all.length - 1] : null; };
-        const epicSectionByKey = {};
-        planSections.forEach(s => { if (/^Epic:/.test(s)) { const k = _secKey(s); if (k) epicSectionByKey[k] = s; } });
+        const sectionByKey = {};
+        planSections.forEach(s => { const k = jiraSectionKey(s); if (k) sectionByKey[k] = s; });
         planSections.forEach(s => {
-          if (!/^Story:/.test(s)) return;
-          const sk = _secKey(s);
-          const ep = sk && epicOfKey[sk];
-          if (ep && epicSectionByKey[ep]) sectionParents[s] = epicSectionByKey[ep];
+          const isInitiative = /^Initiative:/i.test(s);
+          const isEpic = /^Epic:/i.test(s);
+          const isStory = /^Story:/i.test(s);
+          if (!isInitiative && !isEpic && !isStory) return;
+          if (isInitiative) { delete sectionParents[s]; return; }
+          const key = jiraSectionKey(s);
+          const metaParent = sectionMeta[s] && sectionMeta[s]._jiraParentKey;
+          const parentKey = (key && window.tempHierarchyParent && window.tempHierarchyParent[key]) || metaParent || (isStory && key && epicOfKey[key]) || '';
+          const parentSec = sectionByKey[parentKey];
+          const valid = isEpic ? /^Initiative:/i.test(String(parentSec || '')) : /^Epic:/i.test(String(parentSec || ''));
+          if (valid) sectionParents[s] = parentSec;
+          else delete sectionParents[s];
         });
         storage.set('gantt_section_parents', JSON.stringify(sectionParents));
       }
 
-      // Чистка пустых дефолтных секций + пустых Epic/Story секций (все задачи которых ушли в архив)
+      // Чистка пустых дефолтных секций. Jira-контейнеры не удаляем: пустая Story/Epic/Initiative
+      // может быть активным leaf-элементом и должна оставаться видимой.
       const sectionTaskCount = {};
       roadmapData.forEach(t => { if (t.section) sectionTaskCount[t.section] = (sectionTaskCount[t.section] || 0) + 1; });
       // Секцию-РОДИТЕЛЯ (Epic над Story) держим живой, даже без прямых задач, если под ней есть секция с задачами ,
@@ -24215,12 +24329,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       Object.keys(sectionTaskCount).forEach(s => { if ((sectionTaskCount[s] || 0) > 0) { let cur = sectionParents[s], g = 0; while (cur && !keepAsParent.has(cur) && g++ < 8) { keepAsParent.add(cur); cur = sectionParents[cur]; } } });
       planSections = planSections.filter(s => {
         const isDefaultArtefact = /^(I+\.|IV\.|V\.)\s/.test(s) || s === 'Работы команды';
-        const isJiraSection = s.startsWith('Epic:') || s.startsWith('Story:') || s === 'Задачи без эпика';
         const hasTasks = (sectionTaskCount[s] || 0) > 0;
         // Дефолтные артефакты , удаляем, если пустые
         if (isDefaultArtefact && !hasTasks) return false;
-        // Epic/Story секции , удаляем, если пустые И не являются родителем секции с задачами
-        if (isJiraSection && !hasTasks && !keepAsParent.has(s)) return false;
+        if (s === 'Задачи без эпика' && !hasTasks) return false;
         return true;
       });
 
@@ -24280,7 +24392,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       else showToast(_impMsg2, 'ok', 6000);
       // Отметка даты импорта (локальная, без сдвига по таймзоне) , для индикатора «обновлено N дней назад» в шапке
       try { saveJiraCfg({ lastImport: toYmdLocal(new Date()) }); } catch (e) {}
-      try { delete window.tempEpicDict; delete window.tempTypeByKey; } catch (e) {}
+      try { delete window.tempEpicDict; delete window.tempTypeByKey; delete window.tempHierarchyParent; delete window.tempStoryChildOf; } catch (e) {}
       if (typeof renderJiraSyncChip === 'function') renderJiraSyncChip();
       if (typeof renderJiraChangesChip === 'function') renderJiraChangesChip();
       if (typeof renderDataMenuJiraDate === 'function') renderDataMenuJiraDate();
@@ -24978,7 +25090,23 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (f.status && f.status.name) row['Status'] = f.status.name;
       if (f.assignee) row['Assignee'] = f.assignee.displayName || f.assignee.name || '';
       if (f.issuetype && f.issuetype.name) row['Issue Type'] = f.issuetype.name;
-      if (f.parent && f.parent.key) { row['Parent'] = f.parent.key; row['Epic Link'] = f.parent.key; }
+      if (f.parent && f.parent.key) row['Parent'] = f.parent.key;
+      // REST возвращает связи объектами, обычный flat() теряет их ключи. Разворачиваем обе стороны
+      // в те же колонки, которые понимает CSV-импорт; имя link type может быть любым.
+      if (Array.isArray(f.issuelinks)) {
+        const addLink = (base, key) => {
+          if (!key) return;
+          let col = base, i = 1;
+          while (row[col]) col = base + '.' + (i++);
+          row[col] = key;
+        };
+        f.issuelinks.forEach(link => {
+          if (!link) return;
+          const tp = link.type || {};
+          if (link.outwardIssue && link.outwardIssue.key) addLink('Outward issue link (' + (tp.outward || tp.name || 'link') + ')', link.outwardIssue.key);
+          if (link.inwardIssue && link.inwardIssue.key) addLink('Inward issue link (' + (tp.inward || tp.name || 'link') + ')', link.inwardIssue.key);
+        });
+      }
       if (f.duedate) row['Due Date'] = f.duedate;
       if (f.created) row['Created'] = f.created;
       if (f.resolutiondate) { row['Дата разрешения'] = f.resolutiondate; row['Resolved'] = f.resolutiondate; }
@@ -26545,7 +26673,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     <h3 class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">
      <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-     <span id="appVersionBadge">v13.1 , 08.07.2026</span>
+     <span id="appVersionBadge">v13.2 , 21.07.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -26611,7 +26739,15 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </div>
 
    <div>
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.1 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.2 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h13M10 18h10"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Строгая иерархия Jira</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">СТРУКТУРА</span></div><p class="text-xs text-slate-600">Инициатива, эпик и стори теперь всегда отображаются секциями: Initiative → Epic → Story → Task/Bug. Если прямого родителя нет, элемент остается в корне. Поддерживаются произвольные названия и направления Jira-связей.</p></div>
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Пустые секции без визуального шума</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ИНТЕРФЕЙС</span></div><p class="text-xs text-slate-600">Повторяющиеся подписи убраны. В пустой секции остается одна компактная кнопка «Добавить первую задачу», а на таймлайне — спокойный плейсхолдер без лишнего текста.</p></div>
+    </div>
+   </div>
+
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v13.1 <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-100 px-1.5 py-0.5 rounded">08.07.2026</span></h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v16l7-4 7 4V3z"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Вся стратегия наглядной картой</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ЦЕЛИ</span></div><p class="text-xs text-slate-600">Новый вид «Цели , Картой»: сверху вниз от цели к инициативе, эпику, стори и задаче , видно всю картину и все задачи разом. Раскладывать задачи по инициативам можно мышью: перетащите задачу или целый эпик. У эпиков и стори , ссылка на них в Jira.</p></div>
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Связи для Jira одной кнопкой</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">JIRA</span></div><p class="text-xs text-slate-600">У эпика или стори можно скопировать все его связи , родителя, вложенные, блокировки , сразу в формате Jira. Вставляете ключи в поле связи и наводите в Jira такой же порядок, как в плане.</p></div>
@@ -29233,7 +29369,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
        <h5 class="font-semibold text-slate-800 text-sm">Секции: тип, бейдж и ключ-ссылка</h5>
        <span class="ml-auto text-[10px] font-bold text-violet-700 bg-white border border-violet-200 rounded px-1.5 py-0.5">НОВОЕ</span>
       </div>
-      <p class="text-xs text-slate-600">Заголовок секции начинается с типа , «Epic: Название» или «Story: Название». Рядом , цветной бейдж <b>EPIC</b> / <b>STORY</b>. В подзаголовке , ключ Jira с логотипом, сразу кликабельная ссылка на тикет. Отдельная иконка-ссылка убрана , меньше визуального шума.</p>
+      <p class="text-xs text-slate-600">Заголовок Jira-секции начинается с типа: «Initiative:», «Epic:» или «Story:». Рядом показан цветной бейдж уровня, а в подзаголовке — кликабельный ключ Jira.</p>
      </div>
 
      <div class="bg-gradient-to-br from-blue-50 to-white p-4 rounded-xl border border-blue-200 shadow-sm">
@@ -29303,7 +29439,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
        <h5 class="font-semibold text-slate-800 text-sm">Иерархия Jira: Epic → Story → Task</h5>
        <span class="ml-auto text-[10px] font-bold text-blue-700 bg-white border border-blue-200 rounded px-1.5 py-0.5">НОВОЕ</span>
       </div>
-      <p class="text-xs text-slate-600">CSV-импорт строит структуру: Epic-задачи становятся секциями вверху, Story (без эпика) , отдельной секцией «Story: ...», обычные задачи попадают в свою Epic-секцию или в «Задачи без эпика». Новые секции автоокрашиваются из палитры. Статусы Jira (cancelled, on hold, done, blocked, …) корректно нормализуются и добавляются в фильтр.</p>
+      <p class="text-xs text-slate-600">CSV/API-импорт строит строгую структуру Initiative → Epic → Story → Task/Bug. Первые три уровня всегда становятся секциями, даже без детей. Если прямой родитель отсутствует, элемент остаётся в корне; уровень не перепрыгивается. Для структуры подходят любые названия issue link — направление определяется по типам связанных объектов.</p>
      </div>
 
      <div class="bg-gradient-to-br from-violet-50 to-white p-4 rounded-xl border border-violet-200 shadow-sm">
@@ -29974,7 +30110,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         <p class="text-sm text-slate-500 mt-2 max-w-md mx-auto leading-relaxed">Спланируйте проект, двигайте задачи мышью, следите за прогрессом. Все в одном файле, без сервера.</p>
         <span class="inline-flex items-center gap-1.5 mt-3 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2.5 py-1 rounded-lg shadow-xs">
           <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-          <span id="appVersionStartup">версия 13.1</span>
+          <span id="appVersionStartup">версия 13.2</span>
         </span>
       </div>
 

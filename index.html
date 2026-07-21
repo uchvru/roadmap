@@ -95,14 +95,18 @@ section{padding:56px 0}
 .catpill span{font-size:13.5px;font-weight:700;letter-spacing:-.2px}
 .catpill b{font-size:12px;font-weight:800;color:#4f46e5;background:#fff;border:1px solid #dbe3f4;border-radius:999px;padding:2px 9px}
 .catcta .center{text-align:center}
+.notice{max-width:900px;margin:0 auto;background:#eefbf5;border:1px solid #bbefd6;border-radius:18px;padding:24px 26px;color:#315c4c}
+.notice h3{font-size:19px;color:#14543e;margin-bottom:8px}
+.notice p{font-size:14px}
+.notice p+p{margin-top:8px}
 </style></head><body>
 
 <header class=hero><div class=wrap>
- <div class=brand><div class=logo><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2.2 stroke-linecap=round><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class=vchip>v13.1</span></div>
+ <div class=brand><div class=logo><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2.2 stroke-linecap=round><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class=vchip>v13.2</span></div>
  <div class=herogrid>
   <div class=heroleft>
    <h1>Дорожная карта продукта, вся в одном файле</h1>
-   <p class=lead>Дорожная карта, инструмент продакт-оунеров и владельцев продукта: она собирает весь план и сроки <b>в одном месте</b>, чтобы вести продукт, видеть, что и когда будет готово, и вовремя замечать, где что-то отстает. Один файл, работает офлайн, без сервера и подписки, данные остаются только у вас.</p>
+   <p class=lead>Дорожная карта, инструмент продакт-оунеров и владельцев продукта: она собирает весь план и сроки <b>в одном месте</b>, чтобы вести продукт, видеть, что и когда будет готово, и вовремя замечать, где что-то отстает. Один HTML-файл работает локально, без отдельного сервера и подписки.</p>
    <div class=cta>
     <a class="btn primary" href="app.html">Открыть демо, в браузере</a>
   <a class="btn ghost" href="catalog.html">Открыть каталог функций</a>
@@ -121,14 +125,14 @@ section{padding:56px 0}
   </div>
  </div>
  <div class=stats>
-  <div class=stat><div class=v>9.02<span style="font-size:.55em;font-weight:600;color:#94a3b8;-webkit-text-fill-color:#94a3b8"> /10</span></div><div class=l>Простота</div></div>
-  <div class=stat><div class=v>9.16<span style="font-size:.55em;font-weight:600;color:#94a3b8;-webkit-text-fill-color:#94a3b8"> /10</span></div><div class=l>Удовлетворенность</div></div>
-  <div class=stat><div class=v>9.08<span style="font-size:.55em;font-weight:600;color:#94a3b8;-webkit-text-fill-color:#94a3b8"> /10</span></div><div class=l>Ценность</div></div>
-  <div class=stat><div class=v>9.05<span style="font-size:.55em;font-weight:600;color:#94a3b8;-webkit-text-fill-color:#94a3b8"> /10</span></div><div class=l>Рекомендация</div></div>
-  <div class=stat><div class=v>+68</div><div class=l>NPS</div></div>
-  <div class=stat><div class=v>82.1%</div><div class=l>Готовность внедрять</div></div>
+  <div class=stat><div class=v>1</div><div class=l>HTML-файл</div></div>
+  <div class=stat><div class=v>0</div><div class=l>Серверов</div></div>
+  <div class=stat><div class=v>41</div><div class=l>Функция</div></div>
+  <div class=stat><div class=v>5</div><div class=l>Видов плана</div></div>
+  <div class=stat><div class=v>100%</div><div class=l>Офлайн</div></div>
+  <div class=stat><div class=v>v13.2</div><div class=l>Версия</div></div>
  </div>
- <div class=statsrc>Показаны цифры последнего опроса, 1000 руководителей проектов и продуктов. Всего проведено 26 опросов, более 24 000 участников, версия v13.1.</div>
+ <div class=statsrc>Проверяемые характеристики текущей публичной сборки. Исследовательские материалы и их ограничения опубликованы отдельно.</div>
 </div></header>
 
 <div class=shotwrap><div class=wrap>
@@ -137,14 +141,50 @@ section{padding:56px 0}
 </div></div>
 
 <section><div class=wrap>
- <div class=sechead><h2>Что нового в v13.1</h2><p>Наглядность и порядок: стратегия наглядной картой, связи в формате Jira, единый вид всех окон. Все в одном офлайн-файле.</p></div>
+ <div class=sechead><h2>Что нового в v13.2</h2><p>Строгая иерархия Initiative → Epic → Story → Task/Bug и аккуратные пустые секции без повторяющихся подсказок.</p></div>
  <div class=grid>
-  <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round stroke-linejoin=round d="M5 3v16l7-4 7 4V3z"/></svg></div><h3>Цели наглядной картой</h3><p>Вся стратегия сверху вниз: от цели к инициативе, эпику, стори и задаче. Видно, что к чему привязано, и все задачи разом.</p></div>
-  <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round stroke-linejoin=round d="M4 8V6a2 2 0 012-2h2M4 16v2a2 2 0 002 2h2m8-16h2a2 2 0 012 2v2m-4 12h2a2 2 0 002-2v-2"/></svg></div><h3>Раскладка задач мышью</h3><p>Разносите задачи по инициативам перетаскиванием, можно бросить целый эпик. Быстрее, чем открывать каждую карточку.</p></div>
+  <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round stroke-linejoin=round d="M5 3v16l7-4 7 4V3z"/></svg></div><h3>Иерархия Jira без пропусков</h3><p>Initiative, Epic и Story стали секциями. Task и Bug входят в Story, а при отсутствии прямого родителя элемент остается в корне.</p></div>
+  <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round stroke-linejoin=round d="M4 8V6a2 2 0 012-2h2M4 16v2a2 2 0 002 2h2m8-16h2a2 2 0 012 2v2m-4 12h2a2 2 0 002-2v-2"/></svg></div><h3>Чистые пустые секции</h3><p>Вместо повторяющихся инструкций показана одна компактная кнопка добавления. Таймлайн остается спокойным и читаемым.</p></div>
   <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round stroke-linejoin=round d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg></div><h3>Связи для Jira</h3><p>У эпика или стори копируете все его связи (родитель, вложенные, блокировки) в формате Jira и наводите там такой же порядок, как в плане.</p></div>
   <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round stroke-linejoin=round d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg></div><h3>Связи наглядной картой</h3><p>Окно связей открывается картой цепочек. Связывать задачи и эпики можно кликом, перетаскиванием или из списка.</p></div>
   <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round stroke-linejoin=round d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/></svg></div><h3>Единый вид окон</h3><p>Все окна причесаны под один стиль: одинаковые шапки, кнопки и отступы. Стало аккуратнее и привычнее.</p></div>
   <div class=card><div class=ic><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path stroke-linecap=round stroke-linejoin=round d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><h3>Таймлайн на сегодня</h3><p>При открытии план сразу показан на текущей дате, без лишнего клика по кнопке «Сегодня».</p></div>
+</div></div></section>
 
-<footer class=foot><div class=wrap>Дорожная карта продукта, v13.1. Один файл, работает офлайн, данные не уходят в облако.</div></footer>
+<section class=alt><div class=wrap>
+ <div class=sechead><h2>Публичное демо без рабочих данных</h2><p>Можно изучать интерфейс и иерархию, не раскрывая настоящий план команды.</p></div>
+ <div class=notice>
+  <h3>В демо только вымышленные задачи</h3>
+  <p>Публичная сборка не содержит рабочий <code>roadmap-data.json</code>, приватные снимки, токены Jira, бюджеты, ставки или реальные ключи проектов.</p>
+  <p>При обычной локальной работе данные сохраняются в вашем файле и браузере. Сетевой обмен начинается только по вашему действию, например при настройке прямого подключения к Jira.</p>
+ </div>
+</div></section>
+
+<section><div class=wrap>
+ <div class=sechead><h2>Начните за минуту</h2><p>Демо открывается сразу; для собственного плана сохраните рабочую копию локально.</p></div>
+ <div class=how>
+  <div class=card><h3>1. Изучите демо</h3><p>Откройте вымышленный проект и проверьте список, диаграмму, карточки, связи и разные виды плана.</p></div>
+  <div class=card><h3>2. Создайте свой план</h3><p>Замените демо-данные вручную или загрузите CSV из Jira. Рабочий файл не предназначен для публикации.</p></div>
+  <div class=card><h3>3. Храните локально</h3><p>Сохраняйте рабочие выгрузки отдельно от публичного репозитория и не коммитьте токены или приватные снимки.</p></div>
+ </div>
+</div></section>
+
+<section class=alt><div class=wrap>
+ <div class=catcta>
+  <div class=catgrid>
+   <div class=catpill><span>Виды плана</span><b>5</b></div>
+   <div class=catpill><span>Функции</span><b>41</b></div>
+   <div class=catpill><span>Сервер</span><b>не нужен</b></div>
+   <div class=catpill><span>Демо</span><b>вымышленное</b></div>
+  </div>
+  <div class=center><a class="btn primary" href="catalog.html">Посмотреть все функции</a></div>
+ </div>
+</div></section>
+
+<div class=finalcta><div class=wrap>
+ <div class=sechead><h2>Посмотрите продукт на живом примере</h2><p>Публичное демо запускается в браузере и не требует регистрации.</p></div>
+ <div class=cta style="justify-content:center"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="https://github.com/uchvru/roadmap" target="_blank" rel="noopener">Репозиторий GitHub</a></div>
+</div></div>
+
+<footer class=foot><div class=wrap>Дорожная карта продукта, v13.2. Публичная сборка содержит только вымышленные демо-данные.</div></footer>
 </body></html>
