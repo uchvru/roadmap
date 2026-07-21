@@ -6491,6 +6491,16 @@
     <div id="projectFilterPanel" data-filter-panel class="hidden fixed z-[100] w-56 max-h-72 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 no-print no-image-export"></div>
     <div id="taskMovePanel" class="hidden fixed z-[150] w-52 max-h-72 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 no-print no-image-export"></div>
 
+    <nav id="planViewNav" aria-label="Представление плана" class="mb-3 bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden no-print no-image-export">
+      <div class="flex items-center gap-2 px-2 py-2 overflow-x-auto">
+        <span class="hidden sm:inline-flex items-center gap-1.5 pl-2 pr-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500 shrink-0">
+          <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          Представление
+        </span>
+        <div id="planViewTabs" class="flex items-center gap-1 min-w-max" role="group" aria-label="Виды плана"></div>
+      </div>
+    </nav>
+
     <main id="ganttMain" tabindex="-1" class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col md:flex-row relative focus:outline-none">
       <div id="mobileKanbanHint" class="md:hidden order-first w-full bg-amber-50 border-b border-amber-200 text-amber-800 text-xs px-4 py-2 flex items-start gap-2 no-print no-image-export">
         <svg aria-hidden="true" class="w-4 h-4 shrink-0 mt-px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -6606,7 +6616,7 @@
             <select id="taskResource" onchange="checkTaskDeadline()" class="w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all cursor-pointer"></select>
             <div id="taskLeaveWarn" class="hidden mt-1 text-[10px] font-medium text-amber-700"></div>
           </div>
-          <div class="card-more-wrap" style="grid-column:1/-1"><button type="button" id="cardMoreBtn" onclick="toggleCardAdv()" class="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-100 cursor-pointer" title="Показать редкие поля: параметры, приоритет, истории">Еще поля</button></div>
+          <div class="card-more-wrap" style="grid-column:1/-1"><button type="button" id="cardMoreBtn" onclick="toggleCardAdv()" class="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-100 cursor-pointer" title="Показать редкие поля карточки: тип, приоритет и историю">Редкие поля</button></div>
           <div>
             <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Параметры</label>
             <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 min-h-9 bg-slate-50/50 px-3 py-2 rounded-xl border border-slate-100">
@@ -6636,7 +6646,7 @@
           <button type="button" id="taskDetailsToggle" onclick="toggleTaskDetails()" aria-expanded="false" aria-controls="taskDetailsBody" class="w-full flex items-center justify-between gap-2 text-xs font-semibold text-slate-700 tracking-wide uppercase hover:text-indigo-600 transition-colors cursor-pointer">
             <span class="flex items-center gap-2">
               <svg aria-hidden="true" id="taskDetailsChevron" class="w-4 h-4 text-slate-500 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
-              Подробнее
+              Описание и детали
             </span>
             <span id="taskDetailsHint" class="text-[10px] font-medium text-indigo-500 normal-case tracking-normal">оценка, приоритет, цель, связи, метрики, метки, описание</span>
           </button>
@@ -9705,7 +9715,7 @@
     function toggleCardAdv() {
       var m = document.getElementById('taskModal'); if (!m) return;
       var open = m.classList.toggle('card-adv-open');
-      var b = document.getElementById('cardMoreBtn'); if (b) b.textContent = open ? 'Скрыть поля' : 'Еще поля';
+      var b = document.getElementById('cardMoreBtn'); if (b) b.textContent = open ? 'Скрыть редкие поля' : 'Редкие поля';
     }
     // Легенда таймлайна: что значат цвета и значки. Открывается кнопкой «?» в панели масштаба.
     function showGanttLegend() {
@@ -19509,7 +19519,18 @@ let resourceView = 'roles'; // 'roles' | 'load'
       { v: 'forecast', name: 'Успеваем? , прогноз и сценарии', d: 'M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11', adv: true },
       { v: 'present', name: 'Презентация', d: 'M4 5h16v11H4zM2 19h20M9 19v3M15 19v3', adv: false }
     ];
+    function _viewTabsHtml() {
+      var cur = (typeof appView !== 'undefined') ? appView : 'list';
+      return _appViews.map(function (x) {
+        var on = (cur === x.v);
+        var shortName = x.v === 'forecast' ? 'Успеваем?' : x.name;
+        return '<button type="button" onclick="setAppView(\'' + x.v + '\')" aria-pressed="' + (on ? 'true' : 'false') + '"' + (on ? ' aria-current="page"' : '') + ' title="' + escAttr(x.name) + '" class="inline-flex items-center gap-2 h-9 px-3 rounded-xl border text-xs font-semibold whitespace-nowrap transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-400/50 ' + (on ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm' : 'bg-white border-transparent text-slate-600 hover:bg-slate-50 hover:border-slate-200 hover:text-slate-900') + '"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="' + x.d + '"></path></svg><span>' + escHtml(shortName) + '</span></button>';
+      }).join('');
+    }
     function _viewSwitcherBtnHtml() {
+      // Основной переключатель теперь всегда виден отдельной подписанной строкой над планом.
+      // Иконки оставляем только как запасной вариант для старых/вырезанных представлений без этой строки.
+      if (document.getElementById('planViewTabs')) return '';
       var cur = (typeof appView !== 'undefined') ? appView : 'list';
       return '<span class="inline-flex items-center gap-0.5 bg-white border border-slate-200 rounded-lg p-0.5" role="group" aria-label="Виды плана">' + _appViews.map(function (x) {
         var on = (cur === x.v);
@@ -19710,6 +19731,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const zc = document.getElementById('zoomControl');
       const zcm = document.getElementById('zoomControlMobile');
       try { const vb = document.getElementById('viewIconsBar'); if (vb) vb.innerHTML = _viewSwitcherBtnHtml(); } catch (e) {}
+      try { const tabs = document.getElementById('planViewTabs'); if (tabs) tabs.innerHTML = _viewTabsHtml(); } catch (e) {}
       const kv = document.getElementById('kanbanView');
       const isList = (appView === 'list');
       [left, spl, tl, zc, zcm].forEach(el => { if (el) el.style.display = isList ? '' : 'none'; });
@@ -21897,7 +21919,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
     function toggleMilestoneMode() {
       const isMilestone = document.getElementById('taskIsMilestone').checked;
-      { const _tmDlg = document.getElementById('taskModal'); if (_tmDlg) { _tmDlg.classList.toggle('ms-on', isMilestone); _tmDlg.classList.remove('card-adv-open'); const _mb = document.getElementById('cardMoreBtn'); if (_mb) _mb.textContent = 'Подробнее'; } }
+      { const _tmDlg = document.getElementById('taskModal'); if (_tmDlg) { _tmDlg.classList.toggle('ms-on', isMilestone); _tmDlg.classList.remove('card-adv-open'); const _mb = document.getElementById('cardMoreBtn'); if (_mb) _mb.textContent = 'Редкие поля'; } }
       const endContainer = document.getElementById('end-date-container');
       if (isMilestone) { endContainer.style.opacity = '0.4'; document.getElementById('taskEnd').disabled = true; syncMilestoneDates(); }
       else { endContainer.style.opacity = '1'; document.getElementById('taskEnd').disabled = false; }
@@ -30090,24 +30112,19 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
   <div id="startupModal" role="dialog" aria-modal="true" aria-label="Начало работы" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-[990] overflow-y-auto" onclick="if(event.target===this) closeStartupModal()">
     <div class="bg-white rounded-3xl max-w-3xl w-full shadow-2xl overflow-hidden border border-slate-200 relative my-auto">
-      <button onclick="closeStartupModal()" aria-label="Закрыть" title="Закрыть" class="group absolute top-4 right-4 z-10 flex items-center justify-center w-10 h-10 bg-white/80 hover:bg-rose-50 text-slate-500 hover:text-rose-600 border border-slate-200 hover:border-rose-200 rounded-xl transition-all cursor-pointer" title="Закрыть и вернуться к плану">
+      <button onclick="closeStartupModal()" aria-label="Закрыть" class="group absolute top-4 right-4 z-10 flex items-center justify-center w-10 h-10 bg-white/80 hover:bg-rose-50 text-slate-500 hover:text-rose-600 border border-slate-200 hover:border-rose-200 rounded-xl transition-all cursor-pointer" title="Закрыть и вернуться к плану">
         <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
       </button>
       <button onclick="openInfoModal()" aria-label="О проекте , что нового" class="group absolute top-4 right-16 z-10 flex items-center justify-center w-10 h-10 bg-white/80 hover:bg-indigo-50 text-slate-500 hover:text-indigo-600 border border-slate-200 hover:border-indigo-200 rounded-xl transition-all cursor-pointer" title="О проекте">
         <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
               </button>
-      <button onclick="startDemo()" class="group absolute top-4 right-28 z-10 inline-flex items-center gap-1.5 h-10 px-3 bg-white/80 hover:bg-violet-50 text-violet-600 border border-violet-200 hover:border-violet-300 rounded-xl transition-all cursor-pointer" title="Открыть пример проекта (ваши данные не меняются)">
-        <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-        <span class="text-xs font-semibold hidden sm:inline">Демо</span>
-      </button>
-
       <!-- Что это за проект -->
       <div class="bg-gradient-to-br from-indigo-50 to-white px-8 pt-9 pb-6 border-b border-slate-100 text-center">
         <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-600 text-white shadow-md mb-3">
           <svg aria-hidden="true" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
         </div>
         <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Дорожная карта продукта</h2>
-        <p class="text-sm text-slate-500 mt-2 max-w-md mx-auto leading-relaxed">Спланируйте проект, двигайте задачи мышью, следите за прогрессом. Все в одном файле, без сервера.</p>
+        <p class="text-sm text-slate-500 mt-2 max-w-lg mx-auto leading-relaxed">Откройте готовый пример за минуту или начните со своих данных. План работает локально, без сервера.</p>
         <span class="inline-flex items-center gap-1.5 mt-3 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2.5 py-1 rounded-lg shadow-xs">
           <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
           <span id="appVersionStartup">версия 13.2</span>
@@ -30125,17 +30142,26 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           <svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
           <span id="btnStartSavedText" class="truncate">Продолжить работу с файлом</span>
         </button>
+        <button onclick="startDemo()" class="group w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 px-5 rounded-xl shadow-sm transition-all flex items-center justify-center gap-3 mb-3 text-left" title="Открыть пример проекта; ваши рабочие данные не меняются">
+          <span class="flex items-center justify-center w-9 h-9 rounded-xl bg-white/15 shrink-0">
+            <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+          </span>
+          <span class="min-w-0">
+            <span class="block text-sm font-semibold">Посмотреть готовый пример</span>
+            <span class="block text-[11px] text-indigo-100 font-normal">Рекомендуем для первого знакомства · ничего загружать не нужно</span>
+          </span>
+        </button>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <button id="startFromFileBtn" onclick="startFromFile()" class="flex flex-col items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-4 px-2 rounded-xl shadow-xs transition-all text-center leading-snug min-h-[92px]">
-            <svg aria-hidden="true" class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v10m0 0l-3-3m3 3l3-3M5 20h14"></path></svg>
+          <button id="startFromFileBtn" onclick="startFromFile()" class="flex flex-col items-center justify-center gap-2 bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 text-xs font-semibold py-4 px-2 rounded-xl transition-all text-center leading-snug min-h-[92px]">
+            <svg aria-hidden="true" class="w-6 h-6 shrink-0 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v10m0 0l-3-3m3 3l3-3M5 20h14"></path></svg>
             <span>Открыть свой файл (JSON)</span>
           </button>
           <button onclick="startFromJira()" class="flex flex-col items-center justify-center gap-2 bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 text-xs font-medium py-4 px-2 rounded-xl transition-all text-center leading-snug min-h-[92px]" title="Подтянуть задачи и эпики из Jira через вашу текущую сессию">
             <svg aria-hidden="true" class="w-6 h-6 shrink-0 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
             <span>Импорт / экспорт Jira</span>
           </button>
-          <button onclick="startFresh()" class="flex flex-col items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-4 px-2 rounded-xl shadow-xs transition-all text-center leading-snug min-h-[92px]">
-            <svg aria-hidden="true" class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          <button onclick="startFresh()" class="flex flex-col items-center justify-center gap-2 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 hover:border-emerald-300 text-xs font-medium py-4 px-2 rounded-xl transition-all text-center leading-snug min-h-[92px]">
+            <svg aria-hidden="true" class="w-6 h-6 shrink-0 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             <span>Начать с чистого листа</span>
           </button>
         </div>
@@ -30782,6 +30808,49 @@ function saveAuditTeams(){
 // Подключаем к общей системе модалок (Esc и клик по фону)
 try { if(typeof MODAL_CLOSERS!=='undefined') MODAL_CLOSERS.auditTeamsModal=closeAuditTeams; } catch(e){}
 // Escape для аудита и под-модалки «Команды» обрабатывает центральный MODAL_CLOSERS (закрывает строго верхнюю модалку по z-index).
+
+// Типографическая доводка пользовательского текста. Старые строки интерфейса местами содержат
+// пробел перед запятой; исправляем только отображаемый DOM и подсказки, не меняя данные и код.
+function _normalizeUiPunctuation(root) {
+  if (!root) return;
+  function cleanText(node) {
+    if (!node || node.nodeType !== 3 || !node.nodeValue || !/[ \t\u00a0]+,/.test(node.nodeValue)) return;
+    var parent = node.parentElement;
+    if (parent && parent.closest('script,style,pre,code,textarea')) return;
+    node.nodeValue = node.nodeValue.replace(/[ \t\u00a0]+,/g, ',');
+  }
+  function cleanAttrs(el) {
+    if (!el || el.nodeType !== 1) return;
+    ['title', 'aria-label', 'placeholder', 'alt'].forEach(function (name) {
+      var value = el.getAttribute(name);
+      if (value && /[ \t\u00a0]+,/.test(value)) el.setAttribute(name, value.replace(/[ \t\u00a0]+,/g, ','));
+    });
+  }
+  if (root.nodeType === 3) { cleanText(root); return; }
+  if (root.nodeType !== 1 && root.nodeType !== 9 && root.nodeType !== 11) return;
+  if (root.nodeType === 1) cleanAttrs(root);
+  var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  var node;
+  while ((node = walker.nextNode())) cleanText(node);
+  if (root.querySelectorAll) root.querySelectorAll('*').forEach(cleanAttrs);
+}
+try {
+  _normalizeUiPunctuation(document.body);
+  var _uiPunctuationObserver = new MutationObserver(function (mutations) {
+    mutations.forEach(function (m) {
+      if (m.type === 'characterData') _normalizeUiPunctuation(m.target);
+      else if (m.type === 'attributes') _normalizeUiPunctuation(m.target);
+      else m.addedNodes.forEach(_normalizeUiPunctuation);
+    });
+  });
+  _uiPunctuationObserver.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['title', 'aria-label', 'placeholder', 'alt'] });
+} catch (e) {}
+// Первый рендер плана может завершиться до присваивания массива _appViews.
+// Заполняем постоянную навигацию ещё раз после загрузки всех модулей.
+try {
+  var _initialPlanViewTabs = document.getElementById('planViewTabs');
+  if (_initialPlanViewTabs && typeof _viewTabsHtml === 'function') _initialPlanViewTabs.innerHTML = _viewTabsHtml();
+} catch (e) {}
 
 </script>
 </body>
