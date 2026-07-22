@@ -12,6 +12,9 @@
     "projectStatuses"
   ],
   "properties": {
+    "formatVersion": { "type": "integer", "minimum": 1 },
+    "appVersion": { "type": "string" },
+    "projectId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{7,127}$" },
     "savedAt": { "type": "string", "format": "date-time" },
     "savedBy": { "type": "string" },
     "title": { "type": "string" },
