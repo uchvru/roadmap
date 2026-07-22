@@ -1,0 +1,141 @@
+name: Package or release static site
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Тег вида v13.6.0; нужен только при публикации Release'
+        required: false
+        type: string
+      publish_release:
+        description: 'Создать GitHub Release (по умолчанию только dry-run артефакт)'
+        required: true
+        default: false
+        type: boolean
+      deploy_pages:
+        description: 'Развернуть текущий commit в GitHub Pages'
+        required: true
+        default: false
+        type: boolean
+
+concurrency:
+  group: static-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    name: Verify and package
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Verify public build
+        run: node .quality/verify-public.mjs
+      - name: Build reproducible ZIP from tracked files
+        run: git archive --format=zip --output=roadmap-site.zip HEAD
+      - name: Upload dry-run artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: roadmap-static-${{ github.sha }}
+          path: roadmap-site.zip
+          if-no-files-found: error
+          retention-days: 14
+
+  release:
+    name: Publish GitHub Release
+    needs: package
+    if: github.event_name == 'push' || inputs.publish_release == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Resolve and validate tag
+        id: tag
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PUSH_TAG: ${{ github.ref_name }}
+          MANUAL_TAG: ${{ inputs.release_tag }}
+        run: |
+          if [ "$EVENT_NAME" = "push" ]; then TAG="$PUSH_TAG"; else TAG="$MANUAL_TAG"; fi
+          if ! printf '%s' "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
+            echo "Тег должен иметь вид v13.6 или v13.6.0" >&2
+            exit 1
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+      - name: Download packaged site
+        uses: actions/download-artifact@v7
+        with:
+          name: roadmap-static-${{ github.sha }}
+      - name: Create or refresh release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" roadmap-site.zip --clobber
+            gh release edit "$TAG" --target "$GITHUB_SHA" --title "Roadmap $TAG"
+          else
+            gh release create "$TAG" roadmap-site.zip --target "$GITHUB_SHA" --generate-notes --title "Roadmap $TAG"
+          fi
+
+  pages:
+    name: Deploy GitHub Pages
+    needs: package
+    if: github.event_name == 'workflow_dispatch' && inputs.deploy_pages == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Verify again before Pages
+        run: node .quality/verify-public.mjs
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Build tracked-only Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git ls-tree -r HEAD | awk '$1 == "120000" { found=1 } END { exit found ? 0 : 1 }'; then
+            echo "Pages artifact не допускает символические ссылки." >&2
+            exit 1
+          fi
+          mkdir _site
+          git archive --format=tar HEAD | tar -xf - -C _site
+          tar --dereference --hard-dereference --directory _site -cf artifact.tar .
+      - name: Upload Pages artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: github-pages
+          path: artifact.tar
+          archive: false
+          if-no-files-found: error
+          retention-days: 1
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

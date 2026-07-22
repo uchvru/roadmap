@@ -1,0 +1,24 @@
+{
+  "version": "13.6",
+  "generatedAt": "2026-07-23",
+  "source": "synthetic-demo-PAY-LK",
+  "video": {
+    "file": "roadmap-demo-v13.6.mp4",
+    "sha256": "1f0cac8ec757d25a084ecdeeb1175f60a3f4d59ea61d4fc810f877b6b226acdf",
+    "bytes": 10076947,
+    "durationSeconds": 85.5,
+    "width": 1440,
+    "height": 810,
+    "fps": 24,
+    "codec": "h264",
+    "pixelFormat": "yuv420p",
+    "audio": false
+  },
+  "poster": {
+    "file": "roadmap-demo-v13.6-poster.jpg",
+    "sha256": "2d7864cde7aa152805aded1a0b704c559e79f4e02a579603dd8136c499e322f5",
+    "bytes": 39300,
+    "width": 1440,
+    "height": 810
+  }
+}

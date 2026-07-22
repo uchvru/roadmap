@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Roadmap — продуктовая дорожная карта в одном HTML-файле: иерархия, сроки, зависимости и прогноз без отдельного сервера.">
+  <title>Дорожная карта продукта, вся в одном файле</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--ink:#0f172a;--mut:#64748b;--brand:#4f46e5;--line:#e6eaf1}
+    html{scroll-behavior:smooth}
+    body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:#f6f8fc;-webkit-font-smoothing:antialiased;line-height:1.5}
+    a{color:inherit;text-decoration:none}.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+    .hero{position:relative;overflow:hidden;background:linear-gradient(160deg,#eef2ff 0%,#eaf2fe 42%,#f6f8fc 100%);border-bottom:1px solid var(--line)}
+    .hero:before{content:"";position:absolute;top:-160px;right:-120px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(79,70,229,.14),transparent 65%)}
+    .hero .wrap{position:relative;padding:36px 24px 44px}.brand{display:flex;align-items:center;gap:12px}
+    .logo{width:52px;height:52px;border-radius:15px;background:linear-gradient(135deg,#3b82f6,#4f46e5);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(79,70,229,.32)}
+    .logo svg{width:27px;height:27px;color:#fff}.vchip{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#4338ca;background:#fff;border:1px solid #c7d2fe;border-radius:999px;padding:4px 10px}
+    .herogrid{display:grid;grid-template-columns:1.3fr .7fr;gap:44px;align-items:center;margin-top:30px}.heroright{display:flex;justify-content:flex-end}
+    h1{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.6px;max-width:680px}.lead{font-size:clamp(15px,2.2vw,19px);color:#475569;max-width:760px;margin:14px 0 0}.lead b{color:var(--ink);font-weight:650}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:50px;padding:0 20px;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s}
+    .btn.primary{background:#4f46e5;color:#fff;box-shadow:0 12px 26px rgba(79,70,229,.32)}.btn.primary:hover{background:#4338ca;transform:translateY(-1px)}
+    .btn.ghost{background:#fff;color:#334155;border:1px solid #d6ddec}.btn.ghost:hover{border-color:#a5b4fc;color:#3730a3}
+    .vhero{width:100%;max-width:350px;background:rgba(255,255,255,.72);backdrop-filter:blur(6px);border:1px solid #e3e9f4;border-radius:18px;padding:22px 24px;box-shadow:0 18px 44px rgba(15,23,42,.1)}
+    .vhero .hd{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#4338ca;margin-bottom:14px}.vhero .rw{display:flex;align-items:center;gap:14px}
+    .vava{position:relative;overflow:hidden;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#4f46e5);color:#fff;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:800;flex:none;box-shadow:0 8px 20px rgba(79,70,229,.3)}
+    .vava img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.vhero .nm{font-size:17px;font-weight:800}.vhero .rl{font-size:12.5px;color:#64748b;margin-top:2px}.vhero .lk{margin-top:15px;padding-top:15px;border-top:1px solid #eaeef6}.vhero .lk a{font-size:14px;font-weight:600;color:#4f46e5}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:720px;margin-top:28px}.stat{background:rgba(255,255,255,.75);backdrop-filter:blur(6px);border:1px solid #e3e9f4;border-radius:14px;padding:13px 15px;box-shadow:0 6px 18px rgba(15,23,42,.05)}
+    .stat .v{font-size:23px;font-weight:800;letter-spacing:-.5px;background:linear-gradient(120deg,#4f46e5,#3b82f6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}.stat .l{font-size:11px;font-weight:600;color:#64748b;margin-top:2px}.statsrc{font-size:12px;color:#64748b;max-width:820px;margin-top:12px}
+    .shotwrap{margin:-24px 0 0}.video{max-width:920px;margin:0 auto;border-radius:18px;overflow:hidden;border:1px solid #1e293b;box-shadow:0 26px 64px rgba(15,23,42,.2);background:#0b1220;line-height:0}.video video{display:block;width:100%;height:auto}.vidnote{max-width:920px;margin:14px auto 0;text-align:center;font-size:13px;color:#64748b}
+    section{padding:56px 0}.alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.sechead{text-align:center;max-width:760px;margin:0 auto 34px}.sechead h2{font-size:clamp(24px,3.5vw,34px);font-weight:800;letter-spacing:-.4px}.sechead p{color:#64748b;font-size:16px;margin-top:10px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 6px 18px rgba(15,23,42,.05);transition:transform .16s,box-shadow .16s}.card:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(15,23,42,.1)}
+    .card .ic{width:42px;height:42px;border-radius:12px;background:#eef2ff;color:#4f46e5;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-weight:800}.card h3{font-size:17px;font-weight:800}.card p{font-size:13.5px;color:#52607a;margin-top:6px}
+    .synthetic{max-width:900px;margin:0 auto}.synthetic .grid{margin-top:18px}.metric{font-size:28px;font-weight:800;color:#4338ca}.synthetic .note{font-size:12px;color:#64748b;margin-top:14px;text-align:center}
+    .how{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:900px;margin:0 auto}.how .card{text-align:center}
+    .notice{max-width:900px;margin:0 auto;background:#eefbf5;border:1px solid #bbefd6;border-radius:18px;padding:24px 26px;color:#315c4c}.notice h3{font-size:19px;color:#14543e;margin-bottom:8px}.notice p{font-size:14px}.notice p+p{margin-top:8px}
+    .catcta{max-width:960px;margin:0 auto;background:linear-gradient(150deg,#eef2ff,#eaf2fe 55%,#f6f8fc);border:1px solid #dbe3f4;border-radius:20px;padding:32px 28px;box-shadow:0 20px 50px rgba(15,23,42,.08);text-align:center}.catcta p{color:#64748b;margin:8px auto 0;max-width:680px}.catcta .cta{justify-content:center}
+    .finalcta{text-align:center;padding:60px 0}.foot{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:#64748b;font-size:13px}
+    @media(max-width:900px){.herogrid{grid-template-columns:1fr;gap:26px}.heroright{justify-content:flex-start}.stats{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:860px){.grid{grid-template-columns:1fr 1fr}}@media(max-width:720px){.how{grid-template-columns:1fr}}
+    @media(max-width:560px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.cta .btn{width:100%}.vhero{max-width:none}section{padding:48px 0}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.card{transition:none}.btn.primary:hover,.card:hover{transform:none}}
+  </style>
+</head>
+<body>
+  <header class="hero"><div class="wrap">
+    <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">v13.6</span></div>
+    <div class="herogrid">
+      <div>
+        <h1>Дорожная карта продукта, вся в одном файле</h1>
+        <p class="lead">Roadmap собирает <b>инициативы, эпики, стори, задачи и баги</b> в единый план. Сроки, зависимости и прогноз видны на одном экране, а рабочая версия запускается локально из одного HTML-файла — без отдельного сервера и подписки.</p>
+        <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a><a class="btn ghost" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a></div>
+      </div>
+      <div class="heroright"><div class="vhero"><div class="hd">Автор проекта</div><div class="rw"><div class="vava">ВУ<img src="avatar.jpg" alt="Владимир Учинин" onerror="this.remove()"></div><div><div class="nm">Владимир Учинин</div><div class="rl">Владелец продукта / Product Owner</div></div></div><div class="lk"><a href="mailto:uchv@ya.ru">uchv@ya.ru</a></div></div></div>
+    </div>
+    <div class="stats" aria-label="Архивные непроверенные итоги синтетической оценки Roadmap v13.1">
+      <div class="stat"><div class="v">9,02</div><div class="l">Простота / 10</div></div>
+      <div class="stat"><div class="v">9,16</div><div class="l">Удовлетворённость / 10</div></div>
+      <div class="stat"><div class="v">9,08</div><div class="l">Ценность / 10</div></div>
+      <div class="stat"><div class="v">9,05</div><div class="l">Рекомендация / 10</div></div>
+      <div class="stat"><div class="v">+68</div><div class="l">NPS</div></div>
+      <div class="stat"><div class="v">82,1%</div><div class="l">Готовность внедрять</div></div>
+    </div>
+    <p class="statsrc">Архивные заявленные показатели v13.1: последний прогон — 1 000 смоделированных профилей; всего заявлено 26 синтетических опросов и более 24 000 ответов. Исходные анкеты, сырые ответы и формулы расчёта в архиве не найдены, поэтому цифры не являются подтверждённым исследованием и не доказывают спрос.</p>
+  </div></header>
+
+  <div class="shotwrap"><div class="wrap"><div class="video"><video controls playsinline preload="metadata" poster="media/roadmap-demo-v13.6-poster.jpg" aria-label="Демонстрация возможностей Roadmap v13.6" aria-describedby="demo-video-note"><source src="media/roadmap-demo-v13.6.mp4" type="video/mp4">Ваш браузер не воспроизводит MP4. <a href="media/roadmap-demo-v13.6.mp4" download style="color:#93c5fd">Скачать демо-ролик</a>.</video></div><div class="vidnote" id="demo-video-note">Динамичный обзор на синтетическом PAY/LK-проекте · 1 мин 26 с · без звука и рабочих данных.</div></div></div>
+
+  <main>
+    <section><div class="wrap"><div class="synthetic"><div class="sechead"><h2>Синтетическая проверка сценариев v13.6</h2><p>Детерминированный прогон помогает проверить расчёты и найти слабые места до исследования с Product Owner.</p></div><div class="grid">
+      <article class="card"><div class="metric">83,3%</div><h3>Безопасный старт</h3><p>25 из 30 синтетических профилей выбрали демо как безопасную точку входа.</p></article>
+      <article class="card"><div class="metric">90%</div><h3>Понимание иерархии</h3><p>27 из 30 правильно распознали Initiative → Epic → Story → Task/Bug.</p></article>
+      <article class="card"><div class="metric">70%</div><h3>Понятность восстановления</h3><p>21 из 30 дали высокую оценку составу восстановления — этот сценарий требует улучшения первым.</p></article>
+    </div><p class="note">30 смоделированных профилей · 0 реальных участников · значения заданы сценарием и не подтверждают пользовательский спрос или PMF.</p></div></div></section>
+
+    <section class="alt"><div class="wrap"><div class="sechead"><h2>Что делает Roadmap</h2><p>Помогает вести общий план продукта и быстро отвечать на вопросы «что делаем», «от чего зависит» и «успеваем ли».</p></div><div class="grid">
+      <article class="card"><div class="ic">1</div><h3>Показывает иерархию</h3><p>Initiative → Epic → Story → Task/Bug/Subtask. Если промежуточного уровня нет, элемент остаётся в корне и не получает выдуманного родителя.</p></article>
+      <article class="card"><div class="ic">2</div><h3>Сводит план и сроки</h3><p>Список и диаграмма Ганта показывают задачи, секции, даты, загрузку и ключевые вехи в одной области.</p></article>
+      <article class="card"><div class="ic">3</div><h3>Хранит любые связи</h3><p>Зависимости и ссылки Jira не ограничены только иерархией: задачи и секции могут быть связаны разными типами связей.</p></article>
+      <article class="card"><div class="ic">4</div><h3>Даёт пять видов плана</h3><p>Сводка, список и Гант, доска, прогноз «Успеваем?» и презентация используют один набор данных.</p></article>
+      <article class="card"><div class="ic">5</div><h3>Проверяет сценарий «Что если»</h3><p>Можно оценить альтернативный вариант сроков и ресурсов, не меняя реальный план.</p></article>
+      <article class="card"><div class="ic">6</div><h3>Работает рядом с Jira</h3><p>План можно собрать вручную или из CSV. Прямое подключение включается и настраивается только самим пользователем.</p></article>
+    </div></div></section>
+
+    <section><div class="wrap"><div class="sechead"><h2>Начните за минуту</h2><p>Демо можно открыть сразу, а рабочий план хранить отдельно и локально.</p></div><div class="how">
+      <article class="card"><h3>1. Откройте демо</h3><p>Проверьте интерфейс, карточки, связи и разные виды плана на вымышленных данных.</p></article>
+      <article class="card"><h3>2. Создайте свой план</h3><p>Заполните задачи вручную или загрузите выгрузку CSV из Jira.</p></article>
+      <article class="card"><h3>3. Сохраните рабочий файл</h3><p>Держите рабочую копию локально и не публикуйте реальные планы, токены и приватные снимки.</p></article>
+    </div></div></section>
+
+    <section class="alt"><div class="wrap"><div class="sechead"><h2>Публичное демо без рабочих данных</h2><p>Интерфейс можно изучать без раскрытия реального плана команды.</p></div><div class="notice"><h3>В демо только вымышленные задачи</h3><p>Публичная сборка не содержит рабочий <code>roadmap-data.json</code>, приватные снимки, токены Jira, бюджеты, ставки или реальные ключи проектов.</p><p>Сетевой обмен начинается только по вашему действию — например, после настройки прямого подключения к Jira.</p></div></div></section>
+
+    <section><div class="wrap"><div class="catcta"><h2>Нужен полный список возможностей?</h2><p>В каталоге функции сгруппированы по работе с планом, сроками, командой, Jira, аналитикой и презентацией.</p><div class="cta"><a class="btn primary" href="catalog.html">Открыть каталог функций</a><a class="btn ghost" href="app.html">Посмотреть демо</a></div></div></div></section>
+  </main>
+
+  <div class="finalcta"><div class="wrap"><div class="sechead"><h2>Посмотрите Roadmap на живом примере</h2><p>Демо запускается прямо в браузере, без регистрации и без рабочих данных.</p></div><div class="cta" style="justify-content:center"><a class="btn primary" href="app.html">Открыть демо Roadmap</a></div></div></div>
+  <footer class="foot"><div class="wrap">Roadmap v13.6 · Владимир Учинин · Публичная сборка содержит только вымышленные данные.</div></footer>
+</body>
+</html>
