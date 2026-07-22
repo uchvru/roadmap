@@ -127,14 +127,10 @@ jobs:
           fi
           mkdir _site
           git archive --format=tar HEAD | tar -xf - -C _site
-          tar --dereference --hard-dereference --directory _site -cf artifact.tar .
       - name: Upload Pages artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-pages-artifact@v5
         with:
-          name: github-pages
-          path: artifact.tar
-          archive: false
-          if-no-files-found: error
+          path: _site
           retention-days: 1
       - name: Deploy Pages
         id: deployment
