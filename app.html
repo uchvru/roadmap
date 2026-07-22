@@ -1,21 +1,12 @@
 <!DOCTYPE html>
 <!--
  ===========================================================================
- Roadmap , дорожная карта продукта.
- Copyright (c) 2026 Владимир У. (uchv@ya.ru). Все права защищены / All rights reserved.
+ Roadmap — дорожная карта продукта.
+ Copyright (c) 2026 Владимир Учинин.
+ SPDX-License-Identifier: AGPL-3.0-only
 
- ПРОПРИЕТАРНОЕ ПО. Этот файл и весь его исходный код (HTML, CSS, JavaScript) ,
- интеллектуальная собственность правообладателя. Без письменного разрешения
- правообладателя запрещается: копировать, воспроизводить и распространять файл
- или любые его части; изменять, декомпилировать, создавать производные работы;
- использовать код или его фрагменты в других продуктах.
-
- PROPRIETARY SOFTWARE. This file and all of its source code are the intellectual
- property of the copyright holder. Unauthorized copying, modification, distribution,
- reverse-engineering or reuse of this file or any portion of its code, by any means,
- is strictly prohibited without the copyright holder's prior written permission.
-
- Контакт / Contact: uchv@ya.ru
+ Этот файл распространяется на условиях GNU Affero General Public License v3.0.
+ Полный текст лицензии находится в файле LICENSE репозитория.
  ===========================================================================
 -->
 <html lang="ru">
@@ -5265,7 +5256,12 @@
     button:focus-visible, a:focus-visible, [tabindex]:focus-visible, [role="button"]:focus-visible, [role="menuitem"]:focus-visible { outline: 2px solid #4f46e5 !important; outline-offset: 2px; }
     .view-active { background:#4f46e5 !important; color:#fff !important; border-color:#4f46e5 !important; }
     body .text-slate-400 { color:#64748b; } /* контраст AA в светлой теме (2.6:1 -> 4.6:1); ховеры (0,2,0) и темная тема (!important) сохранены */
-    @media (max-width: 767px) { header button, header select, header [role="button"] { min-height: 40px; } } /* тач-цели на мобильном , только реальные контролы шапки */
+    @media (max-width: 767px) {
+      header button, header select, header [role="button"] { min-height: 40px; }
+      .app-header-grid { grid-template-columns: minmax(0, 1fr); }
+      .app-header-toolbar { width: 100%; min-width: 0; }
+      .app-header-actions { width: 100%; min-width: 0; flex-wrap: wrap; justify-content: flex-end; }
+    } /* тач-цели и перенос панели шапки на мобильном */
     .skip-link{position:absolute;left:-9999px;top:0;z-index:3000;background:#fff;color:#4f46e5;padding:8px 14px;border:1px solid #c7d2fe;border-radius:8px;box-shadow:0 6px 18px rgba(15,23,42,.18);font-weight:600;font-size:13px;text-decoration:none;}
     .skip-link:focus{left:8px;top:8px;outline:2px solid #4f46e5;outline-offset:2px;}
     body.read-only .ro-keep { display: inline-flex !important; }
@@ -5946,7 +5942,7 @@
   .feat-switch input:disabled + .fs-track,.feat-switch input:disabled ~ .fs-knob{opacity:.55;}
   /* ===== Темная тема (body.theme-dark). Только экран , печать и экспорт PNG/PDF остаются светлыми (см. @media screen и onclone в loadHtml2CanvasPro). ===== */
   @media screen {
-   bodybody:not(.theme-dark){background:linear-gradient(160deg,#eef2ff 0%,#eaf2fe 40%,#f6f8fc 100%) fixed} .theme-dark { background-color:#0f1519; color:#e2e8f0; color-scheme:dark; }
+   body:not(.theme-dark){background:linear-gradient(160deg,#eef2ff 0%,#eaf2fe 40%,#f6f8fc 100%) fixed} .theme-dark { background-color:#0f1519; color:#e2e8f0; color-scheme:dark; }
    /* Поверхности */
    body.theme-dark .bg-white { background-color:#1a2332 !important; }
    body.theme-dark .bg-slate-50 { background-color:#212d3d !important; }
@@ -6188,7 +6184,7 @@
     </div>
     <header class="relative flex flex-col bg-white rounded-2xl border border-slate-200/80 mb-3 shadow-xs">
       <!-- TIER 1: основная панель инструментов, один ряд -->
-      <div class="grid grid-cols-[auto_1fr] gap-x-3 sm:gap-x-4 gap-y-2 px-5 pt-3.5 pb-3.5 items-center min-w-0">
+      <div class="app-header-grid grid grid-cols-[auto_1fr] gap-x-3 sm:gap-x-4 gap-y-2 px-5 pt-3.5 pb-3.5 items-center min-w-0">
       <div class="flex flex-col gap-1.5 min-w-0">
         <div class="flex items-center gap-3 min-w-0">
         <div class="flex flex-col items-center shrink-0 gap-1">
@@ -6227,7 +6223,7 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-1.5 sm:gap-2 min-w-0 w-full no-print flex-wrap lg:flex-nowrap">
+      <div class="app-header-toolbar flex items-center gap-1.5 sm:gap-2 min-w-0 w-full no-print flex-wrap lg:flex-nowrap">
         <!-- 1) Поиск , поле умеренной ширины с подсказкой Cmd+K -->
         <button onclick="openGlobalSearch()" aria-label="Глобальный поиск (Cmd+K / Ctrl+K)" class="group inline-flex items-center gap-2 h-9 grow min-w-0 px-3 bg-white hover:bg-slate-50 border border-slate-200 hover:border-indigo-300 rounded-xl transition-all cursor-pointer shadow-xs text-left" title="Глобальный поиск (Cmd+K / Ctrl+K)">
           <svg aria-hidden="true" class="w-4 h-4 text-slate-400 group-hover:text-indigo-500 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -6255,7 +6251,7 @@
         <!-- Картинка (PNG) -->
         
         </div>
-        <div class="flex items-center gap-2 shrink-0">
+        <div class="app-header-actions flex items-center gap-2 shrink-0">
         <div class="hidden lg:block relative shrink-0" id="reportsMenuWrap">
           <button type="button" id="reportsMenuBtn" onclick="toggleReportsMenu(event)" aria-label="Отчеты и выгрузки" aria-haspopup="menu" aria-expanded="false" class="inline-flex items-center gap-1.5 h-9 px-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl transition-all cursor-pointer shadow-xs" title="Отчеты и выгрузки">
             <svg aria-hidden="true" class="w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -6980,6 +6976,33 @@
         .replace(/'/g, '&#39;')
         .replace(/`/g, '&#96;');
     }
+    // Доступные имена для основных полей. Часть контролов создается/расположена далеко от
+    // визуальной подписи (включая скрытые file inputs), поэтому задаем aria-label централизованно.
+    function applyCoreControlLabels() {
+      const labels = {
+        jiraImportFile: 'Импорт CSV из Jira', importFile: 'Импорт файла проекта',
+        csvGenericFile: 'Импорт произвольного CSV', mergeFile: 'Объединить с файлом проекта',
+        versionsImportFile: 'Импорт истории версий',
+        taskName: 'Название задачи или вехи', taskSection: 'Секция плана', taskStatus: 'Статус задачи',
+        taskResource: 'Исполнитель', taskStart: 'Дата старта', taskEnd: 'Дата окончания',
+        taskNotes: 'Описание задачи', taskEstimate: 'Оценка в днях', taskDeadline: 'Дедлайн',
+        taskStoryPoints: 'Оценка Story Points', taskHours: 'Оценка в часах',
+        taskCostFixed: 'Фиксированная стоимость', taskCostType: 'Статья затрат', taskPriority: 'Приоритет',
+        taskPredSearch: 'Поиск предшественника', taskInternal: 'Внутренняя задача',
+        taskMetrics: 'Продуктовые метрики', taskMetricType: 'Тип целевой метрики',
+        taskMetricTarget: 'Целевое значение метрики', taskMetricActual: 'Фактическое значение метрики',
+        taskMetricUnit: 'Единица измерения метрики', taskWsjf: 'Оценка WSJF',
+        taskLabels: 'Метки задачи', taskJira: 'Ключ или ссылка Jira', taskEpicLink: 'Ключ родителя Jira',
+        taskConf: 'Ссылка Confluence', taskFigma: 'Ссылка Figma',
+        bulkStatusSel: 'Изменить статус выбранных задач', bulkSectionSel: 'Переместить выбранные задачи в секцию'
+      };
+      Object.keys(labels).forEach(id => {
+        const el = document.getElementById(id);
+        if (el && !el.hasAttribute('aria-label') && !el.hasAttribute('aria-labelledby')) el.setAttribute('aria-label', labels[id]);
+      });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', applyCoreControlLabels, { once: true });
+    else applyCoreControlLabels();
     // Экранирование строки внутри одинарных кавычек в onclick="fn('${val}')".
     function escAttr(v) {
       return escHtml(v).replace(/\\/g, '\\\\');
@@ -7673,7 +7696,7 @@
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '13.3';
+    const APP_VERSION = '13.4';
     const APP_VERSION_DATE = '22.07.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' , ' + APP_VERSION_DATE; } catch (e) {}
@@ -7763,7 +7786,7 @@
     }
 
     // Встроенные демо-данные (пример проекта) , для режима «Посмотреть демо» на стартовом экране. Отдельный демо-файл больше не нужен.
-    const DEMO_DATA = {"savedAt":"2026-06-03T10:00:00.000Z","title":"Запуск мобильного приложения","pageMeta":{"poName":"Алексей Смирнов"},"sections":["I. Исследование и дизайн","II. Техпроработка и оценка","III. Разработка","IV. Тестирование и запуск","Epic: Платежи и подписки [PAY-100]","Epic: Личный кабинет [LK-200]","Задачи без эпика"],"sectionColors":{"I. Исследование и дизайн":"bg-indigo-600 text-white","II. Техпроработка и оценка":"bg-violet-500/90 text-white","III. Разработка":"bg-emerald-500/90 text-white","IV. Тестирование и запуск":"bg-rose-500/90 text-white","Epic: Платежи и подписки [PAY-100]":"bg-blue-500 text-white","Epic: Личный кабинет [LK-200]":"bg-amber-500/90 text-slate-900","Задачи без эпика":"bg-slate-400 text-white"},"resources":["PO","Тех лид","Дизайнер","QA","a.petrov","m.ivanova","d.kozlov","e.sokolova","i.morozov"],"resourceRoles":{"a.petrov":"Backend","m.ivanova":"Frontend","d.kozlov":"Backend","e.sokolova":"QA","i.morozov":"Frontend"},"cutoffs":[{"id":"c1","name":"Бета-тест","date":"2026-07-15","color":"border-blue-500 bg-blue-500","showInHeader":true,"pinned":true},{"id":"c2","name":"Релиз MVP","date":"2026-08-24","color":"border-rose-500 bg-rose-500","showInHeader":true,"pinned":true},{"id":"release-mvp-1-0","name":"Релиз MVP 1.0","date":"2026-07-01","color":"border-emerald-500 bg-emerald-500","showInHeader":true},{"id":"release-mvp-1-1","name":"Релиз MVP 1.1","date":"2026-07-20","color":"border-indigo-500 bg-indigo-500","showInHeader":true},{"id":"release-mvp-2-0","name":"Релиз MVP 2.0","date":"2026-08-24","color":"border-rose-500 bg-rose-500","showInHeader":false}],"collapsedSections":[],"roadmapData":[{"id":1,"section":"I. Исследование и дизайн","name":"Интервью с пользователями","status":"completed","resource":"Дизайнер","start":"2026-06-01","end":"2026-06-08","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"Гипотезы и сегменты согласованы","dod":"Отчет с инсайтами готов","estimate":"","pred":"","release":"MVP 1.0","labels":[],"epicLink":"","issueType":"Story"},{"id":2,"section":"I. Исследование и дизайн","name":"Карта пути пользователя (CJM)","status":"completed","resource":"Дизайнер","start":"2026-06-05","end":"2026-06-12","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 1.0","labels":[],"epicLink":"","issueType":"Story"},{"id":3,"section":"I. Исследование и дизайн","name":"Прототип ключевых экранов","status":"in_progress","resource":"m.ivanova","start":"2026-06-10","end":"2026-06-24","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"Конверсия в регистрацию, время до первого действия","dor":"","dod":"","estimate":"","pred":"","release":"MVP 1.1","labels":[],"epicLink":"","issueType":"Story"},{"id":4,"section":"I. Исследование и дизайн","name":"Дизайн-система и компоненты","status":"review","resource":"Дизайнер","start":"2026-06-16","end":"2026-06-28","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 1.1","labels":[],"epicLink":"","issueType":"Story"},{"id":5,"section":"II. Техпроработка и оценка","name":"Техническое описание API","status":"completed","resource":"Тех лид","start":"2026-06-08","end":"2026-06-16","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 1.0","labels":[],"epicLink":"","issueType":"Task"},{"id":6,"section":"II. Техпроработка и оценка","name":"Оценка и декомпозиция","status":"completed","resource":"Тех лид","start":"2026-06-16","end":"2026-06-20","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 1.0","labels":[],"epicLink":"","issueType":"Task"},{"id":7,"section":"II. Техпроработка и оценка","name":"Выбор стека и архитектура","status":"in_progress","resource":"a.petrov","start":"2026-06-18","end":"2026-06-30","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 1.1","labels":[],"epicLink":"","issueType":"Task"},{"id":8,"section":"III. Разработка","name":"Каркас приложения","status":"in_progress","resource":"a.petrov","start":"2026-06-25","end":"2026-07-10","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 1.1","labels":[],"epicLink":"","issueType":"Story"},{"id":9,"section":"III. Разработка","name":"Экран онбординга","status":"planned","resource":"m.ivanova","start":"2026-07-01","end":"2026-07-12","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 2.0","labels":[],"epicLink":"","issueType":"Story"},{"id":10,"section":"III. Разработка","name":"Лента и поиск","status":"planned","resource":"m.ivanova","start":"2026-07-08","end":"2026-07-25","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 2.0","labels":[],"epicLink":"","issueType":"Task"},{"id":11,"section":"III. Разработка","name":"Интеграция аналитики","status":"planned","resource":"d.kozlov","start":"2026-07-15","end":"2026-07-22","jira":"","isMilestone":false,"blocked":true,"notes":"Ждем доступ к системе аналитики","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 2.0","labels":[],"epicLink":"","issueType":"Task"},{"id":12,"section":"III. Разработка","name":"Push-уведомления","status":"planned","resource":"d.kozlov","start":"2026-07-20","end":"2026-07-30","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 2.0","labels":[],"epicLink":"","issueType":"Task"},{"id":13,"section":"IV. Тестирование и запуск","name":"Тест-план и автотесты","status":"planned","resource":"QA","start":"2026-07-25","end":"2026-08-05","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"","labels":[],"epicLink":"","issueType":"Task"},{"id":14,"section":"IV. Тестирование и запуск","name":"Регресс и нагрузочное","status":"planned","resource":"e.sokolova","start":"2026-08-05","end":"2026-08-15","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"","labels":[],"epicLink":"","issueType":"Task"},{"id":15,"section":"IV. Тестирование и запуск","name":"Подготовка к релизу","status":"planned","resource":"Тех лид","start":"2026-08-15","end":"2026-08-22","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 1.0","labels":[],"epicLink":"","issueType":"Task"},{"id":16,"section":"IV. Тестирование и запуск","name":"Запуск MVP","status":"planned","resource":"PO","start":"2026-08-24","end":"2026-08-24","jira":"","isMilestone":true,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"","labels":[],"epicLink":""},{"id":17,"section":"Epic: Платежи и подписки [PAY-100]","name":"Подключение платежного провайдера","status":"in_progress","resource":"a.petrov","start":"2026-07-01","end":"2026-07-20","jira":"PAY-101","isMilestone":false,"blocked":false,"notes":"","metrics":"Доля успешных оплат","dor":"","dod":"","estimate":"","pred":"","release":"MVP 1.1","labels":[],"epicLink":"","issueType":"Story"},{"id":18,"section":"Epic: Платежи и подписки [PAY-100]","name":"Экран оплаты","status":"planned","resource":"m.ivanova","start":"2026-07-15","end":"2026-07-28","jira":"PAY-102","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 2.0","labels":[],"epicLink":"","issueType":"Task"},{"id":19,"section":"Epic: Платежи и подписки [PAY-100]","name":"Подписки и автосписание","status":"planned","resource":"i.morozov","start":"2026-07-25","end":"2026-08-10","jira":"PAY-103","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 2.0","labels":[],"epicLink":"","issueType":"Story"},{"id":20,"section":"Epic: Личный кабинет [LK-200]","name":"Профиль и настройки","status":"planned","resource":"m.ivanova","start":"2026-07-10","end":"2026-07-24","jira":"LK-201","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 2.0","labels":[],"epicLink":"","issueType":"Task"},{"id":21,"section":"Epic: Личный кабинет [LK-200]","name":"История заказов","status":"planned","resource":"i.morozov","start":"2026-07-20","end":"2026-08-02","jira":"LK-202","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 2.0","labels":[],"epicLink":"","issueType":"Bug"},{"id":22,"section":"Задачи без эпика","name":"Обновить документацию","status":"planned","resource":"Тех лид","start":"2026-07-05","end":"2026-07-10","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"","labels":[],"epicLink":""},{"id":23,"section":"Задачи без эпика","name":"Настроить CI/CD","status":"in_progress","resource":"d.kozlov","start":"2026-06-20","end":"2026-06-30","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"MVP 1.1","labels":[],"epicLink":""}],"archivedTasks":[],"hiddenSections":[],"projectStatuses":[{"id":"planned","name":"В плане","color":"bg-slate-100 text-slate-600","barTheme":"bg-slate-500 text-white"},{"id":"in_progress","name":"В работе","color":"bg-indigo-50 text-indigo-700","barTheme":"bg-indigo-500 text-white"},{"id":"review","name":"Ревью","color":"bg-violet-50 text-violet-700","barTheme":"bg-violet-500 text-white"},{"id":"testing","name":"Тестирование","color":"bg-amber-50 text-amber-700","barTheme":"bg-amber-500 text-white"},{"id":"ready_release","name":"Готов к релизу","color":"bg-teal-50 text-teal-700","barTheme":"bg-teal-500 text-white"},{"id":"completed","name":"Выполнено","color":"bg-emerald-50 text-emerald-700 font-medium","barTheme":"bg-emerald-500 text-white"}],"projectReleases":[{"name":"MVP 1.0","date":"2026-08-24"}],"epicStatuses":{},"sectionMeta":{"Epic: Платежи и подписки [PAY-100]":{"key":"PAY-100","title":"Платежи и подписки","status":"In Progress","project":"PAY","wsjf":"24","metric":"Доля платящих пользователей","impact":"8","epicType":"Бизнесовый","plannedEnd":"2026-08-10","created":"2026-05-15","assignee":"a.petrov","desc":"Полный цикл оплаты: подключение провайдера, экран оплаты, подписки и автосписание для платных функций приложения."},"Epic: Личный кабинет [LK-200]":{"key":"LK-200","title":"Личный кабинет","status":"Analyse","project":"LK","wsjf":"15","metric":"Retention 30 дней","impact":"6","epicType":"Технический","plannedEnd":"2026-08-02","created":"2026-05-20","assignee":"i.morozov","desc":"Личный кабинет пользователя: профиль, настройки уведомлений и история заказов с фильтрами."}},"sectionLabels":{"Epic: Платежи и подписки [PAY-100]":["key_initiative","26Q3"],"Epic: Личный кабинет [LK-200]":["26Q3"]}};
+    const DEMO_DATA = {"savedAt":"2026-07-22T20:00:00.000Z","title":"Запуск мобильного приложения","pageMeta":{"poName":"Алексей Смирнов"},"sections":["Initiative: Запуск мобильного приложения [PAY-1]","Epic: Исследование и дизайн [PAY-100]","Story: Исследование пользователей [PAY-110]","Story: Прототип и дизайн-система [PAY-120]","Epic: Архитектура и платформа [PAY-200]","Story: Техническая проработка [PAY-210]","Story: Базовая разработка [PAY-220]","Epic: Платежи и подписки [PAY-300]","Story: Подключение оплаты [PAY-310]","Story: Подписки [PAY-320]","Epic: Личный кабинет [LK-100]","Story: Профиль пользователя [LK-110]","Story: История заказов [LK-120]","Epic: Тестирование и запуск [PAY-400]","Story: Подготовка релиза [PAY-410]","Задачи без эпика"],"sectionColors":{"Initiative: Запуск мобильного приложения [PAY-1]":"bg-indigo-600 text-white","Epic: Исследование и дизайн [PAY-100]":"bg-violet-500 text-white","Story: Исследование пользователей [PAY-110]":"bg-emerald-500 text-white","Story: Прототип и дизайн-система [PAY-120]":"bg-teal-500 text-white","Epic: Архитектура и платформа [PAY-200]":"bg-blue-500 text-white","Story: Техническая проработка [PAY-210]":"bg-cyan-500 text-white","Story: Базовая разработка [PAY-220]":"bg-sky-500 text-white","Epic: Платежи и подписки [PAY-300]":"bg-fuchsia-500 text-white","Story: Подключение оплаты [PAY-310]":"bg-pink-500 text-white","Story: Подписки [PAY-320]":"bg-rose-500 text-white","Epic: Личный кабинет [LK-100]":"bg-amber-500 text-slate-900","Story: Профиль пользователя [LK-110]":"bg-orange-500 text-white","Story: История заказов [LK-120]":"bg-lime-500 text-slate-900","Epic: Тестирование и запуск [PAY-400]":"bg-purple-500 text-white","Story: Подготовка релиза [PAY-410]":"bg-indigo-500 text-white","Задачи без эпика":"bg-slate-400 text-white"},"resources":["PO","Тех лид","Дизайнер","QA","a.petrov","m.ivanova","d.kozlov","e.sokolova","i.morozov"],"resourceRoles":{"a.petrov":"Backend","m.ivanova":"Frontend","d.kozlov":"Backend","e.sokolova":"QA","i.morozov":"Frontend"},"cutoffs":[{"id":"c1","name":"Бета-тест","date":"2026-07-15","color":"border-blue-500 bg-blue-500","showInHeader":true,"pinned":true},{"id":"c2","name":"Релиз MVP","date":"2026-08-24","color":"border-rose-500 bg-rose-500","showInHeader":true,"pinned":true},{"id":"release-mvp-1-0","name":"Релиз MVP 1.0","date":"2026-07-01","color":"border-emerald-500 bg-emerald-500","showInHeader":true},{"id":"release-mvp-1-1","name":"Релиз MVP 1.1","date":"2026-07-20","color":"border-indigo-500 bg-indigo-500","showInHeader":true},{"id":"release-mvp-2-0","name":"Релиз MVP 2.0","date":"2026-08-24","color":"border-rose-500 bg-rose-500","showInHeader":false}],"collapsedSections":[],"roadmapData":[{"id":1,"section":"Story: Исследование пользователей [PAY-110]","name":"Интервью с пользователями","status":"completed","resource":"Дизайнер","start":"2026-06-01","end":"2026-06-08","jira":"PAY-111","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"Гипотезы и сегменты согласованы","dod":"Отчет с инсайтами готов","estimate":"","pred":"","release":"MVP 1.0","labels":[],"epicLink":"PAY-100","issueType":"Task","_jiraParentKey":"PAY-110","initiativeId":"demo-launch"},{"id":2,"section":"Story: Исследование пользователей [PAY-110]","name":"Карта пути пользователя (CJM)","status":"completed","resource":"Дизайнер","start":"2026-06-05","end":"2026-06-12","jira":"PAY-112","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"1","release":"MVP 1.0","labels":[],"epicLink":"PAY-100","issueType":"Task","_jiraParentKey":"PAY-110","initiativeId":"demo-launch"},{"id":3,"section":"Story: Прототип и дизайн-система [PAY-120]","name":"Прототип ключевых экранов","status":"in_progress","resource":"m.ivanova","start":"2026-06-10","end":"2026-06-24","jira":"PAY-121","isMilestone":false,"blocked":false,"notes":"","metrics":"Конверсия в регистрацию, время до первого действия","dor":"","dod":"","estimate":"","pred":"2","release":"MVP 1.1","labels":[],"epicLink":"PAY-100","issueType":"Task","_jiraParentKey":"PAY-120","initiativeId":"demo-launch"},{"id":4,"section":"Story: Прототип и дизайн-система [PAY-120]","name":"Дизайн-система и компоненты","status":"review","resource":"Дизайнер","start":"2026-06-16","end":"2026-06-28","jira":"PAY-122","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"3","release":"MVP 1.1","labels":[],"epicLink":"PAY-100","issueType":"Task","_jiraParentKey":"PAY-120","initiativeId":"demo-launch"},{"id":5,"section":"Story: Техническая проработка [PAY-210]","name":"Техническое описание API","status":"completed","resource":"Тех лид","start":"2026-06-08","end":"2026-06-16","jira":"PAY-211","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"2","release":"MVP 1.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-210","initiativeId":"demo-launch"},{"id":6,"section":"Story: Техническая проработка [PAY-210]","name":"Оценка и декомпозиция","status":"completed","resource":"Тех лид","start":"2026-06-16","end":"2026-06-20","jira":"PAY-212","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"5","release":"MVP 1.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-210","initiativeId":"demo-launch"},{"id":7,"section":"Story: Техническая проработка [PAY-210]","name":"Выбор стека и архитектура","status":"in_progress","resource":"a.petrov","start":"2026-06-18","end":"2026-06-30","jira":"PAY-213","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"6","release":"MVP 1.1","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-210","initiativeId":"demo-launch"},{"id":8,"section":"Story: Базовая разработка [PAY-220]","name":"Каркас приложения","status":"in_progress","resource":"a.petrov","start":"2026-06-25","end":"2026-07-10","jira":"PAY-221","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"7","release":"MVP 1.1","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-220","initiativeId":"demo-launch"},{"id":9,"section":"Story: Базовая разработка [PAY-220]","name":"Экран онбординга","status":"planned","resource":"m.ivanova","start":"2026-07-01","end":"2026-07-12","jira":"PAY-222","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"8","release":"MVP 2.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-220","initiativeId":"demo-launch"},{"id":10,"section":"Story: Базовая разработка [PAY-220]","name":"Лента и поиск","status":"planned","resource":"m.ivanova","start":"2026-07-08","end":"2026-07-25","jira":"PAY-223","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"9","release":"MVP 2.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-220","initiativeId":"demo-launch"},{"id":11,"section":"Story: Базовая разработка [PAY-220]","name":"Интеграция аналитики","status":"planned","resource":"d.kozlov","start":"2026-07-15","end":"2026-07-22","jira":"PAY-224","isMilestone":false,"blocked":true,"notes":"Ожидается доступ к тестовой системе аналитики","metrics":"","dor":"","dod":"","estimate":"","pred":"10","release":"MVP 2.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-220","initiativeId":"demo-launch"},{"id":12,"section":"Story: Базовая разработка [PAY-220]","name":"Push-уведомления","status":"planned","resource":"d.kozlov","start":"2026-07-20","end":"2026-07-30","jira":"PAY-225","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"10","release":"MVP 2.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-220","initiativeId":"demo-launch"},{"id":13,"section":"Story: Подготовка релиза [PAY-410]","name":"Тест-план и автотесты","status":"planned","resource":"QA","start":"2026-07-25","end":"2026-08-05","jira":"PAY-411","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"12","release":"MVP 2.0","labels":[],"epicLink":"PAY-400","issueType":"Task","_jiraParentKey":"PAY-410","initiativeId":"demo-launch"},{"id":14,"section":"Story: Подготовка релиза [PAY-410]","name":"Регресс и нагрузочное","status":"testing","resource":"e.sokolova","start":"2026-08-05","end":"2026-08-15","jira":"PAY-412","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"13","release":"MVP 2.0","labels":[],"epicLink":"PAY-400","issueType":"Task","_jiraParentKey":"PAY-410","initiativeId":"demo-launch"},{"id":15,"section":"Story: Подготовка релиза [PAY-410]","name":"Подготовка к релизу","status":"ready_release","resource":"Тех лид","start":"2026-08-15","end":"2026-08-22","jira":"PAY-413","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"14","release":"MVP 2.0","labels":[],"epicLink":"PAY-400","issueType":"Task","_jiraParentKey":"PAY-410","initiativeId":"demo-launch"},{"id":16,"section":"Story: Подготовка релиза [PAY-410]","name":"Запуск MVP","status":"planned","resource":"PO","start":"2026-08-24","end":"2026-08-24","jira":"PAY-414","isMilestone":true,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"15","release":"MVP 2.0","labels":[],"epicLink":"PAY-400","issueType":"Task","_jiraParentKey":"PAY-410","initiativeId":"demo-launch"},{"id":17,"section":"Story: Подключение оплаты [PAY-310]","name":"Подключение платежного провайдера","status":"in_progress","resource":"a.petrov","start":"2026-07-01","end":"2026-07-20","jira":"PAY-311","isMilestone":false,"blocked":false,"notes":"","metrics":"Доля успешных оплат","dor":"","dod":"","estimate":"","pred":"6","release":"MVP 1.1","labels":[],"epicLink":"PAY-300","issueType":"Task","_jiraParentKey":"PAY-310","initiativeId":"demo-launch"},{"id":18,"section":"Story: Подключение оплаты [PAY-310]","name":"Экран оплаты","status":"planned","resource":"m.ivanova","start":"2026-07-15","end":"2026-07-28","jira":"PAY-312","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"17","release":"MVP 2.0","labels":[],"epicLink":"PAY-300","issueType":"Task","_jiraParentKey":"PAY-310","initiativeId":"demo-launch"},{"id":19,"section":"Story: Подписки [PAY-320]","name":"Подписки и автосписание","status":"planned","resource":"i.morozov","start":"2026-07-25","end":"2026-08-10","jira":"PAY-321","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"18","release":"MVP 2.0","labels":[],"epicLink":"PAY-300","issueType":"Task","_jiraParentKey":"PAY-320","initiativeId":"demo-launch"},{"id":20,"section":"Story: Профиль пользователя [LK-110]","name":"Профиль и настройки","status":"planned","resource":"m.ivanova","start":"2026-07-10","end":"2026-07-24","jira":"LK-111","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"6","release":"MVP 2.0","labels":[],"epicLink":"LK-100","issueType":"Task","_jiraParentKey":"LK-110","initiativeId":"demo-launch"},{"id":21,"section":"Story: История заказов [LK-120]","name":"История заказов","status":"planned","resource":"i.morozov","start":"2026-07-20","end":"2026-08-02","jira":"LK-121","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"20","release":"MVP 2.0","labels":[],"epicLink":"LK-100","issueType":"Bug","_jiraParentKey":"LK-120","initiativeId":"demo-launch"},{"id":22,"section":"Задачи без эпика","name":"Обновить документацию","status":"planned","resource":"Тех лид","start":"2026-07-05","end":"2026-07-10","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"","labels":[],"epicLink":"","issueType":"Task","_jiraParentKey":"","initiativeId":"demo-launch"},{"id":23,"section":"Задачи без эпика","name":"Настроить CI/CD","status":"in_progress","resource":"d.kozlov","start":"2026-06-20","end":"2026-06-30","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"22","release":"MVP 1.1","labels":[],"epicLink":"","issueType":"Task","_jiraParentKey":"","initiativeId":"demo-launch"}],"archivedTasks":[],"hiddenSections":[],"projectStatuses":[{"id":"planned","name":"В плане","color":"bg-slate-100 text-slate-600","barTheme":"bg-slate-500 text-white"},{"id":"in_progress","name":"В работе","color":"bg-indigo-50 text-indigo-700","barTheme":"bg-indigo-500 text-white"},{"id":"review","name":"Ревью","color":"bg-violet-50 text-violet-700","barTheme":"bg-violet-500 text-white"},{"id":"testing","name":"Тестирование","color":"bg-amber-50 text-amber-700","barTheme":"bg-amber-500 text-white"},{"id":"ready_release","name":"Готов к релизу","color":"bg-teal-50 text-teal-700","barTheme":"bg-teal-500 text-white"},{"id":"completed","name":"Выполнено","color":"bg-emerald-50 text-emerald-700 font-medium","barTheme":"bg-emerald-500 text-white"}],"projectReleases":[{"name":"MVP 1.0","date":"2026-07-01"},{"name":"MVP 1.1","date":"2026-07-20"},{"name":"MVP 2.0","date":"2026-08-24"}],"epicStatuses":{"PAY-1":"in_progress","PAY-100":"completed","PAY-110":"completed","PAY-120":"review","PAY-200":"in_progress","PAY-210":"completed","PAY-220":"in_progress","PAY-300":"in_progress","PAY-310":"in_progress","PAY-320":"planned","LK-100":"planned","LK-110":"planned","LK-120":"planned","PAY-400":"planned","PAY-410":"planned"},"sectionMeta":{"Initiative: Запуск мобильного приложения [PAY-1]":{"key":"PAY-1","title":"Запуск мобильного приложения","kind":"initiative","status":"in_progress","plannedEnd":"2026-08-24","project":"PAY","fromJira":true},"Epic: Исследование и дизайн [PAY-100]":{"key":"PAY-100","title":"Исследование и дизайн","kind":"epic","status":"completed","plannedEnd":"2026-06-28","project":"PAY","fromJira":true,"wsjf":"18","metric":"Проверенные пользовательские сценарии","impact":"7","epicType":"Бизнесовый"},"Story: Исследование пользователей [PAY-110]":{"key":"PAY-110","title":"Исследование пользователей","kind":"story","status":"completed","plannedEnd":"2026-06-12","project":"PAY","fromJira":true},"Story: Прототип и дизайн-система [PAY-120]":{"key":"PAY-120","title":"Прототип и дизайн-система","kind":"story","status":"review","plannedEnd":"2026-06-28","project":"PAY","fromJira":true},"Epic: Архитектура и платформа [PAY-200]":{"key":"PAY-200","title":"Архитектура и платформа","kind":"epic","status":"in_progress","plannedEnd":"2026-07-30","project":"PAY","fromJira":true,"wsjf":"24","metric":"Стабильность сборки","impact":"8","epicType":"Технический"},"Story: Техническая проработка [PAY-210]":{"key":"PAY-210","title":"Техническая проработка","kind":"story","status":"completed","plannedEnd":"2026-06-30","project":"PAY","fromJira":true},"Story: Базовая разработка [PAY-220]":{"key":"PAY-220","title":"Базовая разработка","kind":"story","status":"in_progress","plannedEnd":"2026-07-30","project":"PAY","fromJira":true},"Epic: Платежи и подписки [PAY-300]":{"key":"PAY-300","title":"Платежи и подписки","kind":"epic","status":"in_progress","plannedEnd":"2026-08-10","project":"PAY","fromJira":true,"wsjf":"24","metric":"Доля успешных оплат","impact":"8","epicType":"Бизнесовый","desc":"Полный демонстрационный цикл оплаты и подписки."},"Story: Подключение оплаты [PAY-310]":{"key":"PAY-310","title":"Подключение оплаты","kind":"story","status":"in_progress","plannedEnd":"2026-07-28","project":"PAY","fromJira":true},"Story: Подписки [PAY-320]":{"key":"PAY-320","title":"Подписки","kind":"story","status":"planned","plannedEnd":"2026-08-10","project":"PAY","fromJira":true},"Epic: Личный кабинет [LK-100]":{"key":"LK-100","title":"Личный кабинет","kind":"epic","status":"planned","plannedEnd":"2026-08-02","project":"LK","fromJira":true,"wsjf":"15","metric":"Retention 30 дней","impact":"6","epicType":"Технический","desc":"Профиль, настройки и история заказов в синтетическом проекте."},"Story: Профиль пользователя [LK-110]":{"key":"LK-110","title":"Профиль пользователя","kind":"story","status":"planned","plannedEnd":"2026-07-24","project":"LK","fromJira":true},"Story: История заказов [LK-120]":{"key":"LK-120","title":"История заказов","kind":"story","status":"planned","plannedEnd":"2026-08-02","project":"LK","fromJira":true},"Epic: Тестирование и запуск [PAY-400]":{"key":"PAY-400","title":"Тестирование и запуск","kind":"epic","status":"planned","plannedEnd":"2026-08-24","project":"PAY","fromJira":true,"wsjf":"20","metric":"Доля успешных запусков","impact":"9","epicType":"Технический"},"Story: Подготовка релиза [PAY-410]":{"key":"PAY-410","title":"Подготовка релиза","kind":"story","status":"planned","plannedEnd":"2026-08-24","project":"PAY","fromJira":true}},"sectionLabels":{"Initiative: Запуск мобильного приложения [PAY-1]":["demo","26Q3"],"Epic: Исследование и дизайн [PAY-100]":["research"],"Epic: Архитектура и платформа [PAY-200]":["platform"],"Epic: Платежи и подписки [PAY-300]":["payments","26Q3"],"Epic: Личный кабинет [LK-100]":["profile","26Q3"],"Epic: Тестирование и запуск [PAY-400]":["release"]},"sectionParents":{"Epic: Исследование и дизайн [PAY-100]":"Initiative: Запуск мобильного приложения [PAY-1]","Epic: Архитектура и платформа [PAY-200]":"Initiative: Запуск мобильного приложения [PAY-1]","Epic: Платежи и подписки [PAY-300]":"Initiative: Запуск мобильного приложения [PAY-1]","Epic: Личный кабинет [LK-100]":"Initiative: Запуск мобильного приложения [PAY-1]","Epic: Тестирование и запуск [PAY-400]":"Initiative: Запуск мобильного приложения [PAY-1]","Story: Исследование пользователей [PAY-110]":"Epic: Исследование и дизайн [PAY-100]","Story: Прототип и дизайн-система [PAY-120]":"Epic: Исследование и дизайн [PAY-100]","Story: Техническая проработка [PAY-210]":"Epic: Архитектура и платформа [PAY-200]","Story: Базовая разработка [PAY-220]":"Epic: Архитектура и платформа [PAY-200]","Story: Подключение оплаты [PAY-310]":"Epic: Платежи и подписки [PAY-300]","Story: Подписки [PAY-320]":"Epic: Платежи и подписки [PAY-300]","Story: Профиль пользователя [LK-110]":"Epic: Личный кабинет [LK-100]","Story: История заказов [LK-120]":"Epic: Личный кабинет [LK-100]","Story: Подготовка релиза [PAY-410]":"Epic: Тестирование и запуск [PAY-400]"},"projectGoals":[{"id":"goal-demo-launch","name":"Запустить полезный MVP","owner":"PO","horizon":"2026 Q3","base":"0","target":"1000 активных пользователей"}],"projectInitiatives":[{"id":"demo-launch","name":"Запуск мобильного приложения","goalId":"goal-demo-launch","nnl":"now"}],"projectRaid":[{"id":"raid-demo-1","type":"risk","title":"Задержка доступа к аналитике","owner":"d.kozlov","status":"open"}]};
     // п.4 Выгрузка только для просмотра: данные берем из вшитого снимка, в localStorage получателя НЕ пишем.
     let READ_ONLY_MODE = (typeof window !== 'undefined' && window.__READ_ONLY__ === true);
     if (READ_ONLY_MODE && window.__SHARE_DATA__) {
@@ -8202,8 +8225,8 @@
       let rootedTasks = 0;
       roadmapData.forEach(t => {
         if (!t || t.isMilestone || jiraHierarchyRankFromType(t.issueType) < 3) return;
-        // Обычная задача не может быть прямым ребенком Initiative или Epic: без Story это корень.
-        if (/^(Initiative|Epic):/i.test(String(t.section || ''))) {
+        // Leaf-задача может находиться только в Story или в обычной корневой секции.
+        if (!isTaskTargetSection(t.section)) {
           t.section = 'Задачи без эпика'; rootedTasks++;
         }
       });
@@ -8238,7 +8261,7 @@
         const parent = sectionParents[child];
         const childRank = /^Initiative:/i.test(child) ? 0 : (/^Epic:/i.test(child) ? 1 : (/^Story:/i.test(child) ? 2 : -1));
         const parentRank = /^Initiative:/i.test(parent) ? 0 : (/^Epic:/i.test(parent) ? 1 : (/^Story:/i.test(parent) ? 2 : -1));
-        if ((parentRank >= 0 || childRank >= 0) && childRank !== parentRank + 1) delete sectionParents[child];
+        if (!isValidSectionParent(child, parent) || ((parentRank >= 0 || childRank >= 0) && childRank !== parentRank + 1)) delete sectionParents[child];
       });
       // Считаем активные задачи по секциям
       const counts = {};
@@ -9756,7 +9779,11 @@
       var R = [], pass = 0, fail = 0;
       function chk(name, fn) { try { var r = fn(); if (r === false) { R.push('FAIL ' + name); fail++; } else { R.push('ok ' + name); pass++; } } catch (e) { R.push('FAIL ' + name + ': ' + ((e && e.message) || e)); fail++; } }
       var _av = (typeof appView !== 'undefined') ? appView : 'list';
-      chk('виды переключаются', function () { ['list', 'kanban', 'forecast'].forEach(function (v) { setAppView(v); }); setAppView(_av); return true; });
+      chk('все пять видов переключаются', function () { ['summary', 'list', 'kanban', 'forecast', 'present'].forEach(function (v) { setAppView(v); }); setAppView(_av); return true; });
+      chk('иерархия типов', function () { return jiraHierarchyRankFromType('Initiative') === 0 && jiraHierarchyRankFromType('Epic') === 1 && jiraHierarchyRankFromType('Story') === 2 && jiraHierarchyRankFromType('Bug') === 3; });
+      chk('задачи не лежат в Initiative или Epic', function () { return !roadmapData.some(function (t) { return t && !t.isMilestone && jiraHierarchyRankFromType(t.issueType) === 3 && /^(Initiative|Epic):/i.test(String(t.section || '')); }); });
+      chk('вложенность только соседняя', function () { return Object.keys(sectionParents || {}).every(function (child) { var parent = sectionParents[child]; var cr = /^Initiative:/i.test(child) ? 0 : (/^Epic:/i.test(child) ? 1 : (/^Story:/i.test(child) ? 2 : -1)); var pr = /^Initiative:/i.test(parent) ? 0 : (/^Epic:/i.test(parent) ? 1 : (/^Story:/i.test(parent) ? 2 : -1)); return (cr < 0 && pr < 0) || cr === pr + 1; }); });
+      chk('релизы задач существуют', function () { var names = new Set((projectReleases || []).map(function (r) { return String(r && r.name || ''); })); return !roadmapData.some(function (t) { return t && t.release && !names.has(String(t.release)); }); });
       chk('шапка таймлайна', function () { renderTimelineHeader(); return true; });
       chk('основной рендер', function () { renderRoadmap(true); return true; });
       chk('раскладка спринтов', function () { _levelSchedule(); return true; });
@@ -10715,15 +10742,79 @@
       window.addEventListener('pointerup', onUp);
     }
 
-    function addCustomSection(nameArg) {
+    function sectionHierarchyKind(sectionName) {
+      const s = String(sectionName || '').trim();
+      if (/^Initiative:/i.test(s)) return 'initiative';
+      if (/^Epic:/i.test(s)) return 'epic';
+      if (/^Story:/i.test(s)) return 'story';
+      return 'root';
+    }
+    function isTaskTargetSection(sectionName) {
+      const s = String(sectionName || '');
+      if (!s || !planSections.includes(s)) return false;
+      const kind = sectionHierarchyKind(s);
+      if (kind === 'story') return true;
+      if (kind !== 'root') return false;
+      return !(sectionParents && sectionParents[s]);
+    }
+    function isValidSectionParent(child, parent) {
+      if (!parent) return true;
+      const childKind = sectionHierarchyKind(child);
+      const parentKind = sectionHierarchyKind(parent);
+      if (childKind === 'epic') return parentKind === 'initiative';
+      if (childKind === 'story') return parentKind === 'epic';
+      return false; // Initiative и обычные секции всегда находятся в корне.
+    }
+    function taskTargetSections() { return (planSections || []).filter(isTaskTargetSection); }
+    function ensureTaskRootSection() {
+      let targets = taskTargetSections();
+      if (targets.length) return targets[0];
+      const root = 'Задачи без эпика';
+      if (!planSections.includes(root)) planSections.push(root);
+      if (!sectionColors[root]) sectionColors[root] = 'bg-slate-500 text-white';
+      delete sectionParents[root];
+      storage.set('gantt_sections_list', JSON.stringify(planSections));
+      storage.set('gantt_section_colors', JSON.stringify(sectionColors));
+      storage.set('gantt_section_parents', JSON.stringify(sectionParents));
+      return root;
+    }
+    function validateTaskTargetSection(sectionName, notify) {
+      if (isTaskTargetSection(sectionName)) return true;
+      if (notify !== false && typeof showToast === 'function') showToast('Задачу можно поместить только в Story или обычную корневую секцию', 'warn', 4000);
+      return false;
+    }
+    function childContainerName(kind, rawName) {
+      const prefix = kind === 'epic' ? 'Epic' : 'Story';
+      const clean = String(rawName || '').trim().replace(/^(Initiative|Epic|Story)\s*:\s*/i, '');
+      return clean ? `${prefix}: ${clean}` : '';
+    }
+    function quickAddSectionLabel(sectionName) {
+      const kind = sectionHierarchyKind(sectionName);
+      return kind === 'initiative' ? 'Добавить эпик' : (kind === 'epic' ? 'Добавить стори' : 'Добавить задачу');
+    }
+
+    function addCustomSection(nameArg, opts) {
       // Имя берем из аргумента (кнопка «+» в шапке списка) или из поля ввода (если оно есть)
+      opts = opts || {};
       let val;
       if (typeof nameArg === 'string') val = nameArg.trim();
       else { const input = document.getElementById('newSectionInput'); val = input ? input.value.trim() : ''; }
       if (!val) return;
       if (planSections.includes(val)) { if (typeof showToast === 'function') showToast('Секция с таким именем уже есть', 'info'); return; }
-      // Новую секцию , в начало списка, чтобы ее сразу было видно
-      planSections.unshift(val);
+      // Дочерний контейнер ставим сразу после поддерева родителя; обычную секцию , в начало списка.
+      if (opts.parent && planSections.includes(opts.parent)) {
+        const descendants = new Set(typeof _secDescendants === 'function' ? _secDescendants(opts.parent) : []);
+        let idx = planSections.indexOf(opts.parent) + 1;
+        while (idx < planSections.length && descendants.has(planSections[idx])) idx++;
+        planSections.splice(idx, 0, val);
+        sectionParents[val] = opts.parent;
+      } else {
+        planSections.unshift(val);
+        delete sectionParents[val];
+      }
+      if (opts.kind === 'epic' || opts.kind === 'story') {
+        sectionMeta[val] = { ...(sectionMeta[val] || {}), kind: opts.kind, title: val.replace(/^(Epic|Story):\s*/i, '') };
+      }
       // Назначаем новой секции один из палитры цветов, чтобы бары задач сразу окрашивались
       if (!sectionColors[val]) {
         const palette = ['bg-indigo-500', 'bg-blue-500', 'bg-violet-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-cyan-500', 'bg-fuchsia-500', 'bg-teal-500', 'bg-orange-500'];
@@ -10733,6 +10824,9 @@
       }
       storage.set('gantt_sections_list', JSON.stringify(planSections));
       storage.set('gantt_section_colors', JSON.stringify(sectionColors));
+      storage.set('gantt_section_parents', JSON.stringify(sectionParents));
+      storage.set('gantt_section_meta', JSON.stringify(sectionMeta));
+      if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile();
       const input = document.getElementById('newSectionInput');
       if (input) input.value = '';
       populateSectionSelects();
@@ -10740,6 +10834,7 @@
       updateStatusSelects();
       renderRoadmap();
       if (typeof showToast === 'function') showToast(`Секция «${val}» добавлена`, 'ok');
+      return true;
     }
     // Быстрое добавление секции по кнопке «+» в заголовке списка
     function addSectionPrompt() {
@@ -10786,10 +10881,26 @@
     }
 
     function populateSectionSelects() {
-      document.getElementById('taskSection').innerHTML = planSections.map(s => `<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('');
+      const select = document.getElementById('taskSection'); if (!select) return;
+      const current = select.value;
+      if (!taskTargetSections().length) ensureTaskRootSection();
+      const targets = taskTargetSections();
+      select.innerHTML = targets.map(s => `<option value="${escAttr(s)}">${escHtml(s)}</option>`).join('');
+      select.value = targets.includes(current) ? current : (targets[0] || '');
     }
 
     function openQuickAddForSection(sectionName) {
+      const kind = sectionHierarchyKind(sectionName);
+      if (kind === 'initiative' || kind === 'epic') {
+        const childKind = kind === 'initiative' ? 'epic' : 'story';
+        const childLabel = childKind === 'epic' ? 'эпик' : 'стори';
+        openInputModal({ title: `Новый ${childLabel}`, placeholder: `Название ${childLabel}`, okText: 'Добавить', onOk: (name) => {
+          const child = childContainerName(childKind, name);
+          if (child) addCustomSection(child, { parent: sectionName, kind: childKind });
+        }});
+        return;
+      }
+      if (!validateTaskTargetSection(sectionName)) return;
       openModal(null);
       document.getElementById('taskSection').value = sectionName;
       document.getElementById('modalTitle').innerText = `Добавить задачу в секцию`;
@@ -11139,6 +11250,8 @@
       // Переупорядочивание внутри одной секции , фиксируем видимый порядок и включаем ручной режим,
       // иначе авто-сортировка перекроет перестановку и «перетащить» не сработает.
       const tgt = targetTaskId ? roadmapData.find(t => t.id === targetTaskId) : null;
+      const destinationSection = tgt ? tgt.section : targetSectionName;
+      if (destinationSection && !validateTaskTargetSection(destinationSection)) { draggedRowTaskId = null; return; }
       if (tgt && tgt.section === draggedTask.section) ensureManualOrder();
       const dt = roadmapData.find(t => t.id === draggedRowTaskId);
       roadmapData = roadmapData.filter(t => t.id !== draggedRowTaskId);
@@ -13241,7 +13354,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (selectMode && n > 0) {
         document.getElementById('bulkCount').textContent = n;
         document.getElementById('bulkStatusSel').innerHTML = '<option value="">Статус…</option>' + projectStatuses.map(s => `<option value="${escAttr(s.id)}">${escHtml(s.name)}</option>`).join('');
-        document.getElementById('bulkSectionSel').innerHTML = '<option value="">В секцию…</option>' + planSections.map(s => `<option value="${escAttr(s)}">${escHtml(s)}</option>`).join('');
+        document.getElementById('bulkSectionSel').innerHTML = '<option value="">В секцию…</option>' + taskTargetSections().map(s => `<option value="${escAttr(s)}">${escHtml(s)}</option>`).join('');
         bar.classList.remove('hidden');
       } else { bar.classList.add('hidden'); if (typeof closeBulkPopover === 'function') closeBulkPopover(); }
     }
@@ -13251,7 +13364,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
       const snap = captureUndoState();
       let n = 0;
-      roadmapData.forEach(t => { if (selectedTaskIds.has(t.id) && !t.hidden && (typeof taskPassesFilters !== 'function' || taskPassesFilters(t))) { logStatusChange(t, statusId); t.status = statusId; n++; } });
+      roadmapData.forEach(t => { if (selectedTaskIds.has(t.id) && !t.hidden && (typeof taskPassesFilters !== 'function' || taskPassesFilters(t))) { logStatusChange(t, statusId); t.status = statusId; t.updated = toYmdLocal(CURRENT_DATE || new Date()); n++; } });
       if (!n) { updateBulkBar(); return; }
       storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData));
       renderRoadmap(); updateBulkBar();
@@ -13259,6 +13372,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
     }
     function bulkMoveSection(section) {
       if (!section || !selectedTaskIds.size) return;
+      if (!validateTaskTargetSection(section)) return;
       if (READ_ONLY_MODE) return;
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
       const snap = captureUndoState();
@@ -14364,8 +14478,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const tSelect = document.getElementById('taskResource');
       if (tSelect) {
         const curTVal = tSelect.value;
-        tSelect.innerHTML = projectResources.map(r => `<option value="${escHtml(r)}">${escHtml(r)}${_resOptionSuffix(r)}</option>`).join('');
-        if (projectResources.includes(curTVal)) tSelect.value = curTVal;
+        tSelect.innerHTML = '<option value="">Не назначено</option>' + projectResources.map(r => `<option value="${escAttr(r)}">${escHtml(r)}${_resOptionSuffix(r)}</option>`).join('');
+        tSelect.value = projectResources.includes(curTVal) ? curTVal : '';
       }
     }
 
@@ -14444,12 +14558,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
     }
 
     function updateSectionSelects() {
-      const selectTask = document.getElementById('taskSection');
-      if (selectTask) {
-        const curVal = selectTask.value;
-        selectTask.innerHTML = planSections.map(s => `<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('');
-        if(planSections.includes(curVal)) selectTask.value = curVal;
-      }
+      populateSectionSelects();
     }
 
     
@@ -16104,8 +16213,15 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE) { if (typeof showToast === 'function') showToast('Только просмотр', 'info', 2000); return; }
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
       const ctx = _dupCtx;
-      const newName = String((document.getElementById('dupNewName') || {}).value || '').trim();
+      let newName = String((document.getElementById('dupNewName') || {}).value || '').trim();
       if (!newName) { if (typeof showToast === 'function') showToast(ctx.kind === 'release' ? 'Укажите название нового релиза' : 'Укажите название новой секции', 'warn'); return; }
+      if (ctx.kind === 'section') {
+        const sourceKind = sectionHierarchyKind(ctx.name);
+        if (sourceKind === 'initiative' || sourceKind === 'epic' || sourceKind === 'story') {
+          const prefix = sourceKind === 'initiative' ? 'Initiative' : (sourceKind === 'epic' ? 'Epic' : 'Story');
+          if (sectionHierarchyKind(newName) !== sourceKind) newName = `${prefix}: ${newName.replace(/^(Initiative|Epic|Story)\s*:\s*/i, '')}`;
+        }
+      }
       if (ctx.kind === 'section' && planSections.includes(newName)) { if (typeof showToast === 'function') showToast('Секция с таким названием уже есть', 'warn'); return; }
       const useStart = !!((document.getElementById('dupModeStart') || {}).checked);
       const workdays = !!((document.getElementById('dupWorkdays') || {}).checked);
@@ -16349,7 +16465,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (sel) {
         const banned = new Set([_nestCtx, ..._secDescendants(_nestCtx)]);
         const cur = (sectionParents || {})[_nestCtx] || '';
-        sel.innerHTML = `<option value="">Без родителя (верхний уровень)</option>` + planSections.filter(s => !banned.has(s)).map(s => `<option value="${escAttr(s)}" ${s === cur ? 'selected' : ''}>${escHtml(s)}</option>`).join('');
+        sel.innerHTML = `<option value="">Без родителя (верхний уровень)</option>` + planSections.filter(s => !banned.has(s) && isValidSectionParent(_nestCtx, s)).map(s => `<option value="${escAttr(s)}" ${s === cur ? 'selected' : ''}>${escHtml(s)}</option>`).join('');
       }
       const m = document.getElementById('sectionNestModal');
       if (m) { m.classList.remove('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
@@ -16362,6 +16478,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const child = _nestCtx;
       const parent = String((document.getElementById('sectionNestParent') || {}).value || '');
       if (parent && (parent === child || _secDescendants(child).includes(parent))) { showToast('Нельзя вложить секцию в ее же подсекцию', 'warn'); return; }
+      if (!isValidSectionParent(child, parent)) { showToast('Допустима только иерархия Initiative → Epic → Story; обычные секции остаются в корне', 'warn', 4500); return; }
       const snap = (typeof captureUndoState === 'function') ? captureUndoState() : null;
       if (parent) sectionParents[child] = parent; else delete sectionParents[child];
       // Переупорядочиваем план: подсекция (со своим поддеревом, в прежнем относительном порядке)
@@ -16700,8 +16817,13 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const ctx = _epicCardCtx; if (!ctx) { closeEpicCard(); return; }
       const copy = ctx.copy || _sectionCardCopy(ctx.name);
       const gv = (id) => { const el = document.getElementById(id); return el ? String(el.value || '').trim() : ''; };
-      const newName = gv('epicCardName');
+      let newName = gv('epicCardName');
       if (!newName) { if (typeof showToast === 'function') showToast('Введите: ' + copy.nameLabel.toLowerCase(), 'warn', 3000); return; }
+      { const kind = sectionHierarchyKind(ctx.name);
+        if (kind === 'initiative' || kind === 'epic' || kind === 'story') {
+          const prefix = kind === 'initiative' ? 'Initiative' : (kind === 'epic' ? 'Epic' : 'Story');
+          if (sectionHierarchyKind(newName) !== kind) newName = `${prefix}: ${newName.replace(/^(Initiative|Epic|Story)\s*:\s*/i, '')}`;
+        } }
       if (newName !== ctx.name && (planSections.includes(newName) || (hiddenSections || []).includes(newName))) { showToast('Секция с таким названием уже есть', 'warn'); return; }
       const snap = (typeof captureUndoState === 'function') ? captureUndoState() : null;
       let cur = ctx.name;
@@ -17425,12 +17547,16 @@ let resourceView = 'roles'; // 'roles' | 'load'
     // ===================== Пункт 6: Кого не хватает раньше всех =====================
     // Раскладка задач одного человека по N параллельным полосам (по рабочим дням), возвращает позднейший конец.
     function _lanesFinish(list, lanes, person) {
-      var free = []; for (var i = 0; i < lanes; i++) free.push(null);
+      var laneCount = Math.max(1, parseInt(lanes, 10) || 1);
+      var free = new Array(laneCount).fill(null);
       var sorted = list.slice().sort(function (a, b) { return String(a.start || '').localeCompare(String(b.start || '')); });
       var fin = null;
       sorted.forEach(function (it) {
-        var li = 0, best = free[0];
-        for (var k = 1; k < lanes; k++) { if (free[k] === null) { li = k; best = null; break; } if (best === null || free[k] < best) { best = free[k]; li = k; } }
+        var li = free.findIndex(function (value) { return value === null; });
+        if (li < 0) {
+          li = 0;
+          for (var k = 1; k < free.length; k++) if (String(free[k]).localeCompare(String(free[li])) < 0) li = k;
+        }
         var earliest = it.start || _fcBase();
         if (free[li] && free[li] > earliest) earliest = free[li];
         var span = _spSpan(earliest, it.dur, person);
@@ -19795,6 +19921,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const oldStatus = t.status;
       if (typeof logStatusChange === 'function') { try { logStatusChange(t, statusId); } catch (x) {} }
       t.status = statusId;
+      t.updated = toYmdLocal(CURRENT_DATE || new Date());
       if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile();
       if (typeof persistProjectState === 'function') persistProjectState();
       if (typeof renderRoadmap === 'function') renderRoadmap(true); else renderKanban();
@@ -19813,13 +19940,13 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const blocked = (typeof isBlocked === 'function') ? isBlocked(t) : !!(t && t.blocked);
       const kd = (typeof _kindDotHtml === 'function') ? _kindDotHtml(t) : '';
       const blockBadge = blocked ? '<span title="Заблокирована" class="shrink-0 mt-0.5 text-rose-500"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></span>' : '';
-      const stSel = ro ? '' : ('<select onclick="event.stopPropagation()" onchange="event.stopPropagation(); _kanbanSetStatus(' + t.id + ', this.value)" aria-label="Сменить статус задачи" title="Сменить статус , удобно на телефоне без перетаскивания" class="mt-2 w-full h-8 px-1.5 bg-slate-50 border border-slate-200 rounded-md text-[10px] text-slate-600 cursor-pointer focus:outline-none focus:border-indigo-500">' + (projectStatuses||[]).map(function(s2){return '<option value="'+escAttr(s2.id)+'"'+(s2.id===t.status?' selected':'')+'>'+escHtml(s2.name)+'</option>';}).join('') + '</select>');
+      const stSel = ro ? '' : ('<select onclick="event.stopPropagation()" onkeydown="event.stopPropagation()" onchange="event.stopPropagation(); _kanbanSetStatus(' + t.id + ', this.value)" aria-label="Сменить статус задачи" title="Сменить статус , удобно на телефоне без перетаскивания" class="mt-2 w-full h-8 px-1.5 bg-slate-50 border border-slate-200 rounded-md text-[10px] text-slate-600 cursor-pointer focus:outline-none focus:border-indigo-500">' + (projectStatuses||[]).map(function(s2){return '<option value="'+escAttr(s2.id)+'"'+(s2.id===t.status?' selected':'')+'>'+escHtml(s2.name)+'</option>';}).join('') + '</select>');
       const _risk = [];
       try { if (_critPathIds && _critPathIds.has && _critPathIds.has(t.id)) _risk.push('<span title="Критический путь: сдвиг этой задачи двигает весь план" class="inline-block w-2 h-2 rounded-full bg-violet-500 shrink-0 mt-1.5"></span>'); } catch (e) {}
       try { if (typeof _parViolIds !== 'undefined' && _parViolIds && _parViolIds.has && _parViolIds.has(t.id)) _risk.push('<span title="Перегруз: у исполнителя больше параллельных задач, чем разрешено" class="inline-block w-2 h-2 rounded-full bg-pink-500 shrink-0 mt-1.5"></span>'); } catch (e) {}
       try { if (typeof _taskLeaveConflict === 'function' && _taskLeaveConflict(t)) _risk.push('<span title="Пересекается с отпуском исполнителя" class="inline-block w-2 h-2 rounded-full bg-amber-500 shrink-0 mt-1.5"></span>'); } catch (e) {}
       const riskHtml = _risk.length ? `<span class="inline-flex items-center gap-1 shrink-0 mt-0.5">${_risk.join('')}</span>` : '';
-      return `<div ${dragAttrs} onclick="openTaskById(${t.id})" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTaskById(${t.id});}" class="kanban-card bg-white rounded-lg border border-slate-200 ${blocked ? 'border-l-2 border-l-rose-400' : ''} p-2.5 shadow-2xs hover:border-indigo-300 hover:shadow-sm cursor-pointer transition-all ${ro ? '' : 'active:cursor-grabbing'}">
+      return `<div ${dragAttrs} onclick="openTaskById(${t.id})" tabindex="0" role="button" onkeydown="if(event.target!==event.currentTarget)return;if(event.key==='Enter'||event.key===' '){event.preventDefault();openTaskById(${t.id});}" class="kanban-card bg-white rounded-lg border border-slate-200 ${blocked ? 'border-l-2 border-l-rose-400' : ''} p-2.5 shadow-2xs hover:border-indigo-300 hover:shadow-sm cursor-pointer transition-all ${ro ? '' : 'active:cursor-grabbing'}">
         <div class="flex items-start gap-1.5">${kd}<div class="text-xs font-medium text-slate-800 leading-snug grow min-w-0">${escHtml(t.name || 'Без названия')}</div>${riskHtml}${blockBadge}</div>
         ${sec}
         <div class="flex items-center justify-between gap-2 mt-1.5">${res}<span class="text-[10px] tabular-nums ${overdue ? 'text-rose-600 font-semibold' : 'text-slate-500'}">${escHtml(dt)}</span></div>
@@ -19873,6 +20000,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const oldStatus = t.status;
       if (typeof logStatusChange === 'function') { try { logStatusChange(t, statusId); } catch (x) {} }
       t.status = statusId;
+      t.updated = toYmdLocal(CURRENT_DATE || new Date());
       if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile();
       if (typeof persistProjectState === 'function') persistProjectState();
       if (typeof renderRoadmap === 'function') renderRoadmap(true); else renderKanban();
@@ -20451,6 +20579,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
 
         // Заголовок секции на Ганте (Правая панель)
         const headerRight = document.createElement('div');
+        headerRight.id = `header-right-${sIdx}`;
         headerRight.className = `h-[54px] bg-slate-100/40 relative flex items-center overflow-hidden border-b ${borderColorClass}/50`;
         if (bounds.start) {
           const summaryBar = document.createElement('div');
@@ -20574,7 +20703,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             rowLeft.setAttribute('role', 'button');
             rowLeft.setAttribute('tabindex', '0');
             rowLeft.setAttribute('aria-label', (task.name || 'Задача') + ' , открыть карточку');
-            rowLeft.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (selectMode) toggleBulkSelect(task.id); else openModal(task); } });
+            rowLeft.addEventListener('keydown', (e) => { if (e.target !== rowLeft) return; if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (selectMode) toggleBulkSelect(task.id); else openModal(task); } });
 
             // Проверяем наличие продуктовых заметок для вывода иконки-индикатора
             const hasProductCriteria = task.dor || task.dod || task.notes;
@@ -20599,7 +20728,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
                     ${!task.isMilestone ? ((typeof _taskMineable === 'function' && _taskMineable(task) && !READ_ONLY_MODE) ? `<button type="button" onclick="event.stopPropagation(); toggleTaskExternal(${task.id})" class="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-medium truncate max-w-[120px] cursor-pointer hover:opacity-80 ${jiraTypeBadgeClass(taskTypeLabel(task))}" title="Тип: ${escAttr(taskTypeLabel(task))}. Клик , сменить Моя / Внешняя">${escHtml(taskTypeLabel(task))}</button>` : `<span class="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-medium truncate max-w-[120px] ${jiraTypeBadgeClass(taskTypeLabel(task))}" title="Тип элемента: ${escAttr(taskTypeLabel(task))}">${escHtml(taskTypeLabel(task))}</span>`) : ''}
                     ${!_compactRows && task.jira ? `<a data-feat="jira" href="${escHtml(jiraHref)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="inline-flex items-center gap-1 font-mono font-semibold text-slate-500 hover:text-blue-700 transition-colors shrink-0" title="Jira: ${escHtml(task.jira)} (${escAttr(task.issueType || 'задача')})"><svg aria-hidden="true" class="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="6" fill="${jiraTypeColor(task.issueType)}"/><text x="12" y="16.5" fill="white" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">J</text></svg>${escHtml(getTaskKey(task))}</a>` : `<a href="#" onclick="event.preventDefault(); event.stopPropagation(); openTaskById(${task.id})" class="inline-flex items-center font-mono font-semibold text-slate-400 hover:text-indigo-600 transition-colors shrink-0" title="Открыть карточку задачи">${escHtml(getTaskKey(task))}</a>`}
                     ${(task.isMilestone ? task.start : (task.end || task.start)) ? `<span class="text-indigo-600/80 font-normal shrink-0 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200/60" title="${task.isMilestone ? 'Дата вехи' : 'Начало → конец'}">${(!task.isMilestone && task.start && task.end && task.start !== task.end) ? `<span data-adv>${escHtml(formatDateString(task.start))} → </span>` : ''}${escHtml(formatDateString(task.isMilestone ? task.start : (task.end || task.start)))}</span>${typeof _daysLeftChip === 'function' ? _daysLeftChip(task) : ''}` : `<span class="text-slate-500 font-normal shrink-0 bg-slate-50 px-1.5 py-0.5 rounded border border-dashed border-slate-300" title="Даты не заданы , задайте в карточке, и задача появится на диаграмме">без дат</span>`}
-                    <span class="${statusClass} text-[10px] px-1.5 py-0.5 rounded-sm shrink-0${(READ_ONLY_MODE || task.isMilestone) ? '' : ' cursor-pointer hover:opacity-80'}"${(READ_ONLY_MODE || task.isMilestone) ? '' : ` onclick="event.stopPropagation(); cycleTaskStatus(${task.id})" title="Клик , следующий статус"`}>${escHtml(statusText)}</span>
+                    <span class="${statusClass} text-[10px] px-1.5 py-0.5 rounded-sm shrink-0${(READ_ONLY_MODE || task.isMilestone) ? '' : ' cursor-pointer hover:opacity-80'}"${(READ_ONLY_MODE || task.isMilestone) ? '' : ` role="button" tabindex="0" aria-label="Статус ${escAttr(statusText)}; переключить на следующий" onclick="event.stopPropagation(); cycleTaskStatus(${task.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();cycleTaskStatus(${task.id})}" title="Клик , следующий статус"`}>${escHtml(statusText)}</span>
                     ${isOverdue ? `<span class="text-[10px] px-1.5 py-0.5 rounded-sm shrink-0 bg-slate-100 text-slate-600" title="Текущий статус задачи">${escHtml(statusNameById(task.status) || '')}</span>${task.updated ? `<span class="text-[10px] text-slate-500 shrink-0" title="Дата последнего обновления">обн. ${escHtml(formatDateString(task.updated) || task.updated)}</span>` : ''}` : ''}
                     ${task.resource ? `<span data-feat="resources" class="font-medium text-slate-500 px-1 text-[10px] truncate max-w-[100px] shrink-0" title="${escAttr(task.resource)}">${escHtml(formatResourceList(task.resource))}</span>` : ''}
                     ${!_compactRows && task.estimate ? `<span data-feat="estimates" class="font-semibold text-slate-500 px-1 text-[10px] shrink-0">${parseEstimateDays(task.estimate) || escHtml(task.estimate)}д</span>` : ''}
@@ -20618,7 +20747,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
                 </div>
                 ${criteriaIconHtml}
               </div>
-              <div class="row-actions no-image-export absolute right-10 inset-y-0 flex items-center gap-1 pl-7 pr-1 bg-gradient-to-l from-slate-50 via-slate-50 to-transparent opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity z-10">
+              <div class="row-actions no-image-export absolute right-10 inset-y-0 flex items-center gap-1 pl-7 pr-1 bg-gradient-to-l from-slate-50 via-slate-50 to-transparent opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-opacity z-10">
                 <button type="button" data-act="up" class="w-8 h-8 rounded-lg bg-white border border-slate-200 shadow-xs hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer" title="Выше">
                   <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path></svg>
                 </button>
@@ -20939,7 +21068,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             const emptyReadOnly = (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE);
             emptyRowLeft.innerHTML = emptyReadOnly
               ? `<span class="inline-flex items-center gap-1.5 text-[11px] text-slate-400"><span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>Задач пока нет</span>`
-              : `<button type="button" data-empty-section-add onclick="event.stopPropagation(); openQuickAddForSection('${sectionNameAttr}')" class="group inline-flex items-center gap-2 h-8 px-3 -ml-3 rounded-lg text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 transition-colors cursor-pointer" aria-label="Добавить первую задачу в секцию ${escAttr(mainTitle)}"><span class="w-5 h-5 rounded-md bg-indigo-50 group-hover:bg-indigo-100 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></span>Добавить первую задачу</button>`;
+              : `<button type="button" data-empty-section-add onclick="event.stopPropagation(); openQuickAddForSection('${sectionNameAttr}')" class="group inline-flex items-center gap-2 h-8 px-3 -ml-3 rounded-lg text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 transition-colors cursor-pointer" aria-label="${escAttr(quickAddSectionLabel(sectionName))} в секцию ${escAttr(mainTitle)}"><span class="w-5 h-5 rounded-md bg-indigo-50 group-hover:bg-indigo-100 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></span>${escHtml(quickAddSectionLabel(sectionName))}</button>`;
             listContainer.appendChild(emptyRowLeft);
 
             const emptyRowRight = document.createElement('div');
@@ -21448,7 +21577,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const panel = document.getElementById('taskMovePanel');
       if (!panel || !task) return;
       taskMoveCtx = task;
-      const others = planSections.filter(s => s !== task.section);
+      const others = taskTargetSections().filter(s => s !== task.section);
       panel.innerHTML = `<div class="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Переместить в секцию</div>` +
         (others.length
           ? others.map(s => `<button type="button" data-sec="${escAttr(s)}" class="w-full text-left px-2.5 py-1.5 rounded-lg text-xs text-slate-600 hover:bg-indigo-50 hover:text-indigo-700 transition-colors cursor-pointer truncate">${escHtml(s)}</button>`).join('')
@@ -21477,6 +21606,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (READ_ONLY_MODE) return;
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
       if (!task || !section || task.section === section) return;
+      if (!validateTaskTargetSection(section)) return;
       task.section = section;
       if (!planSections.includes(section)) planSections.push(section);
       storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData));
@@ -21576,6 +21706,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (_secMenuFor === sec && !m.classList.contains('hidden')) { closeSectionMenu(); return; }
       if (typeof closeAllPopovers === 'function') { try { closeAllPopovers(); } catch (e) {} }
       const ro = (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE);
+      const sectionIsEmpty = !(roadmapData || []).some(t => t && t.section === sec) && !(typeof _secDescendants === 'function' && _secDescendants(sec).length);
       const ic = {
         card: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z',
         dup: 'M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z',
@@ -21598,7 +21729,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         m.appendChild(b);
       };
       const sep = () => { const d = document.createElement('div'); d.className = 'my-1 border-t border-slate-100'; m.appendChild(d); };
-      if (!ro) add('Добавить задачу', ic.plus, () => openQuickAddForSection(sec));
+      if (!ro) add(quickAddSectionLabel(sec), ic.plus, () => openQuickAddForSection(sec));
       add(_sectionCardCopy(sec).title, ic.card, () => openEpicCard(sec));
       add('Скопировать список задач', ic.copy, () => copySectionTaskList(sec));
       if (!ro) {
@@ -21611,9 +21742,9 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         add('Опустить ниже', ic.down, () => moveSection(sec, 1));
         sep();
         add(isHidden ? 'Показать секцию' : 'Скрыть секцию', isHidden ? ic.show : ic.hide, () => toggleSectionHidden(sec));
-        add('Задачи в архив', ic.arch, () => archiveSectionTasks(sec));
+        if (!sectionIsEmpty) add('Задачи в архив', ic.arch, () => archiveSectionTasks(sec));
         sep();
-        add('Удалить секцию', ic.del, () => deleteSection(sec), true);
+        add(sectionIsEmpty ? 'Удалить пустую секцию' : 'Удалить секцию', ic.del, () => deleteSection(sec), true);
       }
       m.classList.remove('hidden'); _secMenuFor = sec;
       const r = btn.getBoundingClientRect(); const mw = m.offsetWidth || 240;
@@ -21728,7 +21859,14 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     }
     // Переносит секцию в «Архив»: задачи , в архив, саму секцию (как сущность) , убираем, даже если пустая
     function archiveSectionTasks(sectionName) {
-      archiveTasksList(roadmapData.filter(t => t.section === sectionName), `секцию «${cleanSectionName(sectionName)}»`, [sectionName]);
+      const direct = roadmapData.filter(t => t.section === sectionName);
+      const children = (typeof _secDescendants === 'function') ? _secDescendants(sectionName) : [];
+      if (!direct.length && !children.length) { deleteSection(sectionName); return; }
+      if (!direct.length && children.length) {
+        if (typeof showToast === 'function') showToast('Секция содержит вложенные секции. Архивируйте их задачи отдельно или удалите всё поддерево явно.', 'warn', 5000);
+        return;
+      }
+      archiveTasksList(direct, `секцию «${cleanSectionName(sectionName)}»`, [sectionName]);
     }
     // Общая логика переноса в архив. forceRemoveSections , секции, которые надо убрать целиком (даже пустые).
     function archiveTasksList(list, label, forceRemoveSections) {
@@ -21745,6 +21883,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       list.forEach(t => { delete t.hidden; archivedTasks.push(t); });
       // Убираем секции: принудительные , всегда; остальные , если опустели
       let removedSections = 0;
+      const removedSectionNames = new Set();
       affectedSections.forEach(sec => {
         const forced = force.includes(sec);
         if (forced || !roadmapData.some(t => t.section === sec)) {
@@ -21752,15 +21891,20 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           hiddenSections = hiddenSections.filter(s => s !== sec);
           collapsedSections = collapsedSections.filter(s => s !== sec);
           delete sectionColors[sec];
+          removedSectionNames.add(sec);
           removedSections++;
         }
       });
+      // Не оставляем детей со ссылкой на удаленного родителя: они становятся корневыми секциями.
+      removedSectionNames.forEach(sec => { delete sectionParents[sec]; });
+      Object.keys(sectionParents || {}).forEach(child => { if (removedSectionNames.has(sectionParents[child])) delete sectionParents[child]; });
       storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData));
       storage.set('gantt_archived_tasks', JSON.stringify(archivedTasks));
       storage.set('gantt_sections_list', JSON.stringify(planSections));
       storage.set('gantt_hidden_sections', JSON.stringify(hiddenSections));
       storage.set('gantt_collapsed_sections', JSON.stringify(collapsedSections));
       storage.set('gantt_section_colors', JSON.stringify(sectionColors));
+      storage.set('gantt_section_parents', JSON.stringify(sectionParents));
       updateArchiveBadge();
       updateSectionSelects();
       renderRoadmap();
@@ -22101,8 +22245,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       }
       const _et = roadmapData.find(r => r.id === editingId);
       wrap.innerHTML = ids.map(id => {
-        const t = roadmapData.find(r => r.id === id);
-        const label = t ? `${escHtml(getTaskKey(t))} ${escHtml(t.name)}` : `#${id} (не найдено)`;
+        const activeTask = roadmapData.find(r => r.id === id);
+        const archivedTask = activeTask ? null : (archivedTasks || []).find(r => r && r.id === id);
+        const t = activeTask || archivedTask;
+        const label = t ? `${escHtml(getTaskKey(t))} ${escHtml(t.name)}${archivedTask ? ' (в архиве)' : ''}` : `#${id} (не найдено)`;
         const color = t ? (sectionColors[t.section] || 'bg-slate-500 text-white') : 'bg-slate-300 text-slate-700';
         const colorClass = (color || '').split(' ').filter(c => c.startsWith('bg-') || c.startsWith('text-')).join(' ');
         const _xrel = !!(t && _et && t.release && _et.release && String(t.release) !== String(_et.release));
@@ -22354,7 +22500,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         document.getElementById('modalTitle').innerText = "Новая задача или веха";
         document.getElementById('taskId').value = "";
         document.getElementById('taskName').value = "";
-        document.getElementById('taskSection').value = planSections.length > 0 ? planSections[0] : "";
+        document.getElementById('taskSection').value = taskTargetSections()[0] || ensureTaskRootSection();
         document.getElementById('taskStatus').value = "planned";
         { const _ts = document.getElementById('taskTestStatus'); if (_ts) _ts.value = ''; }
         document.getElementById('taskIsMilestone').checked = false;
@@ -22362,7 +22508,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         { const _k = document.getElementById('taskKind'); if (_k) _k.value = ''; const _ep = document.getElementById('taskExtParty'); if (_ep) _ep.value = ''; const _ee = document.getElementById('taskExtEta'); if (_ee) _ee.value = ''; if (typeof _taskKindFormToggle === 'function') _taskKindFormToggle(); }
         document.getElementById('taskStart').value = "";
         document.getElementById('taskEnd').value = "";
-        document.getElementById('taskResource').value = projectResources.length > 0 ? projectResources[0] : "";
+        document.getElementById('taskResource').value = "";
         document.getElementById('taskPred').value = "";
         _editDepMeta = {};
         document.getElementById('taskEstimate').value = "";
@@ -22508,6 +22654,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         if (_ms && !document.getElementById('taskStart').value) { if (typeof showToast === 'function') showToast('У вехи должна быть дата', 'warn', 3500); const _sf = document.getElementById('taskStart'); if (_sf) { _sf.classList.add('border-rose-400'); _sf.focus(); } return false; } }
       { const _s = document.getElementById('taskStart').value, _e = document.getElementById('taskEnd').value;
        if (_s && _e && _e < _s) { showToast('Дата окончания раньше даты начала', 'warn', 4000); const _ee = document.getElementById('taskEnd'); if (_ee) { _ee.classList.add('border-rose-400'); _ee.focus(); } return false; } }
+      { const _sec = document.getElementById('taskSection').value;
+        if (!validateTaskTargetSection(_sec)) { const _sf = document.getElementById('taskSection'); if (_sf) _sf.focus(); return false; } }
       const taskObj = {
         id: id ? parseInt(id) : (typeof nextTaskId === 'function' ? nextTaskId() : Date.now()),
         name: document.getElementById('taskName').value,
@@ -24725,7 +24873,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       rows.forEach(r => {
         const val = (f) => { const h = map[f]; if (!h) return ''; const idx = headers.indexOf(h); return idx >= 0 ? String(r[idx] == null ? '' : r[idx]).trim() : ''; };
         const name = val('name'); if (!name) return; const _predRaw = map.pred ? val('pred') : '';
-        let section = val('section') || (planSections[0] || 'Задачи');
+        let section = val('section') || (taskTargetSections()[0] || ensureTaskRootSection());
         if (typeof findCanonicalSection === 'function') { const _cs = findCanonicalSection(section); if (_cs) section = _cs; }
         let status = 'planned'; let hasStatus = false; const sv = val('status').toLowerCase(); if (sv && statusByLc[sv]) { status = statusByLc[sv]; hasStatus = true; }
         const resource = val('resource');
@@ -24772,6 +24920,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         roadmapData.forEach(t => { if (!t || t.isMilestone) return; const _a = (k) => { if (k == null) return; const lk = String(k).trim().toLowerCase(); if (lk && !(lk in _refMap)) _refMap[lk] = t.id; }; if (t.jira) _a(t.jira); if (typeof getTaskKey === 'function') { try { _a(getTaskKey(t)); } catch (e) {} } _a(t.name); });
         _depPairs.forEach(pair => { const task = pair.task; if (!task || !_idset.has(task.id)) return; const refs = String(pair.raw).split(/[;,\n]+/).map(x => x.trim()).filter(Boolean); const cur = (typeof getPredecessorIds === 'function') ? getPredecessorIds(task) : []; const seen = new Set(cur.map(String)); refs.forEach(ref => { const pid = _refMap[ref.toLowerCase()]; if (pid != null && String(pid) !== String(task.id) && !seen.has(String(pid))) { cur.push(pid); seen.add(String(pid)); _linked++; } }); if (cur.length) task.pred = cur.join(','); });
       }
+      if (typeof reconcileSections === 'function') reconcileSections(false);
       if (typeof persistProjectState === 'function') persistProjectState();
       if (typeof updateResourceSelects === 'function') updateResourceSelects();
       if (typeof updateProjectFilter === 'function') updateProjectFilter();
@@ -26334,7 +26483,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       </div>
       <div id="goalsModalBody" class="p-6 overflow-y-auto grow space-y-3"></div>
       <div id="goalsFooter" class="px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-2xl flex items-center gap-2">
-        <input type="text" id="newGoalInput" maxlength="160" placeholder="Новая цель , бизнес-результат" onkeydown="if(event.key==='Enter')addGoal()" class="grow h-9 px-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
+        <input type="text" id="newGoalInput" aria-label="Новая цель" maxlength="160" placeholder="Новая цель — бизнес-результат" onkeydown="if(event.key==='Enter')addGoal()" class="grow h-9 px-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
         <button type="button" onclick="addGoal()" class="h-9 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-all cursor-pointer shrink-0">Добавить цель</button>
       </div>
     </div>
@@ -26444,7 +26593,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         </button>
       </div>
       <div class="p-6 space-y-3">
-        <textarea id="quickAddInput" rows="6" oninput="_debQuickAddPreview()" placeholder="Название | дни | исполнитель | секция&#10;&#10;Сверстать лендинг | 5 | a.ivanov | III. Разработка&#10;Согласовать макеты | 2 | Дизайнер&#10;Написать тексты" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono leading-relaxed focus:outline-none focus:border-indigo-500 focus:bg-white transition-all resize-y"></textarea>
+        <textarea id="quickAddInput" aria-label="Задачи для быстрого добавления" rows="6" oninput="_debQuickAddPreview()" placeholder="Название | дни | исполнитель | секция&#10;&#10;Сверстать лендинг | 5 | a.ivanov | III. Разработка&#10;Согласовать макеты | 2 | Дизайнер&#10;Написать тексты" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono leading-relaxed focus:outline-none focus:border-indigo-500 focus:bg-white transition-all resize-y"></textarea>
         <div id="quickAddPreview"></div>
         <p class="text-[10px] text-slate-500 leading-relaxed">Формат: <b>Название | дни | исполнитель | секция</b>. Обязательно только название. «Дни» , длительность от сегодня (если пусто , то 1 день). Если такой секции нет, она создастся. Можно указать ключ Jira (PROJ-123) , задача свяжется и будет обновляться при импорте.</p>
       </div>
@@ -26494,16 +26643,16 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Блоки сводки</div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
             <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_title" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Титул и брендинг</span></label>
-            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_summary" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Общая готовность</span></label>
-            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_statuses" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Статусы</span></label>
-            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_releases" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Прогресс по релизам</span></label>
-            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_attention" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Требует внимания</span></label>
-            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_milestones" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Ближайшие вехи</span></label>
-            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_rag" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Светофор по релизам</span></label>
-            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_slip" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer disabled:cursor-not-allowed"><span class="text-xs text-slate-700">Отклонения от плана</span></label>
-            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_extdep" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer disabled:cursor-not-allowed"><span class="text-xs text-slate-700">Внешние зависимости</span></label>
-            <label data-feat="money" class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_money" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Финансы: бюджет и стоимость</span></label>
-            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_custom" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Свои блоки</span></label>
+            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_summary" aria-label="Общая готовность" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Общая готовность</span></label>
+            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_statuses" aria-label="Статусы" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Статусы</span></label>
+            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_releases" aria-label="Прогресс по релизам" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Прогресс по релизам</span></label>
+            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_attention" aria-label="Требует внимания" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Требует внимания</span></label>
+            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_milestones" aria-label="Ближайшие вехи" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Ближайшие вехи</span></label>
+            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_rag" aria-label="Светофор по релизам" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Светофор по релизам</span></label>
+            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_slip" aria-label="Отклонения от плана" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer disabled:cursor-not-allowed"><span class="text-xs text-slate-700">Отклонения от плана</span></label>
+            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_extdep" aria-label="Внешние зависимости" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer disabled:cursor-not-allowed"><span class="text-xs text-slate-700">Внешние зависимости</span></label>
+            <label data-feat="money" class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_money" aria-label="Финансы: бюджет и стоимость" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Финансы: бюджет и стоимость</span></label>
+            <label class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" id="rb_blk_custom" aria-label="Свои блоки" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Свои блоки</span></label>
           </div>
           <p id="rbSlipHint" class="hidden text-[10px] text-amber-700 mt-1.5">Отчет отклонений недоступен: сначала сохраните версию плана в окне «Версии плана».</p>
           <p id="rbExtdepHint" class="hidden text-[10px] text-amber-700 mt-1.5">Блок «Внешние зависимости» появится, когда в проекте есть задачи этого типа.</p>
@@ -26553,8 +26702,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Брендинг</div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <label class="block"><span class="text-[10px] font-semibold text-slate-600">Организация / проект</span><input type="text" id="rbBrandOrg" maxlength="120" onchange="saveReportBrand()" placeholder="Заголовок сводки, например: ООО Ромашка" class="mt-1 w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"></label>
-            <label class="block"><span class="text-[10px] font-semibold text-slate-600">Подзаголовок</span><input type="text" id="rbBrandSub" maxlength="160" onchange="saveReportBrand()" placeholder="Например: Запуск мобильного приложения" class="mt-1 w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"></label>
-            <label class="block sm:col-span-2"><span class="text-[10px] font-semibold text-slate-600">Подпись внизу</span><input type="text" id="rbBrandFooter" maxlength="200" onchange="saveReportBrand()" placeholder="Например: Конфиденциально, только для руководства" class="mt-1 w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"></label>
+            <label class="block"><span class="text-[10px] font-semibold text-slate-600">Подзаголовок</span><input type="text" id="rbBrandSub" aria-label="Подзаголовок отчёта" maxlength="160" onchange="saveReportBrand()" placeholder="Например: Запуск мобильного приложения" class="mt-1 w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"></label>
+            <label class="block sm:col-span-2"><span class="text-[10px] font-semibold text-slate-600">Подпись внизу</span><input type="text" id="rbBrandFooter" aria-label="Подпись внизу отчёта" maxlength="200" onchange="saveReportBrand()" placeholder="Например: Конфиденциально, только для руководства" class="mt-1 w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"></label>
             <div class="block"><span class="text-[10px] font-semibold text-slate-600">Логотип (PNG, JPG или SVG, до 300 КБ)</span>
               <div class="mt-1 flex items-center gap-2 min-h-9 flex-wrap">
                 <input type="file" id="rbBrandLogoFile" accept="image/png,image/jpeg,image/svg+xml" onchange="rbLogoSelected(this)" aria-label="Файл логотипа" class="hidden">
@@ -26572,7 +26721,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
                 <option value="Для внутреннего использования">Для внутреннего использования</option>
               </select>
             </label>
-            <label class="flex items-center gap-2 sm:col-span-2 px-1 py-1 cursor-pointer"><input type="checkbox" id="rbBrandPageNums" onchange="saveReportBrand()" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Дата и гриф в колонтитуле</span></label>
+            <label class="flex items-center gap-2 sm:col-span-2 px-1 py-1 cursor-pointer"><input type="checkbox" id="rbBrandPageNums" aria-label="Дата и гриф в колонтитуле" onchange="saveReportBrand()" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer"><span class="text-xs text-slate-700">Дата и гриф в колонтитуле</span></label>
           </div>
         </div>
         <div>
@@ -26732,7 +26881,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     <h3 class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">
      <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-     <span id="appVersionBadge">v13.3 , 22.07.2026</span>
+     <span id="appVersionBadge">v13.4 , 22.07.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -26798,7 +26947,16 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </div>
 
    <div>
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.3 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.4 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h14v4H5zM7 10h10v4H7zM9 16h6v4H9z"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Иерархия защищена во всех действиях</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">СТРУКТУРА</span></div><p class="text-xs text-slate-600">Форма, быстрое добавление, перенос мышью и массовые операции соблюдают Initiative → Epic → Story → Task/Bug. Плюс в пустом уровне создаёт правильный дочерний объект.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Мобильный интерфейс и клавиатура</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">UI/UX</span></div><p class="text-xs text-slate-600">Шапка больше не расширяет экран, вложенные кнопки не открывают карточку повторно, а формы, быстрый статус и скрытые действия получили корректные подписи и фокус.</p></div>
+     <div class="bg-gradient-to-br from-amber-50 to-white p-4 rounded-xl border border-amber-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-amber-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.657 0 3-1.343 3-3V6a3 3 0 10-6 0v2c0 1.657 1.343 3 3 3zm-5 0h10a2 2 0 012 2v6H5v-6a2 2 0 012-2z"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Безопаснее демо и JSON</h5><span class="ml-auto text-[10px] font-bold text-amber-700 bg-white border border-amber-200 rounded px-1.5 py-0.5">ПРИВАТНОСТЬ</span></div><p class="text-xs text-slate-600">Публичное демо приведено к строгой иерархии и полностью синтетическим данным. Рабочий JSON проходит структурную и формальную проверку; неиспользуемые метаданные удалены после резервного снимка.</p></div>
+    </div>
+   </div>
+
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v13.3 <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-100 px-1.5 py-0.5 rounded">22.07.2026</span></h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Секции и таймлайн снова совпадают</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ГАНТ</span></div><p class="text-xs text-slate-600">Пустые уровни инициатив, эпиков и стори занимают одинаковую высоту слева и справа. Полосы секций и задачи больше не смещаются после пустых родительских уровней.</p></div>
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Карточка знает свой уровень</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ИЕРАРХИЯ</span></div><p class="text-xs text-slate-600">Заголовок, поля, подсказки и пункт меню теперь соответствуют уровню: карточка инициативы, эпика, стори или обычного раздела.</p></div>
@@ -29766,7 +29924,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         <p id="inputModalDesc" class="hidden text-xs text-slate-500 mt-1 whitespace-pre-line"></p>
       </div>
       <div class="px-5 py-4">
-        <input id="inputModalField" type="text" autocomplete="off" oninput="updateInputModalOk()" onkeydown="inputModalKey(event)" class="w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all">
+        <input id="inputModalField" type="text" aria-labelledby="inputModalTitle" autocomplete="off" oninput="updateInputModalOk()" onkeydown="inputModalKey(event)" class="w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all">
       </div>
       <div class="px-5 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-2">
         <button type="button" onclick="closeInputModal()" class="h-9 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-all cursor-pointer">Отмена</button>
@@ -29809,7 +29967,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       </div>
       <label class="block">
        <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Условие выгрузки (JQL)</span>
-       <textarea id="jiraJql" rows="2" placeholder="project = WEB ORDER BY Rank ASC" class="mt-1 w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:border-indigo-500 focus:bg-white transition-all resize-y"></textarea>
+       <textarea id="jiraJql" aria-label="JQL-запрос" rows="2" placeholder="project = WEB ORDER BY Rank ASC" class="mt-1 w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:border-indigo-500 focus:bg-white transition-all resize-y"></textarea>
       </label>
       <div class="flex flex-wrap gap-1.5">
        <button type="button" onclick="jiraInsertJql('statusCategory != Done')" class="text-[10px] px-2 py-1 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-600 rounded-md transition-colors cursor-pointer">+ только открытые</button>
@@ -29836,7 +29994,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         Прямое подключение по токену (опытный режим)
        </summary>
        <div class="p-3 space-y-2.5">
-        <input type="password" id="jiraToken" placeholder="PAT для Server/DC, или email:api_token для Cloud" class="w-full h-9 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 transition-all" autocomplete="off">
+        <input type="password" id="jiraToken" aria-label="Токен Jira" placeholder="PAT для Server/DC, или email:api_token для Cloud" class="w-full h-9 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 transition-all" autocomplete="off">
         <button type="button" onclick="jiraApiImport()" class="inline-flex items-center justify-center gap-2 h-9 px-4 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-xl transition-all cursor-pointer">Импортировать напрямую через API</button>
         <p id="jiraApiStatus" class="text-[10px] text-slate-500"></p>
         <p class="text-[10px] text-slate-500 leading-relaxed">Сработает, только если ваш Jira разрешает запросы из браузера (CORS). Токен нигде не сохраняется. Если не получилось , используйте выгрузку CSV выше.</p>
@@ -29973,14 +30131,14 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             <input type="date" id="dupStartDate" aria-label="Новая дата старта блока" title="Самая ранняя задача копии начнется в эту дату, остальные сдвинутся на столько же" onfocus="var r=document.getElementById('dupModeStart'); if(r) r.checked=true;" class="h-8 px-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500 grow min-w-0">
           </label>
           <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
-            <input type="radio" name="dupShiftMode" id="dupModeDays" onchange="_dupSyncWorkdays()" class="accent-indigo-600 shrink-0">
+            <input type="radio" name="dupShiftMode" id="dupModeDays" aria-label="Сдвинуть на количество дней" onchange="_dupSyncWorkdays()" class="accent-indigo-600 shrink-0">
             <span class="shrink-0">Сдвиг на</span>
             <input type="number" id="dupShiftDays" placeholder="0" aria-label="Сдвиг в днях" title="Число дней: положительное вправо, отрицательное влево" onfocus="var r=document.getElementById('dupModeDays'); if(r) r.checked=true;" class="w-20 h-8 px-2 text-center tabular-nums bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500">
             <span class="text-slate-500">дней (можно отрицательный)</span>
           </label>
           <div class="border-t border-slate-200 my-0.5"></div>
           <label id="dupWorkdaysLabel" class="flex items-center gap-2 ml-6 text-xs text-slate-500 cursor-pointer transition-opacity">
-            <input type="checkbox" id="dupWorkdays" class="accent-indigo-600 rounded shrink-0">
+            <input type="checkbox" id="dupWorkdays" aria-label="Считать только рабочие дни" class="accent-indigo-600 rounded shrink-0">
             <span>Считать сдвиг в рабочих днях (без выходных и праздников РФ) , только для «Сдвиг»</span>
           </label>
         </div>
@@ -30022,11 +30180,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         </div>
         <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider pt-1.5 mt-1 border-t border-slate-100">Приватность</div>
         <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
-          <input type="checkbox" id="roExportAnon" class="accent-indigo-600 rounded shrink-0">
+          <input type="checkbox" id="roExportAnon" aria-label="Обезличить имена исполнителей" class="accent-indigo-600 rounded shrink-0">
           <span>Псевдонимизировать исполнителей (Исполнитель 1, 2…)</span>
         </label>
         <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
-          <input type="checkbox" id="roExportDropInternal" checked class="accent-indigo-600 rounded shrink-0">
+          <input type="checkbox" id="roExportDropInternal" aria-label="Убрать внутренние заметки" checked class="accent-indigo-600 rounded shrink-0">
           <span>Исключить внутренние задачи</span>
         </label>
         <div>
@@ -30079,11 +30237,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           <div id="exportSliceSections" class="max-h-44 overflow-y-auto bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 flex flex-col gap-1.5"></div>
         </div>
         <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
-          <input type="checkbox" id="exportSliceBw" class="accent-indigo-600 rounded shrink-0">
+          <input type="checkbox" id="exportSliceBw" aria-label="Чёрно-белая печать" class="accent-indigo-600 rounded shrink-0">
           <span>Ч/б (для печати)</span>
         </label>
         <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer" title="В выгрузке останутся только заголовки секций и вехи, обычные задачи будут скрыты">
-          <input type="checkbox" id="exportSliceCompact" class="accent-indigo-600 rounded shrink-0">
+          <input type="checkbox" id="exportSliceCompact" aria-label="Компактный снимок" class="accent-indigo-600 rounded shrink-0">
           <span>Только секции и вехи</span>
         </label>
         <p class="text-[10px] text-slate-500 leading-relaxed">«PNG среза» собирает картинку: список задач + таймлайн строго за выбранный период. «Печать» откроет системное окно печати только с выбранными секциями (период там не режется).</p>
@@ -30102,8 +30260,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
   <div id="bulkBar" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-[1500] max-w-[calc(100vw-24px)] overflow-x-auto flex items-center gap-2 bg-slate-900 text-white rounded-2xl shadow-2xl px-3 py-2 no-print no-image-export">
     <span class="text-xs font-semibold whitespace-nowrap"><span id="bulkCount">0</span> выбрано</span>
     <span class="w-px h-5 bg-white/20"></span>
-    <select id="bulkStatusSel" onchange="bulkSetStatus(this.value)" class="h-8 bg-slate-800 border border-white/15 rounded-lg text-xs px-2 cursor-pointer focus:outline-none"><option value="">Статус…</option></select>
-    <select id="bulkSectionSel" onchange="bulkMoveSection(this.value)" class="h-8 bg-slate-800 border border-white/15 rounded-lg text-xs px-2 cursor-pointer focus:outline-none max-w-[170px]"><option value="">В секцию…</option></select>
+    <select id="bulkStatusSel" aria-label="Изменить статус выбранных задач" onchange="bulkSetStatus(this.value)" class="h-8 bg-slate-800 border border-white/15 rounded-lg text-xs px-2 cursor-pointer focus:outline-none"><option value="">Статус…</option></select>
+    <select id="bulkSectionSel" aria-label="Переместить выбранные задачи в секцию" onchange="bulkMoveSection(this.value)" class="h-8 bg-slate-800 border border-white/15 rounded-lg text-xs px-2 cursor-pointer focus:outline-none max-w-[170px]"><option value="">В секцию…</option></select>
     <button type="button" onclick="openBulkPopover('shift', event)" class="bulk-pop-btn h-8 px-3 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-semibold cursor-pointer whitespace-nowrap" title="Сдвинуть даты выбранных задач на N дней">Сдвиг дней</button>
     <button type="button" onclick="openBulkPopover('release', event)" class="bulk-pop-btn h-8 px-3 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-semibold cursor-pointer whitespace-nowrap" title="Назначить релиз выбранным задачам">Релиз</button>
     <button type="button" onclick="openBulkPopover('resource', event)" class="bulk-pop-btn h-8 px-3 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-semibold cursor-pointer whitespace-nowrap" title="Назначить исполнителя выбранным задачам">Исполнитель</button>
@@ -30172,7 +30330,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         <p class="text-sm text-slate-500 mt-2 max-w-lg mx-auto leading-relaxed">Откройте готовый пример за минуту или начните со своих данных. План работает локально, без сервера.</p>
         <span class="inline-flex items-center gap-1.5 mt-3 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2.5 py-1 rounded-lg shadow-xs">
           <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-          <span id="appVersionStartup">версия 13.3</span>
+          <span id="appVersionStartup">версия 13.4</span>
         </span>
       </div>
 

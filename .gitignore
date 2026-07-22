@@ -1,5 +1,5 @@
 .DS_Store
-roadmap-data*.json
+/roadmap-data*.json
 private-source/
 *.key
 *.pem

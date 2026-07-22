@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uchvru.github.io/roadmap/schemas/roadmap-data.schema.json",
+  "title": "Roadmap project snapshot",
+  "type": "object",
+  "required": [
+    "savedAt",
+    "title",
+    "sections",
+    "roadmapData",
+    "archivedTasks",
+    "projectStatuses"
+  ],
+  "properties": {
+    "savedAt": { "type": "string", "format": "date-time" },
+    "savedBy": { "type": "string" },
+    "title": { "type": "string" },
+    "pageMeta": { "type": "object" },
+    "sections": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "sectionColors": { "type": "object", "additionalProperties": { "type": "string" } },
+    "sectionParents": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } },
+    "sectionDeps": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["pred"],
+        "properties": {
+          "pred": { "type": "string", "minLength": 1 },
+          "type": { "enum": ["FS", "SS", "FF", "SF"] },
+          "lag": { "type": "number" },
+          "fromJira": { "type": "boolean" },
+          "jiraPredKey": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "resources": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "roadmapData": { "type": "array", "items": { "$ref": "#/$defs/task" } },
+    "archivedTasks": { "type": "array", "items": { "$ref": "#/$defs/task" } },
+    "projectStatuses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "color": { "type": "string" },
+          "barTheme": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "projectReleases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "date": { "oneOf": [{ "$ref": "#/$defs/date" }, { "const": "" }] }
+        },
+        "additionalProperties": true
+      }
+    },
+    "projectGoals": { "type": "array", "items": { "type": "object" } },
+    "projectInitiatives": { "type": "array", "items": { "type": "object" } },
+    "projectRaid": { "type": "array", "items": { "type": "object" } },
+    "cutoffs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "date"],
+        "properties": {
+          "id": { "type": ["string", "number"] },
+          "name": { "type": "string" },
+          "date": { "$ref": "#/$defs/date" },
+          "linkedTaskId": { "type": ["string", "number", "null"] }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "task": {
+      "type": "object",
+      "required": ["id", "name", "section", "status"],
+      "properties": {
+        "id": { "type": ["string", "number"] },
+        "name": { "type": "string" },
+        "section": { "type": "string" },
+        "status": { "type": "string" },
+        "start": { "oneOf": [{ "$ref": "#/$defs/date" }, { "const": "" }] },
+        "end": { "oneOf": [{ "$ref": "#/$defs/date" }, { "const": "" }] },
+        "deadline": { "oneOf": [{ "$ref": "#/$defs/date" }, { "const": "" }] },
+        "pred": { "type": ["string", "number", "null"] },
+        "resource": { "type": "string" },
+        "release": { "type": "string" },
+        "initiativeId": { "type": ["string", "number", "null"] },
+        "blocked": { "type": "boolean" },
+        "isMilestone": { "type": "boolean" },
+        "labels": { "type": "array", "items": { "type": "string" } },
+        "history": { "type": "array", "items": { "type": "object" } },
+        "depMeta": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "type": { "enum": ["FS", "SS", "FF", "SF"] },
+              "lag": { "type": "number" }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
