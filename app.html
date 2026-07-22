@@ -6144,6 +6144,22 @@
    body.theme-dark .wb { background:#3d1b2a !important; }
    body.theme-dark .ov, body.theme-dark .et, body.theme-dark .track { background:#212d3d !important; }
    body.theme-dark .tc { background:#2a3844 !important; }
+
+   /* v13.5: compact design tokens for operational screens.  New tools use one
+      rhythm instead of repeating slightly different radii, heights and focus rings. */
+   :root {
+     --rm-space-1:.25rem; --rm-space-2:.5rem; --rm-space-3:.75rem; --rm-space-4:1rem;
+     --rm-radius-sm:.5rem; --rm-radius-md:.75rem; --rm-radius-lg:1rem;
+     --rm-control-h:2.25rem; --rm-focus:#6366f1; --rm-border:#e2e8f0;
+     --rm-surface:#fff; --rm-surface-soft:#f8fafc; --rm-text:#1e293b; --rm-muted:#64748b;
+   }
+   body.theme-dark { --rm-border:#34465a; --rm-surface:#1a2332; --rm-surface-soft:#212d3d; --rm-text:#e2e8f0; --rm-muted:#94a3b8; }
+   .rm-panel { background:var(--rm-surface); color:var(--rm-text); border:1px solid var(--rm-border); border-radius:var(--rm-radius-lg); }
+   .rm-control { min-height:var(--rm-control-h); border:1px solid var(--rm-border); border-radius:var(--rm-radius-md); background:var(--rm-surface); color:var(--rm-text); }
+   .rm-control:focus-visible, .rm-action:focus-visible { outline:3px solid rgba(99,102,241,.28); outline-color:color-mix(in srgb,var(--rm-focus) 28%,transparent); outline-offset:2px; }
+   .rm-action { min-height:var(--rm-control-h); border-radius:var(--rm-radius-md); display:inline-flex; align-items:center; justify-content:center; gap:var(--rm-space-2); cursor:pointer; }
+   .rm-operational-list { scrollbar-gutter:stable; }
+   @media (max-width:640px) { .rm-operational-toolbar > * { width:100%; } .rm-operational-toolbar .rm-action { width:100%; } }
   }
 </style>
 </head>
@@ -6339,6 +6355,10 @@
               <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg></span>
               <span class="grow"><span class="block">Сжать историю правок</span><span class="block text-[10px] text-slate-500 font-normal">старые записи свернутся, файл легче</span></span>
             </button>
+            <button type="button" onclick="closeDataMenu(); openDataQualityCenter();" title="Проверить сроки, связи, статусы и структуру без автоматического изменения данных" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-amber-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
+              <span class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5-2a9 9 0 11-16 0 9 9 0 0116 0z"></path></svg></span>
+              <span class="grow"><span class="block">Качество данных</span><span class="block text-[10px] text-slate-500 font-normal">проблемы, причины и переход к карточке</span></span>
+            </button>
             </div>
             <div class="my-1 h-px bg-slate-100"></div>
             <div class="px-2.5 pt-1.5 pb-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Сохранение и копии</div>
@@ -6381,11 +6401,15 @@
             </button>
             <button type="button" onclick="closeDataMenu(); openVersionsModal();" title="Локальные снимки состояния карты с откатом к любому из них" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
               <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>
-              <span class="grow"><span class="block">История версий файла</span><span class="block text-[10px] text-slate-500 font-normal">автоснимки в браузере, откат к любому</span></span>
+              <span class="grow"><span class="block">Локальные JSON-снимки</span><span class="block text-[10px] text-slate-500 font-normal">до 20 версий, экспорт и безопасный откат</span></span>
             </button>
             <button type="button" onclick="closeDataMenu(); openBaselineModal();" title="Версии плана: снимки сроков и статусов, сравнение с текущим и показ плана тенью на диаграмме" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
               <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg></span>
               <span class="grow"><span class="block">Версии плана</span><span class="block text-[10px] text-slate-500 font-normal">сохраненные планы для сравнения план/факт</span></span>
+            </button>
+            <button type="button" onclick="closeDataMenu(); openProjectJournal();" title="Хронология ключевых изменений проекта; журнал хранится локально и ограничен по размеру" class="sm:col-span-2 w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-indigo-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
+              <span class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2m-4 0a2 2 0 004 0m-4 0a2 2 0 014 0m-7 7h6m-6 4h6"></path></svg></span>
+              <span class="grow"><span class="block">Журнал действий проекта</span><span class="block text-[10px] text-slate-500 font-normal">кто и когда менял важные сущности</span></span>
             </button>
             
             </div>
@@ -6952,6 +6976,272 @@
     </div>
   </div>
 
+  <!-- ROADMAP_MODULES:START -->
+<script data-roadmap-modules="v13.5">
+/* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
+(function () {
+'use strict';
+/* module:roadmap-indexes sha256:559aafcf13b36ea8fadb2b9f9c5193aa91b4983369feb6d877e1f493375b362c */
+const EMPTY = Object.freeze([]);
+
+function asArray(value) {
+  return Array.isArray(value) ? value : EMPTY;
+}
+
+function text(value) {
+  return String(value ?? '').trim();
+}
+
+function add(map, key, value) {
+  const normalized = text(key);
+  if (!normalized) return;
+  const values = map.get(normalized);
+  if (values) values.push(value);
+  else map.set(normalized, [value]);
+}
+
+function freezeLists(map) {
+  for (const [key, values] of map) map.set(key, Object.freeze(values));
+  return map;
+}
+
+function predecessorIds(value) {
+  const values = Array.isArray(value) ? value : text(value).split(',');
+  return [...new Set(values.map(text).filter(Boolean))];
+}
+
+/**
+ * Builds the maps that are repeatedly needed by filters, dependencies and
+ * hierarchy views. It never mutates the snapshot or the task objects.
+ */
+function createRoadmapIndex(snapshot, options = {}) {
+  const source = snapshot && typeof snapshot === 'object' ? snapshot : {};
+  const activeTasks = asArray(source.roadmapData);
+  const archivedTasks = asArray(source.archivedTasks);
+  const includeArchived = options.includeArchived !== false;
+  const tasks = includeArchived ? [...activeTasks, ...archivedTasks] : [...activeTasks];
+  const activeSet = new Set(activeTasks);
+  const archivedSet = new Set(archivedTasks);
+
+  const byId = new Map();
+  const byJira = new Map();
+  const bySection = new Map();
+  const byStatus = new Map();
+  const byResource = new Map();
+  const predecessorsById = new Map();
+  const dependentsById = new Map();
+  const duplicateIds = new Set();
+  const duplicateJira = new Set();
+
+  for (const task of tasks) {
+    if (!task || typeof task !== 'object') continue;
+    const id = text(task.id);
+    const jira = text(task.jira);
+    if (id) {
+      if (byId.has(id)) duplicateIds.add(id);
+      else byId.set(id, task);
+    }
+    if (jira) {
+      if (byJira.has(jira)) duplicateJira.add(jira);
+      else byJira.set(jira, task);
+    }
+    add(bySection, task.section, task);
+    add(byStatus, task.status, task);
+    add(byResource, task.resource, task);
+
+    if (!id) continue;
+    const predecessors = Object.freeze(predecessorIds(task.pred));
+    predecessorsById.set(id, predecessors);
+    for (const predecessor of predecessors) add(dependentsById, predecessor, id);
+  }
+
+  const sections = asArray(source.sections).map(text).filter(Boolean);
+  const sectionParents = source.sectionParents && typeof source.sectionParents === 'object'
+    ? source.sectionParents
+    : {};
+  const sectionChildren = new Map();
+  for (const section of sections) add(sectionChildren, sectionParents[section], section);
+
+  return Object.freeze({
+    tasks: Object.freeze(tasks),
+    activeTasks: Object.freeze([...activeTasks]),
+    archivedTasks: Object.freeze([...archivedTasks]),
+    activeSet,
+    archivedSet,
+    byId,
+    byJira,
+    bySection: freezeLists(bySection),
+    byStatus: freezeLists(byStatus),
+    byResource: freezeLists(byResource),
+    predecessorsById,
+    dependentsById: freezeLists(dependentsById),
+    sectionChildren: freezeLists(sectionChildren),
+    duplicateIds: Object.freeze([...duplicateIds].sort()),
+    duplicateJira: Object.freeze([...duplicateJira].sort()),
+    stats: Object.freeze({
+      activeTasks: activeTasks.length,
+      archivedTasks: archivedTasks.length,
+      indexedTasks: tasks.length,
+      sections: sections.length,
+      dependencies: [...predecessorsById.values()].reduce((sum, values) => sum + values.length, 0),
+    }),
+  });
+}
+
+function listFor(map, key) {
+  return map.get(text(key)) || EMPTY;
+}
+
+if (typeof globalThis !== 'undefined') {
+  const namespace = globalThis.RoadmapModules || (globalThis.RoadmapModules = {});
+  namespace.createRoadmapIndex = createRoadmapIndex;
+  namespace.predecessorIds = predecessorIds;
+  namespace.listFor = listFor;
+}
+
+/* module:large-plan-runtime sha256:770f2d6d98bd7ab287ca9ac2b3d36d42836d0f2e19509816db1891229a7adf4c */
+/* bundled internal import: ./roadmap-indexes.mjs */
+function normalized(value) {
+  return String(value ?? '').trim().toLocaleLowerCase('ru-RU');
+}
+
+function sortedValues(value) {
+  const values = Array.isArray(value) ? value : value ? [value] : [];
+  return values.map(String).filter(Boolean).sort();
+}
+
+function queryKey(filters) {
+  return JSON.stringify({
+    archived: filters.archived === true,
+    includeArchived: filters.includeArchived === true,
+    section: sortedValues(filters.section),
+    status: sortedValues(filters.status),
+    resource: sortedValues(filters.resource),
+    text: normalized(filters.text),
+  });
+}
+
+function addCandidates(index, field, values, target) {
+  const map = field === 'section' ? index.bySection : field === 'status' ? index.byStatus : index.byResource;
+  const combined = [];
+  for (const value of values) combined.push(...listFor(map, value));
+  if (combined.length && (!target.value || combined.length < target.value.length)) target.value = combined;
+}
+
+function includesOne(value, accepted) {
+  return accepted.length === 0 || accepted.includes(String(value ?? ''));
+}
+
+function searchableText(task) {
+  return normalized([
+    task.name,
+    task.jira,
+    task.section,
+    task.status,
+    task.resource,
+    task.notes,
+    ...(Array.isArray(task.labels) ? task.labels : []),
+  ].filter(Boolean).join(' '));
+}
+
+/**
+ * Immutable runtime for one data revision. Index construction is O(n); repeat
+ * filters reuse both the indexes and a bounded LRU result cache.
+ */
+function createLargePlanRuntime(snapshot, options = {}) {
+  const index = createRoadmapIndex(snapshot, { includeArchived: true });
+  const maxQueries = Math.max(1, Number(options.maxQueries) || 100);
+  const searchText = new WeakMap();
+  const cache = new Map();
+
+  function select(filters = {}) {
+    const key = queryKey(filters);
+    if (cache.has(key)) {
+      const hit = cache.get(key);
+      cache.delete(key);
+      cache.set(key, hit);
+      return hit;
+    }
+
+    const sections = sortedValues(filters.section);
+    const statuses = sortedValues(filters.status);
+    const resources = sortedValues(filters.resource);
+    const term = normalized(filters.text);
+    const candidates = { value: null };
+    if (sections.length) addCandidates(index, 'section', sections, candidates);
+    if (statuses.length) addCandidates(index, 'status', statuses, candidates);
+    if (resources.length) addCandidates(index, 'resource', resources, candidates);
+
+    const pool = candidates.value || index.tasks;
+    const result = [];
+    for (const task of pool) {
+      const archived = index.archivedSet.has(task);
+      if (filters.archived === true && !archived) continue;
+      if (filters.archived !== true && filters.includeArchived !== true && archived) continue;
+      if (!includesOne(task.section, sections)) continue;
+      if (!includesOne(task.status, statuses)) continue;
+      if (!includesOne(task.resource, resources)) continue;
+      if (term) {
+        let haystack = searchText.get(task);
+        if (haystack === undefined) {
+          haystack = searchableText(task);
+          searchText.set(task, haystack);
+        }
+        if (!haystack.includes(term)) continue;
+      }
+      result.push(task);
+    }
+
+    const output = Object.freeze(result);
+    cache.set(key, output);
+    if (cache.size > maxQueries) cache.delete(cache.keys().next().value);
+    return output;
+  }
+
+  return Object.freeze({
+    index,
+    select,
+    clearQueryCache: () => cache.clear(),
+    diagnostics: () => Object.freeze({ cachedQueries: cache.size, maxQueries }),
+  });
+}
+
+/**
+ * Keeps exactly one runtime and requires an explicit revision from the caller.
+ * The revision must change after every data mutation; object identity is checked
+ * as a second guard against accidental stale caches.
+ */
+function createLargePlanRuntimeCache(options = {}) {
+  let lastSnapshot;
+  let lastRevision;
+  let runtime;
+  return Object.freeze({
+    get(snapshot, revision) {
+      if (!runtime || snapshot !== lastSnapshot || revision !== lastRevision) {
+        lastSnapshot = snapshot;
+        lastRevision = revision;
+        runtime = createLargePlanRuntime(snapshot, options);
+      }
+      return runtime;
+    },
+    invalidate() {
+      lastSnapshot = undefined;
+      lastRevision = undefined;
+      runtime = undefined;
+    },
+  });
+}
+
+if (typeof globalThis !== 'undefined') {
+  const namespace = globalThis.RoadmapModules || (globalThis.RoadmapModules = {});
+  namespace.createLargePlanRuntime = createLargePlanRuntime;
+  namespace.createLargePlanRuntimeCache = createLargePlanRuntimeCache;
+}
+})();
+//# sourceURL=roadmap-inline-modules.mjs
+</script>
+<!-- ROADMAP_MODULES:END -->
+
   <script>
     /*! Roadmap , дорожная карта продукта. Copyright (c) 2026 Владимир Учинин.
       SPDX-License-Identifier: AGPL-3.0-only
@@ -7265,6 +7555,7 @@
       try { var _gm = document.getElementById('goalsModal'); if (_gm && !_gm.classList.contains('hidden')) { if (typeof renderGoalsList === 'function') renderGoalsList(); } } catch (e) {}
       try { var _rm = document.getElementById('raidModal'); if (_rm && !_rm.classList.contains('hidden') && typeof renderRaidList === 'function') renderRaidList(); } catch (e) {}
       try { var _im = document.getElementById('insightsModal'); if (_im && !_im.classList.contains('hidden')) { if (typeof renderInsights === 'function') renderInsights(); if (typeof renderSectionDashboard === 'function') renderSectionDashboard('ovSectionBody'); } } catch (e) {}
+      if (typeof recordProjectAudit === 'function') recordProjectAudit('undo', 'Отменено последнее действие', {});
       if (typeof showToast === 'function') showToast('Действие отменено', 'ok');
     }
     function showUndoToast(text, durationMs = 7000) {
@@ -7696,8 +7987,8 @@
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '13.4';
-    const APP_VERSION_DATE = '22.07.2026';
+    const APP_VERSION = '13.5';
+    const APP_VERSION_DATE = '23.07.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' , ' + APP_VERSION_DATE; } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'версия ' + APP_VERSION; } catch (e) {}
@@ -8038,6 +8329,29 @@
       if (_pl && _pl.barTheme === 'bg-indigo-400 text-white') _pl.barTheme = 'bg-slate-500 text-white';
     }
     let roadmapData = safeStorageGet('gantt_roadmap_v10_data', initialTasks);
+    // Проектный журнал хранит только осмысленные центральные действия, а не каждый
+    // клик. Ограничение защищает автономный JSON и localStorage от бесконечного роста.
+    const PROJECT_AUDIT_MAX = 500;
+    let projectAuditLog = safeStorageGet('gantt_project_audit_log', []);
+    if (!Array.isArray(projectAuditLog)) projectAuditLog = [];
+    projectAuditLog = projectAuditLog.filter(x => x && x.at && x.action).slice(-PROJECT_AUDIT_MAX);
+    function recordProjectAudit(action, message, meta) {
+      try {
+        if ((typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE) || (typeof DEMO_MODE !== 'undefined' && DEMO_MODE)) return;
+        const entry = {
+          id: 'pa_' + Date.now() + '_' + Math.floor(Math.random() * 1e6),
+          at: new Date().toISOString(),
+          by: (typeof _authorName === 'function' ? _authorName() : '') || 'Локальный пользователь',
+          action: String(action || 'change').slice(0, 40),
+          message: String(message || '').slice(0, 500),
+          meta: (meta && typeof meta === 'object' && !Array.isArray(meta)) ? meta : {}
+        };
+        projectAuditLog.push(entry);
+        if (projectAuditLog.length > PROJECT_AUDIT_MAX) projectAuditLog = projectAuditLog.slice(-PROJECT_AUDIT_MAX);
+        storage.set('gantt_project_audit_log', JSON.stringify(projectAuditLog));
+        return entry;
+      } catch (e) { return null; }
+    }
     // Слияние дублей «На холде»: раньше Jira-импорт заводил отдельный статус с id 'hold', а зона холда работает с 'on_hold'. Сводим в один, чтобы не было двух одинаковых чипов.
     if (Array.isArray(projectStatuses) && projectStatuses.some(s => s && s.id === 'hold')) {
       if (!projectStatuses.some(s => s && s.id === 'on_hold')) {
@@ -8488,6 +8802,11 @@
       try { const db = await dbPromise; if (!db.objectStoreNames.contains('versions')) return []; return await new Promise((resolve) => { const tx = db.transaction('versions', 'readonly'); const req = tx.objectStore('versions').getAll(); req.onsuccess = () => resolve((req.result || []).sort((a, b) => String(b.savedAt).localeCompare(String(a.savedAt)))); req.onerror = () => resolve([]); }); } catch (e) { return []; }
     }
     async function _getVersionSnapshot(id) { try { const db = await dbPromise; return await new Promise((resolve) => { const tx = db.transaction('versions', 'readonly'); const req = tx.objectStore('versions').get(id); req.onsuccess = () => resolve(req.result); req.onerror = () => resolve(null); }); } catch (e) { return null; } }
+    function _snapshotFingerprint(snap) {
+      const s = _versionSig(snap); let h = 2166136261;
+      for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+      return ('00000000' + (h >>> 0).toString(16)).slice(-8);
+    }
     async function saveVersionSnapshot(label, auto) {
       try {
         const snap = buildRoadmapSnapshot(false);
@@ -8496,7 +8815,8 @@
         window.__lastVersionSig = sig;
         const db = await dbPromise; if (!db.objectStoreNames.contains('versions')) return false;
         const id = 'v' + Date.now() + '_' + Math.floor((window.performance && performance.now) ? performance.now() : (Math.random() * 1e6));
-        const rec = { id: id, savedAt: snap.savedAt || new Date().toISOString(), label: label || (auto ? 'Авто' : 'Вручную'), auto: !!auto, tasks: (snap.roadmapData || []).length, data: snap };
+        const json = JSON.stringify(snap);
+        const rec = { id: id, savedAt: snap.savedAt || new Date().toISOString(), label: label || (auto ? 'Авто' : 'Вручную'), auto: !!auto, tasks: (snap.roadmapData || []).length, bytes: new Blob([json]).size, checksum: _snapshotFingerprint(snap), format: 1, data: snap };
         await new Promise((resolve) => { const tx = db.transaction('versions', 'readwrite'); tx.objectStore('versions').put(rec); tx.oncomplete = resolve; tx.onerror = resolve; });
         const all = await listVersionSnapshots();
         if (all.length > VERSIONS_MAX) { const extra = all.slice(VERSIONS_MAX); await new Promise((resolve) => { const tx = db.transaction('versions', 'readwrite'); const st = tx.objectStore('versions'); extra.forEach(x => st.delete(x.id)); tx.oncomplete = resolve; tx.onerror = resolve; }); }
@@ -8569,6 +8889,7 @@
       sectionMeta = (d.sectionMeta && typeof d.sectionMeta === 'object') ? d.sectionMeta : {};
       sectionParents = (d.sectionParents && typeof d.sectionParents === 'object') ? d.sectionParents : {};
       sectionDeps = (d.sectionDeps && typeof d.sectionDeps === 'object' && !Array.isArray(d.sectionDeps)) ? d.sectionDeps : {};
+      projectAuditLog = Array.isArray(d.projectAuditLog) ? d.projectAuditLog.filter(x => x && x.at && x.action).slice(-PROJECT_AUDIT_MAX) : [];
       if (d.title) { roadmapTitleText = d.title; try { storage.set('gantt_roadmap_title', d.title); } catch (e) {} const _tEl = document.getElementById('roadmapTitle'); if (_tEl) { _tEl.innerText = d.title; _tEl.title = d.title; } }
       if (typeof persistProjectState === 'function') persistProjectState();
       if (typeof updateResourceSelects === 'function') updateResourceSelects();
@@ -8580,7 +8901,7 @@
       if (READ_ONLY_MODE) return;
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
       const rec = await _getVersionSnapshot(id); if (!rec || !rec.data) { if (typeof showToast === 'function') showToast('Версия не найдена', 'error'); return; }
-      const doRestore = async () => { await saveVersionSnapshot('Перед откатом', true); _applySnapshotForRestore(rec.data); closeVersionsModal(); if (typeof showToast === 'function') showToast('Откат к версии выполнен', 'ok'); };
+      const doRestore = async () => { await saveVersionSnapshot('Перед откатом', true); _applySnapshotForRestore(rec.data); recordProjectAudit('restore', 'Восстановлен локальный JSON-снимок от ' + _fmtVersionDate(rec.savedAt), { snapshotId: rec.id }); closeVersionsModal(); if (typeof showToast === 'function') showToast('Откат к версии выполнен', 'ok'); };
       let _dTxt = '';
       try { const _d = diffSnapshots(buildRoadmapSnapshot(false), rec.data); _dTxt = ' Откат изменит: +' + _d.added.length + ' / -' + _d.removed.length + ' / ' + _d.changed.length + ' изменений.'; } catch (e) {}
       if (typeof openConfirm === 'function') { openConfirm({ title: 'Откатиться к версии', desc: 'Текущее состояние будет заменено снимком от ' + _fmtVersionDate(rec.savedAt) + '.' + _dTxt + ' Перед откатом сохранится автоверсия текущего состояния.', okText: 'Откатить', onOk: doRestore }); }
@@ -8678,17 +8999,28 @@
     }
     function openVersionsModal() { const m = document.getElementById('versionsModal'); if (m) { m.classList.remove('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); } renderVersionsList(); }
     function closeVersionsModal() { const m = document.getElementById('versionsModal'); if (m) m.classList.add('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
-    async function saveVersionNow() { const _btn = document.getElementById('saveVersionNowBtn'); const _txt = _btn ? _btn.innerHTML : ''; if (_btn) { _btn.disabled = true; _btn.innerHTML = 'Сохраняю…'; } try { window.__lastVersionSig = null; const ok = await saveVersionSnapshot('Вручную', false); if (typeof showToast === 'function') showToast(ok ? 'Версия сохранена' : 'Не удалось сохранить', ok ? 'ok' : 'error'); renderVersionsList(); } finally { if (_btn) { _btn.disabled = false; _btn.innerHTML = _txt; } } }
+    async function saveVersionNow() { const _btn = document.getElementById('saveVersionNowBtn'); const _txt = _btn ? _btn.innerHTML : ''; if (_btn) { _btn.disabled = true; _btn.innerHTML = 'Сохраняю…'; } try { window.__lastVersionSig = null; const ok = await saveVersionSnapshot('Вручную', false); if (ok) recordProjectAudit('snapshot', 'Создан ручной JSON-снимок проекта', { tasks: (roadmapData || []).length }); if (typeof showToast === 'function') showToast(ok ? 'Версия сохранена' : 'Не удалось сохранить', ok ? 'ok' : 'error'); renderVersionsList(); } finally { if (_btn) { _btn.disabled = false; _btn.innerHTML = _txt; } } }
+    async function exportVersionSnapshot(id) {
+      const rec = await _getVersionSnapshot(id);
+      if (!rec || !rec.data) { if (typeof showToast === 'function') showToast('Снимок не найден', 'error'); return; }
+      const payload = { app: 'roadmap-snapshot', version: 1, id: rec.id, savedAt: rec.savedAt, checksum: rec.checksum || _snapshotFingerprint(rec.data), data: rec.data };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
+      const url = URL.createObjectURL(blob), a = document.createElement('a');
+      a.href = url; a.download = 'roadmap_snapshot_' + String(rec.savedAt || '').slice(0, 19).replace(/[:T]/g, '-') + '.json';
+      document.body.appendChild(a); a.click(); setTimeout(() => { try { a.remove(); } catch (e) {} URL.revokeObjectURL(url); }, 0);
+      if (typeof showToast === 'function') showToast('Снимок выгружен отдельно', 'ok', 3000);
+    }
     async function renderVersionsList() {
       const box = document.getElementById('versionsBody'); if (!box) return;
       box.innerHTML = '<div class="text-xs text-slate-400 px-2 py-4 text-center">Загрузка...</div>';
       const all = await listVersionSnapshots();
       if (!all.length) { box.innerHTML = '<div class="px-4 py-12 text-center text-sm text-slate-500">Версий пока нет. Они создаются автоматически каждые 5 минут при изменениях и по кнопке «Сохранить версию сейчас».</div>'; return; }
       box.innerHTML = all.map(v => `<div class="mb-2 flex items-center justify-between gap-2 bg-white border border-slate-200 rounded-xl p-3 shadow-xs">
-        <div class="min-w-0"><div class="text-sm font-medium text-slate-800 truncate">${escHtml(_fmtVersionDate(v.savedAt))} <span class="text-[10px] font-normal ${v.auto ? 'text-slate-400' : 'text-indigo-500'}">${v.auto ? 'авто' : 'вручную'}</span></div><div class="text-[10px] text-slate-500">${escHtml(v.label || '')} · ${v.tasks != null ? v.tasks + ' ' + pluralRu(v.tasks, ['задача', 'задачи', 'задач']) : '? задач'}</div></div>
+        <div class="min-w-0"><div class="text-sm font-medium text-slate-800 truncate">${escHtml(_fmtVersionDate(v.savedAt))} <span class="text-[10px] font-normal ${v.auto ? 'text-slate-400' : 'text-indigo-500'}">${v.auto ? 'авто' : 'вручную'}</span></div><div class="text-[10px] text-slate-500">${escHtml(v.label || '')} · ${v.tasks != null ? v.tasks + ' ' + pluralRu(v.tasks, ['задача', 'задачи', 'задач']) : '? задач'}${v.bytes ? ' · ' + Math.max(1, Math.round(v.bytes / 1024)) + ' КБ' : ''}${v.checksum ? ' · ' + escHtml(v.checksum) : ''}</div></div>
         <div class="flex items-center gap-1 shrink-0">
           <button type="button" onclick="renameVersionSnapshot('${escAttr(v.id)}')" title="Метка или комментарий" aria-label="Метка или комментарий" class="h-7 w-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg></button>
           <button type="button" onclick="markVersionCompare('${escAttr(v.id)}')" aria-pressed="${_verCmpA === v.id}" class="h-7 px-2.5 text-[10px] font-semibold rounded-lg border cursor-pointer transition-colors ${_verCmpA === v.id ? 'border-indigo-500 bg-indigo-600 text-white' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}" title="Сравнить эту версию с другой версией или с текущим состоянием">Сравнить</button>
+          <button type="button" onclick="exportVersionSnapshot('${escAttr(v.id)}')" aria-label="Экспортировать этот JSON-снимок" title="Экспортировать этот JSON-снимок" class="h-7 w-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"></path></svg></button>
           <button type="button" onclick="restoreVersionSnapshot('${escAttr(v.id)}')" class="h-7 px-2.5 text-[10px] font-semibold rounded-lg border border-indigo-200 text-indigo-600 hover:bg-indigo-50 cursor-pointer">Откатить</button>
           <button type="button" onclick="deleteVersionSnapshot('${escAttr(v.id)}', '${escAttr(_fmtVersionDate(v.savedAt))}')" title="Удалить" class="h-7 w-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
         </div>
@@ -8739,7 +9071,8 @@
           seenSig.add(sig);
           let id = (typeof it.id === 'string' && it.id && !seenId.has(it.id)) ? it.id : ('v' + Date.now() + '_imp' + Math.floor(Math.random() * 1e6) + '_' + added);
           seenId.add(id);
-          toPut.push({ id: id, savedAt: it.savedAt || it.data.savedAt || new Date().toISOString(), label: it.label || 'Импорт', auto: !!it.auto, tasks: (it.data.roadmapData || []).length, data: it.data });
+          const _ij = JSON.stringify(it.data);
+          toPut.push({ id: id, savedAt: it.savedAt || it.data.savedAt || new Date().toISOString(), label: it.label || 'Импорт', auto: !!it.auto, tasks: (it.data.roadmapData || []).length, bytes: new Blob([_ij]).size, checksum: it.checksum || _snapshotFingerprint(it.data), format: 1, data: it.data });
           added++;
         });
         if (toPut.length) await new Promise((resolve) => { const tx = db.transaction('versions', 'readwrite'); const st = tx.objectStore('versions'); toPut.forEach(r => st.put(r)); tx.oncomplete = resolve; tx.onerror = resolve; });
@@ -8750,6 +9083,92 @@
         renderVersionsList();
         if (typeof showToast === 'function') showToast('Добавлено ' + added + ', пропущено ' + skipped + ' (дубли)' + (trimmed ? '. Лимит ' + VERSIONS_MAX + ' , старые удалены: ' + trimmed : ''), 'ok', 6000);
       } catch (e) { if (typeof showToast === 'function') showToast('Не удалось импортировать версии', 'error', 4000); }
+    }
+
+    // ===== v13.5: Центр качества данных (read-only diagnostics) =====
+    let _dqIssues = [];
+    function analyzeProjectDataQuality() {
+      const issues = [], active = Array.isArray(roadmapData) ? roadmapData.filter(Boolean) : [];
+      const archived = Array.isArray(archivedTasks) ? archivedTasks.filter(Boolean) : [];
+      const byId = new Map(active.map(t => [String(t.id), t]));
+      const archivedIds = new Set(archived.map(t => String(t.id)));
+      const statusIds = new Set((projectStatuses || []).filter(Boolean).map(s => String(s.id)));
+      const sections = new Set((planSections || []).map(String));
+      const today = (typeof CURRENT_DATE !== 'undefined' && CURRENT_DATE) ? toYmdLocal(CURRENT_DATE) : toYmdLocal(new Date());
+      const done = t => t && (t.status === 'completed' || /выполн|готов|закры|done|closed/i.test((typeof statusNameById === 'function' ? statusNameById(t.status) : t.status) || ''));
+      const add = (category, severity, title, detail, entity) => issues.push({ id: 'dq' + (issues.length + 1), category, severity, title, detail, entity: entity || null });
+      const jiraGroups = new Map();
+      active.forEach(t => {
+        const ref = { type: 'task', id: t.id, label: (t.jira ? t.jira + ' · ' : '') + (t.name || 'Без названия') };
+        if (!String(t.name || '').trim()) add('required', 'error', 'Задача без названия', 'Невозможно однозначно найти элемент в плане.', ref);
+        if (!t.section || !sections.has(String(t.section))) add('structure', 'error', 'Задача вне существующей секции', t.section ? 'Секция «' + t.section + '» отсутствует в списке секций.' : 'Секция не указана.', ref);
+        if (!done(t) && !t.isMilestone && (!t.start || !t.end)) add('dates', 'info', 'Неполные даты', !t.start && !t.end ? 'Не заданы начало и окончание.' : (!t.start ? 'Не задано начало.' : 'Не задано окончание.'), ref);
+        if (t.isMilestone && !t.start && !t.end) add('dates', 'error', 'Веха без даты', 'Веха не может быть показана на таймлайне.', ref);
+        if (t.start && t.end && String(t.end) < String(t.start)) add('dates', 'error', 'Окончание раньше начала', t.start + ' → ' + t.end, ref);
+        if (!done(t) && t.end && String(t.end) < today) add('overdue', 'warning', 'Просроченная задача', 'Срок ' + t.end + ', статус «' + (typeof statusNameById === 'function' ? statusNameById(t.status) : (t.status || 'не задан')) + '».', ref);
+        if (t.status && !statusIds.has(String(t.status))) add('status', 'warning', 'Неизвестный статус', 'Код «' + t.status + '» отсутствует в справочнике статусов.', ref);
+        const preds = String(t.pred || '').split(',').map(x => x.trim()).filter(Boolean);
+        preds.forEach(pid => {
+          if (String(t.id) === pid) add('dependencies', 'error', 'Зависимость задачи от самой себя', 'Удалите циклическую ссылку на эту же задачу.', ref);
+          else if (archivedIds.has(pid)) add('dependencies', 'warning', 'Связь ведет в архив', 'Предшественник #' + pid + ' находится в архиве; решение оставлено пользователю.', ref);
+          else if (!byId.has(pid)) add('dependencies', 'error', 'Связь ведет на отсутствующую задачу', 'Предшественник #' + pid + ' не найден ни в плане, ни в архиве.', ref);
+        });
+        const jk = String(t.jira || '').trim().toUpperCase();
+        if (jk) { if (!jiraGroups.has(jk)) jiraGroups.set(jk, []); jiraGroups.get(jk).push(t); }
+      });
+      jiraGroups.forEach((list, key) => { if (list.length > 1) list.forEach(t => add('duplicates', 'warning', 'Повторяется Jira-ключ ' + key, 'Элементов с этим ключом: ' + list.length + '.', { type: 'task', id: t.id, label: (t.name || key) })); });
+      Object.keys(sectionParents || {}).forEach(child => {
+        const parent = sectionParents[child];
+        if (!sections.has(child)) add('structure', 'warning', 'Метаданные удаленной секции', 'Для «' + child + '» осталась запись о родителе.', { type: 'section', label: child });
+        else if (!sections.has(String(parent))) add('structure', 'error', 'Родительская секция не найдена', '«' + child + '» ссылается на отсутствующую «' + parent + '».', { type: 'section', label: child });
+      });
+      _dqIssues = issues;
+      return issues;
+    }
+    function _dqCategoryName(c) { return ({ all:'Все категории', required:'Обязательные поля', structure:'Структура', dates:'Даты', overdue:'Просрочка', status:'Статусы', dependencies:'Связи', duplicates:'Дубли' })[c] || c; }
+    function openDataQualityCenter() {
+      analyzeProjectDataQuality();
+      const m = document.getElementById('dataQualityModal'); if (!m) return;
+      m.classList.remove('hidden'); renderDataQualityCenter(); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
+    }
+    function closeDataQualityCenter() { const m = document.getElementById('dataQualityModal'); if (m) m.classList.add('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
+    function renderDataQualityCenter() {
+      const list = document.getElementById('dataQualityList'), sum = document.getElementById('dataQualitySummary'); if (!list || !sum) return;
+      const catSelect = document.getElementById('dataQualityCategory');
+      if (catSelect) Array.from(catSelect.options).forEach(o => { const base = o.dataset.base || o.textContent.replace(/\s+\(\d+\)$/, ''); o.dataset.base = base; const n = o.value === 'all' ? _dqIssues.length : _dqIssues.filter(x => x.category === o.value).length; o.textContent = base + ' (' + n + ')'; });
+      const cat = ((catSelect || {}).value || 'all');
+      const q = String(((document.getElementById('dataQualitySearch') || {}).value || '')).trim().toLowerCase();
+      const sevCount = s => _dqIssues.filter(x => x.severity === s).length;
+      sum.innerHTML = `<div class="rm-panel p-3"><div class="text-2xl font-bold text-slate-800">${_dqIssues.length}</div><div class="text-[10px] text-slate-500">всего сигналов</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-rose-600">${sevCount('error')}</div><div class="text-[10px] text-slate-500">ошибки</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-amber-600">${sevCount('warning')}</div><div class="text-[10px] text-slate-500">предупреждения</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-sky-600">${sevCount('info')}</div><div class="text-[10px] text-slate-500">к заполнению</div></div>`;
+      const filtered = _dqIssues.filter(x => (cat === 'all' || x.category === cat) && (!q || (x.title + ' ' + x.detail + ' ' + ((x.entity || {}).label || '')).toLowerCase().includes(q)));
+      if (!filtered.length) { list.innerHTML = `<div class="rm-panel p-8 text-center"><div class="text-sm font-semibold text-emerald-700">${_dqIssues.length ? 'По выбранному фильтру проблем нет' : 'Критичных проблем не найдено'}</div><div class="text-xs text-slate-500 mt-1">Проверка ничего не исправляет автоматически.</div></div>`; return; }
+      const tone = { error:'bg-rose-100 text-rose-700', warning:'bg-amber-100 text-amber-700', info:'bg-sky-100 text-sky-700' };
+      list.innerHTML = filtered.map(x => `<article class="rm-panel p-3 flex items-start gap-3"><span class="mt-0.5 shrink-0 px-2 py-1 rounded-lg text-[10px] font-bold ${tone[x.severity]}">${x.severity === 'error' ? 'ОШИБКА' : (x.severity === 'warning' ? 'ВНИМАНИЕ' : 'ЗАПОЛНИТЬ')}</span><div class="grow min-w-0"><div class="text-sm font-semibold text-slate-800">${escHtml(x.title)}</div><div class="text-xs text-slate-500 mt-0.5">${escHtml(x.detail)}</div>${x.entity && x.entity.label ? `<div class="text-[10px] text-slate-400 mt-1 truncate">${escHtml(x.entity.label)}</div>` : ''}</div>${x.entity && x.entity.type === 'task' ? `<button type="button" onclick="jumpFromDataQuality('${escAttr(x.id)}')" class="rm-action shrink-0 h-9 px-3 border border-indigo-200 text-indigo-700 text-xs font-semibold hover:bg-indigo-50">Открыть</button>` : ''}</article>`).join('');
+    }
+    function jumpFromDataQuality(issueId) { const issue = _dqIssues.find(x => x.id === issueId); if (!issue || !issue.entity || issue.entity.type !== 'task') return; closeDataQualityCenter(); setTimeout(() => openTaskById(issue.entity.id), 30); }
+
+    // ===== v13.5: bounded project action journal =====
+    function openProjectJournal() { const m = document.getElementById('projectJournalModal'); if (!m) return; m.classList.remove('hidden'); renderProjectJournal(); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
+    function closeProjectJournal() { const m = document.getElementById('projectJournalModal'); if (m) m.classList.add('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
+    function _auditActionName(a) { return ({ task_create:'Создание', task_update:'Изменение', task_delete:'Удаление', archive:'Архив', import:'Импорт', restore:'Восстановление', bulk:'Массовая операция', snapshot:'Снимок', project_reset:'Новый проект', undo:'Отмена' })[a] || a; }
+    function renderProjectJournal() {
+      const box = document.getElementById('projectJournalList'); if (!box) return;
+      const action = ((document.getElementById('projectJournalAction') || {}).value || 'all');
+      const q = String(((document.getElementById('projectJournalSearch') || {}).value || '')).trim().toLowerCase();
+      const rows = (projectAuditLog || []).slice().reverse().filter(x => (action === 'all' || x.action === action) && (!q || (x.message + ' ' + x.by + ' ' + x.action).toLowerCase().includes(q)));
+      const c = document.getElementById('projectJournalCount'); if (c) c.textContent = rows.length + ' из ' + (projectAuditLog || []).length;
+      if (!rows.length) { box.innerHTML = '<div class="rm-panel p-8 text-center text-sm text-slate-500">Записей по выбранному фильтру нет.</div>'; return; }
+      box.innerHTML = rows.map(x => { let dt = x.at; try { dt = new Date(x.at).toLocaleString('ru-RU', { dateStyle:'short', timeStyle:'short' }); } catch (e) {} return `<article class="rm-panel p-3"><div class="flex items-center gap-2 flex-wrap"><span class="px-2 py-1 rounded-lg bg-indigo-50 text-indigo-700 text-[10px] font-bold">${escHtml(_auditActionName(x.action))}</span><span class="text-[10px] text-slate-400">${escHtml(dt)}</span><span class="text-[10px] text-slate-500">${escHtml(x.by || '')}</span></div><div class="text-sm text-slate-700 mt-2">${escHtml(x.message || '')}</div></article>`; }).join('');
+    }
+    function exportProjectJournal() {
+      const payload = { app:'roadmap-project-journal', version:1, exportedAt:new Date().toISOString(), project:roadmapTitleText, entries:(projectAuditLog || []).slice() };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json;charset=utf-8' }), url = URL.createObjectURL(blob), a = document.createElement('a');
+      a.href = url; a.download = 'roadmap_journal_' + new Date().toISOString().slice(0, 10) + '.json'; document.body.appendChild(a); a.click(); setTimeout(() => { try { a.remove(); } catch (e) {} URL.revokeObjectURL(url); }, 0);
+    }
+    function clearProjectJournal() {
+      if (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE) return;
+      const run = () => { projectAuditLog = []; storage.set('gantt_project_audit_log', '[]'); renderProjectJournal(); if (typeof showToast === 'function') showToast('Журнал очищен', 'ok'); };
+      if (typeof openConfirm === 'function') openConfirm({ title:'Очистить журнал действий', desc:'Будут удалены только записи журнала. Задачи и другие данные проекта не изменятся.', danger:true, okText:'Очистить', onOk:run }); else run();
     }
     // ---------------------------------
 
@@ -8942,7 +9361,7 @@
         });
         hiddenSections = []; collapsedSections = []; archivedTasks = [];
         customCutoffs = []; projectReleases = []; projectGoals = []; projectInitiatives = []; projectRaid = []; projectFeedback = []; epicStatusByKey = {};
-        sectionColors = {}; resourceRoles = {}; resourceAvailability = {}; resourceLeave = {}; resourceParallel = {}; customCalendar = { holidays: [], workdays: [] }; sectionLabels = {}; sectionMeta = {}; sectionParents = {}; sectionDeps = {};
+        sectionColors = {}; resourceRoles = {}; resourceAvailability = {}; resourceLeave = {}; resourceParallel = {}; customCalendar = { holidays: [], workdays: [] }; sectionLabels = {}; sectionMeta = {}; sectionParents = {}; sectionDeps = {}; projectAuditLog = [];
         reportBlocks = []; reportBrand = {}; reportProfiles = {}; uiProfiles = {}; releaseRag = {}; presentations = _normPres(null);
         featureFlags = _sanitizeFeatureFlags({}); applyFeatureFlags();
         try { storage.set('gantt_baselines', '[]'); } catch (e) {} chartBaselineId = ''; try { storage.set('gantt_chart_baseline', ''); } catch (e) {}
@@ -8993,6 +9412,7 @@
         sectionMeta    = (parsed.sectionMeta && typeof parsed.sectionMeta === 'object') ? parsed.sectionMeta : {};
         sectionParents  = (parsed.sectionParents && typeof parsed.sectionParents === 'object') ? parsed.sectionParents : {};
         sectionDeps = (parsed.sectionDeps && typeof parsed.sectionDeps === 'object' && !Array.isArray(parsed.sectionDeps)) ? parsed.sectionDeps : {};
+        projectAuditLog = Array.isArray(parsed.projectAuditLog) ? parsed.projectAuditLog.filter(x => x && x.at && x.action).slice(-PROJECT_AUDIT_MAX) : [];
         if (parsed.title) roadmapTitleText = parsed.title;
         if (parsed.pageMeta && parsed.pageMeta.poName != null) { storage.set('gantt_po_name', parsed.pageMeta.poName); }
         if (parsed.pageMeta && parsed.pageMeta.focusKeyDate != null) { storage.set('gantt_focus_keydate', String(parsed.pageMeta.focusKeyDate || '')); }
@@ -9010,6 +9430,7 @@
       }
 
       autoSaveFileHandle = handle;
+      recordProjectAudit('import', 'Открыт JSON-файл с автосохранением: ' + (handle.name || 'без имени'), { tasks: (roadmapData || []).length });
       await saveHandle(handle); // Save again just in case
       try { await rememberRecentFile(handle); } catch (e) {}
       updateAutoSaveStatus(`Автосохранение: привязано к ${handle.name}`, 'ok');
@@ -9164,6 +9585,19 @@
       })();
     }
 
+    function startupShowImportChoices() {
+      const p = document.getElementById('startupImportChoices'), b = document.getElementById('startupImportBtn');
+      if (!p) return;
+      const open = p.classList.contains('hidden');
+      p.classList.toggle('hidden', !open);
+      if (b) b.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) { const first = p.querySelector('button'); if (first) setTimeout(() => first.focus(), 20); }
+    }
+    function startImportJsonCopy() {
+      const input = document.getElementById('importFile');
+      if (input) { window.__startupJsonImport = true; input.value = ''; input.click(); }
+    }
+
     async function startFromFile() {
       if (!window.showOpenFilePicker) {
         showToast('Браузер не поддерживает автосохранение в файл. Откройте в Chrome или Edge.', 'warn', 5000);
@@ -9302,6 +9736,7 @@
       sectionParents = {};
       sectionDeps = {};
       archivedTasks = [];
+      projectAuditLog = [];
       projectStatuses = JSON.parse(JSON.stringify(DEFAULT_STATUSES));
       try { statusFilterSel.clear(); resourceFilterSel.clear(); projectFilterSel.clear(); releaseFilterSel.clear(); labelFilterSel.clear(); componentFilterSel.clear(); customFieldFilterSel = {}; } catch (e) {}
       try { if (typeof selectedTaskIds !== 'undefined' && selectedTaskIds.clear) selectedTaskIds.clear(); } catch (e) {}
@@ -9354,7 +9789,8 @@
         gantt_section_parents: JSON.stringify(sectionParents),
         gantt_section_deps: JSON.stringify(sectionDeps),
         gantt_archived_tasks: JSON.stringify(archivedTasks),
-        gantt_project_statuses: JSON.stringify(projectStatuses)
+        gantt_project_statuses: JSON.stringify(projectStatuses),
+        gantt_project_audit_log: JSON.stringify(projectAuditLog)
       };
       // Память всегда обновляем , сессия не теряет правки даже при сбое localStorage (как и в read-only).
       const _keys = Object.keys(pairs);
@@ -9396,6 +9832,7 @@
         wipeAllStorageArtifacts();
         resetProjectState();
         storage.set('gantt_po_name', 'Фамилия Имя');
+        recordProjectAudit('project_reset', 'Создан новый пустой проект', {});
         persistProjectState();
         try { if (typeof updateAutoSaveStatus === 'function') updateAutoSaveStatus('', ''); if (typeof updateAutoSaveBtn === 'function') updateAutoSaveBtn(); } catch (e) {}
         initApp();
@@ -13367,6 +13804,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       roadmapData.forEach(t => { if (selectedTaskIds.has(t.id) && !t.hidden && (typeof taskPassesFilters !== 'function' || taskPassesFilters(t))) { logStatusChange(t, statusId); t.status = statusId; t.updated = toYmdLocal(CURRENT_DATE || new Date()); n++; } });
       if (!n) { updateBulkBar(); return; }
       storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData));
+      recordProjectAudit('bulk', 'Массово изменен статус у ' + n + ' задач', { status: statusId, count: n });
       renderRoadmap(); updateBulkBar();
       offerUndo(`Статус изменен у ${n} задач`, snap);
     }
@@ -13380,6 +13818,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       roadmapData.forEach(t => { if (selectedTaskIds.has(t.id) && !t.hidden && (typeof taskPassesFilters !== 'function' || taskPassesFilters(t))) { t.section = section; n++; } });
       if (!n) { updateBulkBar(); return; }
       storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData));
+      recordProjectAudit('bulk', 'Массово перемещено задач: ' + n + ' в секцию «' + section + '»', { section: section, count: n });
       renderRoadmap(); updateBulkBar();
       offerUndo(`Перемещено в «${section}»: ${n}`, snap);
     }
@@ -20077,6 +20516,16 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const listContainer = document.getElementById('tasks-list-container');
       const barsContainer = document.getElementById('bars-container');
       const visibleTasks = roadmapData.filter(taskPassesFilters);
+      const _indexApi = globalThis.RoadmapModules;
+      const _visibleNormalTasks = visibleTasks.filter(t => t && !t.hidden);
+      const _visibleIndex = _indexApi.createRoadmapIndex({ roadmapData: _visibleNormalTasks }, { includeArchived: false });
+      const _allIndex = _indexApi.createRoadmapIndex({ roadmapData: roadmapData }, { includeArchived: false });
+      const _tasksForSection = section => _indexApi.listFor(_visibleIndex.bySection, section);
+      const _tasksForSections = names => {
+        const result = [];
+        for (const name of names) result.push(..._tasksForSection(name));
+        return result;
+      };
 
       listContainer.innerHTML = ''; barsContainer.innerHTML = '';
       let _zebraIdx = 0;
@@ -20267,7 +20716,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const visSecs = planSections.filter(s => !_effHidden.has(s));
       // В зоне «Скрытые» показываем только ЯВНО скрытые секции , их подсекции прячутся вместе с ними и вернутся, когда вернут родителя.
       const hidSecs = planSections.filter(s => hiddenSections.includes(s));
-      const hiddenTaskList = roadmapData.filter(t => t.hidden && taskPassesFilters(t));
+      const hiddenTaskList = visibleTasks.filter(t => t && t.hidden);
       // Группа «Скрытые» по умолчанию свернута (для читаемости Ганта)
       const hiddenZoneCollapsed = storage.get('gantt_hidden_zone_collapsed') !== '0';
       // Вложенность (п.1): Story-секции выводим с отступом сразу под их Epic. Пустой sectionParents = прежний плоский порядок.
@@ -20298,7 +20747,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       // Зона «На холде» убрана: on_hold , обычный статус (виден в фильтре), задачи остаются в своих секциях.
       // Под активным фильтром в «Скрытые» показываем только скрытые секции, где есть подходящие задачи (иначе зря висит «Пустая секция»).
       const _filterOnHid = anyTaskFilterActive();
-      const hidSecsShown = _filterOnHid ? hidSecs.filter(s => roadmapData.some(t => t.section === s && !t.hidden && taskPassesFilters(t))) : hidSecs;
+      const hidSecsShown = _filterOnHid ? hidSecs.filter(s => _tasksForSection(s).length > 0) : hidSecs;
       if (hidSecsShown.length || hiddenTaskList.length) {
         renderDescriptors.push({ divider: true, count: hidSecsShown.length + hiddenTaskList.length, collapsed: hiddenZoneCollapsed });
         // Содержимое раздела рендерим только когда группа раскрыта
@@ -20318,7 +20767,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         const isCollapsed = (zoneKind === 'onHoldTasks') ? false : collapsedSections.includes(sectionName);
         const sectionTasks = desc.tasksOverride
           ? desc.tasksOverride.slice()
-          : roadmapData.filter(t => t.section === sectionName && !t.hidden && taskPassesFilters(t));
+          : _tasksForSection(sectionName).slice();
 
         // Сортировка задач внутри секции
         sortSectionTasks(sectionTasks);
@@ -20333,13 +20782,13 @@ let resourceView = 'roles'; // 'roles' | 'load'
 
         // v8.2 G3: задачи скрытого поддерева (вложенные секции свернутого родителя) , для сводной полоски и вех
         const _subSecs = (isCollapsed && _hiddenUnder[sectionName]) ? _hiddenUnder[sectionName] : [];
-        const subtreeTasks = _subSecs.length ? roadmapData.filter(t => _subSecs.includes(t.section) && !t.hidden && taskPassesFilters(t)) : [];
+        const subtreeTasks = _subSecs.length ? _tasksForSections(_subSecs) : [];
         // Роллап вверх ВСЕГДА: число задач, %, оценку и границы родителя (эпика) считаем по ВСЕМУ поддереву вложенных
         // секций (стори, задачи и т.д.), а не только при свертке , иначе развернутый эпик показывает только прямые задачи.
         const _allDesc = (!isHiddenZone) ? _secDescendants(sectionName).filter(s => s !== sectionName) : [];
-        const _rollupTasks = _allDesc.length ? roadmapData.filter(t => _allDesc.includes(t.section) && !t.hidden && taskPassesFilters(t)) : [];
+        const _rollupTasks = _allDesc.length ? _tasksForSections(_allDesc) : [];
         const _aggTasks = _rollupTasks.length ? sectionTasks.concat(_rollupTasks) : sectionTasks;
-        const isTrulyEmpty = !roadmapData.some(t => t.section === sectionName);
+        const isTrulyEmpty = _indexApi.listFor(_allIndex.bySection, sectionName).length === 0;
         // Под фильтром прячем нормальную секцию без подходящих задач (в т.ч. пустую): фильтр не должен показывать «Пустая секция».
         if (!isHiddenZone && sectionTasks.length === 0 && _rollupTasks.length === 0 && (!isTrulyEmpty || anyTaskFilterActive())) return;
         const bounds = calculateSectionBounds(_aggTasks);
@@ -21905,6 +22354,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       storage.set('gantt_collapsed_sections', JSON.stringify(collapsedSections));
       storage.set('gantt_section_colors', JSON.stringify(sectionColors));
       storage.set('gantt_section_parents', JSON.stringify(sectionParents));
+      recordProjectAudit('archive', 'Перенесено в архив: задач ' + list.length + (removedSections ? ', секций ' + removedSections : ''), { taskIds: Array.from(ids).slice(0, 50) });
       updateArchiveBadge();
       updateSectionSelects();
       renderRoadmap();
@@ -22754,6 +23204,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         } else roadmapData.push(taskObj);
       } else { roadmapData.push(taskObj); }
 
+      recordProjectAudit(archivedEdit ? 'restore' : (id ? 'task_update' : 'task_create'),
+        (archivedEdit ? 'Восстановлена из архива: ' : (id ? 'Изменена задача: ' : 'Создана задача: ')) + (taskObj.name || 'Без названия'),
+        { taskId: taskObj.id, jira: taskObj.jira || '', section: taskObj.section || '' });
+
       syncDeadlineCutoff(taskObj);
       cascadeDependencies(taskObj.id); closeModal(); renderRoadmap(); _flashShifted(_cascadeShifted);
       if (_taskUndoSnap && typeof offerUndo === 'function') offerUndo('Задача сохранена', _taskUndoSnap);
@@ -22826,6 +23280,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           if (t.depMeta) { delete t.depMeta[tid]; if (!t.pred || !Object.keys(t.depMeta).length) delete t.depMeta; }
         });
         storage.set('gantt_custom_cutoffs', JSON.stringify(customCutoffs));
+        recordProjectAudit('task_delete', 'Удалена задача: ' + _delName, { taskId: tid, archived: _isArch });
         closeModal();
         renderRoadmap();
         offerUndo('Задача удалена', _undoSnap); // отмена удаления (Cmd/Ctrl+Z или кнопка)
@@ -23072,6 +23527,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         sectionMeta,
         sectionParents,
         sectionDeps,
+        projectAuditLog: Array.isArray(projectAuditLog) ? projectAuditLog.slice(-PROJECT_AUDIT_MAX) : [],
         // История версий НЕ встраивается в файл данных (иначе он раздувался до десятков МБ: 20 полных снимков). Она живет в IndexedDB (откат) и переносится отдельным «Экспортом версий». Встраивается только по явному includeVersions===true.
         versions: (includeVersions === true) ? (Array.isArray(_fileVersions) ? _fileVersions : []) : undefined
       };
@@ -23101,6 +23557,9 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       delete snap.resourceRates; delete snap.releaseBudget; delete snap.customFields;
       // Профили выгрузки и маппинга Jira , внутренние настройки команды, получателю файла «для просмотра» не нужны.
       delete snap.roProfiles; delete snap.jiraMapProfiles;
+      // Журнал содержит имена авторов и внутреннюю хронологию: во внешнюю копию
+      // «только для просмотра» он не попадает.
+      delete snap.projectAuditLog;
       if (Array.isArray(snap.cutoffs)) snap.cutoffs = snap.cutoffs.map(c => { const cc = Object.assign({}, c); if (Array.isArray(cc.dateLog)) cc.dateLog = cc.dateLog.map(e => ({ from: e.from, to: e.to, reason: e.reason, at: e.at })); delete cc.stage; delete cc.stageSum; return cc; });
       // Обезличивание задач: внутренние рабочие поля не нужны для просмотра и не должны уходить наружу.
       const STRIP_TASK = ['notes', 'dor', 'dod', 'metrics', 'estimate', 'storyPoints', 'hours', 'costFixed', 'costType', 'metricType', 'metricTarget', 'metricActual', 'metricUnit', 'riceReach', 'riceImpact', 'riceConfidence', 'riceEffort', 'wsjf', '_jiraSync', '_jiraChange', '_jiraPredIds', 'statusLog', 'history', 'created', 'updated', 'custom', 'workLog', 'comments', 'priorityRank', 'extParty', 'extEta'];
@@ -25423,6 +25882,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       try {
         if (Array.isArray(p)) { if (!p.length) return true; return p.filter(_looksLikeTask).length >= Math.ceil(p.length * 0.5); }
         if (p && typeof p === 'object') {
+          if (p.app === 'roadmap-snapshot' && p.data && typeof p.data === 'object') return _validImportSnapshot(p.data);
           if (Array.isArray(p.roadmapData)) { var a = p.roadmapData; if (!a.length) return true; return a.filter(_looksLikeTask).length >= Math.ceil(a.length * 0.5); }
           if (p.enc === 'AES-GCM' && p.ct) return true;
         }
@@ -25444,12 +25904,13 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             return;
           }
           _importParsedSnapshot(parsed, _importUndo);
-        } catch (err) { showToast('Ошибка чтения JSON.', 'error', 4000); }
+        } catch (err) { window.__startupJsonImport = false; showToast('Ошибка чтения JSON.', 'error', 4000); }
       };
       reader.readAsText(file);
     }
     function _importParsedSnapshot(parsed, _importUndo) {
-      if (!_validImportSnapshot(parsed)) { if (typeof showToast === 'function') showToast('Это не похоже на файл плана , импорт отменен, ваши данные не тронуты.', 'error', 5000); return; }
+      if (parsed && parsed.app === 'roadmap-snapshot' && parsed.data && typeof parsed.data === 'object') parsed = parsed.data;
+      if (!_validImportSnapshot(parsed)) { window.__startupJsonImport = false; if (typeof showToast === 'function') showToast('Это не похоже на файл плана , импорт отменен, ваши данные не тронуты.', 'error', 5000); return; }
       try { if (typeof _setSaveMeta === 'function' && parsed && !Array.isArray(parsed)) _setSaveMeta(parsed.savedBy, parsed.savedAt); } catch (e) {}
       if (Array.isArray(parsed)) {
         roadmapData = parsed;
@@ -25462,7 +25923,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         // и не сохранялись поверх импортируемого. Чего нет в файле , станет пустым, как при «Открыть файл».
         planSections = []; sectionColors = {}; projectResources = [];
         customCutoffs = []; collapsedSections = []; hiddenSections = []; archivedTasks = [];
-        projectReleases = []; projectGoals = []; projectInitiatives = []; projectRaid = []; projectFeedback = []; epicStatusByKey = {}; sectionLabels = {}; sectionMeta = {}; sectionParents = {}; sectionDeps = {};
+        projectReleases = []; projectGoals = []; projectInitiatives = []; projectRaid = []; projectFeedback = []; epicStatusByKey = {}; sectionLabels = {}; sectionMeta = {}; sectionParents = {}; sectionDeps = {}; projectAuditLog = [];
         resourceRoles = {}; resourceAvailability = {}; resourceLeave = {}; resourceParallel = {}; customCalendar = { holidays: [], workdays: [] };
         reportBlocks = []; reportBrand = {}; reportProfiles = {}; uiProfiles = {}; releaseRag = {}; presentations = _normPres(null);
         resourceRates = {}; releaseBudget = {}; customFieldDefs = [];
@@ -25512,11 +25973,13 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         if (parsed.roProfiles && typeof parsed.roProfiles === 'object' && !Array.isArray(parsed.roProfiles)) roProfiles = parsed.roProfiles;
         if (parsed.jiraMapProfiles && typeof parsed.jiraMapProfiles === 'object' && !Array.isArray(parsed.jiraMapProfiles)) jiraMapProfiles = parsed.jiraMapProfiles;
         if (parsed.sectionParents && typeof parsed.sectionParents === 'object') sectionParents = parsed.sectionParents;
+        if (Array.isArray(parsed.projectAuditLog)) projectAuditLog = parsed.projectAuditLog.filter(x => x && x.at && x.action).slice(-PROJECT_AUDIT_MAX);
       } else { showToast('Файл не распознан как снимок роадмапа', 'error', 4000); return; }
       if (parsed && !Array.isArray(parsed) && Array.isArray(parsed.versions)) { try { _restoreVersionsFromFile(parsed.versions); } catch (e) {} }
       if (typeof removeSectionSelfRows === 'function') removeSectionSelfRows(false);
       const dd = (typeof dedupeTaskKeys === 'function') ? dedupeTaskKeys() : { total: 0 };
       if (typeof dedupeCutoffs === 'function') dedupeCutoffs();
+      recordProjectAudit('import', 'Импортирован JSON-файл проекта', { tasks: Array.isArray(roadmapData) ? roadmapData.length : 0 });
       storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData));
       storage.set('gantt_archived_tasks', JSON.stringify(archivedTasks));
       storage.set('gantt_sections_list', JSON.stringify(planSections));
@@ -25546,6 +26009,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       storage.set('gantt_section_labels', JSON.stringify(sectionLabels));
       storage.set('gantt_section_meta', JSON.stringify(sectionMeta));
       storage.set('gantt_section_parents', JSON.stringify(sectionParents));
+      storage.set('gantt_project_audit_log', JSON.stringify(projectAuditLog));
       if (typeof updateArchiveBadge === 'function') updateArchiveBadge();
       updateResourceSelects();
       populateSectionSelects();
@@ -25557,6 +26021,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const _msg = `Импорт JSON завершен${dd.total > 0 ? `, убрано дублей , ${dd.total}` : ''}`;
       if (_importUndo && typeof offerUndo === 'function') offerUndo(_msg, _importUndo, 9000);
       else if (typeof showToast === 'function') showToast(_msg, 'ok');
+      if (window.__startupJsonImport) {
+        window.__startupJsonImport = false;
+        if (!appInitialized) initApp();
+        const _sm = document.getElementById('startupModal'); if (_sm) _sm.classList.add('hidden');
+        if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
+      }
     }
 
 
@@ -25994,6 +26464,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       epicAuditModal: function(){ if (typeof closeEpicAudit === 'function') closeEpicAudit(); },
       auditTeamsModal: function(){ if (typeof closeAuditTeams === 'function') closeAuditTeams(); },
       versionsModal: function(){ if (typeof closeVersionsModal === 'function') closeVersionsModal(); },
+      dataQualityModal: function(){ if (typeof closeDataQualityCenter === 'function') closeDataQualityCenter(); },
+      projectJournalModal: function(){ if (typeof closeProjectJournal === 'function') closeProjectJournal(); },
       csvMapModal: function(){ if (typeof closeCsvMapModal === 'function') closeCsvMapModal(); },
       resourceReplaceModal: function(){ if (typeof closeResourceReplace === 'function') closeResourceReplace(); },
       mergeModal: function(){ if (typeof closeMergeModal === 'function') closeMergeModal(); },
@@ -26046,7 +26518,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     });
     // === Доступность модалок: ловушка Tab + возврат фокуса на источник ===
     (function modalFocusA11y() {
-      const MODAL_IDS = ['taskModal','cutoffModal','sectionColorModal','statusModal','taskKindsModal','resourceModal','infoModal','globalSearchModal','reportModal','releaseProgressModal','quickAddModal','baselineModal','archiveModal','headerCutoffModal','epicAuditModal','auditTeamsModal','jiraSyncModal','jiraChangesModal','backPlanModal','inputModal','startupModal','versionsModal','csvMapModal','resourceReplaceModal','mergeModal','duplicateModal','sectionNestModal','exportSliceModal','roExportModal','reportBuilderModal','moneyModal','customFieldsModal','settingsModal','epicCardModal','kanbanColsModal','goalsModal','raidModal','insightsModal','leaderChooserModal','depsOverview','sprintCfgModal','planToolModal'];
+      const MODAL_IDS = ['taskModal','cutoffModal','sectionColorModal','statusModal','taskKindsModal','resourceModal','infoModal','globalSearchModal','reportModal','releaseProgressModal','quickAddModal','baselineModal','archiveModal','headerCutoffModal','epicAuditModal','auditTeamsModal','jiraSyncModal','jiraChangesModal','backPlanModal','inputModal','startupModal','versionsModal','dataQualityModal','projectJournalModal','csvMapModal','resourceReplaceModal','mergeModal','duplicateModal','sectionNestModal','exportSliceModal','roExportModal','reportBuilderModal','moneyModal','customFieldsModal','settingsModal','epicCardModal','kanbanColsModal','goalsModal','raidModal','insightsModal','leaderChooserModal','depsOverview','sprintCfgModal','planToolModal'];
       let lastFocus = null;
       const anyOpen = () => MODAL_IDS.some(id => { const e = document.getElementById(id); return e && !e.classList.contains('hidden'); });
       function topModalEl() {
@@ -26444,12 +26916,49 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </div>
   </div>
 
+  <div id="dataQualityModal" role="dialog" aria-modal="true" aria-labelledby="dataQualityTitle" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1000] flex items-center justify-center hidden p-3 sm:p-4" data-modal-backdrop>
+    <div class="rm-panel shadow-2xl w-full max-w-4xl flex flex-col max-h-[92vh] overflow-hidden">
+      <div class="px-4 sm:px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
+        <div class="min-w-0"><h3 id="dataQualityTitle" class="text-lg font-semibold text-slate-800">Центр качества данных</h3><p class="text-xs text-slate-500 mt-0.5">Диагностика только показывает проблемы и ничего не исправляет без вашего решения.</p></div>
+        <button type="button" onclick="closeDataQualityCenter()" aria-label="Закрыть центр качества данных" class="rm-action w-9 h-9 text-slate-500 hover:bg-slate-100 shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+      </div>
+      <div class="p-4 sm:p-6 flex flex-col min-h-0 gap-4">
+        <div id="dataQualitySummary" class="grid grid-cols-2 sm:grid-cols-4 gap-2 shrink-0" aria-live="polite"></div>
+        <div class="rm-operational-toolbar flex items-center gap-2 flex-wrap shrink-0">
+          <select id="dataQualityCategory" onchange="renderDataQualityCenter()" class="rm-control h-9 px-3 text-xs min-w-48" aria-label="Категория проблем"><option value="all">Все категории</option><option value="required">Обязательные поля</option><option value="structure">Структура</option><option value="dates">Даты</option><option value="overdue">Просрочка</option><option value="status">Статусы</option><option value="dependencies">Связи</option><option value="duplicates">Дубли</option></select>
+          <input id="dataQualitySearch" type="search" oninput="renderDataQualityCenter()" class="rm-control h-9 px-3 text-xs grow min-w-52" placeholder="Поиск по задаче, ключу или причине" aria-label="Поиск по проблемам качества данных">
+          <button type="button" onclick="analyzeProjectDataQuality(); renderDataQualityCenter()" class="rm-action h-9 px-3 border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50">Проверить снова</button>
+        </div>
+        <div id="dataQualityList" class="rm-operational-list overflow-y-auto min-h-0 space-y-2 pr-1" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="projectJournalModal" role="dialog" aria-modal="true" aria-labelledby="projectJournalTitle" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1000] flex items-center justify-center hidden p-3 sm:p-4" data-modal-backdrop>
+    <div class="rm-panel shadow-2xl w-full max-w-3xl flex flex-col max-h-[90vh] overflow-hidden">
+      <div class="px-4 sm:px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
+        <div class="min-w-0"><h3 id="projectJournalTitle" class="text-lg font-semibold text-slate-800">Журнал действий проекта</h3><p class="text-xs text-slate-500 mt-0.5">До 500 ключевых операций. Журнал хранится в JSON проекта и не входит во внешнюю read-only копию.</p></div>
+        <button type="button" onclick="closeProjectJournal()" aria-label="Закрыть журнал действий" class="rm-action w-9 h-9 text-slate-500 hover:bg-slate-100 shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+      </div>
+      <div class="p-4 sm:p-6 flex flex-col min-h-0 gap-3">
+        <div class="rm-operational-toolbar flex items-center gap-2 flex-wrap shrink-0">
+          <select id="projectJournalAction" onchange="renderProjectJournal()" class="rm-control h-9 px-3 text-xs" aria-label="Тип действия"><option value="all">Все действия</option><option value="task_create">Создание</option><option value="task_update">Изменение</option><option value="task_delete">Удаление</option><option value="archive">Архив</option><option value="bulk">Массовые операции</option><option value="import">Импорт</option><option value="restore">Восстановление</option><option value="snapshot">Снимки</option><option value="project_reset">Новый проект</option><option value="undo">Отмена</option></select>
+          <input id="projectJournalSearch" type="search" oninput="renderProjectJournal()" class="rm-control h-9 px-3 text-xs grow min-w-48" placeholder="Поиск по описанию или автору" aria-label="Поиск в журнале">
+          <span id="projectJournalCount" class="text-[10px] text-slate-500 shrink-0" aria-live="polite"></span>
+          <button type="button" onclick="exportProjectJournal()" class="rm-action h-9 px-3 border border-indigo-200 text-indigo-700 text-xs font-semibold hover:bg-indigo-50">Экспорт JSON</button>
+          <button type="button" onclick="clearProjectJournal()" class="rm-action h-9 px-3 border border-rose-200 text-rose-700 text-xs font-semibold hover:bg-rose-50">Очистить</button>
+        </div>
+        <div id="projectJournalList" class="rm-operational-list overflow-y-auto min-h-0 space-y-2 pr-1" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
   <div id="versionsModal" role="dialog" aria-modal="true" aria-label="История версий файла" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1000] flex items-center justify-center hidden p-4" data-modal-backdrop>
    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200/60 w-full max-w-lg flex flex-col max-h-[90vh]">
     <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
      <div class="flex items-center gap-3 min-w-0">
       <span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>
-      <div class="min-w-0"><h3 class="text-lg font-semibold text-slate-800 leading-tight">История версий файла</h3><p class="text-[10px] text-slate-500 leading-tight">Снимки всего проекта в браузере , быстрый откат к любому состоянию (как отмена для всего плана)</p></div>
+      <div class="min-w-0"><h3 class="text-lg font-semibold text-slate-800 leading-tight">Локальные JSON-снимки</h3><p class="text-[10px] text-slate-500 leading-tight">До 20 версий в этом браузере · метаданные, экспорт и откат с резервной копией текущего состояния</p></div>
      </div>
      <button type="button" onclick="closeVersionsModal()" aria-label="Закрыть" title="Закрыть" class="text-slate-500 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
     </div>
@@ -26881,7 +27390,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     <h3 class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">
      <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-     <span id="appVersionBadge">v13.4 , 22.07.2026</span>
+     <span id="appVersionBadge">v13.5 , 23.07.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -26947,7 +27456,18 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </div>
 
    <div>
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.4 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.5 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Центр качества данных</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ПРОВЕРКА</span></div><p class="text-xs text-slate-600">Восемь категорий проверок находят пропущенные сроки, битые связи, дубликаты и проблемы иерархии. Результаты можно фильтровать, а нужная карточка открывается одним кликом.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Локальные версии и безопасное восстановление</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">JSON</span></div><p class="text-xs text-slate-600">Приложение хранит до 20 локальных снимков с датой, размером и контрольной суммой. Перед восстановлением автоматически создаётся ещё одна страховочная версия.</p></div>
+     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Понятный первый запуск</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">СТАРТ</span></div><p class="text-xs text-slate-600">Новый мастер предлагает открыть демо, импортировать JSON или Jira либо начать с пустого плана — без необходимости заранее разбираться во всех кнопках.</p></div>
+     <div class="bg-gradient-to-br from-violet-50 to-white p-4 rounded-xl border border-violet-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-violet-700"><h5 class="font-semibold text-slate-800 text-sm">Журнал изменений проекта</h5><span class="ml-auto text-[10px] font-bold text-violet-700 bg-white border border-violet-200 rounded px-1.5 py-0.5">АУДИТ</span></div><p class="text-xs text-slate-600">Ключевые действия записываются локально: кто, когда и что изменил. Журнал фильтруется и экспортируется, но не попадает в публичную read-only выгрузку.</p></div>
+     <div class="bg-gradient-to-br from-amber-50 to-white p-4 rounded-xl border border-amber-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-amber-700"><h5 class="font-semibold text-slate-800 text-sm">Быстрее на больших планах</h5><span class="ml-auto text-[10px] font-bold text-amber-700 bg-white border border-amber-200 rounded px-1.5 py-0.5">СКОРОСТЬ</span></div><p class="text-xs text-slate-600">Повторные проходы по задачам заменены проверяемыми индексами. На синтетическом плане из 50 000 задач секционные запросы выполняются примерно в четыре раза быстрее.</p></div>
+    </div>
+   </div>
+
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v13.4 <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-100 px-1.5 py-0.5 rounded">22.07.2026</span></h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h14v4H5zM7 10h10v4H7zM9 16h6v4H9z"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Иерархия защищена во всех действиях</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">СТРУКТУРА</span></div><p class="text-xs text-slate-600">Форма, быстрое добавление, перенос мышью и массовые операции соблюдают Initiative → Epic → Story → Task/Bug. Плюс в пустом уровне создаёт правильный дочерний объект.</p></div>
      <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Мобильный интерфейс и клавиатура</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">UI/UX</span></div><p class="text-xs text-slate-600">Шапка больше не расширяет экран, вложенные кнопки не открывают карточку повторно, а формы, быстрый статус и скрытые действия получили корректные подписи и фокус.</p></div>
@@ -30330,12 +30850,19 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         <p class="text-sm text-slate-500 mt-2 max-w-lg mx-auto leading-relaxed">Откройте готовый пример за минуту или начните со своих данных. План работает локально, без сервера.</p>
         <span class="inline-flex items-center gap-1.5 mt-3 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2.5 py-1 rounded-lg shadow-xs">
           <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-          <span id="appVersionStartup">версия 13.4</span>
+          <span id="appVersionStartup">версия 13.5</span>
         </span>
       </div>
 
       <!-- Что внутри , кратко -->
-      <div class="px-10 py-3 text-center text-xs text-slate-500">Импорт из Jira, сроки и зависимости, фильтры, снимок и отчет , все внутри.</div>
+      <div class="px-10 pt-4 pb-2" aria-label="Мастер первого запуска">
+        <ol class="grid grid-cols-3 gap-2 text-center" aria-label="Три шага начала работы">
+          <li class="rounded-xl bg-indigo-50 border border-indigo-100 px-2 py-2"><span class="block text-[10px] font-bold text-indigo-700">1 · ИСТОЧНИК</span><span class="block text-[10px] text-slate-500 mt-0.5">пример, импорт или пустой</span></li>
+          <li class="rounded-xl bg-slate-50 border border-slate-100 px-2 py-2"><span class="block text-[10px] font-bold text-slate-600">2 · ПРОВЕРКА</span><span class="block text-[10px] text-slate-500 mt-0.5">данные останутся локально</span></li>
+          <li class="rounded-xl bg-slate-50 border border-slate-100 px-2 py-2"><span class="block text-[10px] font-bold text-slate-600">3 · РАБОТА</span><span class="block text-[10px] text-slate-500 mt-0.5">план откроется сразу</span></li>
+        </ol>
+      </div>
+      <div class="px-10 py-2 text-center text-xs text-slate-500">Импорт из Jira, сроки и зависимости, фильтры, снимок и отчет , все внутри.</div>
       <div class="px-10 pb-1 text-center text-[10px] text-slate-400">Старт в Простом режиме , показано только основное. Продвинутые функции (приоритизация, деньги, аудит) включаются в Настройках.</div>
 
       <!-- С чего начать -->
@@ -30354,19 +30881,24 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             <span class="block text-[11px] text-indigo-100 font-normal">Рекомендуем для первого знакомства · ничего загружать не нужно</span>
           </span>
         </button>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <button id="startFromFileBtn" onclick="startFromFile()" class="flex flex-col items-center justify-center gap-2 bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 text-xs font-semibold py-4 px-2 rounded-xl transition-all text-center leading-snug min-h-[92px]">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button id="startupImportBtn" type="button" onclick="startupShowImportChoices()" aria-expanded="false" aria-controls="startupImportChoices" class="flex flex-col items-center justify-center gap-2 bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 text-xs font-semibold py-4 px-2 rounded-xl transition-all text-center leading-snug min-h-[92px]">
             <svg aria-hidden="true" class="w-6 h-6 shrink-0 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v10m0 0l-3-3m3 3l3-3M5 20h14"></path></svg>
-            <span>Открыть свой файл (JSON)</span>
-          </button>
-          <button onclick="startFromJira()" class="flex flex-col items-center justify-center gap-2 bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 text-xs font-medium py-4 px-2 rounded-xl transition-all text-center leading-snug min-h-[92px]" title="Подтянуть задачи и эпики из Jira через вашу текущую сессию">
-            <svg aria-hidden="true" class="w-6 h-6 shrink-0 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
-            <span>Импорт / экспорт Jira</span>
+            <span>Импортировать свои данные</span><span class="text-[10px] text-slate-400 font-normal">JSON или Jira</span>
           </button>
           <button onclick="startFresh()" class="flex flex-col items-center justify-center gap-2 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 hover:border-emerald-300 text-xs font-medium py-4 px-2 rounded-xl transition-all text-center leading-snug min-h-[92px]">
             <svg aria-hidden="true" class="w-6 h-6 shrink-0 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             <span>Начать с чистого листа</span>
           </button>
+        </div>
+        <div id="startupImportChoices" class="hidden mt-3 rm-panel p-3" role="region" aria-label="Выберите способ импорта">
+          <p class="text-xs font-semibold text-slate-700 mb-2">Как загрузить данные?</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <button id="startFromFileBtn" type="button" onclick="startFromFile()" class="rm-action px-3 border border-indigo-200 text-indigo-700 text-xs font-semibold hover:bg-indigo-50">JSON + автосохранение</button>
+            <button type="button" onclick="startImportJsonCopy()" class="rm-action px-3 border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50">Импорт JSON-копии</button>
+            <button type="button" onclick="startFromJira()" class="rm-action px-3 border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50">Импорт из Jira</button>
+          </div>
+          <p class="text-[10px] text-slate-500 mt-2">Первый вариант сохраняет обратно в выбранный файл и работает в Chrome/Edge. Импорт копии доступен во всех современных браузерах.</p>
         </div>
         <div id="startupRecents" class="hidden mt-3"></div>
         <p id="startupBrowserHint" class="hidden text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-3 text-center">Открытие своего файла (с автосохранением) работает в Chrome или Edge. В этом браузере выберите импорт из Jira, демо или начните с чистого листа , данные можно сохранить в JSON через меню «Данные».</p>

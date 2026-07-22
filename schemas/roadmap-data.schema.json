@@ -70,6 +70,22 @@
     "projectGoals": { "type": "array", "items": { "type": "object" } },
     "projectInitiatives": { "type": "array", "items": { "type": "object" } },
     "projectRaid": { "type": "array", "items": { "type": "object" } },
+    "projectAuditLog": {
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "type": "object",
+        "required": ["at", "action", "message"],
+        "properties": {
+          "at": { "type": "string", "format": "date-time" },
+          "action": { "type": "string", "minLength": 1 },
+          "message": { "type": "string" },
+          "by": { "type": "string" },
+          "meta": { "type": "object" }
+        },
+        "additionalProperties": true
+      }
+    },
     "cutoffs": {
       "type": "array",
       "items": {
