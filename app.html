@@ -6977,7 +6977,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v13.6">
+<script data-roadmap-modules="v13.7">
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
@@ -8357,7 +8357,7 @@ if (typeof globalThis !== 'undefined') {
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '13.6';
+    const APP_VERSION = '13.7';
     const APP_VERSION_DATE = '23.07.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' , ' + APP_VERSION_DATE; } catch (e) {}
@@ -9219,11 +9219,12 @@ if (typeof globalThis !== 'undefined') {
       for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
       return ('00000000' + (h >>> 0).toString(16)).slice(-8);
     }
-    async function saveVersionSnapshot(label, auto) {
+    async function saveVersionSnapshot(label, auto, options) {
       try {
+        const opts = (options && typeof options === 'object') ? options : {};
         const snap = buildRoadmapSnapshot(false);
         const sig = _versionSig(snap);
-        if (auto && window.__lastVersionSig === sig) return false;
+        if (auto && !opts.force && window.__lastVersionSig === sig) return false;
         window.__lastVersionSig = sig;
         const db = await dbPromise; if (!db.objectStoreNames.contains('versions')) return false;
         const id = 'v' + Date.now() + '_' + Math.floor((window.performance && performance.now) ? performance.now() : (Math.random() * 1e6));
@@ -9234,7 +9235,8 @@ if (typeof globalThis !== 'undefined') {
         if (all.length > VERSIONS_MAX) { const extra = all.slice(VERSIONS_MAX); await new Promise((resolve) => { const tx = db.transaction('versions', 'readwrite'); const st = tx.objectStore('versions'); extra.forEach(x => st.delete(x.id)); tx.oncomplete = resolve; tx.onerror = resolve; }); }
         await _refreshFileVersions();
         if (typeof scheduleAutoSaveFile === 'function') { try { scheduleAutoSaveFile(); } catch (e) {} }
-        return true;
+        window.__lastSavedVersionId = rec.id;
+        return opts.returnRecord ? rec : true;
       } catch (e) { return false; }
     }
     async function _doDeleteVersionSnapshot(id) { try { const db = await dbPromise; await new Promise((resolve) => { const tx = db.transaction('versions', 'readwrite'); tx.objectStore('versions').delete(id); tx.oncomplete = resolve; tx.onerror = resolve; }); } catch (e) {} await _refreshFileVersions(); if (typeof scheduleAutoSaveFile === 'function') { try { scheduleAutoSaveFile(); } catch (e) {} } renderVersionsList(); }
@@ -9309,15 +9311,116 @@ if (typeof globalThis !== 'undefined') {
       renderRoadmap();
       return true;
     }
+    let _pendingVersionRestore = null;
+    let _lastVersionRestoreCheckpoint = null;
+    function _snapshotCollectionSize(snap, key) {
+      const value = snap && snap[key];
+      if (Array.isArray(value)) return value.filter(Boolean).length;
+      if (value && typeof value === 'object') return Object.keys(value).length;
+      return 0;
+    }
+    function _versionRestoreInventory(current, target) {
+      return [
+        ['sections', 'Секции'],
+        ['archivedTasks', 'Архив'],
+        ['resources', 'Исполнители'],
+        ['projectReleases', 'Релизы'],
+        ['projectGoals', 'Цели'],
+        ['projectInitiatives', 'Инициативы'],
+        ['projectRaid', 'Риски'],
+        ['projectStatuses', 'Статусы'],
+        ['cutoffs', 'Вехи']
+      ].map(([key, label]) => ({ key, label, from: _snapshotCollectionSize(current, key), to: _snapshotCollectionSize(target, key) })).filter(x => x.from !== x.to);
+    }
+    function closeVersionRestorePreview() {
+      _pendingVersionRestore = null;
+      const panel = document.getElementById('versionsRestorePanel');
+      if (panel) { panel.classList.add('hidden'); panel.innerHTML = ''; }
+    }
+    function _renderVersionRestoreSuccess(checkpoint, undone) {
+      const panel = document.getElementById('versionsRestorePanel'); if (!panel) return;
+      if (undone) {
+        panel.innerHTML = `<div class="flex items-start gap-3"><span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0" aria-hidden="true">✓</span><div class="min-w-0"><h4 class="text-sm font-semibold text-slate-800">Восстановление отменено</h4><p class="mt-1 text-xs leading-5 text-slate-600">Состояние до восстановления возвращено. Дополнительная версия «Перед отменой восстановления» оставлена в истории.</p></div><button type="button" onclick="closeVersionRestorePreview()" class="ml-auto h-8 px-3 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-white cursor-pointer">Скрыть</button></div>`;
+      } else {
+        panel.innerHTML = `<div class="flex flex-col sm:flex-row sm:items-center gap-3"><span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0" aria-hidden="true">✓</span><div class="min-w-0 grow"><h4 class="text-sm font-semibold text-slate-800">Версия восстановлена</h4><p class="mt-1 text-xs leading-5 text-slate-600">Точка возврата «${escHtml(checkpoint.label || 'Страховка перед восстановлением')}» сохранена в истории. Если результат не подходит, верните прежнее состояние одной кнопкой.</p></div><div class="flex items-center gap-2 shrink-0"><button type="button" onclick="undoLastVersionRestore()" class="h-9 px-3 rounded-xl border border-indigo-200 bg-white text-xs font-semibold text-indigo-700 hover:bg-indigo-50 cursor-pointer">Вернуть как было</button><button type="button" onclick="closeVersionRestorePreview()" class="h-9 px-3 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer">Готово</button></div></div>`;
+      }
+      panel.className = 'mx-6 mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 shrink-0';
+    }
     async function restoreVersionSnapshot(id) {
       if (READ_ONLY_MODE) return;
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
-      const rec = await _getVersionSnapshot(id); if (!rec || !rec.data) { if (typeof showToast === 'function') showToast('Версия не найдена', 'error'); return; }
-      const doRestore = async () => { await saveVersionSnapshot('Перед откатом', true); _applySnapshotForRestore(rec.data); recordProjectAudit('restore', 'Восстановлен локальный JSON-снимок от ' + _fmtVersionDate(rec.savedAt), { snapshotId: rec.id }); closeVersionsModal(); if (typeof showToast === 'function') showToast('Откат к версии выполнен', 'ok'); };
-      let _dTxt = '';
-      try { const _d = diffSnapshots(buildRoadmapSnapshot(false), rec.data); _dTxt = ' Откат изменит: +' + _d.added.length + ' / -' + _d.removed.length + ' / ' + _d.changed.length + ' изменений.'; } catch (e) {}
-      if (typeof openConfirm === 'function') { openConfirm({ title: 'Откатиться к версии', desc: 'Текущее состояние будет заменено снимком от ' + _fmtVersionDate(rec.savedAt) + '.' + _dTxt + ' Перед откатом сохранится автоверсия текущего состояния.', okText: 'Откатить', onOk: doRestore }); }
-      else { doRestore(); }
+      const rec = await _getVersionSnapshot(id);
+      if (!rec || !rec.data) { if (typeof showToast === 'function') showToast('Версия не найдена', 'error'); return; }
+      const current = buildRoadmapSnapshot(false);
+      const diff = diffSnapshots(current, rec.data);
+      const inventory = _versionRestoreInventory(current, rec.data);
+      _pendingVersionRestore = { id: rec.id, rec, diff, inventory };
+      _lastVersionRestoreCheckpoint = null;
+      closeVersionsDiff();
+      const panel = document.getElementById('versionsRestorePanel'); if (!panel) return;
+      const changedFields = diff.changed.reduce((sum, task) => sum + task.fields.length, 0);
+      const inventoryHtml = inventory.length
+        ? inventory.map(x => `<span class="inline-flex items-center h-7 px-2.5 rounded-lg border border-slate-200 bg-white text-[11px] text-slate-600">${escHtml(x.label)}: <strong class="ml-1 text-slate-800">${x.from} → ${x.to}</strong></span>`).join('')
+        : '<span class="text-[11px] text-slate-500">Количество секций, релизов, целей, исполнителей и записей архива не изменится.</span>';
+      panel.innerHTML = `
+        <div class="flex items-start justify-between gap-3">
+          <div class="min-w-0"><div class="text-[10px] font-bold uppercase tracking-wider text-indigo-600">Предварительный просмотр</div><h4 class="mt-1 text-base font-semibold text-slate-800">Восстановить версию от ${escHtml(_fmtVersionDate(rec.savedAt))}?</h4><p class="mt-1 text-xs leading-5 text-slate-600">${rec.label ? escHtml(rec.label) + '. ' : ''}Ниже показано, чем сохранённая версия отличается от текущего состояния.</p></div>
+          <button type="button" onclick="closeVersionRestorePreview()" aria-label="Закрыть предварительный просмотр" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-white cursor-pointer shrink-0">×</button>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
+          <div class="rounded-xl border border-slate-200 bg-white p-2.5"><div class="text-[10px] text-slate-500">Задач после</div><div class="mt-0.5 text-lg font-semibold text-slate-800">${(rec.data.roadmapData || []).length}</div></div>
+          <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-2.5"><div class="text-[10px] text-emerald-700">Будет добавлено</div><div class="mt-0.5 text-lg font-semibold text-emerald-700">+${diff.added.length}</div></div>
+          <div class="rounded-xl border border-rose-200 bg-rose-50 p-2.5"><div class="text-[10px] text-rose-700">Будет убрано</div><div class="mt-0.5 text-lg font-semibold text-rose-700">−${diff.removed.length}</div></div>
+          <div class="rounded-xl border border-amber-200 bg-amber-50 p-2.5"><div class="text-[10px] text-amber-700">Изменится</div><div class="mt-0.5 text-lg font-semibold text-amber-700">${diff.changed.length}<span class="ml-1 text-[10px] font-normal">задач / ${changedFields} полей</span></div></div>
+        </div>
+        <div class="mt-3"><div class="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Другие данные проекта</div><div class="mt-1.5 flex flex-wrap gap-1.5">${inventoryHtml}</div></div>
+        <div class="mt-3 max-h-48 overflow-y-auto rounded-xl border border-slate-200 bg-white p-3">${_versionDiffRowsHtml(diff, 50)}</div>
+        <div class="mt-3 grid sm:grid-cols-2 gap-2">
+          <div class="rounded-xl border border-indigo-200 bg-indigo-50 p-3"><div class="text-xs font-semibold text-indigo-800">Безопасная точка возврата</div><p class="mt-1 text-[11px] leading-4 text-indigo-700">Перед применением будет принудительно сохранена отдельная версия «Страховка перед восстановлением». Дедупликация её не пропустит.</p></div>
+          <div class="rounded-xl border border-slate-200 bg-white p-3"><div class="text-xs font-semibold text-slate-700">Что не удаляется</div><p class="mt-1 text-[11px] leading-4 text-slate-600">История версий и экспортированные файлы сохранятся. После восстановления появится кнопка «Вернуть как было».</p></div>
+        </div>
+        <div class="mt-4 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+          <button type="button" onclick="closeVersionRestorePreview()" class="h-10 px-4 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer">Отмена</button>
+          <button type="button" id="confirmVersionRestoreBtn" onclick="confirmVersionRestore()" class="h-10 px-4 rounded-xl bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-wait">Создать страховку и восстановить</button>
+        </div>`;
+      panel.className = 'mx-6 mt-3 rounded-xl border border-indigo-200 bg-slate-50 p-4 max-h-[58vh] overflow-y-auto shrink-0';
+      panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+    async function confirmVersionRestore() {
+      const pending = _pendingVersionRestore; if (!pending || !pending.rec || !pending.rec.data) return;
+      const btn = document.getElementById('confirmVersionRestoreBtn');
+      if (btn) { btn.disabled = true; btn.textContent = 'Сохраняю страховку…'; }
+      const checkpoint = await saveVersionSnapshot('Страховка перед восстановлением', false, { force: true, returnRecord: true });
+      if (!checkpoint || !checkpoint.id) {
+        if (btn) { btn.disabled = false; btn.textContent = 'Создать страховку и восстановить'; }
+        if (typeof showToast === 'function') showToast('Не удалось создать страховочную версию. Восстановление отменено', 'error', 5000);
+        return;
+      }
+      if (!_applySnapshotForRestore(pending.rec.data)) {
+        if (typeof showToast === 'function') showToast('Версия не применена. Страховочная копия сохранена', 'error', 5000);
+        return;
+      }
+      recordProjectAudit('restore', 'Восстановлен локальный JSON-снимок от ' + _fmtVersionDate(pending.rec.savedAt), { snapshotId: pending.rec.id, checkpointId: checkpoint.id });
+      _lastVersionRestoreCheckpoint = { id: checkpoint.id, targetId: pending.rec.id };
+      _pendingVersionRestore = null;
+      await _refreshFileVersions();
+      renderVersionsList();
+      _renderVersionRestoreSuccess(checkpoint, false);
+      if (typeof showToast === 'function') showToast('Версия восстановлена. Страховочная точка сохранена', 'ok', 4500);
+    }
+    async function undoLastVersionRestore() {
+      const state = _lastVersionRestoreCheckpoint; if (!state || !state.id) return;
+      const checkpoint = await _getVersionSnapshot(state.id);
+      if (!checkpoint || !checkpoint.data) { if (typeof showToast === 'function') showToast('Страховочная версия не найдена', 'error'); return; }
+      const redo = await saveVersionSnapshot('Перед отменой восстановления', false, { force: true, returnRecord: true });
+      if (!redo || !redo.id) { if (typeof showToast === 'function') showToast('Не удалось сохранить текущее состояние. Отмена не выполнена', 'error', 5000); return; }
+      if (!_applySnapshotForRestore(checkpoint.data)) return;
+      recordProjectAudit('restore', 'Отменено восстановление версии', { checkpointId: checkpoint.id, redoCheckpointId: redo.id });
+      _lastVersionRestoreCheckpoint = null;
+      await _refreshFileVersions();
+      renderVersionsList();
+      _renderVersionRestoreSuccess(checkpoint, true);
+      if (typeof showToast === 'function') showToast('Состояние до восстановления возвращено', 'ok', 4500);
     }
     // ===== Сравнение снимков истории версий =====
     // Сопоставление задач: по id, затем по ключу Jira, затем по нормализованному названию.
@@ -9332,8 +9435,21 @@ if (typeof globalThis !== 'undefined') {
         const n = norm(t.name); if (n && !byName.has(n)) byName.set(n, t);
       });
       const usedB = new Set();
-      const stName = (sid) => { try { return (typeof statusNameById === 'function') ? statusNameById(sid) : (sid || '-'); } catch (e) { return sid || '-'; } };
-      const FIELDS = [['name', 'Название'], ['status', 'Статус'], ['start', 'Старт'], ['end', 'Окончание'], ['resource', 'Исполнитель'], ['release', 'Релиз'], ['section', 'Секция']];
+      const statusMap = (snap) => new Map(((snap && Array.isArray(snap.projectStatuses)) ? snap.projectStatuses : []).filter(Boolean).map(s => [String(s.id), s.name || s.id]));
+      const statusA = statusMap(snapA), statusB = statusMap(snapB);
+      const displayValue = (field, value, side) => {
+        if (field === 'status') return (side === 'from' ? statusA : statusB).get(String(value)) || value || '(пусто)';
+        if (field === 'blocked' || field === 'external') return value === true || value === 'true' ? 'да' : 'нет';
+        return value || '(пусто)';
+      };
+      const FIELDS = [
+        ['name', 'Название'], ['issueType', 'Тип'], ['status', 'Статус'],
+        ['start', 'Старт'], ['end', 'Окончание'], ['resource', 'Исполнитель'],
+        ['release', 'Релиз'], ['section', 'Секция'], ['estimate', 'Оценка'],
+        ['storyPoints', 'Story points'], ['pred', 'Связи'], ['blocked', 'Блокировка'],
+        ['parent', 'Родитель'], ['epicLink', 'Эпик'], ['initiativeId', 'Инициатива'],
+        ['external', 'Внешняя задача']
+      ];
       const out = { added: [], removed: [], changed: [] };
       la.forEach(a => {
         let b = (a.id !== undefined && a.id !== null) ? byId.get(String(a.id)) : null;
@@ -9347,8 +9463,7 @@ if (typeof globalThis !== 'undefined') {
           const va = a[f] == null ? '' : String(a[f]);
           const vb = b[f] == null ? '' : String(b[f]);
           if (va === vb) return;
-          const isSt = (f === 'status');
-          fields.push({ field: f, label: label, from: isSt ? stName(va) : (va || '(пусто)'), to: isSt ? stName(vb) : (vb || '(пусто)') });
+          fields.push({ field: f, label: label, from: displayValue(f, va, 'from'), to: displayValue(f, vb, 'to') });
           if (f === 'end' && va && vb) { try { const d = dateToDays(vb) - dateToDays(va); if (Number.isFinite(d)) slipDays = d; } catch (e) {} }
         });
         if (fields.length) out.changed.push({ name: b.name || a.name || '(без названия)', jira: b.jira || a.jira || '', fields: fields, slipDays: slipDays });
@@ -9356,23 +9471,26 @@ if (typeof globalThis !== 'undefined') {
       lb.forEach(b => { if (!usedB.has(b)) out.added.push({ name: b.name || '(без названия)', jira: b.jira || '' }); });
       return out;
     }
+    function _versionDiffRowsHtml(diff, limit) {
+      const rows = [];
+      diff.added.forEach(t => rows.push(`<div class="text-[10px] py-1 flex items-center gap-1.5 min-w-0"><span class="shrink-0 px-1.5 py-0.5 rounded font-bold bg-emerald-100 text-emerald-700">добавится</span><span class="truncate text-slate-700">${t.jira ? escHtml(t.jira) + ' ' : ''}${escHtml(t.name)}</span></div>`));
+      diff.removed.forEach(t => rows.push(`<div class="text-[10px] py-1 flex items-center gap-1.5 min-w-0"><span class="shrink-0 px-1.5 py-0.5 rounded font-bold bg-rose-100 text-rose-700">будет убрана</span><span class="truncate text-slate-700">${t.jira ? escHtml(t.jira) + ' ' : ''}${escHtml(t.name)}</span></div>`));
+      diff.changed.forEach(t => {
+        const fields = t.fields.map(x => `${escHtml(x.label)}: ${escHtml(x.from)} → ${escHtml(x.to)}`).join('; ');
+        const slip = t.slipDays ? `<span class="shrink-0 font-semibold ${t.slipDays > 0 ? 'text-rose-600' : 'text-emerald-600'}">сдвиг ${t.slipDays > 0 ? '+' : ''}${t.slipDays} дн</span>` : '';
+        rows.push(`<div class="text-[10px] py-1 min-w-0 border-b border-slate-100 last:border-0"><div class="flex items-center gap-1.5 min-w-0"><span class="truncate font-medium text-slate-700">${t.jira ? escHtml(t.jira) + ' ' : ''}${escHtml(t.name)}</span>${slip}</div><div class="mt-0.5 text-slate-500 leading-4">${fields}</div></div>`);
+      });
+      const max = Number.isFinite(limit) ? limit : 50;
+      let body = rows.slice(0, max).join('');
+      if (rows.length > max) body += `<div class="text-[10px] text-slate-400 pt-1">и ещё ${rows.length - max}</div>`;
+      return body || '<div class="text-[10px] text-slate-500">Различий в задачах нет</div>';
+    }
     function _renderVersionsDiff(diff, labelA, labelB) {
       const p = document.getElementById('versionsDiffPanel'); if (!p) return;
       window.__lastVersionsDiff = { diff: diff, labelA: labelA, labelB: labelB };
       const head = `<div class="flex items-center justify-between gap-2 mb-2"><div class="text-xs font-semibold text-slate-700 min-w-0 truncate">${escHtml(labelA)} -> ${escHtml(labelB)}</div><div class="flex items-center gap-1 shrink-0"><button type="button" onclick="copyVersionsDiffText()" class="h-6 px-2 text-[10px] font-semibold rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 cursor-pointer transition-colors">Скопировать текстом</button><button type="button" onclick="closeVersionsDiff()" class="h-6 px-2 text-[10px] rounded-lg text-slate-400 hover:text-slate-600 hover:bg-white cursor-pointer transition-colors">скрыть</button></div></div>`;
       const sum = `<div class="text-[10px] text-slate-600 mb-2">+${diff.added.length} новых, -${diff.removed.length} удаленных, ${diff.changed.length} измененных</div>`;
-      const rows = [];
-      diff.added.forEach(t => rows.push(`<div class="text-[10px] py-0.5 flex items-center gap-1.5 min-w-0"><span class="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">добавлена</span><span class="truncate text-slate-700">${t.jira ? escHtml(t.jira) + ' ' : ''}${escHtml(t.name)}</span></div>`));
-      diff.removed.forEach(t => rows.push(`<div class="text-[10px] py-0.5 flex items-center gap-1.5 min-w-0"><span class="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700">удалена</span><span class="truncate text-slate-700">${t.jira ? escHtml(t.jira) + ' ' : ''}${escHtml(t.name)}</span></div>`));
-      diff.changed.forEach(t => {
-        const f = t.fields.map(x => `${escHtml(x.label)}: ${escHtml(x.from)} -> ${escHtml(x.to)}`).join('; ');
-        const slip = t.slipDays ? `<span class="shrink-0 text-[10px] font-semibold ${t.slipDays > 0 ? 'text-rose-600' : 'text-emerald-600'}">сдвиг ${t.slipDays > 0 ? '+' : ''}${t.slipDays} дн</span>` : '';
-        rows.push(`<div class="text-[10px] py-0.5 min-w-0"><div class="flex items-center gap-1.5 min-w-0"><span class="truncate font-medium text-slate-700">${t.jira ? escHtml(t.jira) + ' ' : ''}${escHtml(t.name)}</span>${slip}</div><div class="text-slate-500">${f}</div></div>`);
-      });
-      let body = rows.slice(0, 50).join('');
-      if (rows.length > 50) body += `<div class="text-[10px] text-slate-400 pt-1">и еще ${rows.length - 50}</div>`;
-      if (!rows.length) body = '<div class="text-[10px] text-slate-500">Различий нет</div>';
-      p.innerHTML = head + sum + body;
+      p.innerHTML = head + sum + _versionDiffRowsHtml(diff, 50);
       p.classList.remove('hidden');
     }
     function closeVersionsDiff() { const p = document.getElementById('versionsDiffPanel'); if (p) { p.classList.add('hidden'); p.innerHTML = ''; } window.__lastVersionsDiff = null; }
@@ -9410,7 +9528,7 @@ if (typeof globalThis !== 'undefined') {
       _renderVersionsDiff(diffSnapshots(rec.data, buildRoadmapSnapshot(false)), _fmtVersionDate(rec.savedAt), 'текущее состояние');
     }
     function openVersionsModal() { const m = document.getElementById('versionsModal'); if (m) { m.classList.remove('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); } renderVersionsList(); }
-    function closeVersionsModal() { const m = document.getElementById('versionsModal'); if (m) m.classList.add('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
+    function closeVersionsModal() { const m = document.getElementById('versionsModal'); if (m) m.classList.add('hidden'); closeVersionRestorePreview(); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
     async function saveVersionNow() { const _btn = document.getElementById('saveVersionNowBtn'); const _txt = _btn ? _btn.innerHTML : ''; if (_btn) { _btn.disabled = true; _btn.innerHTML = 'Сохраняю…'; } try { window.__lastVersionSig = null; const ok = await saveVersionSnapshot('Вручную', false); if (ok) recordProjectAudit('snapshot', 'Создан ручной JSON-снимок проекта', { tasks: (roadmapData || []).length }); if (typeof showToast === 'function') showToast(ok ? 'Версия сохранена' : 'Не удалось сохранить', ok ? 'ok' : 'error'); renderVersionsList(); } finally { if (_btn) { _btn.disabled = false; _btn.innerHTML = _txt; } } }
     async function exportVersionSnapshot(id) {
       const rec = await _getVersionSnapshot(id);
@@ -9433,7 +9551,7 @@ if (typeof globalThis !== 'undefined') {
           <button type="button" onclick="renameVersionSnapshot('${escAttr(v.id)}')" title="Метка или комментарий" aria-label="Метка или комментарий" class="h-7 w-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg></button>
           <button type="button" onclick="markVersionCompare('${escAttr(v.id)}')" aria-pressed="${_verCmpA === v.id}" class="h-7 px-2.5 text-[10px] font-semibold rounded-lg border cursor-pointer transition-colors ${_verCmpA === v.id ? 'border-indigo-500 bg-indigo-600 text-white' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}" title="Сравнить эту версию с другой версией или с текущим состоянием">Сравнить</button>
           <button type="button" onclick="exportVersionSnapshot('${escAttr(v.id)}')" aria-label="Экспортировать этот JSON-снимок" title="Экспортировать этот JSON-снимок" class="h-7 w-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"></path></svg></button>
-          <button type="button" onclick="restoreVersionSnapshot('${escAttr(v.id)}')" class="h-7 px-2.5 text-[10px] font-semibold rounded-lg border border-indigo-200 text-indigo-600 hover:bg-indigo-50 cursor-pointer">Откатить</button>
+          <button type="button" onclick="restoreVersionSnapshot('${escAttr(v.id)}')" class="h-7 px-2.5 text-[10px] font-semibold rounded-lg border border-indigo-200 text-indigo-600 hover:bg-indigo-50 cursor-pointer">Восстановить</button>
           <button type="button" onclick="deleteVersionSnapshot('${escAttr(v.id)}', '${escAttr(_fmtVersionDate(v.savedAt))}')" title="Удалить" class="h-7 w-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
         </div>
       </div>`).join('');
@@ -27402,7 +27520,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
   </div>
 
   <div id="versionsModal" role="dialog" aria-modal="true" aria-label="История версий файла" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1000] flex items-center justify-center hidden p-4" data-modal-backdrop>
-   <div class="bg-white rounded-2xl shadow-2xl border border-slate-200/60 w-full max-w-lg flex flex-col max-h-[90vh]">
+   <div class="bg-white rounded-2xl shadow-2xl border border-slate-200/60 w-full max-w-4xl flex flex-col max-h-[90vh]">
     <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
      <div class="flex items-center gap-3 min-w-0">
       <span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>
@@ -27411,6 +27529,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
      <button type="button" onclick="closeVersionsModal()" aria-label="Закрыть" title="Закрыть" class="text-slate-500 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
     </div>
     <div class="px-6 pt-3 flex items-center gap-2 flex-wrap"><button type="button" onclick="closeVersionsModal(); openMergeFile();" title="Слить план с файлом коллеги: правки коллеги подтянутся, конфликты решите вручную. Общий предок берется из этой истории" class="inline-flex items-center gap-1.5 h-9 px-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-xl cursor-pointer">Объединить с файлом коллеги</button><button type="button" id="saveVersionNowBtn" onclick="saveVersionNow()" class="inline-flex items-center gap-1.5 h-9 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Сохранить версию сейчас</button><button type="button" onclick="compareVersionWithCurrent()" class="inline-flex items-center gap-1.5 h-9 px-3 bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 text-xs font-semibold rounded-xl cursor-pointer transition-colors" title="Что изменилось: выбранная (или последняя) версия против текущего состояния карты">Сравнить с текущим</button><button type="button" onclick="exportVersionsToFile()" title="Скачать все локальные версии одним JSON-файлом , для переноса в другой браузер или на другую машину" class="inline-flex items-center gap-1.5 h-9 px-3 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold rounded-xl cursor-pointer transition-colors">Экспорт в файл</button><button type="button" onclick="importVersionsFromFile()" title="Добавить версии из ранее выгруженного файла, дубли пропускаются" class="inline-flex items-center gap-1.5 h-9 px-3 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold rounded-xl cursor-pointer transition-colors">Импорт из файла</button><input type="file" id="versionsImportFile" accept=".json,application/json" class="hidden" onchange="onVersionsImportChosen(event)"><span id="versionsCmpHint" class="text-[10px] text-slate-500"></span></div>
+    <div id="versionsRestorePanel" class="hidden" aria-live="polite"></div>
     <div id="versionsDiffPanel" class="hidden mx-6 mt-3 bg-slate-50 border border-slate-200 rounded-xl p-3 max-h-60 overflow-y-auto shrink-0"></div>
     <div id="versionsBody" class="p-6 pt-3 overflow-y-auto flex-1"></div>
    </div>
@@ -27838,7 +27957,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     <h3 class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">
      <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-     <span id="appVersionBadge">v13.6 , 23.07.2026</span>
+     <span id="appVersionBadge">v13.7 , 23.07.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -27904,7 +28023,15 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </div>
 
    <div>
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.6 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.7 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Восстановление без сюрпризов</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ВЕРСИИ</span></div><p class="text-xs text-slate-600">До подтверждения видны добавляемые, удаляемые и изменяемые задачи, конкретные поля и состав других данных проекта. Отдельно показываются тип карточки, связи, блокировки и уровни иерархии.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Гарантированная страховка и отмена</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">БЕЗОПАСНОСТЬ</span></div><p class="text-xs text-slate-600">Перед применением всегда создаётся отдельная точка возврата, которую не может пропустить дедупликация. После восстановления прежнее состояние возвращается одной кнопкой.</p></div>
+    </div>
+   </div>
+
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v13.6 <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-100 px-1.5 py-0.5 rounded">23.07.2026</span></h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Центр качества данных</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ПРОВЕРКА</span></div><p class="text-xs text-slate-600">Восемь категорий проверок находят пропущенные сроки, битые связи, дубликаты и проблемы иерархии. Результаты можно фильтровать, а нужная карточка открывается одним кликом.</p></div>
      <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Локальные версии и безопасное восстановление</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">JSON</span></div><p class="text-xs text-slate-600">Приложение хранит до 20 локальных снимков с датой, размером и контрольной суммой. Перед восстановлением автоматически создаётся ещё одна страховочная версия.</p></div>
@@ -31298,7 +31425,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         <p class="text-sm text-slate-500 mt-2 max-w-lg mx-auto leading-relaxed">Откройте готовый пример за минуту или начните со своих данных. План работает локально, без сервера.</p>
         <span class="inline-flex items-center gap-1.5 mt-3 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2.5 py-1 rounded-lg shadow-xs">
           <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-          <span id="appVersionStartup">версия 13.6</span>
+          <span id="appVersionStartup">версия 13.7</span>
         </span>
       </div>
 
