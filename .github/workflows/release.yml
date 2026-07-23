@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: 'Тег вида v13.7.0; нужен только при публикации Release'
+        description: 'Тег вида v13.8.0; нужен только при публикации Release'
         required: false
         type: string
       publish_release:
@@ -72,7 +72,7 @@ jobs:
         run: |
           if [ "$EVENT_NAME" = "push" ]; then TAG="$PUSH_TAG"; else TAG="$MANUAL_TAG"; fi
           if ! printf '%s' "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
-            echo "Тег должен иметь вид v13.7 или v13.7.0" >&2
+            echo "Тег должен иметь вид v13.8 или v13.8.0" >&2
             exit 1
           fi
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"

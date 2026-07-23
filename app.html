@@ -6977,7 +6977,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v13.7">
+<script data-roadmap-modules="v13.8">
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
@@ -8357,7 +8357,7 @@ if (typeof globalThis !== 'undefined') {
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '13.7';
+    const APP_VERSION = '13.8';
     const APP_VERSION_DATE = '23.07.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' , ' + APP_VERSION_DATE; } catch (e) {}
@@ -26105,37 +26105,111 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const base = jiraNormBase(jiraGetEl('jiraBaseUrl').value);
       const proj = (jiraGetEl('jiraProjectKey').value || '').trim().toUpperCase();
       const jql = (jiraGetEl('jiraJql').value || '').trim();
-      return { base, proj, jql };
+      const scopeEl = jiraGetEl('jiraImportScope');
+      const scope = scopeEl && scopeEl.value === 'keys' ? 'keys' : 'projects';
+      return { base, proj, jql, scope };
     }
     // Несколько проектов: «WEB, APP» -> ['WEB','APP']
     function jiraParseProjects(raw) { return String(raw || '').toUpperCase().split(/[\s,;]+/).map(x => x.trim()).filter(Boolean); }
-    function jiraDefaultJql(projRaw) {
+    const JIRA_KEYS_PER_QUERY = 200;
+    function jiraExtractKeys(value) {
+      const matches = String(value || '').toUpperCase().match(/\b[A-Z][A-Z0-9_]*-\d+\b/g) || [];
+      return matches;
+    }
+    // Все Jira-ключи, которые пользователь видит в активном плане: обычные задачи,
+    // вехи и контейнеры Initiative/Epic/Story. Архив намеренно не включаем: он не является Гантом.
+    function jiraPlanKeys() {
+      const found = new Set();
+      const add = (value) => jiraExtractKeys(value).forEach(key => found.add(key));
+      (Array.isArray(roadmapData) ? roadmapData : []).forEach(task => { if (task) add(task.jira || ''); });
+      if (sectionMeta && typeof sectionMeta === 'object' && !Array.isArray(sectionMeta)) {
+        Object.keys(sectionMeta).forEach(section => { const meta = sectionMeta[section]; add(meta && meta.key); });
+      }
+      (Array.isArray(planSections) ? planSections : []).forEach(add);
+      return [...found].sort((a, b) => a.localeCompare(b, 'ru', { numeric: true, sensitivity: 'base' }));
+    }
+    function jiraProjectClause(projRaw) {
       const ps = jiraParseProjects(projRaw);
-      if (!ps.length) return '';
-      const clause = ps.length === 1 ? `project = ${ps[0]}` : `project in (${ps.join(', ')})`;
+      return ps.length === 0 ? '' : (ps.length === 1 ? `project = ${ps[0]}` : `project in (${ps.join(', ')})`);
+    }
+    function jiraKeysClause(keys) {
+      const list = Array.isArray(keys) ? keys : [];
+      return list.length ? `key in (${list.join(', ')})` : '';
+    }
+    function jiraDefaultJql(projRaw) {
+      const clause = jiraProjectClause(projRaw);
+      if (!clause) return '';
       return `${clause} ORDER BY Rank ASC`;
+    }
+    function jiraDefaultKeysJql(keys) {
+      const clause = jiraKeysClause(Array.isArray(keys) ? keys : jiraPlanKeys());
+      return clause ? `${clause} ORDER BY Rank ASC` : '';
     }
     // Это еще авто-шаблон «только проект(ы)»? Тогда JQL можно безопасно пересобрать при смене проектов.
     // Важно: ловим и `project = KEY`, и `project in (...)` (прежняя проверка на `=\b` не срабатывала для одного проекта).
     function jiraIsAutoJql(jql) {
-      return /^\s*project\s*(=\s*[^\s()]+|in\s*\([^)]*\))\s*ORDER\s+BY\s+Rank\s+ASC\s*$/i.test(String(jql || '').trim());
+      return /^\s*(?:project\s*(?:=\s*[^\s()]+|in\s*\([^)]*\))|(?:key|issuekey)\s*(?:=\s*[^\s()]+|in\s*\([^)]*\)))\s*ORDER\s+BY\s+Rank\s+ASC\s*$/i.test(String(jql || '').trim());
     }
-    // Заменяет (или добавляет) условие по проекту в JQL текущими ключами из поля «Проекты», сохраняя остальные фильтры.
-    function jiraReplaceProjectClause(jql, projRaw) {
-      const ps = jiraParseProjects(projRaw);
-      const clause = ps.length === 0 ? '' : (ps.length === 1 ? `project = ${ps[0]}` : `project in (${ps.join(', ')})`);
+    // Меняет только область выборки (project/key), оставляя пользовательские фильтры и ORDER BY.
+    function jiraReplaceScopeClause(jql, clause) {
       const cur = String(jql || '').trim();
       if (!cur) return clause ? `${clause} ORDER BY Rank ASC` : '';
-      if (!clause) return cur; // проекты не заданы , JQL не трогаем
-      const projRe = /project\s*(?:=\s*[^\s()]+|in\s*\([^)]*\))/i;
-      if (projRe.test(cur)) return cur.replace(projRe, clause);
-      // условия по проекту нет , добавляем его в начало, перед ORDER BY
+      if (!clause) return cur;
+      const scopeRe = /\b(?:project\s*(?:=\s*[^\s()]+|in\s*\([^)]*\))|(?:key|issuekey)\s*(?:=\s*[^\s()]+|in\s*\([^)]*\)))/i;
+      if (scopeRe.test(cur)) return cur.replace(scopeRe, clause).replace(/\s+/g, ' ').trim();
       const oi = cur.search(/ORDER BY/i);
       const head = oi >= 0 ? cur.slice(0, oi).trim() : cur;
       const tail = oi >= 0 ? cur.slice(oi).trim() : '';
       return (clause + (head ? ' AND ' + head : '') + (tail ? ' ' + tail : '')).replace(/\s+/g, ' ').trim();
     }
+    // Заменяет (или добавляет) условие по проекту в JQL текущими ключами из поля «Проекты», сохраняя остальные фильтры.
+    function jiraReplaceProjectClause(jql, projRaw) {
+      return jiraReplaceScopeClause(jql, jiraProjectClause(projRaw));
+    }
+    function jiraRenderImportScope() {
+      const scopeEl = jiraGetEl('jiraImportScope');
+      const scope = scopeEl && scopeEl.value === 'keys' ? 'keys' : 'projects';
+      const keys = jiraPlanKeys();
+      ['projects', 'keys'].forEach(value => {
+        const btn = jiraGetEl('jiraScope-' + value); if (!btn) return;
+        const active = value === scope;
+        btn.setAttribute('aria-checked', active ? 'true' : 'false');
+        btn.classList.toggle('bg-white', active);
+        btn.classList.toggle('shadow-sm', active);
+        btn.classList.toggle('text-indigo-700', active);
+        btn.classList.toggle('text-slate-500', !active);
+      });
+      const projectInput = jiraGetEl('jiraProjectKey');
+      if (projectInput) { projectInput.disabled = scope === 'keys'; projectInput.classList.toggle('opacity-50', scope === 'keys'); projectInput.classList.toggle('cursor-not-allowed', scope === 'keys'); }
+      const projectLabel = jiraGetEl('jiraProjectLabel');
+      if (projectLabel) projectLabel.textContent = scope === 'keys' ? 'Проекты (не используются)' : 'Проекты';
+      const info = jiraGetEl('jiraKeysScopeInfo');
+      if (info) info.classList.toggle('hidden', scope !== 'keys');
+      const count = jiraGetEl('jiraPlanKeysCount');
+      if (count) count.textContent = keys.length + ' ' + pluralRu(keys.length, ['ключ', 'ключа', 'ключей']);
+      const batches = jiraGetEl('jiraPlanKeysBatches');
+      if (batches) {
+        const n = Math.ceil(keys.length / JIRA_KEYS_PER_QUERY);
+        batches.textContent = !keys.length ? 'В плане пока нет Jira-ключей.' : (keys.length > JIRA_KEYS_PER_QUERY ? 'Jira откроется порциями: ' + n + ' ' + pluralRu(n, ['запрос', 'запроса', 'запросов']) + '.' : 'Будет сформирован один запрос.');
+      }
+    }
+    function jiraSetImportScope(scope, persist) {
+      const value = scope === 'keys' ? 'keys' : 'projects';
+      const scopeEl = jiraGetEl('jiraImportScope'); if (scopeEl) scopeEl.value = value;
+      const jqlEl = jiraGetEl('jiraJql');
+      if (jqlEl) {
+        const current = (jqlEl.value || '').trim();
+        const clause = value === 'keys' ? jiraKeysClause(jiraPlanKeys()) : jiraProjectClause((jiraGetEl('jiraProjectKey') && jiraGetEl('jiraProjectKey').value) || '');
+        jqlEl.value = (!current || jiraIsAutoJql(current))
+          ? (value === 'keys' ? jiraDefaultKeysJql() : jiraDefaultJql((jiraGetEl('jiraProjectKey') && jiraGetEl('jiraProjectKey').value) || ''))
+          : jiraReplaceScopeClause(current, clause);
+      }
+      jiraRenderImportScope();
+      if (persist !== false) saveJiraCfg({ scope: value });
+    }
     function jiraSyncDefaultJqlFromProject() {
+      const scopeEl = jiraGetEl('jiraImportScope');
+      if (scopeEl && scopeEl.value === 'keys') return;
       const proj = (jiraGetEl('jiraProjectKey').value || '').trim().toUpperCase();
       const el = jiraGetEl('jiraJql'); const cur = (el.value || '').trim();
       // Пустой/авто , собираем полный шаблон; кастомный , меняем только условие project, сохраняя фильтры (п.8).
@@ -26157,7 +26231,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       jiraGetEl('jiraBaseUrl').value = cfg.base || '';
       const be = jiraGetEl('jiraBaseUrlExport'); if (be) be.value = cfg.base || '';
       jiraGetEl('jiraProjectKey').value = cfg.proj || '';
-      jiraGetEl('jiraJql').value = cfg.jql || jiraDefaultJql(cfg.proj || '');
+      const scope = cfg.scope === 'keys' ? 'keys' : 'projects';
+      const scopeEl = jiraGetEl('jiraImportScope'); if (scopeEl) scopeEl.value = scope;
+      jiraGetEl('jiraJql').value = cfg.jql || (scope === 'keys' ? jiraDefaultKeysJql() : jiraDefaultJql(cfg.proj || ''));
+      jiraSetImportScope(scope, false);
       const tok = jiraGetEl('jiraToken'); if (tok) tok.value = '';
       { const _se = jiraGetEl('jiraSyncEvery'); if (_se) _se.value = parseInt(getJiraCfg().syncEvery, 10) || 0; }
       jiraSyncTab('import');
@@ -26177,32 +26254,57 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         if (btn) { btn.classList.toggle('font-semibold', t === which); btn.classList.toggle('font-medium', t !== which); btn.classList.toggle('hover:text-slate-900', t !== which); btn.classList.toggle('bg-white', t === which); btn.classList.toggle('shadow-sm', t === which); btn.classList.toggle('text-indigo-700', t === which); btn.classList.toggle('text-slate-500', t !== which); }
       });
     }
-    function jiraPersistForm() { const f = jiraReadForm(); saveJiraCfg({ base: f.base, proj: f.proj, jql: f.jql }); return f; }
+    function jiraPersistForm() { const f = jiraReadForm(); saveJiraCfg({ base: f.base, proj: f.proj, jql: f.jql, scope: f.scope }); return f; }
     // ИМПОРТ , открыть готовую выгрузку CSV в Jira (через текущую сессию)
     // Итоговый JQL: если поле пустое или это авто-шаблон , пересобираем из поля «Проекты» (чтобы все проекты учитывались).
     function jiraEffectiveJql(f) {
       const cur = (f.jql || '').trim();
+      const scope = f && f.scope === 'keys' ? 'keys' : 'projects';
+      if (scope === 'keys') {
+        const keys = jiraPlanKeys();
+        if (!keys.length) return '';
+        if (!cur || jiraIsAutoJql(cur)) return jiraDefaultKeysJql(keys);
+        return jiraReplaceScopeClause(cur, jiraKeysClause(keys));
+      }
       if (!cur || jiraIsAutoJql(cur)) return jiraDefaultJql(f.proj) || cur;
       // Кастомный JQL: приводим условие project к текущему полю «Проекты» (меняем старый ключ или добавляем), п.8.
       const ps = jiraParseProjects(f.proj);
       if (!ps.length) return cur;
       return jiraReplaceProjectClause(cur, f.proj);
     }
+    function jiraQueryBatches(f) {
+      const effective = jiraEffectiveJql(f);
+      if (!effective) return [];
+      if (!f || f.scope !== 'keys') return [effective];
+      const keys = jiraPlanKeys();
+      const out = [];
+      for (let i = 0; i < keys.length; i += JIRA_KEYS_PER_QUERY) {
+        out.push(jiraReplaceScopeClause(effective, jiraKeysClause(keys.slice(i, i + JIRA_KEYS_PER_QUERY))));
+      }
+      return out;
+    }
+    function jiraCopyEffectiveJql() {
+      const f = jiraReadForm();
+      const queries = jiraQueryBatches(f);
+      if (!queries.length) { if (typeof showToast === 'function') showToast('В Ганте нет Jira-ключей', 'warn', 3500); return; }
+      const text = queries.join('\n\n');
+      const done = () => { if (typeof showToast === 'function') showToast(queries.length > 1 ? 'Скопировано запросов: ' + queries.length : 'JQL скопирован', 'ok', 3000); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done).catch(() => { if (typeof fallbackCopy === 'function') fallbackCopy(text, done); });
+      else if (typeof fallbackCopy === 'function') fallbackCopy(text, done);
+    }
     function jiraOpenCsvExport() {
       const f = jiraPersistForm();
       if (!f.base) { showToast('Укажите адрес Jira (например, https://jira.company.ru)', 'warn', 4000); return; }
-      const jql = jiraEffectiveJql(f);
-      if (!jql) { showToast('Укажите проект или JQL', 'warn', 4000); return; }
-      let url;
-      if (jiraIsCloud(f.base)) {
-        // В Jira Cloud прямой CSV-ссылки нет , открываем навигатор с JQL, далее «Экспорт , CSV».
-        url = f.base + '/issues/?jql=' + encodeURIComponent(jql);
-        showToast('Открываю Jira. В навигаторе: «Экспорт» , «Export Excel CSV (all fields)»', 'info', 6000);
-      } else {
-        // Jira Server/Data Center , прямая ссылка скачивает CSV со всеми полями
-        url = f.base + '/sr/jira.issueviews:searchrequest-csv-all-fields/temp/SearchRequest.csv?jqlQuery=' + encodeURIComponent(jql) + '&tempMax=2000';
-      }
-      window.open(url, '_blank', 'noopener');
+      const queries = jiraQueryBatches(f);
+      if (!queries.length) { showToast(f.scope === 'keys' ? 'В Ганте нет задач или секций с Jira-ключами' : 'Укажите проект или JQL', 'warn', 4000); return; }
+      queries.forEach(jql => {
+        const url = jiraIsCloud(f.base)
+          ? (f.base + '/issues/?jql=' + encodeURIComponent(jql))
+          : (f.base + '/sr/jira.issueviews:searchrequest-csv-all-fields/temp/SearchRequest.csv?jqlQuery=' + encodeURIComponent(jql) + '&tempMax=2000');
+        window.open(url, '_blank', 'noopener');
+      });
+      if (queries.length > 1) showToast('Ключи разделены на ' + queries.length + ' ' + pluralRu(queries.length, ['запрос', 'запроса', 'запросов']) + '. Разрешите браузеру открыть несколько вкладок Jira.', 'info', 7000);
+      else if (jiraIsCloud(f.base)) showToast('Открываю Jira. В навигаторе: «Экспорт» , «Export Excel CSV (all fields)»', 'info', 6000);
     }
     function jiraTriggerCsvUpload() { const inp = jiraGetEl('jiraImportFile'); if (inp) inp.click(); }
     // ===== Авто-синхронизация с Jira (поверх REST). Токен держим только в памяти сессии, в файл не пишем. =====
@@ -26223,6 +26325,22 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         if (onProgress) onProgress(all.length, total);
       }
       return all;
+    }
+    async function _jiraFetchIssueBatches(base, queries, token, onProgress) {
+      const list = Array.isArray(queries) ? queries.filter(Boolean) : [];
+      const rows = [], seen = new Set();
+      for (let index = 0; index < list.length; index++) {
+        const batch = await _jiraFetchIssues(base, list[index], token, (n, total) => {
+          if (onProgress) onProgress(n, total, index + 1, list.length);
+        });
+        batch.forEach(row => {
+          const key = String(row && (row['Issue key'] || row['Ключ проблемы'] || row.Key) || '').toUpperCase();
+          if (key && seen.has(key)) return;
+          if (key) seen.add(key);
+          rows.push(row);
+        });
+      }
+      return rows;
     }
     function jiraScheduleAutoSync() {
       if (_jiraAutoTimer) { clearInterval(_jiraAutoTimer); _jiraAutoTimer = null; }
@@ -26246,9 +26364,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (!token) { if (!silent && typeof showToast === 'function') showToast('Введите токен в окне Jira , без него авто-синк не работает', 'warn', 5000); return; }
       const cfg = getJiraCfg();
       if (!cfg.base) { if (!silent && typeof showToast === 'function') showToast('Сначала укажите адрес Jira', 'warn', 4000); return; }
-      const jql = jiraEffectiveJql({ base: cfg.base, proj: cfg.proj || '', jql: cfg.jql || '' });
+      const form = { base: cfg.base, proj: cfg.proj || '', jql: cfg.jql || '', scope: cfg.scope === 'keys' ? 'keys' : 'projects' };
+      const queries = jiraQueryBatches(form);
+      if (!queries.length) { if (!silent && typeof showToast === 'function') showToast(form.scope === 'keys' ? 'В Ганте нет Jira-ключей' : 'Укажите проект или JQL', 'warn', 4000); return; }
       try {
-        const all = await _jiraFetchIssues(cfg.base, jql, token);
+        const all = await _jiraFetchIssueBatches(cfg.base, queries, token);
         jiraSessionToken = token;
         if (all.length) {
           const pv = (typeof previewJiraMerge === 'function') ? previewJiraMerge(all) : null;
@@ -26272,16 +26392,17 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const token = (jiraGetEl('jiraToken').value || '').trim();
       if (!f.base) { showToast('Укажите адрес Jira', 'warn', 4000); return; }
       if (!token) { showToast('Введите токен (PAT для Server/DC или email:api_token для Cloud)', 'warn', 4500); return; }
-      const jql = jiraEffectiveJql(f);
+      const queries = jiraQueryBatches(f);
+      if (!queries.length) { showToast(f.scope === 'keys' ? 'В Ганте нет Jira-ключей' : 'Укажите проект или JQL', 'warn', 4000); return; }
       const statusEl = jiraGetEl('jiraApiStatus');
       const setS = (t, tone) => { if (statusEl) { statusEl.textContent = t; statusEl.className = 'text-[10px] mt-2 ' + (tone === 'err' ? 'text-rose-600' : tone === 'ok' ? 'text-emerald-600' : 'text-slate-500'); } };
       setS('Подключаюсь к Jira…', 'muted');
       try {
-        const all = await _jiraFetchIssues(f.base, jql, token, (n, t) => setS('Получено ' + n + ' из ' + t + '…', 'muted'));
+        const all = await _jiraFetchIssueBatches(f.base, queries, token, (n, t, batch, totalBatches) => setS((totalBatches > 1 ? 'Запрос ' + batch + ' из ' + totalBatches + ': ' : '') + 'получено ' + n + ' из ' + t + '…', 'muted'));
         if (!all.length) { setS('Задач по этому JQL не найдено', 'err'); return; }
         mergeJiraTasks(all);
         setS('Импортировано задач: ' + all.length, 'ok');
-        saveJiraCfg({ base: f.base, proj: f.proj, jql: jql, lastImport: toYmdLocal(new Date()) });
+        saveJiraCfg({ base: f.base, proj: f.proj, jql: jiraEffectiveJql(f), scope: f.scope, lastImport: toYmdLocal(new Date()) });
         jiraSessionToken = token; jiraScheduleAutoSync();
         setTimeout(closeJiraSync, 1200);
       } catch (err) {
@@ -27957,7 +28078,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     <h3 class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">
      <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-     <span id="appVersionBadge">v13.7 , 23.07.2026</span>
+     <span id="appVersionBadge">v13.8 , 23.07.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -28023,7 +28144,15 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </div>
 
    <div>
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.7 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.8 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Jira по ключам из Ганта</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ИМПОРТ</span></div><p class="text-xs text-slate-600">В импорте Jira можно переключиться с проектов на все Jira-ключи текущего Ганта. В запрос входят задачи, вехи и ключи секций из разных проектов; архивные карточки не подмешиваются.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Большие планы и свои фильтры</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">JQL</span></div><p class="text-xs text-slate-600">Статусы, спринты и даты сохраняются при смене режима. Списки длиннее 200 ключей автоматически разбиваются на несколько запросов для CSV, прямого подключения и автообновления; готовый JQL можно скопировать.</p></div>
+    </div>
+   </div>
+
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v13.7 <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-100 px-1.5 py-0.5 rounded">23.07.2026</span></h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Восстановление без сюрпризов</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ВЕРСИИ</span></div><p class="text-xs text-slate-600">До подтверждения видны добавляемые, удаляемые и изменяемые задачи, конкретные поля и состав других данных проекта. Отдельно показываются тип карточки, связи, блокировки и уровни иерархии.</p></div>
      <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Гарантированная страховка и отмена</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">БЕЗОПАСНОСТЬ</span></div><p class="text-xs text-slate-600">Перед применением всегда создаётся отдельная точка возврата, которую не может пропустить дедупликация. После восстановления прежнее состояние возвращается одной кнопкой.</p></div>
@@ -31050,15 +31179,29 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     <div class="p-6 overflow-y-auto flex-1 space-y-4">
 
      <div id="jiraTab-import" class="space-y-4">
+      <input type="hidden" id="jiraImportScope" value="projects">
+      <div>
+       <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Что загружать из Jira</span>
+       <div role="radiogroup" aria-label="Область импорта Jira" class="mt-1.5 inline-flex max-w-full items-center bg-slate-100 rounded-xl p-1">
+        <button type="button" id="jiraScope-projects" role="radio" aria-checked="true" onclick="jiraSetImportScope('projects')" class="min-h-9 px-3 rounded-lg text-xs font-semibold transition-colors cursor-pointer bg-white shadow-sm text-indigo-700">По проектам</button>
+        <button type="button" id="jiraScope-keys" role="radio" aria-checked="false" onclick="jiraSetImportScope('keys')" class="min-h-9 px-3 rounded-lg text-xs font-semibold transition-colors cursor-pointer text-slate-500">По ключам из Ганта</button>
+       </div>
+      </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
        <label class="sm:col-span-2 block">
         <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Адрес Jira</span>
         <input type="text" id="jiraBaseUrl" placeholder="https://jira.company.ru" class="mt-1 w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500 focus:bg-white transition-all">
        </label>
        <label class="block">
-        <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Проекты</span>
+        <span id="jiraProjectLabel" class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Проекты</span>
         <input type="text" id="jiraProjectKey" oninput="jiraSyncDefaultJqlFromProject()" placeholder="WEB, APP" title="Один или несколько ключей через запятую" class="mt-1 w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm uppercase focus:outline-none focus:border-indigo-500 focus:bg-white transition-all">
        </label>
+      </div>
+      <div id="jiraKeysScopeInfo" class="hidden rounded-xl border border-indigo-200 bg-indigo-50 px-3 py-2.5">
+       <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+        <div class="min-w-0 grow"><div class="text-xs font-semibold text-indigo-800"><span id="jiraPlanKeysCount">0 ключей</span> из текущего Ганта</div><p class="mt-0.5 text-[10px] leading-4 text-indigo-700">В запрос попадут ключи задач, вех и секций Initiative/Epic/Story — даже если они относятся к разным Jira-проектам. Архив не загружается.</p><p id="jiraPlanKeysBatches" class="mt-1 text-[10px] font-medium text-indigo-600"></p></div>
+        <button type="button" onclick="jiraCopyEffectiveJql()" class="h-8 px-3 rounded-lg border border-indigo-200 bg-white text-[10px] font-semibold text-indigo-700 hover:bg-indigo-100 cursor-pointer shrink-0">Скопировать JQL</button>
+       </div>
       </div>
       <label class="block">
        <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Условие выгрузки (JQL)</span>
@@ -31425,7 +31568,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         <p class="text-sm text-slate-500 mt-2 max-w-lg mx-auto leading-relaxed">Откройте готовый пример за минуту или начните со своих данных. План работает локально, без сервера.</p>
         <span class="inline-flex items-center gap-1.5 mt-3 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2.5 py-1 rounded-lg shadow-xs">
           <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-          <span id="appVersionStartup">версия 13.7</span>
+          <span id="appVersionStartup">версия 13.8</span>
         </span>
       </div>
 
