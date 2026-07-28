@@ -5267,10 +5267,6 @@
     body.read-only .ro-keep { display: inline-flex !important; }
     body.read-only #newStatusInput, body.read-only #newKindInput { display: none !important; }
     body.read-only #newStatusInput ~ *, body.read-only #newKindInput ~ * { display: none !important; }
-    /* Одинаковая фиксированная высота обязательна с обеих сторон Ганта.
-       Динамический Tailwind-класс h-[44px] не попадал в собранный CSS: слева
-       высоту задавала кнопка, а справа 4px-заглушка, поэтому строки съезжали. */
-    .roadmap-empty-row { height: 44px; min-height: 44px; flex: 0 0 44px; }
     #bars-container [data-task-id] { touch-action: none; } /* палец двигает сроки, а не скроллит */
     #paneSplitter { touch-action: none; }
     .link-handle { position: absolute; }
@@ -22752,23 +22748,6 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             barsContainer.appendChild(rowRight);
           });
 
-          if (sectionTasks.length === 0) {
-            const emptyRowLeft = document.createElement('div');
-            emptyRowLeft.className = "roadmap-empty-row px-5 flex items-center bg-slate-50/25 border-b border-slate-100";
-            emptyRowLeft.dataset.emptySectionRow = sectionName;
-            emptyRowLeft.style.paddingLeft = (20 + secDepth * 22 + 30) + 'px';
-            const emptyReadOnly = (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE);
-            emptyRowLeft.innerHTML = emptyReadOnly
-              ? `<span class="inline-flex items-center gap-1.5 text-[11px] text-slate-400"><span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>Задач пока нет</span>`
-              : `<button type="button" data-empty-section-add onclick="event.stopPropagation(); openQuickAddForSection('${sectionNameAttr}')" class="group inline-flex items-center gap-2 h-8 px-3 -ml-3 rounded-lg text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 transition-colors cursor-pointer" aria-label="${escAttr(quickAddSectionLabel(sectionName))} в секцию ${escAttr(mainTitle)}"><span class="w-5 h-5 rounded-md bg-indigo-50 group-hover:bg-indigo-100 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></span>${escHtml(quickAddSectionLabel(sectionName))}</button>`;
-            listContainer.appendChild(emptyRowLeft);
-
-            const emptyRowRight = document.createElement('div');
-            emptyRowRight.className = "roadmap-empty-row relative bg-slate-50/20 border-b border-slate-100 flex items-center";
-            emptyRowRight.dataset.emptySectionRow = sectionName;
-            emptyRowRight.innerHTML = `<div data-empty-timeline-placeholder class="sticky left-4 w-20 h-1 rounded-full bg-slate-200/70 pointer-events-none" aria-hidden="true"></div>`;
-            barsContainer.appendChild(emptyRowRight);
-          }
         }
       });
 
@@ -29037,7 +29016,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v13.2 <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-100 px-1.5 py-0.5 rounded">21.07.2026</span></h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h13M10 18h10"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Строгая иерархия Jira</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">СТРУКТУРА</span></div><p class="text-xs text-slate-600">Инициатива, эпик и стори теперь всегда отображаются секциями: Initiative → Epic → Story → Task/Bug. Если прямого родителя нет, элемент остается в корне. Поддерживаются произвольные названия и направления Jira-связей.</p></div>
-     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Пустые секции без визуального шума</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ИНТЕРФЕЙС</span></div><p class="text-xs text-slate-600">Повторяющиеся подписи убраны. В пустой секции остается одна компактная кнопка «Добавить первую задачу», а на таймлайне — спокойный плейсхолдер без лишнего текста.</p></div>
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Пустые секции без визуального шума</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ИНТЕРФЕЙС</span></div><p class="text-xs text-slate-600">Отдельные строки «Добавить эпик», «Добавить стори» и «Добавить задачу» убраны из списка. Добавление осталось в меню «…» нужной секции, поэтому иерархия занимает меньше места.</p></div>
     </div>
    </div>
 
