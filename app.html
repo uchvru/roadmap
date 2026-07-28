@@ -6160,6 +6160,38 @@
    .rm-action { min-height:var(--rm-control-h); border-radius:var(--rm-radius-md); display:inline-flex; align-items:center; justify-content:center; gap:var(--rm-space-2); cursor:pointer; }
    .rm-operational-list { scrollbar-gutter:stable; }
    @media (max-width:640px) { .rm-operational-toolbar > * { width:100%; } .rm-operational-toolbar .rm-action { width:100%; } }
+   /* v13.9: рабочие режимы упрощают интерфейс, не меняя данные и права проекта. */
+   body[data-workspace="myweek"] #reportsMenuWrap,
+   body[data-workspace="myweek"] #moreMenuWrap,
+   body[data-workspace="myweek"] #dataMenuWrap,
+   body[data-workspace="myweek"] #quickActionsGroup,
+   body[data-workspace="myweek"] #jiraChangesChip,
+   body[data-workspace="myweek"] #headerCutoffsSep,
+   body[data-workspace="myweek"] #stateDashboard,
+   body[data-workspace="myweek"] #projectFilterGroup { display:none !important; }
+   body[data-workspace="leadership"] #addTaskHeaderBtn,
+   body[data-workspace="leadership"] #planBuilderBtn,
+   body[data-workspace="leadership"] #quickActionsGroup,
+   body[data-workspace="leadership"] #moreMenuWrap,
+   body[data-workspace="leadership"] #dataMenuWrap,
+   body[data-workspace="leadership"] #jiraChangesChip,
+   body[data-workspace="leadership"] #autoSaveBtn,
+   body[data-workspace="leadership"] #archiveBtn,
+   body[data-workspace="leadership"] #planFilterBar,
+   body[data-workspace="leadership"] #headerCutoffsSep { display:none !important; }
+   body[data-workspace="leadership"] #stateDashboard { display:flex !important; }
+   .workspace-select { min-width:9.5rem; max-width:11rem; }
+   #planBuilderPanel { width:100%; z-index:950; }
+   #planBuilderPanel:not(.hidden) { display:flex; }
+   #planBuilderBackdrop { z-index:940; }
+   #planBuilderBackdrop:not(.hidden) { display:block; }
+   @media (min-width:640px) { #planBuilderPanel { width:430px; } }
+   .plan-builder-step[aria-current="step"] { border-color:#818cf8; background:#eef2ff; color:#4338ca; }
+   body.theme-dark .plan-builder-step[aria-current="step"] { border-color:#6366f1; background:#1e2545; color:#c7d2fe; }
+   @media (max-width:640px) {
+     .workspace-select { min-width:8.5rem; max-width:8.5rem; }
+     body[data-workspace="myweek"] #planFilterBar { padding:.375rem; }
+   }
   }
 </style>
 </head>
@@ -6198,7 +6230,7 @@
         <button type="button" onclick="dismissBurningBanner()" aria-label="Скрыть" class="h-8 px-2.5 bg-white hover:bg-rose-100 text-rose-700 border border-rose-300 text-xs font-medium rounded-lg transition-colors cursor-pointer">Скрыть</button>
       </div>
     </div>
-    <header class="relative flex flex-col bg-white rounded-2xl border border-slate-200/80 mb-3 shadow-xs">
+    <header id="appHeader" class="relative flex flex-col bg-white rounded-2xl border border-slate-200/80 mb-3 shadow-xs">
       <!-- TIER 1: основная панель инструментов, один ряд -->
       <div class="app-header-grid grid grid-cols-[auto_1fr] gap-x-3 sm:gap-x-4 gap-y-2 px-5 pt-3.5 pb-3.5 items-center min-w-0">
       <div class="flex flex-col gap-1.5 min-w-0">
@@ -6240,20 +6272,36 @@
       </div>
 
       <div class="app-header-toolbar flex items-center gap-1.5 sm:gap-2 min-w-0 w-full no-print flex-wrap lg:flex-nowrap">
+        <label class="no-image-export shrink-0">
+          <span class="sr-only">Рабочий режим</span>
+          <select id="workspaceModeSelect" onchange="setWorkspaceMode(this.value)" class="workspace-select h-9 px-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-xs font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/40" aria-label="Рабочий режим">
+            <option value="planning">Планирование</option>
+            <option value="myweek">Моя неделя</option>
+            <option value="leadership">Руководство</option>
+          </select>
+        </label>
         <!-- 1) Поиск , поле умеренной ширины с подсказкой Cmd+K -->
         <button onclick="openGlobalSearch()" aria-label="Глобальный поиск (Cmd+K / Ctrl+K)" class="group inline-flex items-center gap-2 h-9 grow min-w-0 px-3 bg-white hover:bg-slate-50 border border-slate-200 hover:border-indigo-300 rounded-xl transition-all cursor-pointer shadow-xs text-left" title="Глобальный поиск (Cmd+K / Ctrl+K)">
           <svg aria-hidden="true" class="w-4 h-4 text-slate-400 group-hover:text-indigo-500 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
           <span class="text-sm text-slate-500 group-hover:text-slate-700 truncate grow">Поиск</span>
         </button>
         <!-- 2) Добавить задачу -->
-        <button onclick="openModal()" aria-label="Добавить задачу" class="group relative inline-flex items-center gap-1.5 h-9 pl-2.5 pr-3 shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all shadow-xs cursor-pointer" title="Добавить задачу">
+        <button id="addTaskHeaderBtn" onclick="openModal()" aria-label="Добавить задачу" class="group relative inline-flex items-center gap-1.5 h-9 pl-2.5 pr-3 shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all shadow-xs cursor-pointer" title="Добавить задачу">
           <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
-          <span class="hidden sm:inline">Задача</span>
+          <span class="hidden sm:inline">Добавить</span>
+        </button>
+        <button id="planBuilderBtn" type="button" onclick="openPlanBuilder()" class="no-image-export inline-flex items-center gap-1.5 h-9 px-3 shrink-0 bg-white hover:bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold rounded-xl transition-all cursor-pointer" title="Пошагово собрать и проверить план">
+          <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-5 8l2 2 4-4"></path></svg>
+          <span class="hidden 2xl:inline">Собрать план</span>
+        </button>
+        <button id="planHealthBtn" type="button" onclick="openPlanHealthCenter()" class="no-image-export relative inline-flex items-center justify-center w-9 h-9 shrink-0 bg-white hover:bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl transition-all cursor-pointer" aria-label="Здоровье плана" title="Здоровье плана: ошибки, риски и поля к заполнению">
+          <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5-2a9 9 0 11-16 0 9 9 0 0116 0z"></path></svg>
+          <span id="planHealthBadge" class="hidden absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-rose-600 text-white text-[9px] font-bold leading-none rounded-full ring-2 ring-white items-center justify-center tabular-nums"></span>
         </button>
         <!-- тонкий разделитель -->
         <div class="w-px h-6 bg-slate-200 shrink-0 mx-0.5 hidden sm:block"></div>
         <!-- ГРУППА значков-действий: одна светлая капсула с разделителями -->
-        <div class="hidden md:inline-flex items-center shrink-0 bg-slate-50 border border-slate-200 rounded-xl p-0.5 shadow-xs">
+        <div id="quickActionsGroup" class="hidden 2xl:inline-flex items-center shrink-0 bg-slate-50 border border-slate-200 rounded-xl p-0.5 shadow-xs">
         <!-- Быстрое добавление задач списком (вынесено из меню «Инструменты») -->
         <button onclick="openQuickAddModal()" aria-label="Быстрое добавление задач списком" class="group relative flex items-center justify-center w-8 h-8 text-slate-500 hover:text-indigo-600 hover:bg-white rounded-lg transition-all cursor-pointer" title="Быстрое добавление задач списком">
           <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h7M4 12h7M4 17h7"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 10v8m4-4h-8"></path></svg>
@@ -6285,9 +6333,13 @@
           </button>
           <div id="moreMenu" class="hidden absolute right-0 mt-1.5 w-60 bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-[100] no-print no-image-export">
             <div class="px-2.5 pt-1 pb-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Проверка и решения</div>
-            <button type="button" onclick="closeMoreMenu(); runPlanCheck();" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
+            <button type="button" onclick="closeMoreMenu(); openPlanHealthCenter();" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-emerald-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
               <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg></span>
-              <span class="grow"><span class="block">Проверка плана</span><span class="block text-[10px] text-slate-500 font-normal">тихие поломки: связи, даты, загрузка</span></span>
+              <span class="grow"><span class="block">Здоровье плана</span><span class="block text-[10px] text-slate-500 font-normal">единая очередь ошибок, рисков и пробелов</span></span>
+            </button>
+            <button type="button" onclick="closeMoreMenu(); openPlanBuilder();" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-indigo-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
+              <span class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 012-2h2a2 2 0 012 2m-5 8l2 2 4-4"></path></svg></span>
+              <span class="grow"><span class="block">Собрать план</span><span class="block text-[10px] text-slate-500 font-normal">цель, состав, команда, связи и фиксация</span></span>
             </button>
             <button type="button" onclick="closeMoreMenu(); openFitByDate();" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
               <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></span>
@@ -6355,9 +6407,9 @@
               <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg></span>
               <span class="grow"><span class="block">Сжать историю правок</span><span class="block text-[10px] text-slate-500 font-normal">старые записи свернутся, файл легче</span></span>
             </button>
-            <button type="button" onclick="closeDataMenu(); openDataQualityCenter();" title="Проверить сроки, связи, статусы и структуру без автоматического изменения данных" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-amber-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
+            <button type="button" onclick="closeDataMenu(); openPlanHealthCenter('data');" title="Проверить сроки, связи, статусы и структуру без автоматического изменения данных" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-amber-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
               <span class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5-2a9 9 0 11-16 0 9 9 0 0116 0z"></path></svg></span>
-              <span class="grow"><span class="block">Качество данных</span><span class="block text-[10px] text-slate-500 font-normal">проблемы, причины и переход к карточке</span></span>
+              <span class="grow"><span class="block">Здоровье плана</span><span class="block text-[10px] text-slate-500 font-normal">проблемы, причины и переход к карточке</span></span>
             </button>
             </div>
             <div class="my-1 h-px bg-slate-100"></div>
@@ -6429,7 +6481,7 @@
           <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
         </button>
         <!-- 8) Архив (Ресурсы перенесены в меню «Еще», п.2) -->
-        <button onclick="openArchiveModal()" aria-label="Архив задач" class="group relative flex items-center justify-center w-9 h-9 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-700 border border-slate-200 rounded-xl transition-all cursor-pointer" title="Архив задач">
+        <button id="archiveBtn" onclick="openArchiveModal()" aria-label="Архив задач" class="group relative flex items-center justify-center w-9 h-9 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-700 border border-slate-200 rounded-xl transition-all cursor-pointer" title="Архив задач">
           <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
           <span id="archiveCountBadge" class="absolute -top-1.5 -right-1.5 min-w-6 h-6 px-1 bg-slate-400 text-white text-[10px] font-semibold leading-none rounded-full ring-2 ring-white shadow-sm items-center justify-center tabular-nums pointer-events-none" style="display:none"></span>
         </button>
@@ -6457,7 +6509,7 @@
     <!-- Сводка для PNG-снимка: видна только в режиме экспорта (image-export-mode) -->
     <div id="snapshotInfoBar" class="mb-6 px-5 py-4 bg-white rounded-2xl border border-slate-200/80 shadow-xs"></div>
 
-    <section class="mb-2 bg-white rounded-2xl border border-slate-200/80 shadow-xs p-2 flex flex-col xl:flex-row items-center justify-between gap-3 overflow-x-auto no-scrollbar no-print no-image-export">
+    <section id="planFilterBar" class="mb-2 bg-white rounded-2xl border border-slate-200/80 shadow-xs p-2 flex flex-col xl:flex-row items-center justify-between gap-3 overflow-x-auto no-scrollbar no-print no-image-export">
 
       <div class="flex items-center gap-2 grow overflow-x-auto no-scrollbar py-2 px-1" id="statusOverview"></div>
 
@@ -6977,7 +7029,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v13.8">
+<script data-roadmap-modules="v13.9">
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
@@ -8357,7 +8409,7 @@ if (typeof globalThis !== 'undefined') {
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '13.8';
+    const APP_VERSION = '13.9';
     const APP_VERSION_DATE = '23.07.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' , ' + APP_VERSION_DATE; } catch (e) {}
@@ -9619,68 +9671,284 @@ if (typeof globalThis !== 'undefined') {
       } catch (e) { if (typeof showToast === 'function') showToast('Не удалось импортировать версии', 'error', 4000); }
     }
 
-    // ===== v13.6: Центр качества данных (read-only diagnostics) =====
+    // ===== v13.9: единый центр здоровья плана (только диагностика) =====
     let _dqIssues = [];
+    let _dqReadiness = { score: 100, ready: 0, total: 0, missing: 0 };
+    function _dqStableId(raw) {
+      let h = 2166136261;
+      const s = String(raw || '');
+      for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+      return 'health-' + (h >>> 0).toString(36);
+    }
+    function _dqTaskRef(t) {
+      return { type: 'task', id: t.id, label: (t.jira ? t.jira + ' · ' : '') + (t.name || 'Без названия') };
+    }
+    function _planReadinessSnapshot() {
+      const tasks = (Array.isArray(roadmapData) ? roadmapData : []).filter(t => t && !t.hidden && !t.isMilestone && t.status !== 'completed' && t.status !== 'on_hold');
+      let ready = 0, total = 0;
+      tasks.forEach(t => {
+        const checks = [
+          !!(t.start && t.end),
+          !!String(t.resource || '').trim(),
+          !!((typeof _taskEstDays === 'function' ? _taskEstDays(t) : parseFloat(t.estimate)) > 0),
+          !!(t.section && (planSections || []).includes(t.section))
+        ];
+        ready += checks.filter(Boolean).length;
+        total += checks.length;
+      });
+      const score = total ? Math.round(ready / total * 100) : 0;
+      return { score, ready, total, missing: Math.max(0, total - ready), tasks: tasks.length };
+    }
     function analyzeProjectDataQuality() {
-      const issues = [], active = Array.isArray(roadmapData) ? roadmapData.filter(Boolean) : [];
+      const issues = [], active = Array.isArray(roadmapData) ? roadmapData.filter(t => t && !t.hidden) : [];
       const archived = Array.isArray(archivedTasks) ? archivedTasks.filter(Boolean) : [];
       const byId = new Map(active.map(t => [String(t.id), t]));
       const archivedIds = new Set(archived.map(t => String(t.id)));
       const statusIds = new Set((projectStatuses || []).filter(Boolean).map(s => String(s.id)));
       const sections = new Set((planSections || []).map(String));
       const today = (typeof CURRENT_DATE !== 'undefined' && CURRENT_DATE) ? toYmdLocal(CURRENT_DATE) : toYmdLocal(new Date());
-      const done = t => t && (t.status === 'completed' || /выполн|готов|закры|done|closed/i.test((typeof statusNameById === 'function' ? statusNameById(t.status) : t.status) || ''));
+      const done = t => {
+        if (!t) return false;
+        if (t.status === 'completed') return true;
+        const name = String((typeof statusNameById === 'function' ? statusNameById(t.status) : t.status) || '').trim().toLowerCase();
+        return ['выполнено', 'завершено', 'закрыто', 'done', 'closed', 'resolved'].includes(name);
+      };
       const parked = t => t && t.status === 'on_hold';
-      const add = (category, severity, title, detail, entity) => issues.push({ id: 'dq' + (issues.length + 1), category, severity, title, detail, entity: entity || null });
+      const seen = new Set();
+      const add = (category, severity, title, detail, entity, code) => {
+        const ref = entity || null;
+        const entityKey = ref ? (ref.type + ':' + (ref.id != null ? ref.id : ref.label || '')) : 'project';
+        const issueCode = code || category + ':' + title;
+        const key = issueCode + '|' + entityKey;
+        if (seen.has(key)) return;
+        seen.add(key);
+        issues.push({ id: _dqStableId(key), code: issueCode, category, severity, title, detail, entity: ref });
+      };
       const jiraGroups = new Map();
       active.forEach(t => {
-        const ref = { type: 'task', id: t.id, label: (t.jira ? t.jira + ' · ' : '') + (t.name || 'Без названия') };
-        if (!String(t.name || '').trim()) add('required', 'error', 'Задача без названия', 'Невозможно однозначно найти элемент в плане.', ref);
-        if (!t.section || !sections.has(String(t.section))) add('structure', 'error', 'Задача вне существующей секции', t.section ? 'Секция «' + t.section + '» отсутствует в списке секций.' : 'Секция не указана.', ref);
-        if (!done(t) && !parked(t) && !t.isMilestone && (!t.start || !t.end)) add('dates', 'info', 'Неполные даты', !t.start && !t.end ? 'Не заданы начало и окончание.' : (!t.start ? 'Не задано начало.' : 'Не задано окончание.'), ref);
-        if (t.isMilestone && !t.start && !t.end) add('dates', 'error', 'Веха без даты', 'Веха не может быть показана на таймлайне.', ref);
-        if (t.start && t.end && String(t.end) < String(t.start)) add('dates', 'error', 'Окончание раньше начала', t.start + ' → ' + t.end, ref);
-        if (!done(t) && !parked(t) && t.end && String(t.end) < today) add('overdue', 'warning', 'Просроченная задача', 'Срок ' + t.end + ', статус «' + (typeof statusNameById === 'function' ? statusNameById(t.status) : (t.status || 'не задан')) + '».', ref);
-        if (t.status && !statusIds.has(String(t.status))) add('status', 'warning', 'Неизвестный статус', 'Код «' + t.status + '» отсутствует в справочнике статусов.', ref);
+        const ref = _dqTaskRef(t);
+        if (!String(t.name || '').trim()) add('required', 'error', 'Задача без названия', 'Невозможно однозначно найти элемент в плане.', ref, 'missing-name');
+        if (!t.section || !sections.has(String(t.section))) add('structure', 'error', 'Задача вне существующей секции', t.section ? 'Секция «' + t.section + '» отсутствует в списке секций.' : 'Секция не указана.', ref, 'missing-section');
+        if (!done(t) && !parked(t) && !t.isMilestone && (!t.start || !t.end)) add('dates', 'info', 'Неполные даты', !t.start && !t.end ? 'Не заданы начало и окончание.' : (!t.start ? 'Не задано начало.' : 'Не задано окончание.'), ref, 'missing-dates');
+        if (t.isMilestone && !t.start && !t.end) add('dates', 'error', 'Веха без даты', 'Веха не может быть показана на таймлайне.', ref, 'milestone-no-date');
+        if (t.start && t.end && String(t.end) < String(t.start)) add('dates', 'error', 'Окончание раньше начала', t.start + ' → ' + t.end, ref, 'invalid-range');
+        if (!done(t) && !parked(t) && t.end && String(t.end) < today) add('overdue', 'warning', 'Просроченная задача', 'Срок ' + t.end + ', статус «' + (typeof statusNameById === 'function' ? statusNameById(t.status) : (t.status || 'не задан')) + '».', ref, 'overdue');
+        if (t.status && !statusIds.has(String(t.status))) add('status', 'warning', 'Неизвестный статус', 'Код «' + t.status + '» отсутствует в справочнике статусов.', ref, 'unknown-status');
         const preds = String(t.pred || '').split(',').map(x => x.trim()).filter(Boolean);
         preds.forEach(pid => {
-          if (String(t.id) === pid) add('dependencies', 'error', 'Зависимость задачи от самой себя', 'Удалите циклическую ссылку на эту же задачу.', ref);
-          else if (archivedIds.has(pid)) add('dependencies', 'warning', 'Связь ведет в архив', 'Предшественник #' + pid + ' находится в архиве; решение оставлено пользователю.', ref);
-          else if (!byId.has(pid)) add('dependencies', 'error', 'Связь ведет на отсутствующую задачу', 'Предшественник #' + pid + ' не найден ни в плане, ни в архиве.', ref);
+          if (String(t.id) === pid) add('dependencies', 'error', 'Зависимость задачи от самой себя', 'Удалите циклическую ссылку на эту же задачу.', ref, 'self-dependency');
+          else if (archivedIds.has(pid)) add('dependencies', 'warning', 'Связь ведет в архив', 'Предшественник #' + pid + ' находится в архиве; решение оставлено пользователю.', ref, 'archived-predecessor');
+          else if (!byId.has(pid)) add('dependencies', 'error', 'Связь ведет на отсутствующую задачу', 'Предшественник #' + pid + ' не найден ни в плане, ни в архиве.', ref, 'missing-predecessor');
         });
+        if (!done(t) && !parked(t) && !t.isMilestone && !String(t.resource || '').trim()) add('readiness', 'info', 'Не назначен исполнитель', 'Без исполнителя нельзя достоверно оценить загрузку и срок.', ref, 'readiness-resource');
+        const estDays = (typeof _taskEstDays === 'function') ? _taskEstDays(t) : (parseFloat(t.estimate) || 0);
+        if (!done(t) && !parked(t) && !t.isMilestone && !(estDays > 0)) add('readiness', 'info', 'Нет оценки работы', 'Добавьте оценку, чтобы прогноз учитывал объем задачи.', ref, 'readiness-estimate');
         const jk = String(t.jira || '').trim().toUpperCase();
         if (jk) { if (!jiraGroups.has(jk)) jiraGroups.set(jk, []); jiraGroups.get(jk).push(t); }
       });
-      jiraGroups.forEach((list, key) => { if (list.length > 1) list.forEach(t => add('duplicates', 'warning', 'Повторяется Jira-ключ ' + key, 'Элементов с этим ключом: ' + list.length + '.', { type: 'task', id: t.id, label: (t.name || key) })); });
+      jiraGroups.forEach((list, key) => { if (list.length > 1) list.forEach(t => add('duplicates', 'warning', 'Повторяется Jira-ключ ' + key, 'Элементов с этим ключом: ' + list.length + '.', _dqTaskRef(t), 'duplicate-jira:' + key)); });
       Object.keys(sectionParents || {}).forEach(child => {
         const parent = sectionParents[child];
-        if (!sections.has(child)) add('structure', 'warning', 'Метаданные удаленной секции', 'Для «' + child + '» осталась запись о родителе.', { type: 'section', label: child });
-        else if (!sections.has(String(parent))) add('structure', 'error', 'Родительская секция не найдена', '«' + child + '» ссылается на отсутствующую «' + parent + '».', { type: 'section', label: child });
+        if (!sections.has(child)) add('structure', 'warning', 'Метаданные удаленной секции', 'Для «' + child + '» осталась запись о родителе.', { type: 'section', label: child }, 'orphan-section-meta');
+        else if (!sections.has(String(parent))) add('structure', 'error', 'Родительская секция не найдена', '«' + child + '» ссылается на отсутствующую «' + parent + '».', { type: 'section', label: child }, 'missing-section-parent');
       });
+      // Добавляем проверки расписания, связей, загрузки и вех из прежнего отдельного окна.
+      const planGroups = (typeof collectPlanCheckGroups === 'function') ? collectPlanCheckGroups() : [];
+      planGroups.forEach(g => (g.items || []).forEach(it => {
+        const task = byId.get(String(it.id)) || active.find(t => t && String(t.id) === String(it.id));
+        add(g.category, g.severity, g.title, it.text || g.hint, task ? _dqTaskRef(task) : null, g.code);
+      }));
+      _dqReadiness = _planReadinessSnapshot();
       _dqIssues = issues;
       return issues;
     }
-    function _dqCategoryName(c) { return ({ all:'Все категории', required:'Обязательные поля', structure:'Структура', dates:'Даты', overdue:'Просрочка', status:'Статусы', dependencies:'Связи', duplicates:'Дубли' })[c] || c; }
-    function openDataQualityCenter() {
+    function _dqCategoryName(c) { return ({ all:'Вся очередь', schedule:'Расписание и сроки', capacity:'Загрузка команды', readiness:'Готовность к прогнозу', data:'Качество данных', required:'Обязательные поля', structure:'Структура', dates:'Даты', overdue:'Просрочка', status:'Статусы', dependencies:'Связи', duplicates:'Дубли' })[c] || c; }
+    function _dqMatchesCategory(issue, category) {
+      if (category === 'all') return true;
+      if (category === 'data') return ['required', 'dates', 'overdue', 'structure', 'status', 'duplicates'].includes(issue.category);
+      if (category === 'schedule') return ['schedule', 'dates', 'overdue'].includes(issue.category);
+      if (category === 'readiness') return ['readiness', 'dates'].includes(issue.category);
+      return issue.category === category;
+    }
+    function openDataQualityCenter(category) {
       analyzeProjectDataQuality();
       const m = document.getElementById('dataQualityModal'); if (!m) return;
+      const sel = document.getElementById('dataQualityCategory');
+      if (sel && category && Array.from(sel.options).some(o => o.value === category)) sel.value = category;
       m.classList.remove('hidden'); renderDataQualityCenter(); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
     }
+    function openPlanHealthCenter(category) { openDataQualityCenter(category || 'all'); }
     function closeDataQualityCenter() { const m = document.getElementById('dataQualityModal'); if (m) m.classList.add('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
     function renderDataQualityCenter() {
       const list = document.getElementById('dataQualityList'), sum = document.getElementById('dataQualitySummary'); if (!list || !sum) return;
       const catSelect = document.getElementById('dataQualityCategory');
-      if (catSelect) Array.from(catSelect.options).forEach(o => { const base = o.dataset.base || o.textContent.replace(/\s+\(\d+\)$/, ''); o.dataset.base = base; const n = o.value === 'all' ? _dqIssues.length : _dqIssues.filter(x => x.category === o.value).length; o.textContent = base + ' (' + n + ')'; });
+      if (catSelect) Array.from(catSelect.options).forEach(o => { const base = o.dataset.base || o.textContent.replace(/\s+\(\d+\)$/, ''); o.dataset.base = base; const n = _dqIssues.filter(x => _dqMatchesCategory(x, o.value)).length; o.textContent = base + ' (' + n + ')'; });
       const cat = ((catSelect || {}).value || 'all');
       const q = String(((document.getElementById('dataQualitySearch') || {}).value || '')).trim().toLowerCase();
       const sevCount = s => _dqIssues.filter(x => x.severity === s).length;
-      sum.innerHTML = `<div class="rm-panel p-3"><div class="text-2xl font-bold text-slate-800">${_dqIssues.length}</div><div class="text-[10px] text-slate-500">всего сигналов</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-rose-600">${sevCount('error')}</div><div class="text-[10px] text-slate-500">ошибки</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-amber-600">${sevCount('warning')}</div><div class="text-[10px] text-slate-500">предупреждения</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-sky-600">${sevCount('info')}</div><div class="text-[10px] text-slate-500">к заполнению</div></div>`;
-      const filtered = _dqIssues.filter(x => (cat === 'all' || x.category === cat) && (!q || (x.title + ' ' + x.detail + ' ' + ((x.entity || {}).label || '')).toLowerCase().includes(q)));
+      sum.innerHTML = `<div class="rm-panel p-3"><div class="text-2xl font-bold ${_dqReadiness.score >= 80 ? 'text-emerald-600' : (_dqReadiness.score >= 60 ? 'text-amber-600' : 'text-rose-600')}">${_dqReadiness.score}%</div><div class="text-[10px] text-slate-500">полнота входных данных</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-rose-600">${sevCount('error')}</div><div class="text-[10px] text-slate-500">ошибки</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-amber-600">${sevCount('warning')}</div><div class="text-[10px] text-slate-500">предупреждения</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-sky-600">${sevCount('info')}</div><div class="text-[10px] text-slate-500">нужно заполнить</div></div>`;
+      const severityRank = { error: 0, warning: 1, info: 2 };
+      const filtered = _dqIssues
+        .filter(x => _dqMatchesCategory(x, cat) && (!q || (x.title + ' ' + x.detail + ' ' + ((x.entity || {}).label || '') + ' ' + _dqCategoryName(x.category)).toLowerCase().includes(q)))
+        .sort((a, b) => (severityRank[a.severity] ?? 9) - (severityRank[b.severity] ?? 9) || String(a.title).localeCompare(String(b.title), 'ru'));
       if (!filtered.length) { list.innerHTML = `<div class="rm-panel p-8 text-center"><div class="text-sm font-semibold text-emerald-700">${_dqIssues.length ? 'По выбранному фильтру проблем нет' : 'Критичных проблем не найдено'}</div><div class="text-xs text-slate-500 mt-1">Проверка ничего не исправляет автоматически.</div></div>`; return; }
       const tone = { error:'bg-rose-100 text-rose-700', warning:'bg-amber-100 text-amber-700', info:'bg-sky-100 text-sky-700' };
-      list.innerHTML = filtered.map(x => `<article class="rm-panel p-3 flex items-start gap-3"><span class="mt-0.5 shrink-0 px-2 py-1 rounded-lg text-[10px] font-bold ${tone[x.severity]}">${x.severity === 'error' ? 'ОШИБКА' : (x.severity === 'warning' ? 'ВНИМАНИЕ' : 'ЗАПОЛНИТЬ')}</span><div class="grow min-w-0"><div class="text-sm font-semibold text-slate-800">${escHtml(x.title)}</div><div class="text-xs text-slate-500 mt-0.5">${escHtml(x.detail)}</div>${x.entity && x.entity.label ? `<div class="text-[10px] text-slate-400 mt-1 truncate">${escHtml(x.entity.label)}</div>` : ''}</div>${x.entity && x.entity.type === 'task' ? `<button type="button" onclick="jumpFromDataQuality('${escAttr(x.id)}')" class="rm-action shrink-0 h-9 px-3 border border-indigo-200 text-indigo-700 text-xs font-semibold hover:bg-indigo-50">Открыть</button>` : ''}</article>`).join('');
+      list.innerHTML = filtered.map(x => `<article class="rm-panel p-3 flex items-start gap-3"><span class="mt-0.5 shrink-0 px-2 py-1 rounded-lg text-[10px] font-bold ${tone[x.severity]}">${x.severity === 'error' ? 'ОШИБКА' : (x.severity === 'warning' ? 'ВНИМАНИЕ' : 'ЗАПОЛНИТЬ')}</span><div class="grow min-w-0"><div class="flex items-center gap-2 flex-wrap"><div class="text-sm font-semibold text-slate-800">${escHtml(x.title)}</div><span class="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">${escHtml(_dqCategoryName(x.category))}</span></div><div class="text-xs text-slate-500 mt-0.5">${escHtml(x.detail)}</div>${x.entity && x.entity.label ? `<div class="text-[10px] text-slate-400 mt-1 truncate">${escHtml(x.entity.label)}</div>` : ''}</div>${x.entity && x.entity.type === 'task' ? `<button type="button" onclick="jumpFromDataQuality('${escAttr(x.id)}')" class="rm-action shrink-0 h-9 px-3 border border-indigo-200 text-indigo-700 text-xs font-semibold hover:bg-indigo-50">Открыть</button>` : ''}</article>`).join('');
     }
     function jumpFromDataQuality(issueId) { const issue = _dqIssues.find(x => x.id === issueId); if (!issue || !issue.entity || issue.entity.type !== 'task') return; closeDataQualityCenter(); setTimeout(() => openTaskById(issue.entity.id), 30); }
+    function renderPlanHealthBadge() {
+      const badge = document.getElementById('planHealthBadge'), btn = document.getElementById('planHealthBtn');
+      if (!badge) return;
+      const signals = analyzeProjectDataQuality().filter(issue => issue.severity === 'error' || issue.severity === 'warning');
+      const risky = new Set(signals.map(issue => issue.entity && issue.entity.type === 'task' ? 'task:' + issue.entity.id : issue.id)).size;
+      badge.textContent = risky > 99 ? '99+' : String(risky);
+      badge.classList.toggle('hidden', risky === 0);
+      badge.classList.toggle('flex', risky > 0);
+      if (btn) btn.title = risky ? ('Здоровье плана: задач с сигналами — ' + risky) : 'Здоровье плана: явных проблем не найдено';
+    }
+
+    // ===== v13.9: пошаговая сборка плана =====
+    // Мастер ничего не меняет сам: он показывает готовность и ведет в уже существующие формы.
+    let _planBuilderStep = 0;
+    let _planBuilderReturnFocus = null;
+    const _PLAN_BUILDER_STEPS = ['Цель', 'Релиз', 'Структура', 'Команда', 'Связи', 'Проверка', 'Фиксация'];
+    function _planBuilderSnapshot() {
+      const tasks = (Array.isArray(roadmapData) ? roadmapData : []).filter(t => t && !t.hidden && !t.isMilestone);
+      const active = tasks.filter(t => t.status !== 'completed' && t.status !== 'on_hold');
+      const releases = new Set();
+      let datedReleases = 0;
+      (projectReleases || []).forEach(r => {
+        if (r && r.name) releases.add(String(r.name));
+        if (r && r.date) datedReleases++;
+      });
+      tasks.forEach(t => { if (t.release) releases.add(String(t.release)); });
+      const estimated = active.filter(t => (typeof _taskEstDays === 'function' ? _taskEstDays(t) : parseFloat(t.estimate)) > 0).length;
+      const assigned = active.filter(t => String(t.resource || '').trim()).length;
+      const deps = active.reduce((n, t) => n + getPredecessorIds(t).length, 0);
+      const readiness = _planReadinessSnapshot();
+      const issues = analyzeProjectDataQuality();
+      return {
+        title: String(roadmapTitleText || '').trim(),
+        goals: (projectGoals || []).length,
+        initiatives: (projectInitiatives || []).length,
+        releases: releases.size,
+        dates: (customCutoffs || []).filter(c => c && c.date).length + datedReleases,
+        sections: (planSections || []).length,
+        tasks: tasks.length,
+        active: active.length,
+        estimated,
+        assigned,
+        deps,
+        readiness,
+        errors: issues.filter(x => x.severity === 'error').length,
+        warnings: issues.filter(x => x.severity === 'warning').length,
+        baselines: (typeof getBaselines === 'function' ? getBaselines() : []).length
+      };
+    }
+    function _pbMetric(value, label, tone) {
+      return `<div class="rm-panel p-3"><div class="text-xl font-bold ${tone || 'text-slate-800'}">${escHtml(String(value))}</div><div class="text-[10px] text-slate-500 mt-0.5">${escHtml(label)}</div></div>`;
+    }
+    function _pbAction(label, action, primary, editing) {
+      const locked = !!editing && typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE;
+      return `<button type="button" onclick="${locked ? '' : `planBuilderAction('${escAttr(action)}')`}" ${locked ? 'disabled title="Недоступно в режиме просмотра"' : ''} class="rm-action h-10 px-4 text-xs font-semibold ${primary ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50'} ${locked ? 'opacity-50 cursor-not-allowed' : ''}">${escHtml(label)}</button>`;
+    }
+    function _pbIntro(step, title, text) {
+      return `<div class="mb-4"><div class="text-[10px] font-bold tracking-widest uppercase text-indigo-600">Шаг ${step + 1} из 7</div><h3 class="text-xl font-semibold text-slate-900 mt-1">${escHtml(title)}</h3><p class="text-sm leading-relaxed text-slate-500 mt-2">${escHtml(text)}</p></div>`;
+    }
+    function openPlanBuilder(step) {
+      const panel = document.getElementById('planBuilderPanel'), backdrop = document.getElementById('planBuilderBackdrop');
+      if (!panel || !backdrop) return;
+      _planBuilderReturnFocus = document.activeElement && document.activeElement !== document.body ? document.activeElement : null;
+      const n = parseInt(step, 10);
+      if (Number.isFinite(n)) _planBuilderStep = Math.max(0, Math.min(6, n));
+      panel.classList.remove('hidden'); backdrop.classList.remove('hidden');
+      renderPlanBuilder();
+      if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
+      setTimeout(() => { const close = panel.querySelector('button[aria-label*="Закрыть"]'); if (close) close.focus(); }, 30);
+    }
+    function closePlanBuilder() {
+      const panel = document.getElementById('planBuilderPanel'), backdrop = document.getElementById('planBuilderBackdrop');
+      if (panel) panel.classList.add('hidden');
+      if (backdrop) backdrop.classList.add('hidden');
+      if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
+      const back = _planBuilderReturnFocus; _planBuilderReturnFocus = null;
+      if (back && document.contains(back)) setTimeout(() => { try { back.focus(); } catch (e) {} }, 20);
+    }
+    function renderPlanBuilder() {
+      const body = document.getElementById('planBuilderBody'), progress = document.getElementById('planBuilderProgress');
+      const prev = document.getElementById('planBuilderPrev'), next = document.getElementById('planBuilderNext'), label = document.getElementById('planBuilderStepLabel');
+      if (!body || !progress) return;
+      const s = _planBuilderSnapshot();
+      const complete = [
+        !!s.title && !/без названия|новый проект/i.test(s.title),
+        s.releases > 0 && s.dates > 0,
+        s.sections > 0 && s.tasks > 0,
+        s.active === 0 || (s.estimated === s.active && s.assigned === s.active),
+        s.active <= 1 || s.deps > 0,
+        s.errors === 0,
+        s.baselines > 0
+      ];
+      progress.innerHTML = _PLAN_BUILDER_STEPS.map((name, i) => `<button type="button" onclick="_planBuilderStep=${i}; renderPlanBuilder()" aria-label="Шаг ${i + 1}: ${escAttr(name)}${complete[i] ? ', готово' : ''}" aria-current="${i === _planBuilderStep ? 'step' : 'false'}" class="plan-builder-step shrink-0 w-8 h-8 rounded-full border text-[11px] font-bold cursor-pointer transition-colors ${i === _planBuilderStep ? 'bg-indigo-600 border-indigo-600 text-white' : (complete[i] ? 'bg-emerald-50 border-emerald-300 text-emerald-700' : 'bg-white border-slate-200 text-slate-500 hover:border-indigo-300')}">${complete[i] ? '✓' : (i + 1)}</button>`).join('');
+      const grids = {
+        0: _pbMetric(s.goals, 'целей', s.goals ? 'text-emerald-600' : 'text-amber-600') + _pbMetric(s.initiatives, 'инициатив', s.initiatives ? 'text-emerald-600' : 'text-amber-600'),
+        1: _pbMetric(s.releases, 'релизов', s.releases ? 'text-emerald-600' : 'text-amber-600') + _pbMetric(s.dates, 'ключевых дат', s.dates ? 'text-emerald-600' : 'text-amber-600'),
+        2: _pbMetric(s.sections, 'секций', s.sections ? 'text-emerald-600' : 'text-amber-600') + _pbMetric(s.tasks, 'задач', s.tasks ? 'text-emerald-600' : 'text-amber-600'),
+        3: _pbMetric(s.estimated + ' / ' + s.active, 'задач с оценкой', s.estimated === s.active ? 'text-emerald-600' : 'text-amber-600') + _pbMetric(s.assigned + ' / ' + s.active, 'назначено', s.assigned === s.active ? 'text-emerald-600' : 'text-amber-600'),
+        4: _pbMetric(s.deps, 'связей между задачами', s.deps || s.active <= 1 ? 'text-emerald-600' : 'text-amber-600') + _pbMetric(s.active, 'активных задач', 'text-slate-800'),
+        5: _pbMetric(s.readiness.score + '%', 'готовность к прогнозу', s.readiness.score >= 80 ? 'text-emerald-600' : 'text-amber-600') + _pbMetric(s.errors + ' / ' + s.warnings, 'ошибок / предупреждений', s.errors ? 'text-rose-600' : (s.warnings ? 'text-amber-600' : 'text-emerald-600')),
+        6: _pbMetric(s.baselines, 'версий плана', s.baselines ? 'text-emerald-600' : 'text-amber-600') + _pbMetric(s.tasks, 'задач войдет в снимок', 'text-slate-800')
+      };
+      const intros = [
+        _pbIntro(0, 'Сформулируйте результат', 'Название, цель и инициатива отвечают на вопрос: зачем этот план нужен и какой результат должен дать.'),
+        _pbIntro(1, 'Поставьте дату результата', 'Релиз группирует работу, а ключевая дата делает срок заметным на диаграмме и в прогнозе.'),
+        _pbIntro(2, 'Разложите работу', 'Соберите понятную цепочку: инициатива → эпик → история → задачи и баги. Если уровня нет, элемент остается в корне.'),
+        _pbIntro(3, 'Добавьте оценку и исполнителя', 'Прогноз становится полезным только когда известны объем работы и доступная команда.'),
+        _pbIntro(4, 'Свяжите зависимую работу', 'Связи показывают порядок, критический путь и последствия переноса задачи.'),
+        _pbIntro(5, 'Проверьте реалистичность', 'Устраните критичные ошибки, затем сравните срок с ожиданиями. Проверка ничего не меняет автоматически.'),
+        _pbIntro(6, 'Зафиксируйте договоренность', 'Сохраните версию плана перед изменениями и подготовьте безопасную копию для обсуждения.')
+      ];
+      const actions = [
+        `<div class="flex flex-wrap gap-2">${_pbAction('Изменить название', 'title', false, true)}${_pbAction('Цели и инициативы', 'goals', true, false)}</div>`,
+        `<div class="flex flex-wrap gap-2">${_pbAction('Добавить ключевую дату', 'release', true, true)}${_pbAction('Посмотреть релизы', 'release-progress', false, false)}</div>`,
+        `<div class="flex flex-wrap gap-2">${_pbAction('Быстро добавить', 'quick-add', true, true)}${_pbAction('Одна задача', 'task', false, true)}</div>`,
+        `<div class="flex flex-wrap gap-2">${_pbAction('Роли и команда', 'resources', true, false)}${_pbAction('Проверить загрузку', 'load', false, false)}</div>`,
+        `<div class="flex flex-wrap gap-2">${_pbAction('Открыть связи', 'deps', true, false)}${_pbAction('Проверить связи', 'health-deps', false, false)}</div>`,
+        `<div class="flex flex-wrap gap-2">${_pbAction('Здоровье плана', 'health', true, false)}${_pbAction('Уложиться в дату', 'fit', false, false)}${_pbAction('Открыть прогноз', 'forecast', false, false)}</div>`,
+        `<div class="flex flex-wrap gap-2">${_pbAction('Версии плана', 'baseline', true, false)}${_pbAction('Полные JSON-снимки', 'versions', false, false)}${_pbAction('Копия для показа', 'share', false, false)}</div>`
+      ];
+      body.innerHTML = intros[_planBuilderStep] + `<div class="grid grid-cols-2 gap-2 mb-4">${grids[_planBuilderStep]}</div>` + actions[_planBuilderStep]
+        + `<div class="mt-5 p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] leading-relaxed text-slate-500">${complete[_planBuilderStep] ? 'Этот шаг выглядит готовым. Можно перейти дальше или открыть данные для проверки.' : 'Шаг требует внимания. Мастер только направляет к нужной форме — решение и сохранение остаются за вами.'}</div>`;
+      if (prev) prev.disabled = _planBuilderStep === 0;
+      if (prev) prev.classList.toggle('opacity-40', _planBuilderStep === 0);
+      if (next) next.textContent = _planBuilderStep === 6 ? 'Готово' : 'Дальше';
+      if (label) label.textContent = (_planBuilderStep + 1) + ' / 7';
+    }
+    function planBuilderGo(delta) {
+      if (_planBuilderStep === 6 && delta > 0) { closePlanBuilder(); return; }
+      _planBuilderStep = Math.max(0, Math.min(6, _planBuilderStep + (parseInt(delta, 10) || 0)));
+      renderPlanBuilder();
+    }
+    function planBuilderAction(action) {
+      if (action === 'title') { closePlanBuilder(); if (typeof startEditTitle === 'function') startEditTitle(); return; }
+      if (action === 'goals' && typeof openGoalsModal === 'function') openGoalsModal();
+      else if (action === 'release' && typeof openCutoffModal === 'function') openCutoffModal();
+      else if (action === 'release-progress' && typeof openReleaseProgressModal === 'function') openReleaseProgressModal();
+      else if (action === 'quick-add' && typeof openQuickAddModal === 'function') openQuickAddModal();
+      else if (action === 'task' && typeof openModal === 'function') openModal();
+      else if (action === 'resources' && typeof openResourceModal === 'function') openResourceModal('roles');
+      else if (action === 'load' && typeof openResourceModal === 'function') openResourceModal('load');
+      else if (action === 'deps' && typeof openDepsOverview === 'function') openDepsOverview();
+      else if (action === 'health-deps') openPlanHealthCenter('dependencies');
+      else if (action === 'health') openPlanHealthCenter('all');
+      else if (action === 'fit' && typeof openFitByDate === 'function') openFitByDate();
+      else if (action === 'forecast') {
+        if (workspaceMode === 'myweek') { if (typeof showToast === 'function') showToast('Прогноз доступен в режиме «Планирование» или «Руководство».', 'info', 3500); return; }
+        closePlanBuilder(); if (typeof setAppView === 'function') setAppView('forecast');
+      }
+      else if (action === 'baseline' && typeof openBaselineModal === 'function') openBaselineModal();
+      else if (action === 'versions' && typeof openVersionsModal === 'function') openVersionsModal();
+      else if (action === 'share' && typeof openRoExport === 'function') openRoExport();
+    }
 
     // ===== v13.6: bounded project action journal =====
     function openProjectJournal() { const m = document.getElementById('projectJournalModal'); if (!m) return; m.classList.remove('hidden'); renderProjectJournal(); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
@@ -10070,8 +10338,10 @@ if (typeof globalThis !== 'undefined') {
       if (typeof renderDataMenuJiraDate === 'function') renderDataMenuJiraDate();
       updateProjectFilter();
       restoreFilters();
+      try { if (typeof applyWorkspaceMode === 'function') applyWorkspaceMode({ skipView: true }); } catch (e) {}
       try { if (typeof setCompactOverview === 'function' && localStorage.getItem(OVERVIEW_PREF_KEY) === '1') setCompactOverview(true, { skipPref: true, skipRender: true }); } catch (e) {}
       renderRoadmap();
+      try { if (typeof applyWorkspaceMode === 'function') applyWorkspaceMode({ skipView: false }); } catch (e) {}
       if (typeof _renderAppViewMenu === 'function') _renderAppViewMenu();
       try { restoreListWidth(); } catch (e) {}
       populateSectionSelects(); updateResourceSelects(); updateStatusSelects(); renderStatusOverview();
@@ -13950,6 +14220,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       return true;
     }
     function taskPassesNonStatusFilters(t) {
+      if (workspaceMode === 'myweek' && !_taskInMyWeek(t)) return false;
       if (releaseFilterSel.size) { if (!t.release || !releaseFilterSel.has(String(t.release))) return false; }
       if (labelFilterSel.size) {
         const own = Array.isArray(t.labels) ? t.labels : [];
@@ -13995,6 +14266,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       return !!t && t.status !== 'completed' && t.status !== 'on_hold';
     }
     function taskPassesFilters(t) {
+      if (workspaceMode === 'myweek' && !_taskInMyWeek(t)) return false;
       // R2: режим «Горит» , задача горит (просрочена / срок в ближайшие 2 дня / блокер), кроме завершенных и вех.
       if (_goritMode && !_taskIsHot(t)) return false;
       // R2: режим «Мои задачи» , исполнитель совпадает с именем автора (учет нескольких исполнителей).
@@ -14053,7 +14325,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
     // Активен ли хоть один фильтр задач , для скрытия пустых секций под фильтром.
     function anyTaskFilterActive() {
       try {
-        return !!(_goritMode || _mineMode
+        return !!(workspaceMode === 'myweek' || _goritMode || _mineMode
           || _kindFilter === 'urgent' || _kindFilter === 'extdep' || _noGoalFilter
           || (releaseFilterSel && releaseFilterSel.size)
           || (labelFilterSel && labelFilterSel.size)
@@ -14883,6 +15155,80 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (ab) ab.className = base + (uiMode === 'advanced' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500 hover:text-slate-900');
     }
     function setUiMode(m) { uiMode = (m === 'simple') ? 'simple' : 'advanced'; try { storage.set('gantt_ui_mode', uiMode); } catch (e) {} applyUiMode(); try { var _vb = document.getElementById('viewIconsBar'); if (_vb) _vb.innerHTML = _viewSwitcherBtnHtml(); } catch (e) {} if (uiMode === 'simple') { try { if (typeof _quietMode !== 'undefined' && _quietMode && typeof setQuietMode === 'function') setQuietMode(false); } catch (e) {} try { if (typeof appView !== 'undefined' && (appView === 'sprints' || appView === 'forecast' || appView === 'present') && typeof setAppView === 'function') setAppView('list'); } catch (e) {} } if (uiMode === 'advanced' && typeof showToast === 'function') { try { if (storage.get('gantt_adv_hint') !== '1') { storage.set('gantt_adv_hint', '1'); showToast('Продвинутый режим включен. Открылись продвинутые виды и инструменты: Спринты, Успеваем?, Презентация, Цели и Инициативы, Риски, Команда, Деньги, Свои поля. Вернуть простой режим можно в настройках.', 'info', 7000); } } catch (e) {} } if (typeof renderRoadmap === 'function') renderRoadmap(true); }
+    // ===== v13.9: рабочие пространства по пользовательской задаче =====
+    // Это локальная настройка интерфейса: она не попадает в JSON проекта и не меняет права доступа.
+    let workspaceMode = (function () {
+      const saved = storage.get('gantt_workspace_mode');
+      return (saved === 'myweek' || saved === 'leadership') ? saved : 'planning';
+    })();
+    function _taskInMyWeek(t) {
+      if (!t || !_taskIsMine(t)) return false;
+      if (t.status === 'on_hold') return false;
+      if (isBlocked(t)) return true;
+      if (typeof _ACTIVE_STATUS !== 'undefined' && _ACTIVE_STATUS[t.status]) return true;
+      const now = new Date(CURRENT_DATE || new Date());
+      const dow = (now.getDay() + 6) % 7;
+      const mon = new Date(now); mon.setDate(now.getDate() - dow);
+      const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+      const from = toYmdLocal(mon), to = toYmdLocal(sun);
+      if (t.isMilestone) {
+        const d = t.start || t.end || '';
+        return !!d && d >= from && d <= to;
+      }
+      if (t.start && t.end && t.start <= to && t.end >= from) return true;
+      if (t.status === 'completed') {
+        const completed = t.completedAt || t.resolved || t.actualEnd || t.end || '';
+        return !!completed && completed >= from && completed <= to;
+      }
+      return false;
+    }
+    function _workspaceAllowedViews() {
+      if (workspaceMode === 'myweek') return new Set(['list', 'kanban', 'summary']);
+      if (workspaceMode === 'leadership') return new Set(['summary', 'forecast', 'present']);
+      return null;
+    }
+    function applyWorkspaceMode(opts) {
+      opts = opts || {};
+      document.body.dataset.workspace = workspaceMode;
+      const select = document.getElementById('workspaceModeSelect');
+      if (select) select.value = workspaceMode;
+      const allowed = _workspaceAllowedViews();
+      if (!opts.skipView && typeof setAppView === 'function') {
+        let target = workspaceMode === 'leadership' ? 'summary' : (workspaceMode === 'myweek' ? (window.innerWidth < 768 ? 'kanban' : 'list') : 'list');
+        if (allowed && !allowed.has(target)) target = workspaceMode === 'leadership' ? 'summary' : 'list';
+        setAppView(target);
+      } else {
+        try { const tabs = document.getElementById('planViewTabs'); if (tabs) tabs.innerHTML = _viewTabsHtml(); } catch (e) {}
+      }
+    }
+    function setWorkspaceMode(mode, opts) {
+      opts = opts || {};
+      const next = (mode === 'myweek' || mode === 'leadership') ? mode : 'planning';
+      const clearedForLeadership = next === 'leadership' && (
+        resourceFilterSel.size || statusFilterSel.size || projectFilterSel.size || releaseFilterSel.size ||
+        labelFilterSel.size || componentFilterSel.size || Object.keys(customFieldFilterSel || {}).length ||
+        _goritMode || _mineMode || _kindFilter || _noGoalFilter
+      );
+      if (clearedForLeadership) {
+        resourceFilterSel.clear(); statusFilterSel.clear(); projectFilterSel.clear(); releaseFilterSel.clear();
+        labelFilterSel.clear(); componentFilterSel.clear(); customFieldFilterSel = {};
+        _goritMode = false; _mineMode = false; _kindFilter = ''; _noGoalFilter = false;
+        if (typeof persistFilters === 'function') persistFilters();
+        if (typeof updateFilterLabels === 'function') updateFilterLabels();
+        if (typeof updateReleaseFilterBtn === 'function') updateReleaseFilterBtn();
+      }
+      workspaceMode = next;
+      try { storage.set('gantt_workspace_mode', workspaceMode); } catch (e) {}
+      _mineMode = false;
+      _goritMode = false;
+      if (typeof _updateModeButtons === 'function') _updateModeButtons();
+      applyWorkspaceMode({ skipView: !!opts.skipView });
+      if (!opts.skipRender && typeof renderRoadmap === 'function') renderRoadmap(true);
+      if (!opts.silent && typeof showToast === 'function') {
+        const label = workspaceMode === 'myweek' ? 'Моя неделя' : (workspaceMode === 'leadership' ? 'Для руководителя' : 'Планирование');
+        showToast('Рабочий режим: ' + label + (clearedForLeadership ? '. Показывается весь план, фильтры сброшены.' : ''), 'info', clearedForLeadership ? 4200 : 2200);
+      }
+    }
     // Чип балла приоритизации в строках , опт-ин, по умолчанию выключен (вью-преференс, как режим и сортировка)
     let _showPriorityScores = false;
     try { _showPriorityScores = (storage.get('gantt_show_priority') === '1'); } catch (e) {}
@@ -14963,6 +15309,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function saveAuthorNameInput(v) {
       if (READ_ONLY_MODE) return;
       try { storage.set('gantt_author', String(v || '').trim()); } catch (e) {}
+      if (typeof workspaceMode !== 'undefined' && workspaceMode === 'myweek' && typeof renderRoadmap === 'function') renderRoadmap(true);
       if (typeof showToast === 'function') showToast('Имя автора сохранено', 'ok');
     }
     // ===== Интерактивный тур (п.14) =====
@@ -18355,7 +18702,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       var byId = byIdArg || new Map((roadmapData || []).map(function (t) { return [t.id, t]; }));
       var out = [];
       (roadmapData || []).forEach(function (m) {
-        if (!m || !m.isMilestone || !m.start) return;
+        if (!m || m.hidden || !m.isMilestone || !m.start || m.status === 'completed' || m.status === 'on_hold') return;
         var preds = getPredecessorIds(m).map(function (id) { return byId.get(id); }).filter(Boolean);
         if (!preds.length) return;
         var latest = ''; preds.forEach(function (p) { var e = p.end || p.start; if (e && e > latest) latest = e; });
@@ -18381,45 +18728,79 @@ let resourceView = 'roles'; // 'roles' | 'load'
     }
     function _pcOverload(active) {
       var byRes = {};
-      active.forEach(function (t) { if (t.status === 'completed' || !t.start || !t.end) return; var r = String(t.resource || '').trim(); if (!r) return; (byRes[r] = byRes[r] || []).push(t); });
+      active.forEach(function (t) {
+        if (t.status === 'completed' || t.status === 'on_hold' || !t.start || !t.end) return;
+        var tokens = (typeof splitResourceTokens === 'function') ? splitResourceTokens(t.resource) : String(t.resource || '').split(/[;,\/]+/).map(function (x) { return x.trim(); }).filter(Boolean);
+        var names = [];
+        tokens.forEach(function (token) {
+          var parsed = (typeof parseResourceToken === 'function') ? parseResourceToken(token) : { name: token };
+          var name = String(parsed.name || '').trim();
+          if (name && names.indexOf(name) < 0) names.push(name);
+        });
+        names.forEach(function (name) { (byRes[name] = byRes[name] || []).push(t); });
+      });
       var out = [];
       Object.keys(byRes).forEach(function (r) {
         var arr = byRes[r]; if (arr.length < 2) return;
-        var lim = (typeof _resParLimit === 'function') ? _resParLimit(r) : 1; if (!Number.isFinite(lim) || lim < 1) lim = 1;
+        var lim = (typeof _resParLimit === 'function') ? _resParLimit(r) : 0; if (!Number.isFinite(lim) || lim < 0) lim = 0;
         var evts = [];
         arr.forEach(function (t) { evts.push({ d: dateToDays(t.start), x: 1 }); evts.push({ d: dateToDays(t.end) + 1, x: -1 }); });
         evts.sort(function (a, b) { return a.d - b.d || a.x - b.x; });
         var cur = 0, peak = 0, peakDay = null;
         evts.forEach(function (e) { cur += e.x; if (cur > peak) { peak = cur; peakDay = e.d; } });
-        var threshold = (lim >= 50) ? 3 : (lim + 1);
+        // 0 означает, что лимит не задан. В этом случае отмечаем только выраженную
+        // параллельность (3+), а не объявляем две задачи перегрузкой без настройки пользователя.
+        var threshold = lim > 0 ? (lim + 1) : 3;
         if (peak >= 2 && peak >= threshold) out.push({ id: arr[0].id, text: r + ' , ' + peak + ' ' + pluralRu(peak, ['задача', 'задачи', 'задач']) + ' одновременно' + (peakDay != null ? ' около ' + formatDateString(daysToDate(peakDay)) : '') });
       });
       return out;
     }
-    function runPlanCheck() {
-      var all = (roadmapData || []).filter(function (t) { return t && t.id != null; });
-      var active = all.filter(function (t) { return !t.isMilestone; });
+    function collectPlanCheckGroups() {
+      var all = (roadmapData || []).filter(function (t) { return t && !t.hidden && t.id != null; });
+      var active = all.filter(function (t) { return !t.isMilestone && t.status !== 'completed' && t.status !== 'on_hold'; });
       var byId = new Map(all.map(function (t) { return [t.id, t]; }));
+      var activeById = new Map(active.map(function (t) { return [t.id, t]; }));
+      var archivedIds = new Set((archivedTasks || []).filter(Boolean).map(function (t) { return t.id; }));
       var todayD = dateToDays(toYmdLocal(CURRENT_DATE || new Date()));
       var groups = [];
-      function grp(sev, title, hint) { var g = { sev: sev, title: title, hint: hint, items: [] }; groups.push(g); return g; }
-      var gDang = grp('red', 'Связь на удаленную задачу', 'Задача ждет ту, которой уже нет в плане.');
-      active.forEach(function (t) { getPredecessorIds(t).forEach(function (pid) { if (!byId.has(pid)) gDang.items.push({ id: t.id, text: _pcName(t) + ' , ждет задачу, которой нет' }); }); });
-      var gOrder = grp('red', 'Задача идет раньше того, что ее держит', 'Начинается до того, как закончится предшественник.');
-      active.forEach(function (t) { getPredecessorIds(t).forEach(function (pid) { var p = byId.get(pid); if (!p || p.isMilestone) return; var st = _depPairStatus(p, t); if (st && st.kind === 'bad') gOrder.items.push({ id: t.id, text: _pcName(t) + ' раньше, чем закончится «' + _pcName(p) + '»' }); }); });
-      var gInv = grp('red', 'Конец раньше начала', 'Дата окончания стоит раньше даты начала.');
+      function grp(category, severity, code, sev, title, hint) { var g = { category: category, severity: severity, code: code, sev: sev, title: title, hint: hint, items: [] }; groups.push(g); return g; }
+      var gDang = grp('dependencies', 'error', 'missing-predecessor', 'red', 'Связь на удаленную задачу', 'Задача ждет ту, которой уже нет в плане.');
+      active.forEach(function (t) { getPredecessorIds(t).forEach(function (pid) { if (!byId.has(pid) && !archivedIds.has(pid)) gDang.items.push({ id: t.id, text: _pcName(t) + ' , ждет задачу, которой нет' }); }); });
+      var gOrder = grp('schedule', 'error', 'dependency-order', 'red', 'Задача идет раньше того, что ее держит', 'Начинается до того, как закончится предшественник.');
+      active.forEach(function (t) {
+        getPredecessorIds(t).forEach(function (pid) {
+          var p = byId.get(pid); if (!p || p.isMilestone || !p.start || !p.end || !t.start || !t.end) return;
+          var di = _depInfo(t, pid);
+          var ps = dateToDays(p.start), pe = dateToDays(p.end), ts = dateToDays(t.start), te = dateToDays(t.end);
+          var bad = di.type === 'SS' ? ts < ps + di.lag
+            : (di.type === 'FF' ? te < pe + di.lag
+              : (di.type === 'SF' ? te < ps + di.lag : ts < pe + 1 + di.lag));
+          if (bad) gOrder.items.push({ id: t.id, text: _pcName(t) + ' нарушает связь ' + di.type + (di.lag ? ' с лагом ' + di.lag : '') + ' с «' + _pcName(p) + '»' });
+        });
+      });
+      var gInv = grp('schedule', 'error', 'invalid-range', 'red', 'Конец раньше начала', 'Дата окончания стоит раньше даты начала.');
       active.forEach(function (t) { if (t.start && t.end && dateToDays(t.end) < dateToDays(t.start)) gInv.items.push({ id: t.id, text: _pcName(t) + ' , ' + formatDateString(t.start) + ' , ' + formatDateString(t.end) }); });
-      var gCyc = grp('red', 'Кольцо в связях', 'Задачи ждут друг друга по кругу.');
-      _pcFindCycles(all, byId).slice(0, 20).forEach(function (chain) { gCyc.items.push({ id: chain[0], text: chain.map(function (id) { return _pcName(byId.get(id)); }).join(' , ') + ' , ' + _pcName(byId.get(chain[0])) }); });
-      var gOver = grp('amber', 'Срок в прошлом, а задача не закрыта', 'Дата окончания прошла, но задача не завершена.');
+      var gCyc = grp('dependencies', 'error', 'dependency-cycle', 'red', 'Кольцо в связях', 'Задачи ждут друг друга по кругу.');
+      _pcFindCycles(active, activeById).slice(0, 20).forEach(function (chain) { gCyc.items.push({ id: chain[0], text: chain.map(function (id) { return _pcName(activeById.get(id)); }).join(' , ') + ' , ' + _pcName(activeById.get(chain[0])) }); });
+      var gOver = grp('schedule', 'warning', 'overdue', 'amber', 'Срок в прошлом, а задача не закрыта', 'Дата окончания прошла, но задача не завершена.');
       active.forEach(function (t) { if (t.status === 'completed' || t.status === 'on_hold') return; if (t.end && dateToDays(t.end) < todayD) gOver.items.push({ id: t.id, text: _pcName(t) + ' , срок ' + formatDateString(t.end) }); });
-      var gLoad = grp('amber', 'Человек занят несколькими делами разом', 'У одного исполнителя задачи идут одновременно.');
+      var gLoad = grp('capacity', 'warning', 'resource-overload', 'amber', 'Человек занят несколькими делами разом', 'У одного исполнителя задачи идут одновременно.');
       _pcOverload(active).forEach(function (o) { gLoad.items.push(o); });
-      var gMile = grp('amber', 'Веха под угрозой', 'Задачи перед вехой заканчиваются позже ее даты.');
+      var gPaused = grp('dependencies', 'warning', 'paused-predecessor', 'amber', 'Зависимость поставлена на паузу', 'Продолжение цепочки нельзя надежно спрогнозировать, пока предшественник на паузе.');
+      active.forEach(function (t) {
+        getPredecessorIds(t).forEach(function (pid) {
+          var p = byId.get(pid);
+          if (p && p.status === 'on_hold') gPaused.items.push({ id: t.id, text: _pcName(t) + ' ждет «' + _pcName(p) + '»' });
+        });
+      });
+      var gMile = grp('schedule', 'warning', 'milestone-risk', 'amber', 'Веха под угрозой', 'Задачи перед вехой заканчиваются позже ее даты.');
       _milestonesAtRisk(byId).forEach(function (m) { gMile.items.push({ id: m.id, text: m.name + ' , назначена ' + formatDateString(m.date) + ', работа завершится ' + formatDateString(m.latest) + ' (+' + m.over + ' ' + _dniWord(m.over) + ')' }); });
-      var gND = grp('gray', 'Задача без сроков', 'Нет дат , не попадает на диаграмму и в прогноз.');
+      var gND = grp('readiness', 'info', 'missing-dates', 'gray', 'Задача без сроков', 'Нет дат , не попадает на диаграмму и в прогноз.');
       active.forEach(function (t) { if (t.status === 'completed' || t.status === 'on_hold') return; if (!t.start || !t.end) gND.items.push({ id: t.id, text: _pcName(t) }); });
-      _pcRender(groups);
+      return groups;
+    }
+    function runPlanCheck() {
+      openPlanHealthCenter('schedule');
     }
     function _pcRender(groups) {
       var real = groups.filter(function (g) { return g.items.length; });
@@ -18446,7 +18827,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
     // Клонирует roadmapData, дает поработать с копией и гарантированно возвращает оригинал.
     function _planSandbox(fn) { var bak = roadmapData; try { roadmapData = bak.map(function (t) { return Object.assign({}, t); }); return fn(); } finally { roadmapData = bak; } }
     // Прогноз готовности (позднейший конец) по движку раскладки, опционально в рамках scope-фильтра.
-    function _planFinish(scope) { var s = _levelSchedule(); var mx = null; (roadmapData || []).forEach(function (t) { if (!t || t.hidden || t.isMilestone) return; if (scope && !scope(t)) return; var e = s[t.id] && s[t.id].end; if (e && (!mx || e > mx)) mx = e; }); return mx; }
+    function _planFinish(scope) { var s = _levelSchedule({ respectFilters: false }); var mx = null; (roadmapData || []).forEach(function (t) { if (!t || t.hidden || t.isMilestone || t.status === 'completed' || t.status === 'on_hold') return; if (scope && !scope(t)) return; var e = s[t.id] && s[t.id].end; if (e && (!mx || e > mx)) mx = e; }); return mx; }
     function _taskWord(n) { n = Math.abs(n); var d = n % 10, h = n % 100; if (d === 1 && h !== 11) return 'задачу'; if (d >= 2 && d <= 4 && (h < 12 || h > 14)) return 'задачи'; return 'задач'; }
     // Транзитивные зависимые (кто ждет эту задачу, прямо или по цепочке)
     function _cutDependents(id) { var out = new Set(), byPred = {}; (roadmapData || []).forEach(function (t) { getPredecessorIds(t).forEach(function (p) { (byPred[p] = byPred[p] || []).push(t.id); }); }); (function down(x) { (byPred[x] || []).forEach(function (cid) { if (!out.has(cid)) { out.add(cid); down(cid); } }); })(id); return Array.from(out); }
@@ -18481,7 +18862,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         var cut = [], guard = 0;
         while (_planFinish(scope) > target && guard < 40) {
           guard++;
-          var sched = _levelSchedule();
+          var sched = _levelSchedule({ respectFilters: false });
           var cand = (roadmapData || []).filter(function (t) { return t && !t.hidden && !t.isMilestone && t.status !== 'completed' && sched[t.id] && (!scope || scope(t)); });
           if (!cand.length) break;
           cand.sort(function (a, b) { return String(sched[b.id].end).localeCompare(String(sched[a.id].end)); });
@@ -19622,9 +20003,45 @@ let resourceView = 'roles'; // 'roles' | 'load'
       while (done < n && guard < 4000) { d.setDate(d.getDate() + 1); guard++; if (_resWorks(person, d)) done++; }
       return { start: start, end: toYmdLocal(d) };
     }
-    function _levelSchedule() {
-      var tasks = (roadmapData || []).filter(function (t) { return t && !t.isMilestone && !t.hidden && t.status !== 'completed' && (typeof taskPassesFilters !== 'function' || taskPassesFilters(t)); });
+    function _spStartForEnd(endYmd, n, person) {
+      var d = parseLocalDate(endYmd), guard = 0;
+      while (!_resWorks(person, d) && guard < 800) { d.setDate(d.getDate() - 1); guard++; }
+      var end = toYmdLocal(d), done = 1;
+      while (done < n && guard < 4000) { d.setDate(d.getDate() - 1); guard++; if (_resWorks(person, d)) done++; }
+      return { start: toYmdLocal(d), end: end };
+    }
+    function _scheduleShiftDate(ymd, days) {
+      var d = parseLocalDate(ymd); d.setDate(d.getDate() + (parseInt(days, 10) || 0)); return toYmdLocal(d);
+    }
+    function _scheduleResourceNames(value) {
+      var tokens = (typeof splitResourceTokens === 'function') ? splitResourceTokens(value) : String(value || '').split(/[;,\/]+/).map(function (x) { return x.trim(); }).filter(Boolean);
+      var out = [];
+      tokens.forEach(function (token) {
+        var parsed = (typeof parseResourceToken === 'function') ? parseResourceToken(token) : { name: token };
+        var name = String(parsed.name || '').trim();
+        if (name && out.indexOf(name) < 0) out.push(name);
+      });
+      return out;
+    }
+    function _scheduleDependencyStart(task, predId, predSpan, dur, person) {
+      if (!predSpan || !predSpan.start || !predSpan.end) return '';
+      var info = (typeof _depInfo === 'function') ? _depInfo(task, predId) : { type: 'FS', lag: 0 };
+      var lag = Number.isFinite(parseInt(info.lag, 10)) ? parseInt(info.lag, 10) : 0;
+      if (info.type === 'SS') return _scheduleShiftDate(predSpan.start, lag);
+      if (info.type === 'FF' || info.type === 'SF') {
+        var anchor = info.type === 'FF' ? predSpan.end : predSpan.start;
+        var requiredEnd = _scheduleShiftDate(anchor, lag);
+        var firstValidEnd = _spSpan(requiredEnd, 1, person).start;
+        return _spStartForEnd(firstValidEnd, dur, person).start;
+      }
+      return _scheduleShiftDate(predSpan.end, 1 + lag);
+    }
+    function _levelSchedule(opts) {
+      opts = opts || {};
+      var respectFilters = opts.respectFilters !== false;
+      var tasks = (roadmapData || []).filter(function (t) { return t && !t.isMilestone && !t.hidden && t.status !== 'completed' && t.status !== 'on_hold' && (!respectFilters || typeof taskPassesFilters !== 'function' || taskPassesFilters(t)); });
       var byId = {}; tasks.forEach(function (t) { byId[t.id] = t; });
+      var allById = {}; (roadmapData || []).forEach(function (t) { if (t && !t.hidden) allById[t.id] = t; });
       var sched = {}, personLanes = {};
       var _PAR = (typeof _spCfg !== 'undefined' && _spCfg && _spCfg.par > 0) ? Math.min(5, Math.round(_spCfg.par)) : 1;
       var base = (typeof CURRENT_DATE !== 'undefined' && CURRENT_DATE) ? toYmdLocal(CURRENT_DATE) : _getSprints()[0].from;
@@ -19639,18 +20056,35 @@ let resourceView = 'roles'; // 'roles' | 'load'
       tasks.forEach(function (t) { if (order.indexOf(t.id) < 0) order.push(t.id); }); // на случай циклов
       order.forEach(function (id) {
         var t = byId[id]; if (!t) return;
-        var est = parseFloat(t.estimate); var noEst = !(Number.isFinite(est) && est > 0); var _occ = (typeof _spCfg !== 'undefined' && _spCfg && _spCfg.occ > 0) ? _spCfg.occ : 1;
-        var _avp = (typeof _resourceAvail === 'function' && (t.resource || '').trim()) ? (_resourceAvail((t.resource || '').trim()) / 100) : 1;
+        var est = (typeof _taskEstDays === 'function') ? _taskEstDays(t) : parseFloat(t.estimate); var noEst = !(Number.isFinite(est) && est > 0); var _occ = (typeof _spCfg !== 'undefined' && _spCfg && _spCfg.occ > 0) ? _spCfg.occ : 1;
+        var resources = _scheduleResourceNames(t.resource); var res = resources.join(', '); var noRes = resources.length === 0;
+        var _avp = resources.length && typeof _resourceAvail === 'function' ? Math.min.apply(null, resources.map(function (name) { return _resourceAvail(name) / 100; })) : 1;
         if (!(_avp > 0 && _avp <= 1)) _avp = 1; // частичная занятость исполнителя: 50% = вдвое дольше по календарю
         var dur = noEst ? 1 : Math.max(1, Math.ceil(est / (_occ * _avp)));
-        var res = (t.resource || '').trim(); var noRes = !res;
         var earliest = base;
-        getPredecessorIds(t).forEach(function (pid) { var ps = sched[pid]; if (ps) { var nd = parseLocalDate(ps.end); nd.setDate(nd.getDate() + 1); var e = toYmdLocal(nd); if (e > earliest) earliest = e; } });
-        var _laneIdx = -1;
-        if (res) { var _parR = (typeof _resParLimit === 'function' && _resParLimit(res)) ? _resParLimit(res) : 99; var _lanes = personLanes[res] || (personLanes[res] = []); var _bestFree = null; for (var _li = 0; _li < _parR; _li++) { var _lf = _lanes[_li] || null; if (_lf === null) { _laneIdx = _li; _bestFree = null; break; } if (_bestFree === null || _lf < _bestFree) { _bestFree = _lf; _laneIdx = _li; } } if (_bestFree && _bestFree > earliest) earliest = _bestFree; }
+        getPredecessorIds(t).forEach(function (pid) {
+          var pred = allById[pid];
+          var predSpan = sched[pid] || (pred && pred.start && pred.end ? { start: pred.start, end: pred.end } : null);
+          var candidate = _scheduleDependencyStart(t, pid, predSpan, dur, res);
+          if (candidate && candidate > earliest) earliest = candidate;
+        });
+        var laneClaims = [];
+        resources.forEach(function (name) {
+          var configured = (typeof _resParLimit === 'function') ? _resParLimit(name) : 0;
+          var limit = configured > 0 ? configured : _PAR;
+          var lanes = personLanes[name] || (personLanes[name] = []);
+          var laneIndex = 0, bestFree = lanes[0] || null;
+          for (var li = 0; li < limit; li++) {
+            var free = lanes[li] || null;
+            if (free === null) { laneIndex = li; bestFree = null; break; }
+            if (bestFree === null || free < bestFree) { bestFree = free; laneIndex = li; }
+          }
+          if (bestFree && bestFree > earliest) earliest = bestFree;
+          laneClaims.push({ name: name, index: laneIndex });
+        });
         var span = _spSpan(earliest, dur, res);
         sched[id] = { start: span.start, end: span.end, dur: dur, noEst: noEst, noRes: noRes, overflow: span.end > lastEnd };
-        if (res && _laneIdx >= 0) { var nf = parseLocalDate(span.end); nf.setDate(nf.getDate() + 1); personLanes[res][_laneIdx] = toYmdLocal(nf); }
+        laneClaims.forEach(function (claim) { var nf = parseLocalDate(span.end); nf.setDate(nf.getDate() + 1); personLanes[claim.name][claim.index] = toYmdLocal(nf); });
       });
       return sched;
     }
@@ -19734,21 +20168,34 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function _fcDayDiff(a, b) { try { return Math.round((parseLocalDate(b) - parseLocalDate(a)) / 86400000); } catch (e) { return 0; } }
     // Оптимистичный финиш: только зависимости + рабочие дни/отпуска, ресурсы работают параллельно (без конфликта)
     function _fcOptSchedule() {
-      var tasks = (roadmapData || []).filter(function (t) { return t && !t.isMilestone && !t.hidden && t.status !== 'completed' && (typeof taskPassesFilters !== 'function' || taskPassesFilters(t)); });
+      var tasks = (roadmapData || []).filter(function (t) { return t && !t.isMilestone && !t.hidden && t.status !== 'completed' && t.status !== 'on_hold' && (typeof taskPassesFilters !== 'function' || taskPassesFilters(t)); });
       var byId = {}; tasks.forEach(function (t) { byId[t.id] = t; });
-      var base = _fcBase(); var memo = {};
-      function endOf(id, guard) {
+      var allById = {}; (roadmapData || []).forEach(function (t) { if (t && !t.hidden) allById[t.id] = t; });
+      var base = _fcBase(); var memo = {}, visiting = {};
+      function spanOf(id, guard) {
         if (memo[id]) return memo[id];
-        if (guard > 600) return base;
-        var t = byId[id]; if (!t) return base;
-        var est = parseFloat(t.estimate); var dur = (Number.isFinite(est) && est > 0) ? Math.max(1, Math.ceil(est)) : 1;
+        if (guard > 600 || visiting[id]) return { start: base, end: base };
+        var t = byId[id]; if (!t) return null;
+        visiting[id] = true;
+        var est = (typeof _taskEstDays === 'function') ? _taskEstDays(t) : parseFloat(t.estimate);
+        var resources = _scheduleResourceNames(t.resource); var person = resources.join(', ');
+        var availability = resources.length && typeof _resourceAvail === 'function' ? Math.min.apply(null, resources.map(function (name) { return _resourceAvail(name) / 100; })) : 1;
+        if (!(availability > 0 && availability <= 1)) availability = 1;
+        var dur = (Number.isFinite(est) && est > 0) ? Math.max(1, Math.ceil(est / availability)) : 1;
         var earliest = base;
-        getPredecessorIds(t).forEach(function (pid) { if (byId[pid]) { var pe = endOf(pid, guard + 1); var nd = parseLocalDate(pe); nd.setDate(nd.getDate() + 1); var e = toYmdLocal(nd); if (e > earliest) earliest = e; } });
-        var span = _spSpan(earliest, dur, (t.resource || '').trim());
-        memo[id] = span.end; return span.end;
+        getPredecessorIds(t).forEach(function (pid) {
+          var pred = allById[pid];
+          var predSpan = byId[pid] ? spanOf(pid, guard + 1) : (pred && pred.start && pred.end ? { start: pred.start, end: pred.end } : null);
+          var candidate = _scheduleDependencyStart(t, pid, predSpan, dur, person);
+          if (candidate && candidate > earliest) earliest = candidate;
+        });
+        var span = _spSpan(earliest, dur, person);
+        delete visiting[id];
+        memo[id] = span; return span;
       }
-      tasks.forEach(function (t) { endOf(t.id, 0); });
-      return memo;
+      tasks.forEach(function (t) { spanOf(t.id, 0); });
+      var ends = {}; Object.keys(memo).forEach(function (id) { ends[id] = memo[id].end; });
+      return ends;
     }
     // Причина самого позднего срока: узкое место по человеку, ожидание зависимости, нехватка оценок
     function _fcReason(behind, sched) {
@@ -20666,7 +21113,11 @@ let resourceView = 'roles'; // 'roles' | 'load'
     ];
     function _viewTabsHtml() {
       var cur = (typeof appView !== 'undefined') ? appView : 'list';
-      return _appViews.map(function (x) {
+      var allowed = (typeof _workspaceAllowedViews === 'function') ? _workspaceAllowedViews() : null;
+      return _appViews.filter(function (x) {
+        if (x.adv && typeof uiMode !== 'undefined' && uiMode === 'simple') return false;
+        return !allowed || allowed.has(x.v);
+      }).map(function (x) {
         var on = (cur === x.v);
         var shortName = x.v === 'forecast' ? 'Успеваем?' : x.name;
         return '<button type="button" onclick="setAppView(\'' + x.v + '\')" aria-pressed="' + (on ? 'true' : 'false') + '"' + (on ? ' aria-current="page"' : '') + ' title="' + escAttr(x.name) + '" class="inline-flex items-center gap-2 h-9 px-3 rounded-xl border text-xs font-semibold whitespace-nowrap transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-400/50 ' + (on ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm' : 'bg-white border-transparent text-slate-600 hover:bg-slate-50 hover:border-slate-200 hover:text-slate-900') + '"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="' + x.d + '"></path></svg><span>' + escHtml(shortName) + '</span></button>';
@@ -20677,12 +21128,23 @@ let resourceView = 'roles'; // 'roles' | 'load'
       // Иконки оставляем только как запасной вариант для старых/вырезанных представлений без этой строки.
       if (document.getElementById('planViewTabs')) return '';
       var cur = (typeof appView !== 'undefined') ? appView : 'list';
-      return '<span class="inline-flex items-center gap-0.5 bg-white border border-slate-200 rounded-lg p-0.5" role="group" aria-label="Виды плана">' + _appViews.map(function (x) {
+      var allowed = (typeof _workspaceAllowedViews === 'function') ? _workspaceAllowedViews() : null;
+      var views = _appViews.filter(function (x) {
+        if (x.adv && typeof uiMode !== 'undefined' && uiMode === 'simple') return false;
+        return !allowed || allowed.has(x.v);
+      });
+      return '<span class="inline-flex items-center gap-0.5 bg-white border border-slate-200 rounded-lg p-0.5" role="group" aria-label="Виды плана">' + views.map(function (x) {
         var on = (cur === x.v);
         return '<button type="button" onclick="setAppView(\'' + x.v + '\')" aria-pressed="' + (on ? 'true' : 'false') + '" title="' + escAttr(x.name) + '" aria-label="' + escAttr(x.name) + '" class="inline-flex items-center justify-center w-8 h-8 rounded-md transition-colors cursor-pointer ' + (on ? 'view-active' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800') + '"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="' + x.d + '"></path></svg></button>';
       }).join('') + '</span>';
     }
-    function setAppView(v) { appView = (v === 'kanban' || v === 'forecast' || v === 'present' || v === 'summary') ? v : 'list'; kanbanMode = (appView === 'kanban'); applyAppView(); }
+    function setAppView(v) {
+      var next = (v === 'kanban' || v === 'forecast' || v === 'present' || v === 'summary') ? v : 'list';
+      if (typeof uiMode !== 'undefined' && uiMode === 'simple' && next === 'forecast') next = 'list';
+      var allowed = (typeof _workspaceAllowedViews === 'function') ? _workspaceAllowedViews() : null;
+      if (allowed && !allowed.has(next)) next = workspaceMode === 'leadership' ? 'summary' : 'list';
+      appView = next; kanbanMode = (appView === 'kanban'); applyAppView();
+    }
     function toggleKanban() { setAppView(appView === 'kanban' ? 'list' : 'kanban'); }
     // ===== Вид «Сводка»: главное о плане одним взглядом, 5 плиток, клик открывает список с фильтром =====
     function _sumOpen(key) {
@@ -21223,16 +21685,20 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (visibleTasks.length === 0) {
         // Различаем «проект пуст» (нет задач вообще) и «фильтры все скрыли»
         const emptyProject = (roadmapData || []).length === 0;
-        const lTitle = emptyProject ? 'Проект пуст' : 'Ничего не найдено';
+        const myWeekEmpty = !emptyProject && typeof workspaceMode !== 'undefined' && workspaceMode === 'myweek';
+        const myWeekHasAuthor = !myWeekEmpty || (typeof _authorName === 'function' && !!_authorName());
+        const lTitle = emptyProject ? 'Проект пуст' : (myWeekEmpty ? (myWeekHasAuthor ? 'На этой неделе задач нет' : 'Сначала укажите себя') : 'Ничего не найдено');
         const lDesc = emptyProject
           ? 'Добавьте первую задачу или загрузите данные из Jira (меню «Данные» в шапке).'
-          : 'Под текущие фильтры ни одна задача не подходит. Попробуйте сбросить параметры.';
+          : (myWeekEmpty ? (myWeekHasAuthor ? 'Для вас нет активных, заблокированных или запланированных на эту неделю задач.' : 'Имя автора сопоставляется с исполнителем задач и хранится только в этом файле.') : 'Под текущие фильтры ни одна задача не подходит. Попробуйте сбросить параметры.');
         const lIcon = emptyProject
           ? 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
           : 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z';
         const lAction = emptyProject
           ? `<div class="flex flex-wrap items-center justify-center gap-2"><button type="button" onclick="openModal()" class="inline-flex items-center gap-1.5 h-8 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-xs"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>Добавить задачу</button><button type="button" onclick="startDemo()" class="inline-flex items-center gap-1.5 h-8 px-3 bg-white hover:bg-violet-50 text-violet-600 border border-violet-200 text-xs font-semibold rounded-lg transition-all cursor-pointer">Посмотреть пример</button></div>`
-          : `<button type="button" onclick="resetAllFilters()" class="inline-flex items-center gap-1.5 h-8 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-lg border border-indigo-200/60 transition-all cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Сбросить фильтры</button>`;
+          : (myWeekEmpty
+            ? `<div class="flex flex-wrap items-center justify-center gap-2">${myWeekHasAuthor ? '' : `<button type="button" onclick="openSettingsModal()" class="inline-flex items-center gap-1.5 h-8 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-xs">Указать себя</button>`}<button type="button" onclick="setWorkspaceMode('planning')" class="inline-flex items-center gap-1.5 h-8 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-lg border border-indigo-200/60 transition-all cursor-pointer">Открыть весь план</button></div>`
+            : `<button type="button" onclick="resetAllFilters()" class="inline-flex items-center gap-1.5 h-8 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-lg border border-indigo-200/60 transition-all cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Сбросить фильтры</button>`);
         listContainer.innerHTML = `
           <div class="px-5 py-12 text-center bg-white">
             <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl ${emptyProject ? 'bg-indigo-50 text-indigo-500' : 'bg-slate-100 text-slate-500'} mb-3">
@@ -23064,6 +23530,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       container.innerHTML = chips.join('');
       if (!container._scrollBound) { container.addEventListener('scroll', updateStatusOverflowArrow, { passive: true }); container._scrollBound = true; }
       requestAnimationFrame(updateStatusOverflowArrow);
+      if (typeof renderPlanHealthBadge === 'function') renderPlanHealthBadge();
     }
     // Индикатор «есть еще статусы» , показывается, когда табы не помещаются и есть прокрутка вправо
     function updateStatusOverflowArrow() {
@@ -27121,6 +27588,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     // === Global UX-усиление модалок ===
     // Закрытие открытой модалки по Esc + блокировка скролла body, пока что-то открыто
     const MODAL_CLOSERS = {
+      planBuilderPanel: function(){ if (typeof closePlanBuilder === 'function') closePlanBuilder(); },
       planToolModal: closePlanTool,
       depsOverview: function(){ var m=document.getElementById('depsOverview'); if(m)m.remove(); },
       sprintCfgModal: function(){ if (typeof closeSprintCfg === 'function') closeSprintCfg(); },
@@ -27205,7 +27673,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     });
     // === Доступность модалок: ловушка Tab + возврат фокуса на источник ===
     (function modalFocusA11y() {
-      const MODAL_IDS = ['taskModal','cutoffModal','sectionColorModal','statusModal','taskKindsModal','resourceModal','infoModal','globalSearchModal','reportModal','releaseProgressModal','quickAddModal','baselineModal','archiveModal','headerCutoffModal','epicAuditModal','auditTeamsModal','jiraSyncModal','jiraChangesModal','backPlanModal','inputModal','startupModal','versionsModal','dataQualityModal','projectJournalModal','csvMapModal','resourceReplaceModal','mergeModal','duplicateModal','sectionNestModal','exportSliceModal','roExportModal','reportBuilderModal','moneyModal','customFieldsModal','settingsModal','epicCardModal','kanbanColsModal','goalsModal','raidModal','insightsModal','leaderChooserModal','depsOverview','sprintCfgModal','planToolModal'];
+      const MODAL_IDS = ['taskModal','cutoffModal','sectionColorModal','statusModal','taskKindsModal','resourceModal','infoModal','globalSearchModal','reportModal','releaseProgressModal','quickAddModal','baselineModal','archiveModal','headerCutoffModal','epicAuditModal','auditTeamsModal','jiraSyncModal','jiraChangesModal','backPlanModal','inputModal','startupModal','versionsModal','dataQualityModal','projectJournalModal','csvMapModal','resourceReplaceModal','mergeModal','duplicateModal','sectionNestModal','exportSliceModal','roExportModal','reportBuilderModal','moneyModal','customFieldsModal','settingsModal','epicCardModal','kanbanColsModal','goalsModal','raidModal','insightsModal','leaderChooserModal','depsOverview','sprintCfgModal','planToolModal','planBuilderPanel'];
       let lastFocus = null;
       const anyOpen = () => MODAL_IDS.some(id => { const e = document.getElementById(id); return e && !e.classList.contains('hidden'); });
       function topModalEl() {
@@ -27576,7 +28044,28 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </div>
   </div>
 
-  <!-- Общее окно аналитических инструментов плана: проверка, уложиться в дату, кого не хватает -->
+  <!-- Пошаговая сборка плана: панель остается на месте, пока поверх открываются рабочие формы. -->
+  <div id="planBuilderBackdrop" class="hidden fixed inset-0 bg-slate-900/25 backdrop-blur-[1px] z-[940] no-print no-image-export" onclick="closePlanBuilder()" aria-hidden="true"></div>
+  <aside id="planBuilderPanel" role="dialog" aria-modal="true" aria-labelledby="planBuilderTitle" class="hidden fixed inset-y-0 right-0 z-[950] w-full sm:w-[430px] bg-white border-l border-slate-200 shadow-2xl flex-col no-print no-image-export">
+    <div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-3 shrink-0">
+      <div class="min-w-0">
+        <div class="flex items-center gap-2">
+          <span class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 012-2h2a2 2 0 012 2m-5 8l2 2 4-4"></path></svg></span>
+          <div><h2 id="planBuilderTitle" class="text-lg font-semibold text-slate-800 leading-tight">Собрать план</h2><p class="text-[11px] text-slate-500 mt-0.5">Семь шагов от цели до зафиксированной версии</p></div>
+        </div>
+      </div>
+      <button type="button" onclick="closePlanBuilder()" class="rm-action w-9 h-9 text-slate-500 hover:bg-slate-100 shrink-0" aria-label="Закрыть мастер сборки плана"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+    </div>
+    <div id="planBuilderProgress" class="px-4 py-3 border-b border-slate-100 flex gap-1.5 overflow-x-auto no-scrollbar shrink-0" role="list" aria-label="Шаги сборки плана"></div>
+    <div id="planBuilderBody" class="p-5 overflow-y-auto grow min-h-0" aria-live="polite"></div>
+    <div class="px-5 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-2 shrink-0">
+      <button id="planBuilderPrev" type="button" onclick="planBuilderGo(-1)" class="rm-action h-10 px-4 border border-slate-200 bg-white text-slate-700 text-xs font-semibold hover:bg-slate-50">Назад</button>
+      <span id="planBuilderStepLabel" class="text-[10px] text-slate-500 tabular-nums"></span>
+      <button id="planBuilderNext" type="button" onclick="planBuilderGo(1)" class="rm-action h-10 px-4 bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700">Дальше</button>
+    </div>
+  </aside>
+
+  <!-- Общее окно аналитических инструментов плана: уложиться в дату, кого не хватает и последствия отреза -->
   <div id="planToolModal" role="dialog" aria-modal="true" aria-label="Инструмент плана" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1000] flex items-center justify-center hidden p-4" data-modal-backdrop>
     <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200/60 flex flex-col max-h-[88vh]">
       <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3 shrink-0">
@@ -27606,15 +28095,20 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
   <div id="dataQualityModal" role="dialog" aria-modal="true" aria-labelledby="dataQualityTitle" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1000] flex items-center justify-center hidden p-3 sm:p-4" data-modal-backdrop>
     <div class="rm-panel shadow-2xl w-full max-w-4xl flex flex-col max-h-[92vh] overflow-hidden">
       <div class="px-4 sm:px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
-        <div class="min-w-0"><h3 id="dataQualityTitle" class="text-lg font-semibold text-slate-800">Центр качества данных</h3><p class="text-xs text-slate-500 mt-0.5">Диагностика только показывает проблемы и ничего не исправляет без вашего решения.</p></div>
-        <button type="button" onclick="closeDataQualityCenter()" aria-label="Закрыть центр качества данных" class="rm-action w-9 h-9 text-slate-500 hover:bg-slate-100 shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        <div class="min-w-0"><h3 id="dataQualityTitle" class="text-lg font-semibold text-slate-800">Здоровье плана</h3><p class="text-xs text-slate-500 mt-0.5">Единая очередь проблем расписания, связей, загрузки и данных. Ничего не меняется без вашего решения.</p></div>
+        <button type="button" onclick="closeDataQualityCenter()" aria-label="Закрыть здоровье плана" class="rm-action w-9 h-9 text-slate-500 hover:bg-slate-100 shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
       <div class="p-4 sm:p-6 flex flex-col min-h-0 gap-4">
         <div id="dataQualitySummary" class="grid grid-cols-2 sm:grid-cols-4 gap-2 shrink-0" aria-live="polite"></div>
         <div class="rm-operational-toolbar flex items-center gap-2 flex-wrap shrink-0">
-          <select id="dataQualityCategory" onchange="renderDataQualityCenter()" class="rm-control h-9 px-3 text-xs min-w-48" aria-label="Категория проблем"><option value="all">Все категории</option><option value="required">Обязательные поля</option><option value="structure">Структура</option><option value="dates">Даты</option><option value="overdue">Просрочка</option><option value="status">Статусы</option><option value="dependencies">Связи</option><option value="duplicates">Дубли</option></select>
+          <button type="button" onclick="closeDataQualityCenter(); openPlanBuilder();" class="rm-action h-9 px-3 bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700">Собрать план</button>
+          <button type="button" data-adv onclick="closeDataQualityCenter(); openEpicAudit();" class="rm-action h-9 px-3 border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50">Подробный аудит эпиков</button>
+          <button type="button" onclick="closeDataQualityCenter(); openFitByDate();" class="rm-action h-9 px-3 border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50">Уложиться в дату</button>
+        </div>
+        <div class="rm-operational-toolbar flex items-center gap-2 flex-wrap shrink-0">
+          <select id="dataQualityCategory" onchange="renderDataQualityCenter()" class="rm-control h-9 px-3 text-xs min-w-48" aria-label="Категория проблем"><option value="all">Вся очередь</option><option value="schedule">Расписание и сроки</option><option value="capacity">Загрузка команды</option><option value="readiness">Готовность к прогнозу</option><option value="data">Качество данных</option><option value="dependencies">Связи</option><option value="structure">Структура</option><option value="status">Статусы</option><option value="duplicates">Дубли</option></select>
           <input id="dataQualitySearch" type="search" oninput="renderDataQualityCenter()" class="rm-control h-9 px-3 text-xs grow min-w-52" placeholder="Поиск по задаче, ключу или причине" aria-label="Поиск по проблемам качества данных">
-          <button type="button" onclick="analyzeProjectDataQuality(); renderDataQualityCenter()" class="rm-action h-9 px-3 border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50">Проверить снова</button>
+          <button type="button" onclick="analyzeProjectDataQuality(); renderDataQualityCenter(); renderPlanHealthBadge();" class="rm-action h-9 px-3 border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50">Проверить снова</button>
         </div>
         <div id="dataQualityList" class="rm-operational-list overflow-y-auto min-h-0 space-y-2 pr-1" aria-live="polite"></div>
       </div>
@@ -28078,7 +28572,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     <h3 class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">
      <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-     <span id="appVersionBadge">v13.8 , 23.07.2026</span>
+     <span id="appVersionBadge">v13.9 , 23.07.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -28144,9 +28638,18 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </div>
 
    <div>
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.8 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.9 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
-     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Jira по ключам из Ганта</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ИМПОРТ</span></div><p class="text-xs text-slate-600">В импорте Jira можно переключиться с проектов на все Jira-ключи текущего Ганта. В запрос входят задачи, вехи и ключи секций из разных проектов; архивные карточки не подмешиваются.</p></div>
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Три рабочих пространства</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ФОКУС</span></div><p class="text-xs text-slate-600">«Планирование» оставляет полный набор инструментов, «Моя неделя» собирает назначенную работу, а «Для руководителя» открывает спокойную сводку без кнопок редактирования.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Единое здоровье плана</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">ПРОВЕРКА</span></div><p class="text-xs text-slate-600">Ошибки расписания, связи, загрузка, структура и готовность к прогнозу собраны в одной очереди. Проверка учитывает тип связи и лаг и ничего не меняет автоматически.</p></div>
+     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Собрать план за семь шагов</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">МАСТЕР</span></div><p class="text-xs text-slate-600">Панель ведёт от цели и релиза к структуре, команде, связям, проверке и сохранённой версии. Она показывает пробелы и открывает существующие формы, но не принимает решения за пользователя.</p></div>
+    </div>
+   </div>
+
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v13.8</h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Jira по ключам из Ганта</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ИМПОРТ</span></div><p class="text-xs text-slate-600">В импорте Jira можно переключиться с проектов на все Jira-ключи текущего Ганта. В запрос входят задачи, вехи и ключи секций из разных проектов; завершённые карточки не подмешиваются.</p></div>
      <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Большие планы и свои фильтры</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">JQL</span></div><p class="text-xs text-slate-600">Статусы, спринты и даты сохраняются при смене режима. Списки длиннее 200 ключей автоматически разбиваются на несколько запросов для CSV, прямого подключения и автообновления; готовый JQL можно скопировать.</p></div>
     </div>
    </div>
@@ -31568,7 +32071,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         <p class="text-sm text-slate-500 mt-2 max-w-lg mx-auto leading-relaxed">Откройте готовый пример за минуту или начните со своих данных. План работает локально, без сервера.</p>
         <span class="inline-flex items-center gap-1.5 mt-3 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2.5 py-1 rounded-lg shadow-xs">
           <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-          <span id="appVersionStartup">версия 13.8</span>
+          <span id="appVersionStartup">версия 13.9</span>
         </span>
       </div>
 
