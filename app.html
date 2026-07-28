@@ -11161,7 +11161,7 @@ if (typeof globalThis !== 'undefined') {
       function row(sample, name, desc) { return '<div class="flex items-start gap-3 py-1.5 border-b border-slate-100 last:border-0"><div class="shrink-0 w-14 h-6 relative flex items-center justify-center">' + sample + '</div><div class="min-w-0"><div class="text-[12px] font-semibold text-slate-800">' + name + '</div><div class="text-[11px] text-slate-500">' + desc + '</div></div></div>'; }
       var items = [
         row('<div class="w-12 h-3.5 rounded-md bg-indigo-500"></div>', 'Полоса задачи', 'Цвет , цвет секции. Длина , от начала до конца задачи.'),
-        row('<div class="w-12 h-3.5 rounded-md bg-indigo-500 relative overflow-hidden"><div class="absolute inset-y-0 right-0 w-5" style="background:repeating-linear-gradient(135deg, rgba(255,255,255,0.5) 0 4px, rgba(255,255,255,0) 4px 8px)"></div></div>', 'Штриховка на конце', 'Задача в работе идет дольше плана: полоса тянется до сегодня и растет каждый день. Темная риска , плановый срок.'),
+        row('<div class="w-12 h-3.5 rounded-md bg-indigo-500 relative overflow-hidden"><div class="absolute inset-y-0 right-0 w-5" style="background:repeating-linear-gradient(135deg, rgba(255,255,255,0.5) 0 4px, rgba(255,255,255,0) 4px 8px)"></div></div>', 'Штриховка на конце', 'Смена статуса зафиксирована позже планового срока. Темная риска показывает плановый конец.'),
         row('<div class="w-12 h-3.5 rounded-md bg-indigo-500" style="outline:2px dashed #f97316;outline-offset:1px"></div><svg class="w-3.5 h-3.5 text-rose-600 absolute -top-0.5 left-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm1 16h-2v-2h2v2zm0-4h-2V9h2v5z"/></svg>', 'Красный треугольник и оранжевый пунктир', 'Задача в работе, а исполнитель сейчас в отпуске. Передайте ее или поставьте на паузу.'),
         row('<svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm1 16h-2v-2h2v2zm0-4h-2V9h2v5z"/></svg>', 'Желтый треугольник', 'Период задачи задевает отпуск исполнителя , срок может сдвинуться.'),
         row('<svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>', 'Янтарный календарик', 'Задача вылезла из окна своего спринта. Поправьте даты или перенесите в другой спринт.'),
@@ -15019,14 +15019,30 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (typeof showToast === 'function') showToast('Задача продублирована', 'ok');
       openModal(copy);
     }
-    function logStatusChange(task, newStatus) {
+    function logStatusChange(task, newStatus, meta) {
       if (!task || (task.status || '') === (newStatus || '')) return;
+      meta = (meta && typeof meta === 'object') ? meta : {};
+      const _fallbackAt = toYmdLocal(CURRENT_DATE);
+      const _requestedAt = (typeof parseJiraDate === 'function') ? parseJiraDate(meta.at || '') : String(meta.at || '');
+      const _at = _requestedAt || _fallbackAt;
+      const _time = Object.prototype.hasOwnProperty.call(meta, 'time') ? String(meta.time || '') : _auditClock();
+      const _by = Object.prototype.hasOwnProperty.call(meta, 'by') ? String(meta.by || '') : _authorName();
       task.statusLog = task.statusLog || [];
-      task.statusLog.push({ from: task.status || '', to: newStatus || '', at: toYmdLocal(CURRENT_DATE), time: _auditClock(), by: _authorName() });
+      const _entry = { from: task.status || '', to: newStatus || '', at: _at, time: _time, by: _by };
+      if (meta.source) _entry.source = String(meta.source);
+      task.statusLog.push(_entry);
       if (task.statusLog.length > 200) {
         task.statusLog = task.statusLog.slice(-200);
         if (!window.__statusLogTrimHintShown) { window.__statusLogTrimHintShown = true; if (typeof showToast === 'function') showToast('История статусов хранит последние 200 изменений по задаче, старые не показываются.', 'info', 6000); }
       }
+    }
+    // Jira не сообщает отдельную дату перехода в статус в обычной CSV-выгрузке.
+    // Берем дату решения для закрытых задач, для остальных — «Обновлено» из Jira.
+    // Это дата источника, а не день, когда пользователь загрузил CSV в Roadmap.
+    function logJiraStatusChange(task, mapped) {
+      if (!task || !mapped || !mapped.status) return;
+      const sourceAt = (mapped.status === 'completed' && mapped._jiraResolved) ? mapped._jiraResolved : (mapped.updated || '');
+      logStatusChange(task, mapped.status, { at: sourceAt, time: '', by: 'Jira', source: 'jira' });
     }
     function statusNameById(sid) { const s = (projectStatuses || []).find(x => x.id === sid); return s ? s.name : (sid || '-'); }
     function renderTaskStatusHistory(task) {
@@ -20704,20 +20720,56 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function _presPc(ymd, lo, hi) { if (!ymd || !lo || !hi) return null; var a = dateToDays(lo), b = dateToDays(hi), x = dateToDays(ymd); var tot = b - a + 1; if (tot <= 0) return 0; return Math.max(0, Math.min(100, (x - a) / tot * 100)); }
     function _presPcEnd(ymd, lo, hi) { if (!ymd || !lo || !hi) return null; var a = dateToDays(lo), b = dateToDays(hi), x = dateToDays(ymd); var tot = b - a + 1; if (tot <= 0) return 0; return Math.max(0, Math.min(100, (x - a + 1) / tot * 100)); }
     function _presHex(t) { var sd = (projectStatuses || []).filter(function (s) { return s && s.id === t.status; })[0]; var theme = (sd && sd.barTheme) || ''; var k = theme.split(' ')[0]; var m = { 'bg-slate-500': '#64748b', 'bg-slate-400': '#94a3b8', 'bg-indigo-500': '#6366f1', 'bg-indigo-600': '#4f46e5', 'bg-violet-500': '#8b5cf6', 'bg-amber-500': '#f59e0b', 'bg-amber-400': '#fbbf24', 'bg-teal-500': '#14b8a6', 'bg-emerald-500': '#10b981', 'bg-rose-500': '#f43f5e', 'bg-sky-500': '#0ea5e9' }; return m[k] || '#6366f1'; }
+    // Конец полосы определяется плановой датой и последним фактом смены статуса.
+    // Не растягиваем активную задачу до «сегодня»: это создавало ложную дату на таймлайне.
+    function _statusTimelineEnd(task) {
+      var end = (task && (task.end || task.start)) || '';
+      (task && Array.isArray(task.statusLog) ? task.statusLog : []).forEach(function (e) {
+        var at = e && parseJiraDate(e.at || '');
+        if (at && (!end || at > end)) end = at;
+      });
+      return end;
+    }
+    // Цветные участки одной «колбаски» соответствуют периодам между сменами статусов.
+    // Переход начинает действовать с указанного календарного дня.
+    function _statusTimelineGradient(task, visualEnd) {
+      if (!task || !task.start || !visualEnd || !Array.isArray(task.statusLog) || !task.statusLog.length) return '';
+      var startD = dateToDays(task.start), endD = dateToDays(visualEnd);
+      if (!isFinite(startD) || !isFinite(endD) || endD < startD) return '';
+      var events = task.statusLog.map(function (e, i) {
+        var at = e && parseJiraDate(e.at || '');
+        return { at: at, d: at ? dateToDays(at) : NaN, from: (e && e.from) || '', to: (e && e.to) || '', i: i };
+      }).filter(function (e) { return isFinite(e.d); }).sort(function (a, b) { return a.d - b.d || a.i - b.i; });
+      if (!events.length) return '';
+      var status = events[0].from || task.status || 'planned';
+      events.forEach(function (e) { if (e.d <= startD && e.to) status = e.to; });
+      var total = endD - startD + 1, stops = [], lastPct = 0;
+      events.forEach(function (e) {
+        if (e.d <= startD || e.d > endD || !e.to || e.to === status) return;
+        var pct = Math.max(0, Math.min(100, (e.d - startD) / total * 100));
+        var oldColor = _presHex({ status: status }), newColor = _presHex({ status: e.to });
+        stops.push(oldColor + ' ' + lastPct.toFixed(3) + '%', oldColor + ' ' + pct.toFixed(3) + '%');
+        stops.push(newColor + ' ' + pct.toFixed(3) + '%');
+        status = e.to; lastPct = pct;
+      });
+      var finalColor = _presHex({ status: status || task.status });
+      stops.push(finalColor + ' ' + lastPct.toFixed(3) + '%', finalColor + ' 100%');
+      return 'linear-gradient(to right, ' + stops.join(', ') + ')';
+    }
     function _presStatusName(t) { var sd = (projectStatuses || []).filter(function (s) { return s && s.id === t.status; })[0]; return sd ? (sd.name || '') : ''; }
     function _presStatusChipView(t) { var sd = (projectStatuses || []).filter(function (s) { return s && s.id === t.status; })[0]; if (!sd) return ''; var cls = sd.color || 'bg-slate-100 text-slate-600'; return '<span class="' + escAttr(cls) + ' text-[10px] px-1.5 py-0.5 rounded font-medium">' + escHtml(sd.name || '') + '</span>'; }
     function _presNZad(n) { n = Math.abs(Number(n) || 0); var d = n % 100, u = n % 10; if (d > 10 && d < 20) return 'задач'; if (u === 1) return 'задача'; if (u >= 2 && u <= 4) return 'задачи'; return 'задач'; }
     var _PRES_GCOL = ['#6366f1', '#10b981', '#f59e0b', '#f43f5e', '#8b5cf6', '#14b8a6', '#0ea5e9', '#ec4899'];
     function _presPrep(set) {
       var byId = {}; (roadmapData || []).forEach(function (t) { if (t) byId[t.id] = t; });
-      var lo = '', hi = ''; var _tod = toYmdLocal(CURRENT_DATE);
+      var lo = '', hi = '';
       var groups = (set.groups || []).filter(function (g) { return !g.hidden; }).map(function (g, _gi) {
         var gStart = '', gEnd = '', gVis = '', cnt = 0;
         var items = (g.items || []).map(function (it) {
           var t = byId[it.taskId]; if (!t) return null;
           var nm = (it.alias && it.alias.trim()) ? it.alias : (t.name || '');
           var st = t.start || '', en = t.end || t.start || ''; if (st && en && en < st) en = st;
-          var ven = en; if (!t.isMilestone && t.status !== 'completed' && typeof _ACTIVE_STATUS !== 'undefined' && _ACTIVE_STATUS[t.status] && en && en < _tod) ven = _tod; // в работе , бар честно тянется до сегодня
+          var ven = t.isMilestone ? en : (_statusTimelineEnd(t) || en); // факт тянется только до реальной смены статуса, не до даты просмотра
           var showAs = it.showAs || 'bar';
           if (showAs !== 'hide') { cnt++; if (st) { if (!lo || st < lo) lo = st; if (ven && (!hi || ven > hi)) hi = ven; if (!gStart || st < gStart) gStart = st; if (en && (!gEnd || en > gEnd)) gEnd = en; if (ven && (!gVis || ven > gVis)) gVis = ven; } }
           return { task: t, name: nm, start: st, end: en, visEnd: ven, showAs: showAs, taskId: it.taskId };
@@ -22464,11 +22516,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
                 return;
               }
 
-              // Задача в работе и еще не закрыта: полоса тянется до сегодня (растет каждый день), а не обрывается в прошлом.
-              const _todayYmd = (typeof toYmdLocal === 'function' && typeof CURRENT_DATE !== 'undefined') ? toYmdLocal(CURRENT_DATE) : '';
-              const _isInWork = !task.isMilestone && task.status !== 'completed' && !!_ACTIVE_STATUS[task.status];
-              const _grewToToday = _isInWork && _todayYmd && task.end && task.end < _todayYmd;
-              const _visEndYmd = _grewToToday ? _todayYmd : task.end;
+              // Плановая полоса расширяется только до последней реальной смены статуса.
+              // Дата просмотра страницы не является фактом по задаче и больше не подставляется в конец полосы.
+              const _visEndYmd = (typeof _statusTimelineEnd === 'function' ? _statusTimelineEnd(task) : '') || task.end;
+              const _grewPastPlan = !!(_visEndYmd && task.end && _visEndYmd > task.end);
               const visualActualDays = inclusiveDurationDays(task.start, _visEndYmd);
               const _baseEndYmd = (estimateDays && task.start && typeof _spSpan === 'function') ? _spSpan(task.start, estimateDays, String(task.resource || '').trim()).end : null;
               const baselineDays = _baseEndYmd ? inclusiveDurationDays(task.start, _baseEndYmd) : (estimateDays || visualActualDays);
@@ -22542,6 +22593,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
               bar.style.left = `0px`;
               bar.style.width = `${actualWidth}px`;
               bar.style.minWidth = '6px';
+              const _statusGradient = (typeof _statusTimelineGradient === 'function') ? _statusTimelineGradient(task, _visEndYmd) : '';
+              if (_statusGradient) bar.style.background = _statusGradient;
               if (_lvNow) {
                 // Обводку не ставим поверх критического пути (у него свой фиолетовый контур), значок-треугольник остается
                 if (!_critPathIds.has(task.id)) { bar.style.outline = '2px dashed #f97316'; bar.style.outlineOffset = '1px'; }
@@ -22558,13 +22611,13 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
               }
               bar.appendChild(txt);
               // Участок сверх планового срока (задача в работе идет дольше плана) , штриховка, чтобы было видно перерасход
-              if (_grewToToday) {
+              if (_grewPastPlan) {
                 const _plannedW = inclusiveDurationDays(task.start, task.end) * DAY_WIDTH;
                 const _ov = document.createElement('div');
                 _ov.className = 'absolute inset-y-0 right-0 rounded-r-md pointer-events-none';
                 _ov.style.left = `${_plannedW}px`;
                 _ov.style.background = 'repeating-linear-gradient(135deg, rgba(255,255,255,0.4) 0 5px, rgba(255,255,255,0) 5px 10px)';
-                _ov.title = `Идет дольше планового срока (${formatDateString(task.end)}) , полоса растет до сегодня`;
+                _ov.title = `Смена статуса зафиксирована после планового срока (${formatDateString(task.end)})`;
                 bar.appendChild(_ov);
                 // Засечка планового срока: темная риска на месте, где задача должна была закончиться
                 const _tick = document.createElement('div');
@@ -25250,6 +25303,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     let START_COL_KEYS = ['Пользовательское поле (Planned Start)', 'Пользовательское поле (Start date)', 'Пользовательское поле (Target start)', 'Запланированная дата начала', 'Плановая дата начала', 'Дата начала', 'Дата начала работ', 'Целевая дата начала', 'Planned Start', 'Target start', 'Start date', 'Custom field (Start date)', 'Custom field (Target start)'];
     let END_COL_KEYS = ['Пользовательское поле (Planned End)', 'Пользовательское поле (End date)', 'Пользовательское поле (Target end)', 'Запланированная дата завершения', 'Плановая дата завершения', 'Дата окончания', 'Дата завершения', 'Целевая дата завершения', 'Целевая дата', 'Срок исполнения', 'Planned End', 'Target end', 'Due date', 'Custom field (Due date)', 'Custom field (Target end)'];
     let RESOLVED_COL_KEYS = ['Дата разрешения', 'Дата решения', 'Resolved', 'Resolution date', 'Resolution Date', 'Дата закрытия', 'Resolved date', 'Resolved Date'];
+    let UPDATED_COL_KEYS = ['Обновлено', 'Updated', 'Дата обновления', 'Updated date', 'Updated Date'];
     // Конфигурируемый маппинг колонок Jira (п.8): свои названия дополняют встроенные, не заменяя.
     const _DEF_RELEASE_COL_KEYS = RELEASE_COL_KEYS.slice(), _DEF_RELEASE_DATE_KEYS = RELEASE_DATE_KEYS.slice(), _DEF_LABEL_COL_KEYS = LABEL_COL_KEYS.slice(), _DEF_COMPONENT_COL_KEYS = COMPONENT_COL_KEYS.slice(), _DEF_START_COL_KEYS = START_COL_KEYS.slice(), _DEF_END_COL_KEYS = END_COL_KEYS.slice();
     function _getJiraColMap() { try { const m = JSON.parse(storage.get('gantt_jira_colmap') || '{}'); return (m && typeof m === 'object' && !Array.isArray(m)) ? m : {}; } catch (e) { return {}; } }
@@ -25616,6 +25670,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       let start = parseJiraDate(firstNonEmpty(issue, START_COL_KEYS));
       let end = parseJiraDate(firstNonEmpty(issue, END_COL_KEYS));
       const _resolved = parseJiraDate(firstNonEmpty(issue, RESOLVED_COL_KEYS));
+      const _updated = parseJiraDate(firstNonEmpty(issue, UPDATED_COL_KEYS));
       // Если в выгрузке конец оказался раньше старта , меняем местами, чтобы не было полоски отрицательной длины.
       if (start && end && String(end) < String(start)) { const _t = end; end = start; start = _t; }
       const resource = firstNonEmpty(issue, ['Исполнитель', 'Assignee', 'Пользовательское поле (Owner)', 'Пользовательское поле (Owner).1']);
@@ -25660,6 +25715,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         _jiraHasRealStart: !!start,
         _jiraHasRealEnd: !!end,
         _jiraResolved: _resolved || '',
+        updated: _updated || '',
         resource,
         pred: '',
         _predKeys: getJiraPredKeys(issue),
@@ -26036,7 +26092,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             const _aS0 = existingArch.start, _aE0 = existingArch.end;
             const _asyncS = (existingArch._jiraSync && existingArch._jiraSync.start) || '', _asyncE = (existingArch._jiraSync && existingArch._jiraSync.end) || '';
             const _amanS = !existingArch._jiraSync || (_aS0 || '') !== _asyncS, _amanE = !existingArch._jiraSync || (_aE0 || '') !== _asyncE;
-            if (mapped.status && existingArch.status !== mapped.status && typeof logStatusChange === 'function') { try { logStatusChange(existingArch, mapped.status); } catch (e) {} }
+            if (mapped.status && existingArch.status !== mapped.status && typeof logJiraStatusChange === 'function') { try { logJiraStatusChange(existingArch, mapped); } catch (e) {} }
             Object.assign(existingArch, mapped);
             existingArch.start = (mapped._jiraHasRealStart && !_amanS) ? mapped.start : _aS0;
             existingArch.end = (mapped.status === 'completed' && mapped._jiraResolved) ? mapped._jiraResolved : ((mapped._jiraHasRealEnd && !_amanE) ? mapped.end : _aE0);
@@ -26061,7 +26117,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           const _archObj = byJiraArchived.get(mapped.jira);
           if (_archObj) {
             if (mapped.name) _archObj.name = mapped.name;
-            if (mapped.status && _archObj.status !== mapped.status) { _archObj.status = mapped.status; if (typeof logStatusChange === 'function') logStatusChange(_archObj, mapped.status); }
+            if (mapped.status && _archObj.status !== mapped.status) { if (typeof logJiraStatusChange === 'function') logJiraStatusChange(_archObj, mapped); _archObj.status = mapped.status; }
             const _asyncS2 = (_archObj._jiraSync && _archObj._jiraSync.start) || '', _asyncE2 = (_archObj._jiraSync && _archObj._jiraSync.end) || '';
             const _amanS2 = !_archObj._jiraSync || (_archObj.start || '') !== _asyncS2, _amanE2 = !_archObj._jiraSync || (_archObj.end || '') !== _asyncE2;
             if (mapped._jiraHasRealStart && !_amanS2) _archObj.start = mapped.start;
@@ -26103,8 +26159,9 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           let _chg = false; const _cf = [];
           if (mapped.name && existing.name !== mapped.name) { chgName++; _chg = true; _cf.push('название'); }
           existing.name = mapped.name || existing.name;
-          if (mapped.status && existing.status !== mapped.status) { chgStatus++; _chg = true; _cf.push('статус'); if (typeof logStatusChange === 'function') logStatusChange(existing, mapped.status); }
+          if (mapped.status && existing.status !== mapped.status) { chgStatus++; _chg = true; _cf.push('статус'); if (typeof logJiraStatusChange === 'function') logJiraStatusChange(existing, mapped); }
           existing.status = mapped.status || existing.status;
+          if (mapped.updated) existing.updated = mapped.updated;
           if (typeof mapped.blocked === 'boolean' && existing.blocked !== mapped.blocked) { existing.blocked = mapped.blocked; _chg = true; _cf.push('блокировка'); }
           const _oldStart = existing.start, _oldEnd = existing.end;
           // Защита ручных дат: дата считается ручной, если пользователь увел ее от значения, ранее пришедшего из Jira (снимок _jiraSync), либо снимка нет. Импорт перетирает дату ТОЛЬКО реальной датой из Jira и ТОЛЬКО если пользователь ее не двигал руками.
@@ -27200,6 +27257,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       }
       if (f.duedate) row['Due Date'] = f.duedate;
       if (f.created) row['Created'] = f.created;
+      if (f.updated) row['Updated'] = f.updated;
       if (f.resolutiondate) { row['Дата разрешения'] = f.resolutiondate; row['Resolved'] = f.resolutiondate; }
       if (Array.isArray(f.labels)) row['Labels'] = f.labels.join(' ');
       if (typeof f.description === 'string') row['Description'] = f.description;
@@ -29049,14 +29107,14 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h16v11H4zM2 19h20"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Презентация читается как роадмап-таблица</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ПРЕЗЕНТАЦИЯ</span></div><p class="text-xs text-slate-600">Показ стал нагляднее: у каждой задачи видны начало и конец, сверху , месяцы и спринты, каждая группа своим цветом. Масштаб переключается на день, неделю или месяц под вашу встречу. Клик по задаче открывает ее карточку, а порядок задач и групп меняется стрелками.</p></div>
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Витрина держится плана</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ПОКАЗ</span></div><p class="text-xs text-slate-600">Если сроки задач в плане сдвинулись, показ честно предупреждает, что мог устареть. Одной кнопкой «Подтянуть сроки по плану» сроки групп встают на реальные даты из плана , не нужно править каждую вручную.</p></div>
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Планировать стало проще</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ПРОЩЕ</span></div><p class="text-xs text-slate-600">Новый вид «Сводка» отвечает на главные вопросы одним взглядом: что в работе, что просрочено, что на этой неделе, кто в отпуске и когда ближайшая дата , клик по плитке открывает список. Под шапкой таймлайна теперь видны спринты, текущий подсвечен , сразу понятно, попадает ли задача в свой спринт, а вылезшие помечаются календариком. У задач видны обе даты и «осталось N дней». Кнопка «?» рядом с масштабом открывает шпаргалку по всем цветам и значкам. В Простом режиме карточка задачи стала короче: редкие поля спрятаны за «Подробнее». В «Команде» у каждого исполнителя появилась настройка параллельности: сколько задач он может вести одновременно. Перегруз сразу подсвечивается на таймлайне, а раскладка в «Спринтах» и «Успеваем?» учитывает ограничение. Там же можно объявить рабочие выходные: укажите период «Работа в выходные», и задачи этого исполнителя смогут начинаться и заканчиваться в субботу или воскресенье , все расчеты это учтут. Кнопка «Связи» над таймлайном открывает все зависимости одним списком: цепочки со светофором (встык, зазор, нарушение), задачи без связей, добавление связи двумя списками и удаление крестиком. Вторая вкладка , карта: задачи блоками по уровням цепочек, связи стрелками, а новую связь можно проставить двумя кликами , предшественник, потом зависимая.</p></div>
-     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Задача в работе показана честно</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ДАТЫ</span></div><p class="text-xs text-slate-600">Задача, которую уже взяли в работу, больше не прыгает на сегодня , она стоит на своей реальной дате начала. А если она еще не закрыта, полоса тянется до сегодня и растет каждый день, а не обрывается в прошлом , сразу видно, что работа идет. Участок сверх планового срока помечается штриховкой. И если исполнитель задачи в работе сейчас в отпуске, задача подсвечивается красным , передайте ее или поставьте на паузу.</p></div>
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Даты и статусы совпадают</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ДАТЫ</span></div><p class="text-xs text-slate-600">Полоса начинается и заканчивается по датам задачи, а цветные участки соответствуют журналу смены статусов. Импорт из Jira берет дату решения для закрытых задач и дату обновления для остальных. Текущая дата больше не подставляется как факт. Если переход был позже планового срока, этот участок отмечается штриховкой.</p></div>
     </div>
    </div>
 
    <div>
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v12.10 <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-100 px-1.5 py-0.5 rounded">01.07.2026</span></h4>
     <div class="grid grid-cols-1 gap-3">
-     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Таймлайн показывает, что в работе сейчас</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ДАТЫ</span></div><p class="text-xs text-slate-600">Даты на таймлайне стали честнее. Задача в рабочем статусе больше не висит в будущем , она встает на сегодня, и сразу видно, что делается прямо сейчас. А завершенная задача не может стоять в будущем , она встает на реальную дату закрытия. Ваши ручные даты и планы это не трогает.</p></div>
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Таймлайн хранит фактические даты</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ДАТЫ</span></div><p class="text-xs text-slate-600">У задачи отдельно сохраняются плановые границы и факты из журнала. Завершенная задача получает дату решения из Jira, а активная не переносится автоматически на день просмотра. Ручные даты остаются под контролем пользователя.</p></div>
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Видно, когда менялся статус</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">СТАТУСЫ</span></div><p class="text-xs text-slate-600">На таймлайне появились точки смены статуса , по одной на каждый переход, цветом нового статуса. Наведите , и увидите, когда и на что менялся статус задачи и кто менял. История задачи стала видна прямо на плане.</p></div>
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h16v11H4zM2 19h20"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Презентация: группы сворачиваются</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ПРЕЗЕНТАЦИЯ</span></div><p class="text-xs text-slate-600">В «Презентации» каждая группа теперь , своя полоса на таймлайне. Группу можно свернуть в одну полосу со своими сроками или развернуть в задачи. Показ читается как настоящий роадмап, и на экране, и в PDF.</p></div>
     </div>
