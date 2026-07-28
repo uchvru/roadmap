@@ -232,6 +232,10 @@ if (catalogManifest?.files && catalogManifest?.expected) {
   }
 
   const featureIds = new Set(entries.map(([name]) => name.slice(0, 3)));
+  const catalogCards = [...catalog.matchAll(/<article class=card\b/g)].length;
+  assert(catalogCards === featureIds.size, `В каталоге ${featureIds.size} карточки функций`);
+  assert(catalog.includes(`Ниже <b>${featureIds.size} функции</b>`), `В вводном тексте указаны все ${featureIds.size} функции`);
+  assert(catalog.includes(`<div class=stat><div class=v>${featureIds.size}</div><div class=l>Функции в каталоге</div></div>`), `Счётчик каталога равен ${featureIds.size}`);
   for (const id of featureIds) {
     assert(catalogManifest.files[`${id}_light.webp`] && catalogManifest.files[`${id}_dark.webp`], `${id}: есть светлая и тёмная тема`);
   }
