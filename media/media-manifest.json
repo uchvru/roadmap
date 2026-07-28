@@ -4,20 +4,20 @@
   "source": "synthetic-demo-PAY-LK",
   "video": {
     "file": "roadmap-demo-v14.0.mp4",
-    "sha256": "b555540f9aefe9ca18b62af87320c624e5a4109e7904c8f46c0ff03cb41d76e4",
-    "bytes": 10555417,
-    "durationSeconds": 96.1,
+    "sha256": "4618a43ef1f4f46efa26ceb3968cbccb04a064377b6f72dfa153ecbb75d6a5e3",
+    "bytes": 8856556,
+    "durationSeconds": 91,
     "width": 1440,
     "height": 810,
-    "fps": 24,
+    "fps": 30,
     "codec": "h264",
     "pixelFormat": "yuv420p",
     "audio": false
   },
   "poster": {
     "file": "roadmap-demo-v14.0-poster.jpg",
-    "sha256": "da6211d29582ac9932685e231fb8b76665ff3d533193de53781a133bd1bdc939",
-    "bytes": 38799,
+    "sha256": "7a4e62ddf0e002b8206c31805b9be0a4ba660ea58af3afe146fc71d2b27202de",
+    "bytes": 39588,
     "width": 1440,
     "height": 810
   }
