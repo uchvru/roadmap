@@ -6272,14 +6272,6 @@
       </div>
 
       <div class="app-header-toolbar flex items-center gap-1.5 sm:gap-2 min-w-0 w-full no-print flex-wrap lg:flex-nowrap">
-        <label class="no-image-export shrink-0">
-          <span class="sr-only">Рабочий режим</span>
-          <select id="workspaceModeSelect" onchange="setWorkspaceMode(this.value)" class="workspace-select h-9 px-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-xs font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/40" aria-label="Рабочий режим">
-            <option value="planning">Планирование</option>
-            <option value="myweek">Моя неделя</option>
-            <option value="leadership">Руководство</option>
-          </select>
-        </label>
         <!-- 1) Поиск , поле умеренной ширины с подсказкой Cmd+K -->
         <button onclick="openGlobalSearch()" aria-label="Глобальный поиск (Cmd+K / Ctrl+K)" class="group inline-flex items-center gap-2 h-9 grow min-w-0 px-3 bg-white hover:bg-slate-50 border border-slate-200 hover:border-indigo-300 rounded-xl transition-all cursor-pointer shadow-xs text-left" title="Глобальный поиск (Cmd+K / Ctrl+K)">
           <svg aria-hidden="true" class="w-4 h-4 text-slate-400 group-hover:text-indigo-500 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -6289,14 +6281,6 @@
         <button id="addTaskHeaderBtn" onclick="openModal()" aria-label="Добавить задачу" class="group relative inline-flex items-center gap-1.5 h-9 pl-2.5 pr-3 shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all shadow-xs cursor-pointer" title="Добавить задачу">
           <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
           <span class="hidden sm:inline">Добавить</span>
-        </button>
-        <button id="planBuilderBtn" type="button" onclick="openPlanBuilder()" class="no-image-export inline-flex items-center gap-1.5 h-9 px-3 shrink-0 bg-white hover:bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold rounded-xl transition-all cursor-pointer" title="Пошагово собрать и проверить план">
-          <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-5 8l2 2 4-4"></path></svg>
-          <span class="hidden 2xl:inline">Собрать план</span>
-        </button>
-        <button id="planHealthBtn" type="button" onclick="openPlanHealthCenter()" class="no-image-export relative inline-flex items-center justify-center w-9 h-9 shrink-0 bg-white hover:bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl transition-all cursor-pointer" aria-label="Здоровье плана" title="Здоровье плана: ошибки, риски и поля к заполнению">
-          <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5-2a9 9 0 11-16 0 9 9 0 0116 0z"></path></svg>
-          <span id="planHealthBadge" class="hidden absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-rose-600 text-white text-[9px] font-bold leading-none rounded-full ring-2 ring-white items-center justify-center tabular-nums"></span>
         </button>
         <!-- тонкий разделитель -->
         <div class="w-px h-6 bg-slate-200 shrink-0 mx-0.5 hidden sm:block"></div>
@@ -6467,10 +6451,6 @@
             </div>
           </div>
         </div>
-        <button type="button" id="jiraChangesChip" data-feat="jira" onclick="openJiraChangesModal()" class="hidden shrink-0 whitespace-nowrap inline-flex items-center gap-1.5 h-9 px-3 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 rounded-xl transition-all cursor-pointer no-image-export" title="Новые и обновленные задачи из последнего импорта Jira , нажмите, чтобы посмотреть список">
-          <svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          <span class="text-xs font-semibold">Jira: <span id="jiraFreshDate" class="tabular-nums">--</span><span id="jiraFreshCount" class="hidden"></span></span>
-        </button>
         <!-- 6) Автосохранение , точка-индикатор на дискете, время в подсказке -->
         <button id="autoSaveBtn" onclick="setupAutoSaveFile()" aria-label="Автосохранение в файл (выключено)" class="group relative flex items-center justify-center w-9 h-9 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-indigo-600 border border-slate-200 rounded-xl transition-all cursor-pointer" title="Автосохранение в файл (выключено)">
           <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 21v-8H7v8M7 3v5h8"/></svg>
@@ -6574,6 +6554,30 @@
           Представление
         </span>
         <div id="planViewTabs" class="flex items-center gap-1 min-w-max" role="group" aria-label="Виды плана"></div>
+        <div class="w-px h-6 bg-slate-200 shrink-0 mx-0.5" aria-hidden="true"></div>
+        <div class="flex items-center gap-1.5 min-w-max" role="group" aria-label="Режим и инструменты планирования">
+          <label class="shrink-0 inline-flex items-center gap-1.5" title="Рабочий режим меняет набор представлений, но не данные проекта">
+            <span class="hidden lg:inline text-[10px] font-semibold uppercase tracking-wider text-slate-500">Режим</span>
+            <select id="workspaceModeSelect" onchange="setWorkspaceMode(this.value)" class="workspace-select h-9 px-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-xs font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/40" aria-label="Рабочий режим">
+              <option value="planning">Планирование</option>
+              <option value="myweek">Моя неделя</option>
+              <option value="leadership">Руководство</option>
+            </select>
+          </label>
+          <button id="planBuilderBtn" type="button" onclick="openPlanBuilder()" class="inline-flex items-center gap-1.5 h-9 px-3 shrink-0 bg-white hover:bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold rounded-xl transition-all cursor-pointer" title="Пошагово собрать и проверить план">
+            <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-5 8l2 2 4-4"></path></svg>
+            <span>Собрать план</span>
+          </button>
+          <button id="planHealthBtn" type="button" onclick="openPlanHealthCenter()" class="relative inline-flex items-center gap-1.5 h-9 px-3 shrink-0 bg-white hover:bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold rounded-xl transition-all cursor-pointer" aria-label="Здоровье плана" title="Здоровье плана: ошибки, риски и поля к заполнению">
+            <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5-2a9 9 0 11-16 0 9 9 0 0116 0z"></path></svg>
+            <span>Здоровье плана</span>
+            <span id="planHealthBadge" class="hidden absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-rose-600 text-white text-[9px] font-bold leading-none rounded-full ring-2 ring-white items-center justify-center tabular-nums"></span>
+          </button>
+          <button type="button" id="jiraChangesChip" data-feat="jira" onclick="openJiraChangesModal()" class="hidden shrink-0 whitespace-nowrap inline-flex items-center gap-1.5 h-9 px-3 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 rounded-xl transition-all cursor-pointer" title="Новые и обновленные задачи из последнего импорта Jira , нажмите, чтобы посмотреть список">
+            <svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span class="text-xs font-semibold">Изменения из Jira · <span id="jiraFreshDate" class="tabular-nums">--</span><span id="jiraFreshCount" class="hidden"></span></span>
+          </button>
+        </div>
       </div>
     </nav>
 
@@ -25562,6 +25566,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const existingKeys = new Set();
       (roadmapData || []).forEach(t => { if (t.jira) existingKeys.add(String(t.jira).trim()); });
       (archivedTasks || []).forEach(t => { if (t.jira) existingKeys.add(String(t.jira).trim()); });
+      const archivedSectionKeys = new Set();
+      (archivedTasks || []).forEach(t => {
+        const sectionKey = jiraSectionKey(t && t.section);
+        if (sectionKey) archivedSectionKeys.add(sectionKey);
+      });
       // как и в mergeJiraTasks: задачу без ключа можно связать с CSV по уникальному имени
       const _normTaskName = (x) => String(x || '').toLowerCase().replace(/\s+/g, ' ').trim();
       const byName = new Map();
@@ -25587,10 +25596,82 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           if (cand && cand !== 'DUP' && !usedNames.has(nm)) { upd++; usedNames.add(nm); }
           else nw++;
         }
-        try { const sec = getJiraEpicSection(iss); if (sec && !planSections.includes(sec)) newSecs.add(sec); } catch (e) {}
+        try {
+          const sec = getJiraEpicSection(iss);
+          const secKey = jiraSectionKey(sec);
+          // Секция, сохраненная у задачи в архиве, не является новой: повторный импорт
+          // не должен обещать ее создание и затем показывать пустой контейнер.
+          if (sec && !planSections.includes(sec) && !existingKeys.has(k) && !(secKey && archivedSectionKeys.has(secKey))) newSecs.add(sec);
+        } catch (e) {}
       });
       return { total: keys.size, newCount: nw, updateCount: upd, sectionCount: newSecs.size };
     }
+
+    // Удаляет только те Jira-контейнеры, которые закрыты или уже представлены в архиве
+    // и не нужны ни одной активной задаче. Активная пустая Story остается видимой, а родитель
+    // сохраняется, если под ним есть живая Story/задача. Так повторный импорт не воскресит
+    // архивную секцию и одновременно не разрушит Initiative → Epic → Story.
+    function pruneInactiveJiraSections(archivedSectionRefs) {
+      const archiveRefs = archivedSectionRefs instanceof Set ? archivedSectionRefs : new Set();
+      const directLive = new Set();
+      (roadmapData || []).forEach(t => { if (t && t.section) directLive.add(String(t.section)); });
+      const live = new Set(directLive);
+      const inactiveInfo = section => {
+        const key = jiraSectionKey(section);
+        const meta = (sectionMeta && sectionMeta[section]) || {};
+        const rawStatus = (key && epicStatusByKey && epicStatusByKey[key]) || meta.status || '';
+        return {
+          key,
+          closed: rawStatus === 'completed' || (rawStatus && classifyJiraStatus(rawStatus) === 'completed'),
+          archived: archiveRefs.has(section) || (key && archiveRefs.has(key))
+        };
+      };
+      // Пустой, но активный контейнер является содержимым плана сам по себе. Его родитель тоже нужен,
+      // даже если прямых строк задач пока нет ни у одного из них.
+      (planSections || []).forEach(section => {
+        if (!/^(Initiative|Epic|Story):/i.test(String(section || ''))) return;
+        const info = inactiveInfo(section);
+        if (!info.closed && !info.archived) live.add(section);
+      });
+      let changed = true, guard = 0;
+      while (changed && guard++ < 20) {
+        changed = false;
+        Object.keys(sectionParents || {}).forEach(child => {
+          const parent = sectionParents[child];
+          if (live.has(child) && parent && !live.has(parent)) { live.add(parent); changed = true; }
+        });
+      }
+
+      const removed = [];
+      planSections = (planSections || []).filter(section => {
+        if (!/^(Initiative|Epic|Story):/i.test(String(section || '')) || live.has(section)) return true;
+        const info = inactiveInfo(section);
+        if (!info.closed && !info.archived) return true;
+        removed.push(section);
+        return false;
+      });
+
+      if (!removed.length) return removed;
+      const removedSet = new Set(removed);
+      if (Array.isArray(hiddenSections)) hiddenSections = hiddenSections.filter(s => !removedSet.has(s));
+      if (Array.isArray(collapsedSections)) collapsedSections = collapsedSections.filter(s => !removedSet.has(s));
+      removed.forEach(section => {
+        delete sectionParents[section];
+        if (sectionColors) delete sectionColors[section];
+        if (sectionLabels) delete sectionLabels[section];
+        if (sectionMeta) delete sectionMeta[section];
+        if (typeof sectionDeps !== 'undefined' && sectionDeps) delete sectionDeps[section];
+      });
+      Object.keys(sectionParents || {}).forEach(child => { if (removedSet.has(sectionParents[child])) delete sectionParents[child]; });
+      if (typeof sectionDeps !== 'undefined' && sectionDeps) {
+        Object.keys(sectionDeps).forEach(section => {
+          const dep = sectionDeps[section];
+          if (removedSet.has(section) || (dep && removedSet.has(dep.pred))) delete sectionDeps[section];
+        });
+      }
+      return removed;
+    }
+
     function mergeJiraTasks(issues) {
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
       if (!issues || !issues.length) {
@@ -25722,7 +25803,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const yearStart = new Date(new Date().getFullYear(), 0, 1);
       const yearStartYmd = `${yearStart.getFullYear()}-01-01`;
 
-      let created = 0, updated = 0, resourcesAdded = 0, sectionsAdded = 0, archived = 0;
+      let created = 0, updated = 0, resourcesAdded = 0, sectionsAdded = 0, archived = 0, inactiveSectionsRemoved = 0;
       // Детальный учет: что именно поменялось у совпавших задач (чтобы не писать «150 обновл.» когда ничего не изменилось)
       let trulyUpdated = 0, chgStatus = 0, chgDates = 0, chgType = 0, chgRelease = 0, chgResource = 0, chgSection = 0, chgName = 0, chgEstimate = 0;
 
@@ -26012,6 +26093,21 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         storage.set('gantt_section_parents', JSON.stringify(sectionParents));
       }
 
+      // Архивирование секции сохраняет прежнее имя секции у ее задач. По нему восстанавливаем
+      // Jira-ключ контейнера и не позволяем повторному импорту создать пустой дубликат.
+      const archivedSectionRefs = new Set();
+      (archivedTasks || []).forEach(t => {
+        if (!t) return;
+        if (t.section) archivedSectionRefs.add(String(t.section));
+        const sectionKey = jiraSectionKey(t.section);
+        if (sectionKey) archivedSectionRefs.add(sectionKey);
+        if (t.jira && jiraHierarchyRankFromType(t.issueType || '') <= 2) archivedSectionRefs.add(String(t.jira).trim());
+      });
+      const inactiveRemoved = pruneInactiveJiraSections(archivedSectionRefs);
+      inactiveSectionsRemoved = inactiveRemoved.length;
+      const newlyAddedRemoved = inactiveRemoved.filter(s => !sectionsBeforeImport.has(s)).length;
+      if (newlyAddedRemoved) sectionsAdded = Math.max(0, sectionsAdded - newlyAddedRemoved);
+
       // Чистка пустых дефолтных секций. Jira-контейнеры не удаляем: пустая Story/Epic/Initiative
       // может быть активным leaf-элементом и должна оставаться видимой.
       const sectionTaskCount = {};
@@ -26041,6 +26137,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       // терял эти поля после перезагрузки из браузера (без привязанного файла).
       storage.set('gantt_section_labels', JSON.stringify(sectionLabels));
       storage.set('gantt_section_meta', JSON.stringify(sectionMeta));
+      storage.set('gantt_section_parents', JSON.stringify(sectionParents));
+      if (typeof sectionDeps !== 'undefined') storage.set('gantt_section_deps', JSON.stringify(sectionDeps));
+      storage.set('gantt_hidden_sections', JSON.stringify(hiddenSections));
+      storage.set('gantt_collapsed_sections', JSON.stringify(collapsedSections));
       updateResourceSelects();
       updateStatusSelects();
       updateReleaseSelects();
@@ -26076,6 +26176,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         }
         if (archived > 0) parts.push(`в архив ${archived}`);
         if (sectionsAdded > 0) parts.push(`секций +${sectionsAdded}`);
+        if (inactiveSectionsRemoved > 0) parts.push(`закрытых/архивных секций скрыто ${inactiveSectionsRemoved}`);
         return 'Импорт Jira: ' + parts.join(', ');
       })();
       let _hidJira = 0;
