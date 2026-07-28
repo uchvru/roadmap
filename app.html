@@ -6223,6 +6223,7 @@
      transform-origin:top right;
      animation:rm-popover-in .12s ease-out;
    }
+   #moreMenu.rm-popover { position:fixed !important; z-index:980 !important; }
    .rm-popover button, .rm-popover [role="menuitem"] { min-height:2.25rem; border-radius:.5rem !important; }
    #toastHost { right:max(1rem,env(safe-area-inset-right)) !important; bottom:max(1rem,env(safe-area-inset-bottom)) !important; gap:.5rem !important; }
    .rm-toast.rm-toast {
@@ -6249,6 +6250,74 @@
      #toastHost { left:max(.5rem,env(safe-area-inset-left)) !important; right:max(.5rem,env(safe-area-inset-right)) !important; bottom:max(.5rem,env(safe-area-inset-bottom)) !important; }
      .rm-toast.rm-toast { width:100%; max-width:none; }
    }
+   /* UI polish: controls use one focus treatment, the workspace picker reserves
+      room for its own chevron, and counters stay inside their parent action. */
+   .rm-dialog-surface .rm-control:focus-visible,
+   .rm-dialog-surface input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):focus-visible,
+   .rm-dialog-surface select:focus-visible,
+   .rm-dialog-surface textarea:focus-visible {
+     outline:3px solid rgba(99,102,241,.22);
+     outline-offset:1px;
+     border-color:#818cf8 !important;
+   }
+   .workspace-picker { position:relative; display:inline-flex; align-items:center; }
+   .workspace-select.workspace-select {
+     min-width:9.75rem; max-width:11rem;
+     padding-left:.875rem; padding-right:2.5rem;
+     -webkit-appearance:none; appearance:none;
+     line-height:1.2;
+   }
+   .workspace-picker-chevron {
+     position:absolute; right:.75rem; top:50%; width:1rem; height:1rem;
+     color:#475569; transform:translateY(-50%); pointer-events:none;
+   }
+   body.theme-dark .workspace-picker-chevron { color:#94a3b8; }
+   .plan-health-badge {
+     display:inline-flex; align-items:center; justify-content:center;
+     min-width:1.5rem; height:1.25rem; padding:0 .375rem;
+     border-radius:999px; background:#e11d48; color:#fff;
+     font-size:.625rem; font-weight:800; line-height:1; font-variant-numeric:tabular-nums;
+     box-shadow:inset 0 0 0 1px rgba(255,255,255,.28);
+   }
+   .plan-health-badge.hidden { display:none; }
+   #planHealthBtn { padding-left:.75rem; padding-right:.5rem; }
+
+   /* Compact first-run screen: one introduction, one action hierarchy, no dead space. */
+   #startupModal .startup-shell { max-width:56rem; max-height:calc(100dvh - 2rem); display:flex; flex-direction:column; overflow:hidden; }
+   #startupModal .startup-header { flex:none; }
+   #startupModal .startup-body { min-height:0; overflow-y:auto; scrollbar-gutter:stable; }
+   #startupModal .startup-brand-mark {
+     width:2.75rem; height:2.75rem; min-width:2.75rem; min-height:2.75rem;
+     flex:0 0 2.75rem; aspect-ratio:1 / 1; border-radius:.75rem;
+   }
+   #startupModal .startup-brand-mark svg { width:1.5rem; height:1.5rem; }
+   #startupModal .startup-saved-action {
+     min-height:3.25rem; padding:.75rem 1rem; line-height:1.25;
+     cursor:pointer; touch-action:manipulation;
+   }
+   #startupModal .startup-choice {
+     min-height:6.25rem; border-radius:var(--rm-radius-lg);
+     transition:border-color .15s ease,background-color .15s ease,box-shadow .15s ease,transform .15s ease;
+   }
+   #startupModal .startup-choice:hover { transform:translateY(-1px); box-shadow:0 8px 22px rgba(15,23,42,.09); }
+   #startupModal .startup-choice:focus-visible { outline:3px solid rgba(99,102,241,.25); outline-offset:2px; }
+   #startupModal #startupRecents > p { margin-bottom:.5rem; text-align:left; }
+   #startupModal #startupRecents button { border-radius:var(--rm-radius-md); }
+   body.theme-dark #startupModal .startup-header,
+   body.theme-dark #startupModal .startup-body { background:var(--rm-surface) !important; }
+   @media (max-width:640px) {
+     #startupModal .startup-shell { max-height:calc(100dvh - 1rem); }
+     #startupModal .startup-header { padding:1rem 6rem 1rem 1rem !important; gap:.75rem !important; }
+     #startupModal .startup-header > .grow { padding-right:0 !important; }
+     #startupModal .startup-header h2 { width:100%; max-width:100%; font-size:1.125rem; line-height:1.25; }
+     #startupModal .startup-header > .absolute { top:1rem; right:1rem; gap:.375rem; }
+     #startupModal .startup-brand-mark {
+       width:2.5rem; height:2.5rem; min-width:2.5rem; min-height:2.5rem; flex-basis:2.5rem;
+     }
+     #startupModal .startup-saved-action { min-height:3rem; padding:.6875rem .875rem; }
+     #startupModal .startup-choice { min-height:4.75rem; }
+     #startupModal .startup-choice:hover { transform:none; }
+   }
    /* v13.9: рабочие режимы упрощают интерфейс, не меняя данные и права проекта. */
    body[data-workspace="myweek"] #reportsMenuWrap,
    body[data-workspace="myweek"] #moreMenuWrap,
@@ -6269,7 +6338,7 @@
    body[data-workspace="leadership"] #planFilterBar,
    body[data-workspace="leadership"] #headerCutoffsSep { display:none !important; }
    body[data-workspace="leadership"] #stateDashboard { display:flex !important; }
-   .workspace-select { min-width:9.5rem; max-width:11rem; }
+   .workspace-select { min-width:9.75rem; max-width:11rem; }
    #planBuilderPanel { width:100%; z-index:950; }
    #planBuilderPanel:not(.hidden) { display:flex; }
    #planBuilderBackdrop { z-index:940; }
@@ -6398,22 +6467,9 @@
             <div class="px-2.5 pt-1 pb-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Отчеты</div><div class="px-2.5 pt-2 pb-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400">Посмотреть</div><button type="button" onclick="closeReportsMenu(); openReportModal();" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left"><span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></span><span class="grow"><span class="block">Отчет за период</span><span class="block text-[10px] text-slate-500 font-normal">что сделали за выбранное время</span></span></button><button type="button" onclick="closeReportsMenu(); openReleaseProgressModal();" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left"><span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg></span><span class="grow"><span class="block">Прогресс по релизам</span><span class="block text-[10px] text-slate-500 font-normal">сколько готово и когда успеем</span></span></button><button type="button" onclick="closeReportsMenu(); openStatusOnePager();" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left"><span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9h6m-6 3h4"></path></svg></span><span class="grow"><span class="block">Минута на статус</span><span class="block text-[10px] text-slate-500 font-normal">рассказ на страницу, зачитать за минуту</span></span></button><div class="px-2.5 pt-2 pb-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400">Для руководства</div><button type="button" title="Один пункт: внутри выберите форму , одна страница (PDF), одна картинка или набор слайдов" onclick="closeReportsMenu(); openLeaderChooser();" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left"><span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v9a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM2 19h20"></path></svg></span><span class="grow"><span class="block">Подготовить для руководства</span><span class="block text-[10px] text-slate-500 font-normal">картинка или слайды , выбор внутри</span></span></button><div class="px-2.5 pt-2 pb-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400">Поделиться и выгрузить</div><button type="button" onclick="closeReportsMenu(); openExportSlice();" title="Сохранить картинку плана PNG , удобно отправить в мессенджер." class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left"><span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></span><span class="grow"><span class="block">Картинка и печать</span><span class="block text-[10px] text-slate-500 font-normal">PNG периода, печать, мини-постер</span></span></button><button type="button" onclick="closeReportsMenu(); copyChatStatus();" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left"><span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg></span><span class="grow"><span class="block">Скопировать статус для чата</span><span class="block text-[10px] text-slate-500 font-normal">короткий текст для чата или почты</span></span></button><button type="button" onclick="closeReportsMenu(); exportTasksXlsx();" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left"><span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2m3 4H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></span><span class="grow"><span class="block">Выгрузить в таблицу</span><span class="block text-[10px] text-slate-500 font-normal">все задачи таблицей для расчетов</span></span></button>
           </div>
         </div>
-        <!-- Еще: отчет, аудит, настройки (статусы, ресурсы) , вынесено из шапки (п.2) -->
-        <div class="relative shrink-0" id="moreMenuWrap">
-          <button type="button" id="moreMenuBtn" onclick="toggleMoreMenu(event)" aria-label="Инструменты" aria-haspopup="menu" aria-expanded="false" class="inline-flex items-center gap-1.5 h-9 px-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl transition-all cursor-pointer shadow-xs" title="Инструменты">
-            <svg aria-hidden="true" class="w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"></path></svg>
-            <svg aria-hidden="true" class="w-3 h-3 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
-          </button>
-          <div id="moreMenu" class="hidden absolute right-0 mt-1.5 w-60 bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-[100] no-print no-image-export">
+        <!-- Дополнительные инструменты открываются из строки представлений. -->
+        <div id="moreMenu" class="hidden fixed w-72 bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-[220] no-print no-image-export">
             <div class="px-2.5 pt-1 pb-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Проверка и решения</div>
-            <button type="button" onclick="closeMoreMenu(); openPlanHealthCenter();" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-emerald-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
-              <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg></span>
-              <span class="grow"><span class="block">Здоровье плана</span><span class="block text-[10px] text-slate-500 font-normal">единая очередь ошибок, рисков и пробелов</span></span>
-            </button>
-            <button type="button" onclick="closeMoreMenu(); openPlanBuilder();" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-indigo-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
-              <span class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 012-2h2a2 2 0 012 2m-5 8l2 2 4-4"></path></svg></span>
-              <span class="grow"><span class="block">Собрать план</span><span class="block text-[10px] text-slate-500 font-normal">цель, состав, команда, связи и фиксация</span></span>
-            </button>
             <button type="button" onclick="closeMoreMenu(); openFitByDate();" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
               <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></span>
               <span class="grow"><span class="block">Уложиться в дату</span><span class="block text-[10px] text-slate-500 font-normal">что убрать, чтобы попасть в срок</span></span>
@@ -6451,7 +6507,6 @@
               <span class="grow"><span class="block">Команда</span><span class="block text-[10px] text-slate-500 font-normal">люди, роли, занятость, отпуска и неявки</span></span>
             </button>
           </div>
-        </div>
 
         <!-- 7) Данные: Jira CSV, импорт/экспорт JSON, защита паролем -->
         <div class="relative shrink-0" id="dataMenuWrap">
@@ -6647,21 +6702,31 @@
         <div class="flex items-center gap-1.5 min-w-max" role="group" aria-label="Режим и инструменты планирования">
           <label class="shrink-0 inline-flex items-center gap-1.5" title="Рабочий режим меняет набор представлений, но не данные проекта">
             <span class="hidden lg:inline text-[10px] font-semibold uppercase tracking-wider text-slate-500">Режим</span>
-            <select id="workspaceModeSelect" onchange="setWorkspaceMode(this.value)" class="workspace-select h-9 px-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-xs font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/40" aria-label="Рабочий режим">
-              <option value="planning">Планирование</option>
-              <option value="myweek">Моя неделя</option>
-              <option value="leadership">Руководство</option>
-            </select>
+            <span class="workspace-picker">
+              <select id="workspaceModeSelect" onchange="setWorkspaceMode(this.value)" class="workspace-select h-9 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-xs font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/40" aria-label="Рабочий режим">
+                <option value="planning">Планирование</option>
+                <option value="myweek">Моя неделя</option>
+                <option value="leadership">Руководство</option>
+              </select>
+              <svg aria-hidden="true" class="workspace-picker-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 9l6 6 6-6"></path></svg>
+            </span>
           </label>
           <button id="planBuilderBtn" type="button" onclick="openPlanBuilder()" class="inline-flex items-center gap-1.5 h-9 px-3 shrink-0 bg-white hover:bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold rounded-xl transition-all cursor-pointer" title="Пошагово собрать и проверить план">
             <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-5 8l2 2 4-4"></path></svg>
             <span>Собрать план</span>
           </button>
-          <button id="planHealthBtn" type="button" onclick="openPlanHealthCenter()" class="relative inline-flex items-center gap-1.5 h-9 px-3 shrink-0 bg-white hover:bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold rounded-xl transition-all cursor-pointer" aria-label="Здоровье плана" title="Здоровье плана: ошибки, риски и поля к заполнению">
+          <button id="planHealthBtn" type="button" onclick="openPlanHealthCenter()" class="inline-flex items-center gap-1.5 h-9 pl-3 pr-2 shrink-0 bg-white hover:bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold rounded-xl transition-all cursor-pointer" aria-label="Здоровье плана" title="Здоровье плана: ошибки, риски и поля к заполнению">
             <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5-2a9 9 0 11-16 0 9 9 0 0116 0z"></path></svg>
             <span>Здоровье плана</span>
-            <span id="planHealthBadge" class="hidden absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-rose-600 text-white text-[9px] font-bold leading-none rounded-full ring-2 ring-white items-center justify-center tabular-nums"></span>
+            <span id="planHealthBadge" class="plan-health-badge hidden" aria-hidden="true"></span>
           </button>
+          <div class="relative shrink-0" id="moreMenuWrap">
+            <button type="button" id="moreMenuBtn" onclick="toggleMoreMenu(event)" aria-label="Другие инструменты плана" aria-haspopup="menu" aria-expanded="false" class="inline-flex items-center gap-1.5 h-9 px-3 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-all cursor-pointer" title="Другие проверки и настройки плана">
+              <svg aria-hidden="true" class="w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 12h.01M12 12h.01M19 12h.01"></path></svg>
+              <span>Ещё</span>
+              <svg aria-hidden="true" class="w-3 h-3 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+          </div>
           <button type="button" id="jiraChangesChip" data-feat="jira" onclick="openJiraChangesModal()" class="hidden shrink-0 whitespace-nowrap inline-flex items-center gap-1.5 h-9 px-3 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 rounded-xl transition-all cursor-pointer" title="Новые и обновленные задачи из последнего импорта Jira , нажмите, чтобы посмотреть список">
             <svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             <span class="text-xs font-semibold">Изменения из Jira · <span id="jiraFreshDate" class="tabular-nums">--</span><span id="jiraFreshCount" class="hidden"></span></span>
@@ -9279,8 +9344,8 @@ if (typeof globalThis !== 'undefined') {
       if (READ_ONLY_MODE || demo || !('showOpenFilePicker' in window)) { box.classList.add('hidden'); box.innerHTML = ''; return; }
       const list = await _getRecentFiles();
       if (!list.length) { box.classList.add('hidden'); box.innerHTML = ''; return; }
-      box.innerHTML = '<p class="text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-2 text-center">Недавние файлы</p>'
-        + '<div class="flex flex-col gap-1.5">' + list.map((r, i) =>
+      box.innerHTML = '<p class="text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-2">Недавние файлы</p>'
+        + '<div class="flex flex-col gap-1.5">' + list.slice(0, 3).map((r, i) =>
           `<button type="button" onclick="openRecentFile(${i})" class="w-full flex items-center justify-between gap-2 bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl px-3 py-2 text-left transition-all cursor-pointer" title="Открыть файл и продолжить работу с ним">
             <span class="flex items-center gap-2 min-w-0"><svg aria-hidden="true" class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg><span class="text-xs font-medium text-slate-700 truncate">${escHtml(r && r.name || '')}</span></span>
             <span class="text-[10px] text-slate-500 shrink-0">${escHtml(_recentRelDate(r && r.at))}</span>
@@ -9897,7 +9962,11 @@ if (typeof globalThis !== 'undefined') {
       badge.textContent = risky > 99 ? '99+' : String(risky);
       badge.classList.toggle('hidden', risky === 0);
       badge.classList.toggle('flex', risky > 0);
-      if (btn) btn.title = risky ? ('Здоровье плана: задач с сигналами — ' + risky) : 'Здоровье плана: явных проблем не найдено';
+      if (btn) {
+        var healthLabel = risky ? ('Здоровье плана: задач с сигналами — ' + risky) : 'Здоровье плана: явных проблем не найдено';
+        btn.title = healthLabel;
+        btn.setAttribute('aria-label', healthLabel);
+      }
     }
 
     // ===== v13.9: пошаговая сборка плана =====
@@ -15413,7 +15482,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       { sel: '#viewIconsBar', title: 'Виды плана', text: 'Один план в разных видах: Сводка, Список с диаграммой, Доска, «Успеваем?» и Презентация для показа. Переключаются здесь. Спринты видны полосой на самой шкале.' },
       { sel: '#resourceFilterBtn', title: 'Фильтры', text: 'Фильтры по статусу (чипы сводки), проекту, ресурсу, метке, компоненту и релизу, плюс сохраняемые пресеты.' },
       { sel: '#dataMenuBtn', title: 'Данные', text: 'Импорт из Jira и обычного CSV (Excel, Trello, Notion), экспорт, история версий файла с откатом и слияние с файлом коллеги.' },
-      { sel: '#moreMenuBtn', title: 'Инструменты', text: 'Деньги, аудит эпиков, Стратегия , цели и риски, Справочники и Команда. Все редкое , тут.' },
+      { sel: '#moreMenuBtn', title: 'Другие инструменты', text: 'Дополнительные проверки и настройки находятся рядом с режимами плана, а не в основной шапке.' },
       { sel: '#bars-container', title: 'Таймлайн', text: 'Тяните края задач, чтобы менять сроки. Между зависимыми задачами рисуются стрелки, у связи можно выбрать, как задачи идут друг за другом.' },
       { sel: '#appLogoBtn', title: 'Справка', text: 'Справка , по клику на логотип: откроется стартовое окно, в нем кнопка «Как работать с планом , справка», горячие клавиши и повтор этого тура. Режим Простой/Продвинутый, темы и выключатели модулей , в окне «Настройки» (шестеренка в шапке).' }
     ];
@@ -15700,25 +15769,42 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const w = document.getElementById('dataMenuWrap');
       if (w && !w.contains(e.target)) closeDataMenu();
     }
-    // Меню «Еще»: отчет, аудит, статусы, ресурсы (вынесено из шапки, п.2)
+    // Меню «Еще»: дополнительные проверки и настройки рядом с представлениями плана.
     function toggleMoreMenu(ev) {
       if (ev) ev.stopPropagation();
       const m = document.getElementById('moreMenu');
       if (!m) return;
       const willOpen = m.classList.contains('hidden');
       closeAllPopovers();
-      if (willOpen) { m.classList.remove('hidden'); document.addEventListener('click', moreMenuAway, true); }
       const btn = document.getElementById('moreMenuBtn'); if (btn) btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      if (willOpen && btn) {
+        m.classList.remove('hidden');
+        const r = btn.getBoundingClientRect();
+        const gap = 6;
+        const edge = 8;
+        const width = Math.min(288, window.innerWidth - edge * 2);
+        m.style.width = width + 'px';
+        m.style.left = Math.max(edge, Math.min(r.right - width, window.innerWidth - width - edge)) + 'px';
+        const menuHeight = Math.min(m.scrollHeight, window.innerHeight - edge * 2);
+        const below = r.bottom + gap;
+        const above = r.top - gap - menuHeight;
+        m.style.top = (below + menuHeight <= window.innerHeight - edge ? below : Math.max(edge, above)) + 'px';
+        m.style.maxHeight = Math.max(180, window.innerHeight - edge * 2) + 'px';
+        m.style.overflowY = 'auto';
+        document.addEventListener('click', moreMenuAway, true);
+      }
     }
     function closeMoreMenu() {
       const m = document.getElementById('moreMenu');
       const btn = document.getElementById('moreMenuBtn'); if (btn) btn.setAttribute('aria-expanded', 'false');
       if (m && !m.classList.contains('hidden')) m.classList.add('hidden');
+      if (m) { m.style.left = ''; m.style.top = ''; m.style.width = ''; m.style.maxHeight = ''; m.style.overflowY = ''; }
       document.removeEventListener('click', moreMenuAway, true);
     }
     function moreMenuAway(e) {
       const w = document.getElementById('moreMenuWrap');
-      if (w && !w.contains(e.target)) closeMoreMenu();
+      const m = document.getElementById('moreMenu');
+      if ((!w || !w.contains(e.target)) && (!m || !m.contains(e.target))) closeMoreMenu();
     }
     function toggleReportsMenu(ev) {
       if (ev) ev.stopPropagation();
@@ -32253,62 +32339,57 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     </div>
   </div>
 
-  <div id="startupModal" role="dialog" aria-modal="true" aria-label="Начало работы" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-[990] overflow-y-auto" onclick="if(event.target===this) closeStartupModal()">
-    <div class="bg-white rounded-3xl max-w-3xl w-full shadow-2xl overflow-hidden border border-slate-200 relative my-auto">
-      <button onclick="closeStartupModal()" aria-label="Закрыть" class="group absolute top-4 right-4 z-10 flex items-center justify-center w-10 h-10 bg-white/80 hover:bg-rose-50 text-slate-500 hover:text-rose-600 border border-slate-200 hover:border-rose-200 rounded-xl transition-all cursor-pointer" title="Закрыть и вернуться к плану">
-        <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-      </button>
-      <button onclick="openInfoModal()" aria-label="О проекте , что нового" class="group absolute top-4 right-16 z-10 flex items-center justify-center w-10 h-10 bg-white/80 hover:bg-indigo-50 text-slate-500 hover:text-indigo-600 border border-slate-200 hover:border-indigo-200 rounded-xl transition-all cursor-pointer" title="О проекте">
-        <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-              </button>
-      <!-- Что это за проект -->
-      <div class="bg-gradient-to-br from-indigo-50 to-white px-8 pt-9 pb-6 border-b border-slate-100 text-center">
-        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-600 text-white shadow-md mb-3">
-          <svg aria-hidden="true" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
+  <div id="startupModal" role="dialog" aria-modal="true" aria-labelledby="startupTitle" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-[990] overflow-y-auto" onclick="if(event.target===this) closeStartupModal()">
+    <div class="startup-shell bg-white rounded-2xl w-full shadow-2xl border border-slate-200 relative my-auto">
+      <header class="startup-header bg-gradient-to-br from-indigo-50 to-white px-5 sm:px-6 py-5 border-b border-slate-100 flex items-start gap-3 sm:gap-4">
+        <div class="startup-brand-mark flex items-center justify-center bg-indigo-600 text-white shadow-sm">
+          <svg aria-hidden="true" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
         </div>
-        <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Дорожная карта продукта</h2>
-        <p class="text-sm text-slate-500 mt-2 max-w-lg mx-auto leading-relaxed">Откройте готовый пример за минуту или начните со своих данных. План работает локально, без сервера.</p>
-        <span class="inline-flex items-center gap-1.5 mt-3 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2.5 py-1 rounded-lg shadow-xs">
-          <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-          <span id="appVersionStartup">версия 13.10</span>
-        </span>
-      </div>
+        <div class="min-w-0 grow pr-20 sm:pr-24">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
+            <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
+              <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+              <span id="appVersionStartup">версия 13.10</span>
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
+        </div>
+        <div class="absolute top-4 right-4 flex items-center gap-2">
+          <button type="button" onclick="openInfoModal()" aria-label="О проекте и новых функциях" class="group flex items-center justify-center w-9 h-9 bg-white/80 hover:bg-indigo-50 text-slate-500 hover:text-indigo-600 border border-slate-200 hover:border-indigo-200 rounded-xl transition-all cursor-pointer" title="О проекте">
+            <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </button>
+          <button type="button" onclick="closeStartupModal()" aria-label="Закрыть" class="group flex items-center justify-center w-9 h-9 bg-white/80 hover:bg-rose-50 text-slate-500 hover:text-rose-600 border border-slate-200 hover:border-rose-200 rounded-xl transition-all cursor-pointer" title="Закрыть и вернуться к плану">
+            <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+      </header>
 
-      <!-- Что внутри , кратко -->
-      <div class="px-10 pt-4 pb-2" aria-label="Мастер первого запуска">
-        <ol class="grid grid-cols-3 gap-2 text-center" aria-label="Три шага начала работы">
-          <li class="rounded-xl bg-indigo-50 border border-indigo-100 px-2 py-2"><span class="block text-[10px] font-bold text-indigo-700">1 · ИСТОЧНИК</span><span class="block text-[10px] text-slate-500 mt-0.5">пример, импорт или пустой</span></li>
-          <li class="rounded-xl bg-slate-50 border border-slate-100 px-2 py-2"><span class="block text-[10px] font-bold text-slate-600">2 · ПРОВЕРКА</span><span class="block text-[10px] text-slate-500 mt-0.5">данные останутся локально</span></li>
-          <li class="rounded-xl bg-slate-50 border border-slate-100 px-2 py-2"><span class="block text-[10px] font-bold text-slate-600">3 · РАБОТА</span><span class="block text-[10px] text-slate-500 mt-0.5">план откроется сразу</span></li>
-        </ol>
-      </div>
-      <div class="px-10 py-2 text-center text-xs text-slate-500">Импорт из Jira, сроки и зависимости, фильтры, снимок и отчет , все внутри.</div>
-      <div class="px-10 pb-1 text-center text-[10px] text-slate-400">Старт в Простом режиме , показано только основное. Продвинутые функции (приоритизация, деньги, аудит) включаются в Настройках.</div>
+      <div class="startup-body px-5 sm:px-6 py-5">
+        <div class="flex items-start gap-2.5 rounded-xl bg-emerald-50 border border-emerald-200 px-3.5 py-3 text-emerald-800">
+          <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5-2a9 9 0 11-16 0 9 9 0 0116 0z"></path></svg>
+          <p class="text-xs leading-relaxed"><strong>Работает локально.</strong> Файл и данные остаются на вашем компьютере и не отправляются на сервер.</p>
+        </div>
 
-      <!-- С чего начать -->
-      <div class="px-10 pb-8">
-        <p class="text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-3 text-center">С чего начать</p>
-        <button id="btnStartSaved" onclick="startFromSavedFile()" class="hidden w-full bg-emerald-600 hover:bg-emerald-700 text-white text-base font-semibold py-4 px-5 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2.5 mb-3">
+        <div class="flex items-end justify-between gap-3 mt-4 mb-3">
+          <div><h3 class="text-sm font-semibold text-slate-800">Выберите, с чего начать</h3><p class="text-[11px] text-slate-500 mt-0.5">Все варианты открывают рабочий план сразу после выбора.</p></div>
+        </div>
+        <button id="btnStartSaved" type="button" onclick="startFromSavedFile()" class="startup-saved-action hidden w-full bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2.5 mb-3">
           <svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
           <span id="btnStartSavedText" class="truncate">Продолжить работу с файлом</span>
         </button>
-        <button onclick="startDemo()" class="group w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 px-5 rounded-xl shadow-sm transition-all flex items-center justify-center gap-3 mb-3 text-left" title="Открыть пример проекта; ваши рабочие данные не меняются">
-          <span class="flex items-center justify-center w-9 h-9 rounded-xl bg-white/15 shrink-0">
-            <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-          </span>
-          <span class="min-w-0">
-            <span class="block text-sm font-semibold">Посмотреть готовый пример</span>
-            <span class="block text-[11px] text-indigo-100 font-normal">Рекомендуем для первого знакомства · ничего загружать не нужно</span>
-          </span>
-        </button>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <button id="startupImportBtn" type="button" onclick="startupShowImportChoices()" aria-expanded="false" aria-controls="startupImportChoices" class="flex flex-col items-center justify-center gap-2 bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 text-xs font-semibold py-4 px-2 rounded-xl transition-all text-center leading-snug min-h-[92px]">
-            <svg aria-hidden="true" class="w-6 h-6 shrink-0 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v10m0 0l-3-3m3 3l3-3M5 20h14"></path></svg>
-            <span>Импортировать свои данные</span><span class="text-[10px] text-slate-400 font-normal">JSON или Jira</span>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <button type="button" onclick="startDemo()" class="startup-choice group bg-indigo-600 hover:bg-indigo-700 text-white border border-indigo-600 px-4 py-4 flex flex-col items-start justify-between gap-3 text-left shadow-sm" title="Открыть пример проекта; ваши рабочие данные не меняются">
+            <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-white/15 shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></span>
+            <span><span class="block text-sm font-semibold">Открыть готовый пример</span><span class="block text-[10px] text-indigo-100 font-normal mt-0.5">Лучший вариант для знакомства</span></span>
           </button>
-          <button onclick="startFresh()" class="flex flex-col items-center justify-center gap-2 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 hover:border-emerald-300 text-xs font-medium py-4 px-2 rounded-xl transition-all text-center leading-snug min-h-[92px]">
-            <svg aria-hidden="true" class="w-6 h-6 shrink-0 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-            <span>Начать с чистого листа</span>
+          <button id="startupImportBtn" type="button" onclick="startupShowImportChoices()" aria-expanded="false" aria-controls="startupImportChoices" class="startup-choice bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-4 py-4 flex flex-col items-start justify-between gap-3 text-left">
+            <svg aria-hidden="true" class="w-5 h-5 shrink-0 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v10m0 0l-3-3m3 3l3-3M5 20h14"></path></svg>
+            <span><span class="block text-sm font-semibold">Импортировать данные</span><span class="block text-[10px] text-slate-500 font-normal mt-0.5">JSON-файл или задачи из Jira</span></span>
+          </button>
+          <button type="button" onclick="startFresh()" class="startup-choice bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 hover:border-emerald-300 px-4 py-4 flex flex-col items-start justify-between gap-3 text-left">
+            <svg aria-hidden="true" class="w-5 h-5 shrink-0 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            <span><span class="block text-sm font-semibold">Создать пустой план</span><span class="block text-[10px] text-slate-500 font-normal mt-0.5">Начать структуру с нуля</span></span>
           </button>
         </div>
         <div id="startupImportChoices" class="hidden mt-3 rm-panel p-3" role="region" aria-label="Выберите способ импорта">
@@ -32320,10 +32401,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           </div>
           <p class="text-[10px] text-slate-500 mt-2">Первый вариант сохраняет обратно в выбранный файл и работает в Chrome/Edge. Импорт копии доступен во всех современных браузерах.</p>
         </div>
-        <div id="startupRecents" class="hidden mt-3"></div>
+        <div id="startupRecents" class="hidden mt-4 pt-4 border-t border-slate-100"></div>
         <p id="startupBrowserHint" class="hidden text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-3 text-center">Открытие своего файла (с автосохранением) работает в Chrome или Edge. В этом браузере выберите импорт из Jira, демо или начните с чистого листа , данные можно сохранить в JSON через меню «Данные».</p>
-        <p class="text-xs text-slate-500 text-center mt-3">Первый раз здесь? <button type="button" onclick="startTourFromStartup()" class="font-semibold text-indigo-600 hover:text-indigo-700 underline-offset-2 hover:underline cursor-pointer">Посмотреть короткий тур на примере демо</button></p>
-        <p class="text-xs text-slate-500 text-center pt-4 mt-4 border-t border-slate-100 max-w-xl mx-auto">Данные остаются у вас , в браузере или в файле на диске. Ничего не уходит на сервер.</p>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-4 pt-4 border-t border-slate-100 text-[11px] text-slate-500">
+          <span>Первый раз здесь?</span>
+          <button type="button" onclick="startTourFromStartup()" class="font-semibold text-indigo-600 hover:text-indigo-700 underline-offset-2 hover:underline cursor-pointer sm:text-right">Посмотреть короткий тур на примере</button>
+        </div>
       </div>
     </div>
   </div>
@@ -33018,10 +33101,14 @@ function normalizeUiChrome(root) {
       var label = (button.getAttribute('aria-label') || button.getAttribute('title') || '').trim().toLowerCase();
       var action = button.getAttribute('onclick') || '';
       var iconOnlyClose = !button.textContent.trim() && button.querySelector('svg') && /close/i.test(action);
+      if (button.textContent.trim() && !button.closest('[role="tablist"], .startup-shell')) button.classList.add('rm-action');
       if (label === 'закрыть' || label === 'close' || iconOnlyClose) {
         button.classList.add('rm-dialog-close');
         if (!button.getAttribute('aria-label')) button.setAttribute('aria-label', 'Закрыть');
       }
+    });
+    surface.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]), select, textarea').forEach(function (control) {
+      control.classList.add('rm-control');
     });
     surface.querySelectorAll('.rm-dialog-footer button').forEach(function (button) { button.classList.add('rm-dialog-action'); });
   });
