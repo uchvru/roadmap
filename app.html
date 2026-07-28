@@ -5457,18 +5457,18 @@
     body.theme-portal header,
     body.theme-portal main,
     body.theme-portal #roadmap-root > section { border-radius: 1.5rem !important; }
-    /* Модальные окна: крупное скругление, мягкая глубокая тень */
+    /* Модальные окна используют общий радиус и тень во всех темах. */
     body.theme-portal [role="dialog"][class*="justify-center"] > div {
-      border-radius: 1.6rem !important;
-      box-shadow: 0 30px 70px rgba(15,23,42,0.16), 0 6px 16px rgba(15,23,42,0.06) !important;
+      border-radius: var(--rm-dialog-radius, 1rem) !important;
+      box-shadow: var(--rm-dialog-shadow, 0 24px 64px rgba(15,23,42,.22)) !important;
     }
-    body.theme-portal #epicAuditModal > div { border-radius: 1.4rem !important; }
+    body.theme-portal #epicAuditModal > div { border-radius: var(--rm-dialog-radius, 1rem) !important; }
     /* Меню и всплывающие панели: мягкая тень и скругление */
     body.theme-portal #dataMenu, body.theme-portal #moreMenu, body.theme-portal #presetMenu,
     body.theme-portal #sortMenu, body.theme-portal #depLinesMenu, body.theme-portal #releaseFilterMenu,
     body.theme-portal [data-filter-panel], body.theme-portal #taskMovePanel {
-      border-radius: 1.1rem !important;
-      box-shadow: 0 16px 40px rgba(15,23,42,0.12), 0 2px 6px rgba(15,23,42,0.05) !important;
+      border-radius: var(--rm-radius-md, .75rem) !important;
+      box-shadow: var(--rm-popover-shadow, 0 16px 40px rgba(15,23,42,.16)) !important;
     }
     /* Чипы статусов чуть круглее и воздушнее */
     body.theme-portal #statusOverview button { border-radius: 999px !important; }
@@ -6152,6 +6152,10 @@
      --rm-radius-sm:.5rem; --rm-radius-md:.75rem; --rm-radius-lg:1rem;
      --rm-control-h:2.25rem; --rm-focus:#6366f1; --rm-border:#e2e8f0;
      --rm-surface:#fff; --rm-surface-soft:#f8fafc; --rm-text:#1e293b; --rm-muted:#64748b;
+     --rm-dialog-x:1.5rem; --rm-dialog-y:1rem; --rm-dialog-body:1.5rem;
+     --rm-dialog-radius:1rem; --rm-overlay:rgba(15,23,42,.58);
+     --rm-dialog-shadow:0 24px 64px rgba(15,23,42,.22),0 8px 24px rgba(15,23,42,.10);
+     --rm-popover-shadow:0 16px 40px rgba(15,23,42,.16),0 4px 12px rgba(15,23,42,.08);
    }
    body.theme-dark { --rm-border:#34465a; --rm-surface:#1a2332; --rm-surface-soft:#212d3d; --rm-text:#e2e8f0; --rm-muted:#94a3b8; }
    .rm-panel { background:var(--rm-surface); color:var(--rm-text); border:1px solid var(--rm-border); border-radius:var(--rm-radius-lg); }
@@ -6160,6 +6164,91 @@
    .rm-action { min-height:var(--rm-control-h); border-radius:var(--rm-radius-md); display:inline-flex; align-items:center; justify-content:center; gap:var(--rm-space-2); cursor:pointer; }
    .rm-operational-list { scrollbar-gutter:stable; }
    @media (max-width:640px) { .rm-operational-toolbar > * { width:100%; } .rm-operational-toolbar .rm-action { width:100%; } }
+
+   /* v13.10: единый ритм модальных окон, меню и уведомлений. Разметка старых
+      функций получает эти роли автоматически через normalizeUiChrome(). */
+   .rm-dialog-overlay.rm-dialog-overlay {
+     background:var(--rm-overlay) !important;
+     -webkit-backdrop-filter:blur(4px) !important;
+     backdrop-filter:blur(4px) !important;
+     padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left)) !important;
+     overscroll-behavior:contain;
+   }
+   .rm-dialog-surface.rm-dialog-surface {
+     color:var(--rm-text) !important;
+     background:var(--rm-surface) !important;
+     border:1px solid var(--rm-border) !important;
+     border-radius:var(--rm-dialog-radius) !important;
+     box-shadow:var(--rm-dialog-shadow) !important;
+     background-clip:padding-box;
+   }
+   .rm-dialog-header.rm-dialog-header {
+     min-height:4.25rem;
+     margin:0 !important;
+     padding:var(--rm-dialog-y) var(--rm-dialog-x) !important;
+     border-bottom:1px solid var(--rm-border) !important;
+     background:var(--rm-surface) !important;
+   }
+   .rm-dialog-content.rm-dialog-content { padding:var(--rm-dialog-body) !important; }
+   .rm-dialog-footer.rm-dialog-footer {
+     min-height:4rem;
+     margin:0 !important;
+     padding:.75rem var(--rm-dialog-x) !important;
+     gap:.5rem !important;
+     border-top:1px solid var(--rm-border) !important;
+     background:var(--rm-surface-soft) !important;
+   }
+   .rm-dialog-close.rm-dialog-close {
+     width:2.25rem !important; height:2.25rem !important; min-width:2.25rem !important; min-height:2.25rem !important;
+     padding:0 !important; border-radius:var(--rm-radius-md) !important;
+     display:inline-flex !important; align-items:center !important; justify-content:center !important;
+   }
+   .rm-dialog-action.rm-dialog-action { min-height:2.5rem !important; padding-left:1rem !important; padding-right:1rem !important; border-radius:var(--rm-radius-md) !important; }
+   #appVersionBadge { white-space:nowrap; }
+   .rm-dialog-surface input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]),
+   .rm-dialog-surface select { min-height:2.5rem; border-radius:var(--rm-radius-md) !important; }
+   .rm-dialog-surface textarea { border-radius:var(--rm-radius-md) !important; }
+   .rm-dialog-stack.rm-dialog-stack { padding:0 !important; }
+   .rm-dialog-stack > .rm-dialog-body-part { margin-left:var(--rm-dialog-x) !important; margin-right:var(--rm-dialog-x) !important; }
+   .rm-dialog-stack > .rm-dialog-body-part:first-of-type { margin-top:var(--rm-dialog-body) !important; }
+   .rm-dialog-stack > .rm-dialog-body-part:last-of-type { margin-bottom:var(--rm-dialog-body) !important; }
+   .rm-popover.rm-popover {
+     max-width:calc(100vw - 1rem);
+     color:var(--rm-text) !important;
+     background:var(--rm-surface) !important;
+     border:1px solid var(--rm-border) !important;
+     border-radius:var(--rm-radius-md) !important;
+     box-shadow:var(--rm-popover-shadow) !important;
+     padding:.375rem !important;
+     transform-origin:top right;
+     animation:rm-popover-in .12s ease-out;
+   }
+   .rm-popover button, .rm-popover [role="menuitem"] { min-height:2.25rem; border-radius:.5rem !important; }
+   #toastHost { right:max(1rem,env(safe-area-inset-right)) !important; bottom:max(1rem,env(safe-area-inset-bottom)) !important; gap:.5rem !important; }
+   .rm-toast.rm-toast {
+     width:max-content; max-width:min(28rem,calc(100vw - 2rem)); min-height:2.75rem;
+     padding:.625rem .875rem !important; border-radius:var(--rm-radius-md) !important;
+     box-shadow:var(--rm-popover-shadow) !important; line-height:1.4;
+   }
+   .rm-dialog-close:focus-visible, .rm-dialog-action:focus-visible, .rm-popover button:focus-visible {
+     outline:3px solid rgba(99,102,241,.28); outline-offset:2px;
+   }
+   @keyframes rm-popover-in { from { opacity:0; transform:translateY(-3px) scale(.985); } to { opacity:1; transform:none; } }
+   @media (prefers-reduced-motion:reduce) { .rm-popover { animation:none; } }
+   body.theme-dark .rm-dialog-overlay { --rm-overlay:rgba(2,6,23,.72); }
+   body.theme-dark .rm-dialog-surface, body.theme-dark .rm-dialog-header, body.theme-dark .rm-dialog-footer, body.theme-dark .rm-popover { border-color:var(--rm-border) !important; }
+   @media (max-width:640px) {
+     :root { --rm-dialog-x:1rem; --rm-dialog-y:.875rem; --rm-dialog-body:1rem; }
+     .rm-dialog-overlay.rm-dialog-overlay { padding:max(.5rem,env(safe-area-inset-top)) max(.5rem,env(safe-area-inset-right)) max(.5rem,env(safe-area-inset-bottom)) max(.5rem,env(safe-area-inset-left)) !important; align-items:flex-end !important; }
+     .rm-dialog-surface.rm-dialog-surface { width:100% !important; max-width:none !important; max-height:calc(100dvh - 1rem) !important; border-radius:1rem !important; }
+     #globalSearchModal.rm-dialog-overlay { align-items:flex-start !important; padding-top:max(.5rem,env(safe-area-inset-top)) !important; }
+     #epicAuditModal.rm-dialog-overlay, #startupModal.rm-dialog-overlay { align-items:center !important; }
+     .rm-dialog-header.rm-dialog-header { min-height:3.75rem; }
+     .rm-dialog-footer.rm-dialog-footer { min-height:3.75rem; flex-wrap:wrap; }
+     .rm-dialog-footer > button { flex:1 1 auto; }
+     #toastHost { left:max(.5rem,env(safe-area-inset-left)) !important; right:max(.5rem,env(safe-area-inset-right)) !important; bottom:max(.5rem,env(safe-area-inset-bottom)) !important; }
+     .rm-toast.rm-toast { width:100%; max-width:none; }
+   }
    /* v13.9: рабочие режимы упрощают интерфейс, не меняя данные и права проекта. */
    body[data-workspace="myweek"] #reportsMenuWrap,
    body[data-workspace="myweek"] #moreMenuWrap,
@@ -7033,7 +7122,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v13.9">
+<script data-roadmap-modules="v13.10">
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
@@ -7782,7 +7871,7 @@ if (typeof globalThis !== 'undefined') {
         info: 'bg-slate-800 text-white'
       };
       const toast = document.createElement('div');
-      toast.className = `pointer-events-auto ${tones[tone] || tones.info} text-xs font-medium px-4 py-2 rounded-xl shadow-lg flex items-center gap-2 transition-all duration-200`;
+      toast.className = `rm-toast pointer-events-auto ${tones[tone] || tones.info} text-xs font-medium px-4 py-2 rounded-xl shadow-lg flex items-center gap-2 transition-all duration-200`;
       toast.style.opacity = '0';
       toast.style.transform = 'translateY(8px)';
       const icon = tone === 'ok'
@@ -7996,7 +8085,7 @@ if (typeof globalThis !== 'undefined') {
         document.body.appendChild(host);
       }
       const toast = document.createElement('div');
-      toast.className = 'pointer-events-auto bg-slate-800 text-white text-xs font-medium pl-4 pr-2 py-2 rounded-xl shadow-lg flex items-center gap-3 transition-all duration-200';
+      toast.className = 'rm-toast pointer-events-auto bg-slate-800 text-white text-xs font-medium pl-4 pr-2 py-2 rounded-xl shadow-lg flex items-center gap-3 transition-all duration-200';
       toast.style.opacity = '0'; toast.style.transform = 'translateY(8px)';
       const span = document.createElement('span'); span.textContent = text;
       const btn = document.createElement('button');
@@ -8413,10 +8502,10 @@ if (typeof globalThis !== 'undefined') {
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '13.9';
-    const APP_VERSION_DATE = '23.07.2026';
+    const APP_VERSION = '13.10';
+    const APP_VERSION_DATE = '28.07.2026';
     function applyAppVersion() {
-      try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' , ' + APP_VERSION_DATE; } catch (e) {}
+      try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'версия ' + APP_VERSION; } catch (e) {}
     }
     document.addEventListener('DOMContentLoaded', applyAppVersion);
@@ -28673,7 +28762,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     <h3 class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">
      <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-     <span id="appVersionBadge">v13.9 , 23.07.2026</span>
+     <span id="appVersionBadge">v13.10, 28.07.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -28739,7 +28828,16 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </div>
 
    <div>
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.9 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v13.10 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Единые окна и меню</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">UI/UX</span></div><p class="text-xs text-slate-600">Модальные окна, выпадающие меню и уведомления получили одинаковые отступы, скругления, тени, размеры кнопок и фокус. Длинные формы сохраняют прокрутку, а на телефоне открываются как удобные нижние панели.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Чистый повторный импорт Jira</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">ИМПОРТ</span></div><p class="text-xs text-slate-600">Закрытые и уже убранные из рабочего плана элементы больше не создают пустые секции при повторном импорте. Существующая иерархия и связи сохраняются.</p></div>
+     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Инструменты рядом с видами плана</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">НАВИГАЦИЯ</span></div><p class="text-xs text-slate-600">Рабочий режим, сборка плана, здоровье и изменения Jira перенесены к переключателям «Сводка», «Список», «Доска» и «Презентация», чтобы шапка стала спокойнее.</p></div>
+    </div>
+   </div>
+
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v13.9</h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Три рабочих пространства</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ФОКУС</span></div><p class="text-xs text-slate-600">«Планирование» оставляет полный набор инструментов, «Моя неделя» собирает назначенную работу, а «Для руководителя» открывает спокойную сводку без кнопок редактирования.</p></div>
      <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Единое здоровье плана</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">ПРОВЕРКА</span></div><p class="text-xs text-slate-600">Ошибки расписания, связи, загрузка, структура и готовность к прогнозу собраны в одной очереди. Проверка учитывает тип связи и лаг и ничего не меняет автоматически.</p></div>
@@ -32172,7 +32270,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         <p class="text-sm text-slate-500 mt-2 max-w-lg mx-auto leading-relaxed">Откройте готовый пример за минуту или начните со своих данных. План работает локально, без сервера.</p>
         <span class="inline-flex items-center gap-1.5 mt-3 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2.5 py-1 rounded-lg shadow-xs">
           <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-          <span id="appVersionStartup">версия 13.9</span>
+          <span id="appVersionStartup">версия 13.10</span>
         </span>
       </div>
 
@@ -32865,6 +32963,86 @@ function saveAuditTeams(){
 // Подключаем к общей системе модалок (Esc и клик по фону)
 try { if(typeof MODAL_CLOSERS!=='undefined') MODAL_CLOSERS.auditTeamsModal=closeAuditTeams; } catch(e){}
 // Escape для аудита и под-модалки «Команды» обрабатывает центральный MODAL_CLOSERS (закрывает строго верхнюю модалку по z-index).
+
+// v13.10: единая визуальная система для старых и динамически создаваемых окон.
+// Роли добавляются поверх существующей разметки, поэтому поведение форм и сохранение данных не меняются.
+function normalizeUiChrome(root) {
+  if (!root) return;
+  var overlaySelector = '.fixed.inset-0, [data-modal-backdrop]';
+  var overlays = [];
+  function collectOverlay(el) {
+    if (!el || el.nodeType !== 1 || !el.matches(overlaySelector)) return;
+    if (el.id === 'planBuilderBackdrop' || el.id === 'planBuilderPanel') return;
+    var directDialog = Array.prototype.some.call(el.children || [], function (child) {
+      return child && child.getAttribute && child.getAttribute('role') === 'dialog';
+    });
+    if (el.getAttribute('role') === 'dialog' || el.hasAttribute('data-modal-backdrop') || directDialog || /Modal$/.test(el.id || '')) overlays.push(el);
+  }
+  if (root.nodeType === 1) collectOverlay(root);
+  if (root.querySelectorAll) root.querySelectorAll(overlaySelector).forEach(collectOverlay);
+
+  overlays.forEach(function (overlay) {
+    overlay.classList.add('rm-dialog-overlay');
+    var children = Array.prototype.filter.call(overlay.children || [], function (child) {
+      return child && child.nodeType === 1 && !child.matches('button,svg,[aria-hidden="true"].absolute.inset-0');
+    });
+    var surface = children.find(function (child) { return child.getAttribute('role') === 'dialog'; })
+      || children.find(function (child) { return /rounded|max-w-|bg-white|shadow/.test(child.className || ''); })
+      || children[0];
+    if (!surface) return;
+    surface.classList.add('rm-dialog-surface');
+
+    var parts = Array.prototype.filter.call(surface.children || [], function (child) { return child && child.nodeType === 1; });
+    var first = parts[0] || null;
+    var last = parts.length > 1 ? parts[parts.length - 1] : null;
+    var compactStack = overlay.id === 'sectionColorModal' || overlay.id === 'leaderChooserModal';
+    if (compactStack) surface.classList.add('rm-dialog-stack');
+
+    if (first && (compactStack || /border-b/.test(first.className || '') || (first.querySelector('h1,h2,h3,h4') && first.querySelector('button')))) {
+      first.classList.add('rm-dialog-header');
+    }
+    if (last && (overlay.id === 'sectionColorModal' || /border-t/.test(last.className || '') || (/justify-end/.test(last.className || '') && last.querySelectorAll('button').length > 0))) {
+      last.classList.add('rm-dialog-footer');
+    }
+    parts.forEach(function (part) {
+      if (part === first && part.classList.contains('rm-dialog-header')) return;
+      if (part === last && part.classList.contains('rm-dialog-footer')) return;
+      if (compactStack) {
+        if (part.tagName !== 'INPUT' || part.type !== 'hidden') part.classList.add('rm-dialog-body-part');
+      } else if (/(^|\s)(p|px|py)-(4|5|6|8|10)(\s|$)/.test(part.className || '')) {
+        part.classList.add('rm-dialog-content');
+      }
+    });
+
+    surface.querySelectorAll('button').forEach(function (button) {
+      var label = (button.getAttribute('aria-label') || button.getAttribute('title') || '').trim().toLowerCase();
+      var action = button.getAttribute('onclick') || '';
+      var iconOnlyClose = !button.textContent.trim() && button.querySelector('svg') && /close/i.test(action);
+      if (label === 'закрыть' || label === 'close' || iconOnlyClose) {
+        button.classList.add('rm-dialog-close');
+        if (!button.getAttribute('aria-label')) button.setAttribute('aria-label', 'Закрыть');
+      }
+    });
+    surface.querySelectorAll('.rm-dialog-footer button').forEach(function (button) { button.classList.add('rm-dialog-action'); });
+  });
+
+  var popupSelector = '[role="menu"], [data-filter-panel], #taskMovePanel, #reportsMenu, #moreMenu, #dataMenu, #presetMenu, #releaseFilterMenu, #zoomMenu, #depLinesMenu, #sortMenu';
+  var popups = [];
+  if (root.nodeType === 1 && root.matches(popupSelector)) popups.push(root);
+  if (root.querySelectorAll) root.querySelectorAll(popupSelector).forEach(function (el) { popups.push(el); });
+  popups.forEach(function (popup) {
+    if (/fixed|absolute/.test(popup.className || '') || popup.id) popup.classList.add('rm-popover');
+  });
+  var toastHost = document.getElementById('toastHost');
+  if (toastHost) Array.prototype.forEach.call(toastHost.children, function (toast) { toast.classList.add('rm-toast'); });
+}
+try {
+  normalizeUiChrome(document.body);
+  var _uiChromeObserver = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) { mutation.addedNodes.forEach(normalizeUiChrome); });
+  });
+  _uiChromeObserver.observe(document.body, { subtree:true, childList:true });
+} catch (e) { console.warn('UI chrome normalization unavailable:', e); }
 
 // Типографическая доводка пользовательского текста. Старые строки интерфейса местами содержат
 // пробел перед запятой; исправляем только отображаемый DOM и подсказки, не меняя данные и код.
