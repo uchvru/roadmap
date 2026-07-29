@@ -28,3 +28,40 @@ jobs:
           package-manager-cache: false
       - name: Verify public build
         run: node .quality/verify-public.mjs
+
+  pages:
+    name: Deploy verified GitHub Pages
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Build tracked-only Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git ls-tree -r HEAD | awk '$1 == "120000" { found=1 } END { exit found ? 0 : 1 }'; then
+            echo "Pages artifact не допускает символические ссылки." >&2
+            exit 1
+          fi
+          mkdir _site
+          git archive --format=tar HEAD | tar -xf - -C _site
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+          retention-days: 1
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
