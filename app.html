@@ -6526,15 +6526,21 @@
    /* v14.4: компактная двухуровневая рабочая область. Верхний уровень отвечает
       за проект и действия, нижний объединяет виды, проверки и фильтры. */
    #appHeader .app-header-grid {
-     grid-template-columns:minmax(20rem,auto) minmax(22rem,1fr);
-     padding:.75rem 1rem; gap:.625rem 1rem;
+     grid-template-columns:minmax(22rem,28rem) minmax(34rem,1fr);
+     grid-template-rows:auto auto;
+     padding:.625rem .875rem; gap:.375rem 1rem;
+     align-items:start;
    }
-   #appHeader .app-header-toolbar { align-self:start; }
+   #appHeader .app-header-grid > :first-child { grid-column:1; grid-row:1; }
+   #appHeader .app-header-toolbar { grid-column:2; grid-row:1; align-self:center; }
+   #appHeader .app-header-toolbar > button:first-child { min-width:9rem; }
    #appHeader .app-header-actions { gap:.375rem; }
    #appHeader .app-header-insight-row {
-     grid-column:1/-1; display:flex; align-items:center; gap:.5rem; min-width:0;
-     padding-top:.625rem; border-top:1px solid var(--rm-border);
+     grid-column:1; grid-row:2; display:flex; align-items:center; gap:.375rem; min-width:0;
+     padding:0 0 0 3.25rem; border:0;
    }
+   #planOverviewHost { margin-left:auto; min-width:0; }
+   #planOverviewHost .app-header-insight-row { padding:0; }
    .header-summary-btn {
      min-height:2rem; padding:.35rem .625rem; border:1px solid var(--rm-border);
      border-radius:.625rem; background:var(--rm-surface-soft); color:var(--rm-text);
@@ -6546,15 +6552,21 @@
    }
    .header-summary-value { color:var(--rm-muted); font-weight:600; }
    #headerInsightsPanel {
-     position:absolute; left:1rem; right:auto; width:min(46rem,calc(100% - 2rem)); top:calc(100% - .25rem); z-index:260;
+     position:fixed; left:1rem; right:auto; width:min(46rem,calc(100% - 1rem)); z-index:980;
+     max-height:min(70vh,36rem); overflow:auto;
      padding:.75rem; border:1px solid var(--rm-border); border-radius:.875rem;
      background:var(--rm-surface); box-shadow:0 18px 40px rgba(15,23,42,.16);
    }
    #headerInsightsPanel[hidden] { display:none !important; }
    #headerInsightsPanel .header-insight-block[hidden] { display:none !important; }
+   #headerInsightsDates { margin-top:.75rem; padding-top:.75rem; border-top:1px solid var(--rm-border); }
    #headerInsightsPanel #stateDashboard { padding-left:0 !important; overflow:visible; }
    #headerInsightsPanel #headerCutoffsSep { align-items:center; }
    #autosaveStatus { display:none !important; }
+
+   .settings-tab-list { scrollbar-width:none; }
+   .settings-tab-list::-webkit-scrollbar { display:none; }
+   .startup-tour-btn { min-height:2.75rem; }
 
    #planControlDeck {
      margin-bottom:.75rem; border:1px solid var(--rm-border); border-radius:1rem;
@@ -6565,18 +6577,54 @@
      order:-1; margin:0 !important; border:0 !important; border-radius:1rem 1rem 0 0 !important;
      box-shadow:none !important; overflow:visible; background:transparent !important;
    }
-   #planControlDeck #planViewNav > div { padding:.5rem .625rem; }
+   #planControlDeck #planViewNav > div {
+     min-height:3.25rem; padding:.375rem .5rem; justify-content:flex-start;
+   }
    #planControlDeck #planFilterBar {
-     margin:0 !important; padding:.5rem .625rem !important; gap:.5rem !important;
+     margin:0 !important; min-height:3.375rem; padding:.375rem .5rem !important; gap:.375rem !important;
+     justify-content:flex-start !important; flex-wrap:nowrap;
      border:0 !important; border-top:1px solid var(--rm-border) !important;
      border-radius:0 0 1rem 1rem !important; box-shadow:none !important;
      background:transparent !important; overflow:visible !important;
    }
    #planControlDeck .plan-command-bar { border:0; background:transparent; padding:0; }
    #filterToolsWrap {
-     display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; min-width:0;
+     position:fixed; z-index:980; width:min(24rem,calc(100vw - 1rem));
+     max-height:min(70vh,38rem); overflow:auto;
+     display:flex; flex-direction:column; align-items:stretch; gap:.75rem; min-width:0;
+     padding:.75rem; border:1px solid var(--rm-border); border-radius:.875rem;
+     background:var(--rm-surface); box-shadow:var(--rm-popover-shadow);
    }
    #filterToolsWrap[hidden] { display:none !important; }
+   #resourceFilterPanel,#projectFilterPanel,#releaseFilterMenu,#presetMenu { z-index:990 !important; }
+   .filter-tools-header { display:flex; align-items:flex-start; justify-content:space-between; gap:.75rem; padding-bottom:.625rem; border-bottom:1px solid var(--rm-border); }
+   .filter-tools-title { font-size:.8125rem; line-height:1.2; font-weight:750; color:var(--rm-text); }
+   .filter-tools-subtitle { margin-top:.2rem; font-size:.6875rem; line-height:1.35; color:var(--rm-muted); }
+   .filter-tools-close { width:2rem; height:2rem; min-width:2rem; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--rm-border); border-radius:.625rem; color:var(--rm-muted); background:var(--rm-surface-soft); }
+   .filter-tools-fields { display:flex !important; flex-direction:column; align-items:stretch !important; gap:.5rem !important; }
+   .filter-tools-fields > [id="projectFilterGroup"],.filter-tools-fields > [data-feat="resources"] { width:100%; min-height:2.625rem; }
+   .filter-tools-fields .filter-multibtn { width:auto !important; flex:1 1 auto; }
+   .filter-tools-fields #projectFilterGroup::before { content:'Проект'; }
+   .filter-tools-fields > [data-feat="resources"]::before { content:'Исполнитель'; }
+   .filter-tools-fields #projectFilterGroup::before,.filter-tools-fields > [data-feat="resources"]::before {
+     min-width:5.25rem; padding-left:.625rem; color:var(--rm-muted); font-size:.6875rem; font-weight:700;
+   }
+   .filter-tools-fields > .w-px,.filter-tools-separator { display:none !important; }
+   .filter-tools-actions { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.5rem !important; }
+   .filter-tools-actions > * { min-width:0; }
+   .filter-tools-actions > button,.filter-tools-actions > .relative > button {
+     width:100% !important; min-height:2.5rem; padding:.45rem .625rem !important;
+     display:flex !important; justify-content:flex-start !important; gap:.45rem; border-radius:.625rem !important;
+   }
+   .filter-tools-actions button[data-label]::after { content:attr(data-label); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:.6875rem; font-weight:700; }
+   #activeFiltersBar {
+     display:flex; align-items:center; gap:.375rem; min-height:2.5rem; padding:.35rem .5rem;
+     overflow-x:auto; border-top:1px solid var(--rm-border); background:var(--rm-surface-soft);
+     border-radius:0 0 1rem 1rem;
+   }
+   #activeFiltersBar[hidden] { display:none !important; }
+   #planControlDeck.has-active-filters #planFilterBar { border-radius:0 !important; }
+   .active-filter-chip { flex:none; display:inline-flex; align-items:center; gap:.3rem; min-height:1.875rem; padding:.25rem .55rem; border:1px solid #c7d2fe; border-radius:.625rem; background:#eef2ff; color:#4338ca; font-size:.6875rem; font-weight:700; white-space:nowrap; }
    #filterToolsBtn {
      min-height:2.25rem; padding:.4rem .7rem; border:1px solid var(--rm-border);
      border-radius:.7rem; background:var(--rm-surface-soft); color:var(--rm-text);
@@ -6585,18 +6633,22 @@
    #filterToolsBtn:hover,#filterToolsBtn[aria-expanded="true"],#filterToolsBtn[data-active="1"] {
      color:#4338ca; border-color:#c7d2fe; background:#eef2ff;
    }
-   #statusOverview { flex:0 1 auto; }
-   #statusCompactWrap { flex:none; }
-   #statusCompactBtn { width:auto !important; min-width:8.75rem; }
+   #statusOverview {
+     flex:1 1 auto !important; max-width:calc(100% - 6.75rem);
+     gap:.375rem !important; padding:.125rem 0 !important;
+   }
+   #statusCompactWrap { display:none !important; }
+   #statusCompactBtn { width:auto !important; min-width:9.5rem; }
    #summaryView > div:first-child { min-height:3rem; }
 
    @media (min-width:1101px) {
      #planFilterBar { flex-direction:row !important; align-items:center !important; }
-     #statusCompactWrap { display:block !important; }
    }
-   @media (max-width:1279px) {
-     #appHeader .app-header-grid { grid-template-columns:1fr; }
-     #appHeader .app-header-insight-row { grid-column:1; }
+   @media (max-width:1023px) {
+     #appHeader .app-header-grid { grid-template-columns:1fr; grid-template-rows:auto auto auto; }
+     #appHeader .app-header-grid > :first-child { grid-column:1; grid-row:1; }
+     #appHeader .app-header-toolbar { grid-column:1; grid-row:2; }
+     #appHeader .app-header-insight-row { grid-column:1; grid-row:3; padding-left:0; }
    }
 
    @media (max-width:767px) {
@@ -6611,11 +6663,31 @@
      .rm-form-grid.rm-form-grid { grid-template-columns:minmax(0,1fr) !important; }
      .rm-dialog-footer .rm-btn { flex:1 1 9rem; }
      #appHeader .app-header-insight-row { overflow-x:auto; padding-bottom:.125rem; }
+     #appHeader .app-header-grid {
+       grid-template-rows:auto auto; padding:.5rem .625rem; gap:.375rem;
+     }
+     #appHeader .app-header-grid > :first-child { gap:.25rem; }
+     #appHeader .app-header-meta { margin-top:0 !important; flex-wrap:nowrap; }
+     #appHeader .app-header-date,#appHeader #appVerChip { display:none !important; }
+     #appHeader #roadmapTitle { font-size:1rem; }
+     #appHeader .app-header-toolbar { gap:.375rem; }
+     #appHeader .app-header-toolbar > button:first-child { min-width:0; }
+     #settingsTabList {
+       padding-right:2rem;
+       -webkit-mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 2rem),transparent 100%);
+       mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 2rem),transparent 100%);
+     }
+     #settingsTabList[data-at-end="true"] { padding-right:.5rem; -webkit-mask-image:none; mask-image:none; }
      #headerInsightsPanel { position:fixed; left:.5rem; right:.5rem; width:auto; top:auto; bottom:5rem; max-height:55vh; overflow:auto; }
      #planControlDeck { border-radius:.875rem; }
-     #planControlDeck #planViewNav { display:none !important; }
-     #planControlDeck #planFilterBar { border-top:0 !important; border-radius:.875rem !important; }
-     #filterToolsWrap { position:absolute; left:.5rem; right:.5rem; margin-top:.25rem; z-index:230; padding:.625rem; border:1px solid var(--rm-border); border-radius:.875rem; background:var(--rm-surface); box-shadow:0 14px 34px rgba(15,23,42,.18); }
+     #planControlDeck #planViewNav { display:block !important; }
+     #planControlDeck #planViewNav .plan-command-bar { display:none !important; }
+     #planControlDeck #planViewNav > div { min-height:auto; padding:.375rem; }
+     #planOverviewHost { width:100%; margin-left:0; }
+     #planOverviewHost .header-summary-btn { width:100%; justify-content:center; }
+     #planControlDeck #planFilterBar { border-top:1px solid var(--rm-border) !important; border-radius:0 0 .875rem .875rem !important; }
+     #filterToolsWrap { left:.5rem !important; right:.5rem !important; width:auto !important; top:auto !important; bottom:5rem; max-height:65vh; }
+     .filter-tools-actions { grid-template-columns:1fr; }
    }
    @media (prefers-reduced-motion:reduce) { .rm-side-sheet { animation:none !important; } .rm-btn { transition:none !important; } }
    .timeline-empty-state { position:sticky; left:0; width:max(20rem,min(44rem,calc(100vw - 32rem))); min-height:34rem; }
@@ -6624,8 +6696,7 @@
    .pres-edit-row .pres-row-actions { opacity:.18; transition:opacity .15s ease; }
    .pres-edit-row:hover .pres-row-actions,.pres-edit-row:focus-within .pres-row-actions { opacity:1; }
    @media (max-width:1100px) {
-     #statusOverview { display:none !important; }
-     #statusCompactWrap { display:block; flex:1 1 auto; min-width:12rem; }
+     #statusOverview { display:flex !important; max-width:calc(100% - 6.75rem); }
      #planFilterBar { flex-direction:row !important; align-items:center !important; }
      #planViewNav .plan-view-caption { display:none !important; }
    }
@@ -6638,8 +6709,7 @@
      #appHeader .app-header-grid { padding:.75rem; grid-template-columns:1fr; }
      #appHeader .app-header-toolbar { width:100%; }
      #appHeader #reportsMenuWrap,#appHeader #autoSaveBtn,#appHeader #archiveBtn { display:none !important; }
-     #planFilterBar { padding:.5rem; gap:.5rem; }
-     #planViewNav { display:none; }
+     #planFilterBar { padding:.5rem; gap:.5rem; flex-wrap:wrap; }
      .timeline-empty-state { width:min(100vw,36rem); }
      .pres-edit-row .pres-row-actions { opacity:1; }
    }
@@ -6708,12 +6778,12 @@
           <button onclick="saveTitle()" class="inline-flex items-center justify-center h-10 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all cursor-pointer shadow-xs">Сохранить</button>
           <button onclick="cancelEditTitle()" class="inline-flex items-center justify-center h-10 px-3 text-slate-500 hover:text-slate-700 hover:bg-slate-100 text-xs font-medium rounded-xl transition-all cursor-pointer">Отмена</button>
         </div>
-        <div class="text-xs text-slate-500 mt-0.5 px-1.5 flex flex-wrap items-center justify-start gap-1.5 min-w-0">
+        <div class="app-header-meta text-xs text-slate-500 mt-0.5 px-1.5 flex flex-wrap items-center justify-start gap-1.5 min-w-0">
           <button type="button" onclick="editPoName()" class="no-image-export inline-flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-slate-500 hover:text-indigo-700 hover:border-indigo-200 hover:bg-indigo-50/40 transition-colors cursor-pointer shrink-0 min-w-0" title="Продакт-оунер (РО) , чей это роадмап. Нажмите, чтобы поменять имя">
             <svg aria-hidden="true" class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
             <span class="truncate">РО: <span id="poNameDisplay" class="font-semibold text-slate-600">Фамилия Имя</span></span>
           </button>
-          <span class="shrink-0 inline-flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-slate-600" title="Текущая дата проекта">
+          <span class="app-header-date shrink-0 inline-flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-slate-600" title="Текущая дата проекта">
             <svg aria-hidden="true" class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
             Сегодня <span id="currentProjectDate" class="font-medium text-slate-600"></span>
           </span>
@@ -6922,14 +6992,12 @@
         <input type="file" id="mergeFile" class="hidden" accept=".json,application/json" onchange="onMergeFileChosen(event)">
       </div>
         <div class="app-header-insight-row no-print no-image-export">
-          <button type="button" id="headerStateBtn" class="header-summary-btn" onclick="toggleHeaderInsights('state')" aria-expanded="false" aria-controls="headerInsightsPanel">
+          <button type="button" id="headerOverviewBtn" class="header-summary-btn" onclick="toggleHeaderInsights()" aria-expanded="false" aria-controls="headerInsightsPanel">
             <svg aria-hidden="true" class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19V9m5 10V5m5 14v-7m5 7V3"></path></svg>
-            <span>Состояние плана</span>
+            <span>План</span>
             <span id="headerStateSummary" class="header-summary-value"></span>
-          </button>
-          <button type="button" id="headerDatesBtn" class="header-summary-btn" onclick="toggleHeaderInsights('dates')" aria-expanded="false" aria-controls="headerInsightsPanel">
-            <svg aria-hidden="true" class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-            <span>Ближайшие даты</span>
+            <span aria-hidden="true" class="text-slate-300">·</span>
+            <span class="header-summary-value">даты:</span>
             <span id="headerDatesCount" class="header-summary-value">0</span>
           </button>
           <span id="autosaveStatus" role="status" aria-live="polite" class="hidden"></span>
@@ -6961,7 +7029,7 @@
       <div class="flex items-center gap-2 grow overflow-x-auto no-scrollbar py-2 px-1" id="statusOverview"></div>
       <div id="statusCompactWrap" class="relative">
         <button type="button" id="statusCompactBtn" onclick="toggleStatusCompactMenu(event)" aria-haspopup="menu" aria-expanded="false" class="w-full h-9 px-3 inline-flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">
-          <span id="statusCompactLabel" class="truncate">Все статусы</span>
+          <span id="statusCompactLabel" class="truncate">Другие статусы</span>
           <span id="statusCompactCount" class="shrink-0 text-[10px] font-bold text-slate-500"></span>
         </button>
         <div id="statusCompactMenu" class="hidden fixed w-72 max-h-80 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-[240]"></div>
@@ -6973,12 +7041,20 @@
         <span id="filterToolsCount" class="hidden min-w-5 h-5 px-1 rounded-full bg-indigo-600 text-white text-[10px] font-bold items-center justify-center">0</span>
       </button>
 
-      <div id="filterToolsWrap" hidden>
+      <div id="filterToolsWrap" role="dialog" aria-modal="false" aria-label="Фильтры плана" hidden>
+      <div class="filter-tools-header">
+        <div>
+          <div class="filter-tools-title">Фильтры плана</div>
+          <div class="filter-tools-subtitle">Проект, исполнитель и быстрые условия в одном месте</div>
+        </div>
+        <button type="button" class="filter-tools-close" onclick="toggleFilterTools(false)" aria-label="Закрыть фильтры">
+          <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
 
+      <div class="filter-tools-separator hidden xl:block w-px h-7 bg-slate-200 shrink-0 mx-2"></div>
 
-      <div class="hidden xl:block w-px h-7 bg-slate-200 shrink-0 mx-2"></div>
-
-      <div class="flex flex-wrap items-center gap-2 shrink-0">
+      <div class="filter-tools-fields flex flex-wrap items-center gap-2 shrink-0">
         <!-- Статус , первичный фильтр это чипы «Сводки статусов» (renderStatusOverview): счетчики, светофор, мультивыбор той же statusFilterSel. Дубль-дропдаун убран (V6). -->
 
         <!-- Группа: Jira-проект (мультивыбор, скрыта когда проектов <= 1) -->
@@ -7006,24 +7082,25 @@
         </div>
       </div>
 
-      <div class="w-px h-7 bg-slate-200 self-center shrink-0 mx-1 hidden xl:block"></div>
-      <div class="flex items-center gap-1.5 shrink-0">
-      <button type="button" id="goritModeBtn" onclick="toggleGoritMode()" aria-pressed="false" aria-label="Только горящее" title="Только горящее: просрочено, срок в ближайшую неделю или блокеры" class="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl border transition-colors cursor-pointer bg-slate-50 border-slate-200 text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path></svg></button>
-      <button type="button" id="mineModeBtn" onclick="toggleMineMode()" aria-pressed="false" aria-label="Мои задачи" title="Мои задачи (исполнитель , имя автора из Настроек)" class="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl border transition-colors cursor-pointer bg-slate-50 border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></button>
+      <div class="filter-tools-separator w-px h-7 bg-slate-200 self-center shrink-0 mx-1 hidden xl:block"></div>
+      <div class="filter-tools-actions flex items-center gap-1.5 shrink-0">
+      <button type="button" id="goritModeBtn" data-label="Горящее" onclick="toggleGoritMode()" aria-pressed="false" aria-label="Только горящее" title="Только горящее: просрочено, срок в ближайшую неделю или блокеры" class="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl border transition-colors cursor-pointer bg-slate-50 border-slate-200 text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path></svg></button>
+      <button type="button" id="mineModeBtn" data-label="Мои задачи" onclick="toggleMineMode()" aria-pressed="false" aria-label="Мои задачи" title="Мои задачи (исполнитель , имя автора из Настроек)" class="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl border transition-colors cursor-pointer bg-slate-50 border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></button>
       <div class="relative shrink-0">
-        <button type="button" id="releaseFilterBtn" onclick="toggleReleaseFilterMenu(event)" class="relative inline-flex items-center justify-center h-9 w-9 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl transition-colors cursor-pointer" title="Фильтр по метке, компоненту, релизу и своим полям" aria-label="Фильтр по метке, компоненту, релизу и своим полям" aria-haspopup="menu"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5a1.99 1.99 0 011.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z"></path></svg><span id="releaseFilterCount" class="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 bg-indigo-600 text-white text-[10px] font-semibold leading-none rounded-full ring-2 ring-white inline-flex items-center justify-center tabular-nums" style="display:none">0</span></button>
+        <button type="button" id="releaseFilterBtn" data-label="Метки и релизы" onclick="toggleReleaseFilterMenu(event)" class="relative inline-flex items-center justify-center h-9 w-9 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl transition-colors cursor-pointer" title="Фильтр по метке, компоненту, релизу и своим полям" aria-label="Фильтр по метке, компоненту, релизу и своим полям" aria-haspopup="menu"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5a1.99 1.99 0 011.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z"></path></svg><span id="releaseFilterCount" class="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 bg-indigo-600 text-white text-[10px] font-semibold leading-none rounded-full ring-2 ring-white inline-flex items-center justify-center tabular-nums" style="display:none">0</span></button>
         <div id="releaseFilterMenu" role="menu" class="hidden fixed w-60 max-h-72 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-[110] no-print no-image-export"></div>
       </div>
       <div class="relative shrink-0">
-        <button type="button" id="presetBtn" onclick="togglePresetMenu(event)" class="inline-flex items-center justify-center h-9 w-9 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl transition-colors cursor-pointer" title="Наборы фильтров" aria-label="Наборы фильтров" aria-haspopup="menu"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg></button>
+        <button type="button" id="presetBtn" data-label="Наборы" onclick="togglePresetMenu(event)" class="inline-flex items-center justify-center h-9 w-9 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl transition-colors cursor-pointer" title="Наборы фильтров" aria-label="Наборы фильтров" aria-haspopup="menu"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg></button>
         <div id="presetMenu" class="hidden fixed w-56 bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-[100] no-print no-image-export"></div>
       </div>
-      <button type="button" onclick="resetAllFilters()" class="shrink-0 inline-flex items-center justify-center w-9 h-9 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-500 hover:text-rose-600 rounded-xl transition-colors cursor-pointer" title="Сбросить все фильтры" aria-label="Сбросить все фильтры">
+      <button type="button" data-label="Сбросить всё" onclick="resetAllFilters()" class="shrink-0 inline-flex items-center justify-center w-9 h-9 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-500 hover:text-rose-600 rounded-xl transition-colors cursor-pointer" title="Сбросить все фильтры" aria-label="Сбросить все фильтры">
         <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
       </button>
       </div>
       </div>
     </section>
+    <div id="activeFiltersBar" hidden aria-label="Активные фильтры"></div>
 
     <!-- Выпадающие панели мультивыбора фильтров (fixed, чтобы не обрезались overflow секции) -->
     <div id="resourceFilterPanel" data-filter-panel class="hidden fixed z-[100] w-56 max-h-72 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 no-print no-image-export"></div>
@@ -7057,6 +7134,7 @@
             <span class="text-xs font-semibold">Изменения из Jira · <span id="jiraFreshDate" class="tabular-nums">--</span><span id="jiraFreshCount" class="hidden"></span></span>
           </button>
         </div>
+        <div id="planOverviewHost" class="flex items-center shrink-0"></div>
       </div>
     </nav>
     </div>
@@ -8562,6 +8640,9 @@ if (typeof globalThis !== 'undefined') {
         ['health','Проверить здоровье плана','Ошибки, риски и поля','здоровье ошибки риски'],
         ['builder','Собрать план','Пошаговая проверка','собрать план проверка'],
         ['jira','Импорт / экспорт Jira','Обновить задачи','jira импорт экспорт'],
+        ['versions','История версий файла','Снимки и восстановление','версии восстановление откат история файла'],
+        ['team','Открыть команду','Люди, роли и занятость','команда люди роли ресурсы занятость отпуска'],
+        ['settings','Открыть настройки','Вид, модули и справочники','настройки вид модули справочники'],
         ['view-summary','Открыть сводку','Главное о плане','сводка обзор'],
         ['view-list','Открыть список и Гант','Задачи и таймлайн','список гант'],
         ['view-board','Открыть доску','Карточки по статусам','доска канбан'],
@@ -8743,6 +8824,7 @@ if (typeof globalThis !== 'undefined') {
       if (r.kind === 'command') {
         const actions={
           'add-task':function(){openModal();},'add-section':function(){addSectionPrompt();},'health':function(){openPlanHealthCenter();},'builder':function(){openPlanBuilder();},'jira':function(){openJiraSync();},
+          'versions':function(){openVersionsModal();},'team':function(){openResourceModal('roles');},'settings':function(){openSettingsModal();},
           'view-summary':function(){setAppView('summary');},'view-list':function(){setAppView('list');},'view-board':function(){setAppView('kanban');},'view-present':function(){setAppView('present');},'timeline-fit':function(){setAppView('list');setTimeout(function(){fitTimelineToPlan();},80);}
         }; if(actions[r.id])actions[r.id](); return;
       }
@@ -12865,26 +12947,36 @@ if (typeof globalThis !== 'undefined') {
     function closeHeaderInsights() {
       const panel = document.getElementById('headerInsightsPanel');
       if (panel) panel.hidden = true;
-      ['headerStateBtn', 'headerDatesBtn'].forEach(id => { const b = document.getElementById(id); if (b) b.setAttribute('aria-expanded', 'false'); });
+      const btn = document.getElementById('headerOverviewBtn');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
     }
-    function toggleHeaderInsights(kind) {
+    function toggleHeaderInsights() {
       const panel = document.getElementById('headerInsightsPanel');
       const state = document.getElementById('headerInsightsState');
       const dates = document.getElementById('headerInsightsDates');
       if (!panel || !state || !dates) return;
-      const next = kind === 'dates' ? 'dates' : 'state';
-      const sameOpen = !panel.hidden && panel.dataset.kind === next;
-      if (sameOpen) { closeHeaderInsights(); return; }
+      const btn = document.getElementById('headerOverviewBtn');
+      if (!panel.hidden) { closeHeaderInsights(); return; }
       if (typeof closeAllPopovers === 'function') closeAllPopovers();
-      panel.dataset.kind = next;
+      if (panel.parentElement !== document.body) document.body.appendChild(panel);
       panel.hidden = false;
-      state.hidden = next !== 'state';
-      dates.hidden = next !== 'dates';
-      const sb = document.getElementById('headerStateBtn'), db = document.getElementById('headerDatesBtn');
-      if (sb) sb.setAttribute('aria-expanded', next === 'state' ? 'true' : 'false');
-      if (db) db.setAttribute('aria-expanded', next === 'dates' ? 'true' : 'false');
+      state.hidden = false;
+      dates.hidden = false;
+      if (btn) {
+        btn.setAttribute('aria-expanded', 'true');
+        const r = btn.getBoundingClientRect(), edge = 8, gap = 6;
+        const width = Math.min(736, window.innerWidth - edge * 2);
+        panel.style.width = width + 'px';
+        panel.style.left = Math.max(edge, Math.min(r.right - width, window.innerWidth - width - edge)) + 'px';
+        const height = Math.min(panel.scrollHeight, window.innerHeight - edge * 2);
+        const below = r.bottom + gap, above = r.top - gap - height;
+        panel.style.top = (below + height <= window.innerHeight - edge ? below : Math.max(edge, above)) + 'px';
+      }
     }
     function updateHeaderSummary() {
+      const host = document.getElementById('planOverviewHost');
+      const row = document.querySelector('#appHeader .app-header-insight-row');
+      if (host && row && row.parentElement !== host) host.appendChild(row);
       const out = document.getElementById('headerStateSummary');
       if (!out) return;
       const tasks = (Array.isArray(roadmapData) ? roadmapData : []).filter(t => t && !t.hidden && !t.isMilestone);
@@ -12896,11 +12988,14 @@ if (typeof globalThis !== 'undefined') {
         try { const d = parseLocalDate(c.date); const dd = Math.round((d - CURRENT_DATE) / 86400000); return dd >= 0 && dd <= horizon; } catch (e) { return false; }
       }).length;
       out.textContent = pct + '% · ' + tasks.length + ' задач' + (soon ? ' · ' + soon + ' скоро' : '');
+      const overview = document.getElementById('headerOverviewBtn');
+      if (overview) overview.setAttribute('aria-label', 'План: ' + out.textContent + '. Ближайшие даты: ' + (document.getElementById('headerDatesCount')?.textContent || '0'));
     }
     document.addEventListener('click', function (event) {
       const panel = document.getElementById('headerInsightsPanel');
       if (!panel || panel.hidden) return;
-      const inside = panel.contains(event.target) || ['headerStateBtn', 'headerDatesBtn'].some(id => { const b = document.getElementById(id); return b && b.contains(event.target); });
+      const btn = document.getElementById('headerOverviewBtn');
+      const inside = panel.contains(event.target) || (btn && btn.contains(event.target));
       if (!inside) closeHeaderInsights();
     });
     function renderHeaderCutoffChips() {
@@ -15909,16 +16004,30 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const m = document.getElementById('settingsModal'); if (!m) return;
       renderSettingsModal();
       m.classList.remove('hidden');
+      requestAnimationFrame(syncSettingsTabsOverflow);
       if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
     }
     function closeSettingsModal() { const m = document.getElementById('settingsModal'); if (m) m.classList.add('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
     let _settingsTab = 'proj';
+    function syncSettingsTabsOverflow() {
+      const tabs = document.getElementById('settingsTabList') || document.querySelector('#settingsModal nav[role="tablist"]'); if (!tabs) return;
+      if (!tabs.id) tabs.id = 'settingsTabList';
+      tabs.classList.add('settings-tab-list');
+      if (!tabs.dataset.overflowBound) {
+        tabs.dataset.overflowBound = '1';
+        tabs.addEventListener('scroll', syncSettingsTabsOverflow, {passive:true});
+      }
+      const atEnd = tabs.scrollLeft + tabs.clientWidth >= tabs.scrollWidth - 2;
+      tabs.setAttribute('data-at-end', atEnd ? 'true' : 'false');
+    }
     function settingsTab(name) {
       _settingsTab = name || 'proj';
       const root = document.getElementById('settingsModal'); if (!root) return;
       root.querySelectorAll('[data-settings-panel]').forEach(p => p.classList.toggle('hidden', p.getAttribute('data-settings-panel') !== _settingsTab));
+      let activeTab = null;
       root.querySelectorAll('[data-settings-tab]').forEach(b => {
         const on = b.getAttribute('data-settings-tab') === _settingsTab;
+        if (on) activeTab = b;
         b.setAttribute('aria-selected', on ? 'true' : 'false');
         b.classList.toggle('bg-white', on);
         b.classList.toggle('text-indigo-700', on);
@@ -15926,6 +16035,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
         b.classList.toggle('text-slate-600', !on);
       });
       const c = document.getElementById('settingsContent'); if (c) c.scrollTop = 0;
+      if (activeTab) activeTab.scrollIntoView({block:'nearest', inline:'center'});
+      requestAnimationFrame(syncSettingsTabsOverflow);
     }
     function saveAuthorNameInput(v) {
       if (READ_ONLY_MODE) return;
@@ -16033,11 +16144,13 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (e) e.stopPropagation();
       const menu = document.getElementById('presetMenu'); if (!menu) return;
       const willOpen = menu.classList.contains('hidden');
+      const btn = (e && e.currentTarget && e.currentTarget.id === 'presetBtn') ? e.currentTarget : document.getElementById('presetBtn');
+      const anchorRect = btn ? btn.getBoundingClientRect() : null;
       closeAllPopovers();
       if (willOpen) {
+        if (menu.parentElement !== document.body) document.body.appendChild(menu);
         renderPresetMenu();
-        const btn = (e && e.currentTarget && e.currentTarget.id === 'presetBtn') ? e.currentTarget : document.getElementById('presetBtn');
-        if (btn) { const r = btn.getBoundingClientRect(); menu.style.top = (r.bottom + 6) + 'px'; menu.style.left = Math.max(8, Math.min(r.right - 224, window.innerWidth - 232)) + 'px'; }
+        if (anchorRect) { menu.style.top = (anchorRect.bottom + 6) + 'px'; menu.style.left = Math.max(8, Math.min(anchorRect.right - 224, window.innerWidth - 232)) + 'px'; }
         menu.classList.remove('hidden');
       }
     }
@@ -16172,6 +16285,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (e) e.stopPropagation();
       const m = document.getElementById('releaseFilterMenu'); if (!m) return;
       if (m.classList.contains('hidden')) {
+        if (m.parentElement !== document.body) document.body.appendChild(m);
         relFilterQuery = ''; renderReleaseFilterMenu();
         // меню теперь fixed (в общем ряду фильтров) , позиционируем под кнопкой, как у пресетов
         const btn = document.getElementById('releaseFilterBtn');
@@ -16243,6 +16357,9 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const btn = document.getElementById('moreMenuBtn'); if (btn) btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
       const trigger = ev && ev.currentTarget && typeof ev.currentTarget.getBoundingClientRect === 'function' ? ev.currentTarget : btn;
       if (willOpen && trigger) {
+        // Меню живет в body, а не внутри шапки: так оно не попадает под
+        // соседнюю панель фильтров или таймлайн из-за stacking context браузера.
+        if (m.parentElement !== document.body) document.body.appendChild(m);
         m.classList.remove('hidden');
         const r = trigger.getBoundingClientRect();
         const gap = 6;
@@ -16346,6 +16463,15 @@ let resourceView = 'roles'; // 'roles' | 'load'
       closeAllPopovers();
     }, true);
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllPopovers(); });
+    document.addEventListener('pointerdown', (e) => {
+      const wrap = document.getElementById('filterToolsWrap');
+      const btn = document.getElementById('filterToolsBtn');
+      if (!wrap || wrap.hidden || !btn) return;
+      const target = e.target;
+      if (wrap.contains(target) || btn.contains(target)) return;
+      if (target && target.closest && target.closest('[data-filter-panel],#releaseFilterMenu,#presetMenu')) return;
+      toggleFilterTools(false);
+    }, true);
 
     // === Кастомные тултипы вместо нативных title (быстрее, читаемы, не режутся у краев) ===
     (function initAppTooltips() {
@@ -24177,23 +24303,81 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       try { if (_noGoalFilter) n++; } catch (e) {}
       return n;
     }
+    function activeFilterSummaries() {
+      const items = [];
+      const addSelection = (label, set, labelId) => {
+        if (!set || !set.size) return;
+        const labelEl = labelId ? document.getElementById(labelId) : null;
+        const visible = labelEl && labelEl.textContent ? labelEl.textContent.trim() : '';
+        const values = Array.from(set).map(String).filter(Boolean);
+        items.push(label + ': ' + (visible && !/^Все\s/i.test(visible) ? visible : (values.length === 1 ? values[0] : values.length)));
+      };
+      try { addSelection('Проект', projectFilterSel, 'projectFilterLabel'); } catch (e) {}
+      try { addSelection('Исполнитель', resourceFilterSel, 'resourceFilterLabel'); } catch (e) {}
+      try { addSelection('Релиз', releaseFilterSel); } catch (e) {}
+      try { addSelection('Метка', labelFilterSel); } catch (e) {}
+      try { addSelection('Компонент', componentFilterSel); } catch (e) {}
+      try { const n = _cfActiveFieldCount(); if (n) items.push('Свои поля: ' + n); } catch (e) {}
+      try { if (_goritMode) items.push('Горящее'); } catch (e) {}
+      try { if (_mineMode) items.push('Мои задачи'); } catch (e) {}
+      try { if (_kindFilter === 'urgent') items.push('Инциденты и хотфиксы'); else if (_kindFilter === 'extdep') items.push('Внешние зависимости'); else if (_kindFilter) items.push('Тип задачи'); } catch (e) {}
+      try { if (_noGoalFilter) items.push('Без цели'); } catch (e) {}
+      return items;
+    }
+    function renderActiveFiltersBar() {
+      const bar = document.getElementById('activeFiltersBar');
+      const deck = document.getElementById('planControlDeck');
+      if (!bar) return;
+      const items = activeFilterSummaries();
+      bar.hidden = items.length === 0;
+      if (deck) deck.classList.toggle('has-active-filters', items.length > 0);
+      bar.innerHTML = items.length ? [
+        '<span class="shrink-0 px-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">Активно</span>',
+        ...items.map(text => `<button type="button" class="active-filter-chip" onclick="toggleFilterTools(true)" title="Изменить фильтры">${escHtml(text)}</button>`),
+        '<button type="button" class="active-filter-chip !border-slate-200 !bg-white !text-slate-600 hover:!text-rose-600" onclick="resetAllFilters()" title="Сбросить все фильтры">Сбросить всё</button>'
+      ].join('') : '';
+    }
     function updateFilterToolsSummary() {
       const btn = document.getElementById('filterToolsBtn'), badge = document.getElementById('filterToolsCount');
-      if (!btn || !badge) return;
+      if (!btn || !badge) { renderActiveFiltersBar(); return; }
       const n = activeFilterToolCount();
       btn.dataset.active = n ? '1' : '0';
       badge.textContent = String(n);
       badge.classList.toggle('hidden', !n);
       badge.classList.toggle('inline-flex', !!n);
+      renderActiveFiltersBar();
     }
     function toggleFilterTools(forceOpen) {
       const wrap = document.getElementById('filterToolsWrap'), btn = document.getElementById('filterToolsBtn');
       if (!wrap || !btn) return;
       const open = (typeof forceOpen === 'boolean') ? forceOpen : wrap.hidden;
       if (open && typeof closeAllPopovers === 'function') closeAllPopovers();
-      wrap.hidden = !open;
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if (open) { const first = wrap.querySelector('button,[tabindex]'); if (first) setTimeout(() => first.focus({ preventScroll:true }), 0); }
+      if (!open) {
+        wrap.hidden = true;
+        ['left','right','top','bottom','width','maxHeight'].forEach(prop => { wrap.style[prop] = ''; });
+        return;
+      }
+      if (wrap.parentElement !== document.body) document.body.appendChild(wrap);
+      wrap.hidden = false;
+      if (window.innerWidth > 767) {
+        const edge = 8, gap = 6;
+        const r = btn.getBoundingClientRect();
+        const width = Math.min(384, window.innerWidth - edge * 2);
+        wrap.style.width = width + 'px';
+        wrap.style.left = Math.max(edge, Math.min(r.right - width, window.innerWidth - width - edge)) + 'px';
+        wrap.style.right = 'auto';
+        wrap.style.bottom = 'auto';
+        const availableBelow = window.innerHeight - r.bottom - gap - edge;
+        const availableAbove = r.top - gap - edge;
+        const naturalHeight = wrap.scrollHeight;
+        const placeBelow = availableBelow >= Math.min(naturalHeight, 320) || availableBelow >= availableAbove;
+        const available = Math.max(160, placeBelow ? availableBelow : availableAbove);
+        wrap.style.maxHeight = Math.min(608, available) + 'px';
+        wrap.style.top = (placeBelow ? r.bottom + gap : Math.max(edge, r.top - gap - Math.min(naturalHeight, available))) + 'px';
+      }
+      const first = wrap.querySelector('.filter-tools-close,button,[tabindex]');
+      if (first) setTimeout(() => first.focus({ preventScroll:true }), 0);
     }
     // Клик по «Просрочено»: включаем режим «Горит» (если еще не включен) , показать всю горящую работу.
     function renderStatusOverview() {
@@ -24220,8 +24404,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       // Общий % готовности проекта показываем в чипе «Всего N (P%)» ниже
       chips.push(`<button onclick="setStatusFilter('all')" aria-pressed="${sel.size === 0}" title="Общий прогресс проекта: готово ${doneCount} из ${totalTasks} (${overallPct}%)" class="transition-all inline-flex items-center gap-2 pl-2 pr-3.5 py-[7px] rounded-xl shrink-0 whitespace-nowrap bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold cursor-pointer ${getStyle(sel.size === 0)}">Все <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">${totalTasks}</span></button>`);
 
-      const primaryStatusIds = new Set(['planned', 'in_progress', 'completed']);
-      projectStatuses.filter(s => primaryStatusIds.has(s.id) || sel.has(s.id)).forEach(s => {
+      (projectStatuses || []).forEach(s => {
         const count = roadmapData.filter(t => !t.isMilestone && t.status === s.id && inScope(t)).length;
         // Показываем ВСЕ статусы, не схлопываем и не прячем пустые (п.5).
         // Единый спокойный чип: белый фон + цветная точка (цвет статуса), без радуги фонов.
@@ -24241,20 +24424,6 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const blActive = sel.has('blocked');
       if (blActive) chips.push(specChip('blocked', blActive, 'Блокеры', 'bg-rose-600', blockedCount, 'Заблокированные задачи'));
 
-      // Сводка активных фильтров (по проекту/ресурсу/релизу/меткам/компонентам) + быстрый сброс ,
-      // иначе непонятно, почему часть задач скрыта.
-      const dims = [];
-      if (projectFilterSel.size) dims.push('проект');
-      if (resourceFilterSel.size) dims.push('ресурс');
-      if (releaseFilterSel.size) dims.push('релиз');
-      if (labelFilterSel.size) dims.push('метки');
-      if (componentFilterSel.size) dims.push('компоненты');
-      { const _cfn = _cfActiveFieldCount(); if (_cfn) dims.push('свои поля: ' + _cfn); }
-      if (dims.length) {
-        const allTasks = roadmapData.filter(t => !t.isMilestone).length;
-        chips.push(`<button onclick="resetAllFilters()" title="Сбросить все фильтры" class="transition-all inline-flex items-center gap-1.5 pl-2.5 pr-2.5 py-[7px] rounded-xl shrink-0 whitespace-nowrap border border-amber-300 bg-amber-50 text-amber-700 text-xs font-medium cursor-pointer hover:bg-amber-100">Фильтр: ${dims.join(', ')} , показано ${totalTasks} из ${allTasks}<svg aria-hidden="true" class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg></button>`);
-      }
-
       container.innerHTML = chips.join('');
       if (!container._scrollBound) { container.addEventListener('scroll', updateStatusOverflowArrow, { passive: true }); container._scrollBound = true; }
       requestAnimationFrame(updateStatusOverflowArrow);
@@ -24267,14 +24436,18 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const menu = document.getElementById('statusCompactMenu'), label = document.getElementById('statusCompactLabel'), countEl = document.getElementById('statusCompactCount');
       if (!menu || !label || !countEl) return;
       const inScope = t => t && !t.hidden && !t.isMilestone && taskPassesNonStatusFilters(t);
-      const total = (roadmapData || []).filter(inScope).length;
+      const scopedTasks = (roadmapData || []).filter(inScope);
+      const total = scopedTasks.length;
+      const primaryStatusIds = new Set(['planned', 'in_progress', 'completed']);
+      const secondaryTotal = scopedTasks.filter(t => !primaryStatusIds.has(t.status)).length;
       const names = [];
       statusFilterSel.forEach(id => {
         if (id === 'overdue') names.push('Просрочено'); else if (id === 'milestone') names.push('Вехи'); else if (id === 'blocked') names.push('Блокеры');
         else { const st = (projectStatuses || []).find(s => s.id === id); if (st) names.push(st.name); }
       });
-      label.textContent = names.length ? (names.length === 1 ? names[0] : 'Статусы: ' + names.length) : 'Ещё статусы';
-      countEl.textContent = String(total);
+      label.textContent = names.length ? (names.length === 1 ? names[0] : 'Статусы: ' + names.length) : 'Другие статусы';
+      countEl.textContent = String(secondaryTotal);
+      countEl.classList.toggle('hidden', secondaryTotal === 0 && names.length === 0);
       const row = (id, name, n, dot) => { const on = statusFilterSel.has(id); return `<button type="button" onclick="setStatusFilter('${escAttr(id)}');renderStatusCompactMenu()" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-left text-xs ${on ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}"><span class="w-2 h-2 rounded-full ${dot || 'bg-slate-400'}"></span><span class="grow truncate">${escHtml(name)}</span><span class="tabular-nums text-[10px] ${on ? 'text-indigo-600' : 'text-slate-500'}">${n}</span></button>`; };
       let html = `<button type="button" onclick="setStatusFilter('all');renderStatusCompactMenu()" class="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs ${statusFilterSel.size ? 'text-slate-700 hover:bg-slate-50' : 'bg-indigo-50 text-indigo-700 font-semibold'}"><span>Все статусы</span><span>${total}</span></button>`;
       (projectStatuses || []).forEach(st => { const n = (roadmapData || []).filter(t => inScope(t) && t.status === st.id).length; const dot = ((st.barTheme || st.color || '').split(/\s+/).find(c => /^bg-/.test(c))) || 'bg-slate-400'; html += row(st.id, st.name, n, dot); });
@@ -28867,7 +29040,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         </button>
       </div>
       <div id="globalSearchResults" class="overflow-y-auto flex-1 min-h-[100px]"></div>
-      <div class="px-5 py-2.5 border-t border-slate-100 flex items-center gap-3 text-[10px] text-slate-400 shrink-0 no-print"><span class="inline-flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-[10px] text-slate-600">Стрелки</kbd> выбрать</span><span class="inline-flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-[10px] text-slate-600">Enter</kbd> перейти</span><span class="inline-flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-[10px] text-slate-600">Esc</kbd> закрыть</span></div>
+      <div class="px-5 py-2.5 border-t border-slate-100 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-slate-400 shrink-0 no-print"><span class="font-medium text-slate-500">Команды: проверки, Jira, версии, команда</span><span class="inline-flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-[10px] text-slate-600">Стрелки</kbd> выбрать</span><span class="inline-flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-[10px] text-slate-600">Enter</kbd> перейти</span><span class="inline-flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-[10px] text-slate-600">Esc</kbd> закрыть</span></div>
     </div>
   </div>
 
@@ -32640,8 +32813,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
   </div>
   <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-2xl flex flex-col sm:flex-row items-center sm:items-center justify-between gap-3">
    <a href="mailto:uchv@ya.ru" rel="noopener noreferrer" class="group flex items-center gap-2.5 transition-all">
-    <img src="avatar.jpg" alt="Владимир У." onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm shrink-0">
-    <div class="w-10 h-10 rounded-full bg-indigo-100 group-hover:bg-indigo-600 items-center justify-center text-indigo-600 group-hover:text-white font-bold text-xs transition-colors shrink-0 hidden">ВУ</div>
+    <div class="w-10 h-10 rounded-full bg-indigo-100 group-hover:bg-indigo-600 flex items-center justify-center text-indigo-600 group-hover:text-white font-bold text-xs transition-colors shrink-0">ВУ</div>
     <div class="flex flex-col leading-tight">
      <span class="text-xs font-semibold text-slate-700 group-hover:text-indigo-700 transition-colors"><span class="text-slate-500 font-normal">Создатель ·</span> Владимир У.</span>
      <span class="text-[10px] text-slate-500 group-hover:text-indigo-600 transition-colors font-mono mt-0.5">uchv@ya.ru</span>
@@ -33146,7 +33318,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         <p id="startupBrowserHint" class="hidden text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-3 text-center">Открытие своего файла (с автосохранением) работает в Chrome или Edge. В этом браузере выберите импорт из Jira, демо или начните с чистого листа , данные можно сохранить в JSON через меню «Данные».</p>
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-4 pt-4 border-t border-slate-100 text-[11px] text-slate-500">
           <span>Первый раз здесь?</span>
-          <button type="button" onclick="startTourFromStartup()" class="font-semibold text-indigo-600 hover:text-indigo-700 underline-offset-2 hover:underline cursor-pointer sm:text-right">Посмотреть короткий тур на примере</button>
+          <button type="button" onclick="startTourFromStartup()" class="startup-tour-btn px-3 inline-flex items-center justify-center rounded-xl font-semibold text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 underline-offset-2 hover:underline cursor-pointer sm:text-right">Посмотреть короткий тур на примере</button>
         </div>
       </div>
     </div>
