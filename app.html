@@ -6161,16 +6161,20 @@
    .rm-operational-list { scrollbar-gutter:stable; }
    @media (max-width:640px) { .rm-operational-toolbar > * { width:100%; } .rm-operational-toolbar .rm-action { width:100%; } }
 
-   /* v14.0: единый ритм модальных окон, меню и уведомлений. Разметка старых
+   /* v14.1: единый ритм модальных окон, меню и уведомлений. Разметка старых
       функций получает эти роли автоматически через normalizeUiChrome(). */
    .rm-dialog-overlay.rm-dialog-overlay {
      background:var(--rm-overlay) !important;
+     z-index:var(--rm-layer-z,1100) !important;
+     isolation:isolate;
      -webkit-backdrop-filter:blur(4px) !important;
      backdrop-filter:blur(4px) !important;
      padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left)) !important;
      overscroll-behavior:contain;
    }
    .rm-dialog-surface.rm-dialog-surface {
+     position:relative;
+     z-index:1;
      color:var(--rm-text) !important;
      background:var(--rm-surface) !important;
      border:1px solid var(--rm-border) !important;
@@ -6277,6 +6281,7 @@
    }
    .plan-health-badge.hidden { display:none; }
    #planHealthBtn { padding-left:.75rem; padding-right:.5rem; }
+   body:has(.rm-dialog-overlay:not(.hidden)) #appTooltip { opacity:0 !important; left:-9999px !important; }
 
    /* Compact first-run screen: one introduction, one action hierarchy, no dead space. */
    #startupModal .startup-shell { max-width:56rem; max-height:calc(100dvh - 2rem); display:flex; flex-direction:column; overflow:hidden; }
@@ -6323,6 +6328,17 @@
    body[data-workspace="myweek"] #headerCutoffsSep,
    body[data-workspace="myweek"] #stateDashboard,
    body[data-workspace="myweek"] #projectFilterGroup { display:none !important; }
+   body.roadmap-empty[data-workspace="myweek"] #planFilterBar { display:none !important; }
+   body.roadmap-empty #sprintBand,
+   body.roadmap-empty #sprintBandSpacer { display:none !important; }
+   body.roadmap-empty #zoomControl,
+   body.roadmap-empty #zoomControlMobile,
+   body.roadmap-empty #timeline-footer { display:none !important; }
+   body.roadmap-empty #timeline-header { width:100% !important; }
+   body.roadmap-empty #timeline-header > * { display:none !important; }
+   body.roadmap-empty #bars-container { width:100% !important; min-width:0 !important; }
+   body.roadmap-empty .timeline-scroll { overflow:hidden !important; }
+   body.roadmap-empty .timeline-empty-state { position:static; width:100%; min-height:550px; }
    body[data-workspace="leadership"] #addTaskHeaderBtn,
    body[data-workspace="leadership"] #planBuilderBtn,
    body[data-workspace="leadership"] #quickActionsGroup,
@@ -6335,9 +6351,9 @@
    body[data-workspace="leadership"] #headerCutoffsSep { display:none !important; }
    body[data-workspace="leadership"] #stateDashboard { display:flex !important; }
    .workspace-select { min-width:9.75rem; max-width:11rem; }
-   #planBuilderPanel { width:100%; z-index:950; }
+   #planBuilderPanel { width:100%; z-index:var(--rm-layer-z,1100); }
    #planBuilderPanel:not(.hidden) { display:flex; }
-   #planBuilderBackdrop { z-index:940; }
+   #planBuilderBackdrop { z-index:1090; }
    #planBuilderBackdrop:not(.hidden) { display:block; }
    @media (min-width:640px) { #planBuilderPanel { width:430px; } }
    .plan-builder-step[aria-current="step"] { border-color:#818cf8; background:#eef2ff; color:#4338ca; }
@@ -6349,7 +6365,10 @@
    /* v14.0: adaptive planning shell. */
    #statusCompactWrap,#mobilePlanNav { display:none; }
    .planning-hub-badge { min-width:1.25rem; height:1.25rem; padding:0 .35rem; border-radius:999px; background:#e11d48; color:#fff; font-size:.625rem; font-weight:800; align-items:center; justify-content:center; }
-   #planViewNav .workspace-picker,#planViewNav label[title^="Рабочий режим"],#planViewNav #planBuilderBtn,#planViewNav #planHealthBtn,#planViewNav #jiraChangesChip { display:none !important; }
+   #planViewNav #planBuilderBtn,#planViewNav #planHealthBtn,#planViewNav #jiraChangesChip { display:none !important; }
+   #planViewNav .workspace-picker { display:inline-flex; }
+   #planViewNav .workspace-mode-label { display:inline-flex; }
+   .timeline-empty-state { position:sticky; left:0; width:max(20rem,min(44rem,calc(100vw - 32rem))); min-height:34rem; }
    body[data-list-density="compact"] #tasks-list-container > div[id^="header-left-"],body[data-list-density="compact"] #bars-container > div[id^="header-right-"] { height:46px !important; }
    body[data-list-density="compact"] #tasks-list-container [id^="task-row-left-"],body[data-list-density="compact"] #bars-container [id^="task-row-right-"] { min-height:38px !important; height:38px !important; }
    .pres-edit-row .pres-row-actions { opacity:.18; transition:opacity .15s ease; }
@@ -6372,6 +6391,7 @@
      #planFilterBar { padding:.5rem; gap:.5rem; }
      #planFilterBar > div:nth-of-type(3) { display:none !important; }
      #planViewNav { display:none; }
+     .timeline-empty-state { width:min(100vw,36rem); }
      .pres-edit-row .pres-row-actions { opacity:1; }
    }
   }
@@ -6493,8 +6513,8 @@
         </div>
         <!-- Дополнительные инструменты открываются из строки представлений. -->
         <div id="moreMenu" class="hidden fixed w-72 bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-[220] no-print no-image-export">
-            <div class="px-2.5 pt-1 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Рабочий режим</div>
-            <div class="grid grid-cols-3 gap-1 px-1 pb-1.5" role="group" aria-label="Рабочий режим">
+            <div class="workspace-menu-mobile md:hidden px-2.5 pt-1 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Режим плана</div>
+            <div class="workspace-menu-mobile md:hidden grid grid-cols-3 gap-1 px-1 pb-1.5" role="group" aria-label="Режим плана">
               <button type="button" data-workspace-choice="planning" onclick="closeMoreMenu();setWorkspaceMode('planning')" class="h-8 rounded-lg border border-slate-200 text-[10px] font-semibold text-slate-600 hover:bg-indigo-50">План</button>
               <button type="button" data-workspace-choice="myweek" onclick="closeMoreMenu();setWorkspaceMode('myweek')" class="h-8 rounded-lg border border-slate-200 text-[10px] font-semibold text-slate-600 hover:bg-indigo-50">Моя неделя</button>
               <button type="button" data-workspace-choice="leadership" onclick="closeMoreMenu();setWorkspaceMode('leadership')" class="h-8 rounded-lg border border-slate-200 text-[10px] font-semibold text-slate-600 hover:bg-indigo-50">Руководство</button>
@@ -6743,10 +6763,10 @@
         <div id="planViewTabs" class="flex items-center gap-1 min-w-max" role="group" aria-label="Виды плана"></div>
         <div class="w-px h-6 bg-slate-200 shrink-0 mx-0.5" aria-hidden="true"></div>
         <div class="flex items-center gap-1.5 min-w-max" role="group" aria-label="Режим и инструменты планирования">
-          <label class="shrink-0 inline-flex items-center gap-1.5" title="Рабочий режим меняет набор представлений, но не данные проекта">
-            <span class="hidden lg:inline text-[10px] font-semibold uppercase tracking-wider text-slate-500">Режим</span>
+          <label class="workspace-mode-label shrink-0 items-center gap-1.5" title="Режим меняет представление, но не данные проекта">
+            <span class="hidden xl:inline text-[10px] font-semibold uppercase tracking-wider text-slate-500">Режим плана</span>
             <span class="workspace-picker">
-              <select id="workspaceModeSelect" onchange="setWorkspaceMode(this.value)" class="workspace-select h-9 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-xs font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/40" aria-label="Рабочий режим">
+              <select id="workspaceModeSelect" onchange="setWorkspaceMode(this.value)" class="workspace-select h-9 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-xs font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/40" aria-label="Режим плана">
                 <option value="planning">Планирование</option>
                 <option value="myweek">Моя неделя</option>
                 <option value="leadership">Руководство</option>
@@ -7240,7 +7260,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v14.0">
+<script data-roadmap-modules="v14.1">
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
@@ -8640,7 +8660,7 @@ if (typeof globalThis !== 'undefined') {
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '14.0';
+    const APP_VERSION = '14.1';
     const APP_VERSION_DATE = '29.07.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
@@ -15501,8 +15521,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
       applyWorkspaceMode({ skipView: !!opts.skipView });
       if (!opts.skipRender && typeof renderRoadmap === 'function') renderRoadmap(true);
       if (!opts.silent && typeof showToast === 'function') {
-        const label = workspaceMode === 'myweek' ? 'Моя неделя' : (workspaceMode === 'leadership' ? 'Для руководителя' : 'Планирование');
-        showToast('Рабочий режим: ' + label + (clearedForLeadership ? '. Показывается весь план, фильтры сброшены.' : ''), 'info', clearedForLeadership ? 4200 : 2200);
+        const label = workspaceMode === 'myweek' ? 'Моя неделя' : (workspaceMode === 'leadership' ? 'Руководство' : 'Планирование');
+        showToast('Режим плана: ' + label + (clearedForLeadership ? '. Показывается весь план, фильтры сброшены.' : ''), 'info', clearedForLeadership ? 4200 : 2200);
       }
     }
     // Чип балла приоритизации в строках , опт-ин, по умолчанию выключен (вью-преференс, как режим и сортировка)
@@ -21472,7 +21492,12 @@ let resourceView = 'roles'; // 'roles' | 'load'
       var next = (v === 'kanban' || v === 'forecast' || v === 'present' || v === 'summary') ? v : 'list';
       if (typeof uiMode !== 'undefined' && uiMode === 'simple' && next === 'forecast') next = 'list';
       var allowed = (typeof _workspaceAllowedViews === 'function') ? _workspaceAllowedViews() : null;
-      if (allowed && !allowed.has(next)) next = workspaceMode === 'leadership' ? 'summary' : 'list';
+      // Переход из сокращенного режима к скрытому виду должен открывать этот вид,
+      // а не молча возвращать пользователя на прежнюю страницу.
+      if (allowed && !allowed.has(next) && typeof setWorkspaceMode === 'function') {
+        setWorkspaceMode('planning', { skipView: true, skipRender: true, silent: true });
+        if (typeof showToast === 'function') showToast('Открыт полный план', 'info', 1800);
+      }
       appView = next; kanbanMode = (appView === 'kanban'); applyAppView();
     }
     function toggleKanban() { setAppView(appView === 'kanban' ? 'list' : 'kanban'); }
@@ -21838,6 +21863,28 @@ let resourceView = 'roles'; // 'roles' | 'load'
     let listDensity = (function(){ try{return storage.get('gantt_list_density')==='compact'?'compact':'comfortable';}catch(e){return 'comfortable';} })();
     function applyListDensity(){ document.body.dataset.listDensity=listDensity; const b=document.getElementById('listDensityBtn'); if(b){const compact=listDensity==='compact';b.classList.toggle('bg-indigo-50',compact);b.classList.toggle('text-indigo-700',compact);b.setAttribute('aria-pressed',compact?'true':'false');b.title=compact?'Компактный список. Нажмите для обычного':'Обычный список. Нажмите для компактного';} }
     function toggleListDensity(){ listDensity=listDensity==='compact'?'comfortable':'compact'; try{storage.set('gantt_list_density',listDensity);}catch(e){} applyListDensity(); renderRoadmap(true); }
+    function renderRoadmapEmptyState(listContainer, barsContainer) {
+      const emptyProject = (roadmapData || []).length === 0;
+      const myWeekEmpty = !emptyProject && typeof workspaceMode !== 'undefined' && workspaceMode === 'myweek';
+      const myWeekHasAuthor = !myWeekEmpty || (typeof _authorName === 'function' && !!_authorName());
+      const title = emptyProject ? 'Проект пуст' : (myWeekEmpty ? (myWeekHasAuthor ? 'На этой неделе задач нет' : 'Сначала укажите себя') : 'Ничего не найдено');
+      const description = emptyProject
+        ? 'Добавьте первую задачу или загрузите данные из Jira в меню «Данные».'
+        : (myWeekEmpty ? (myWeekHasAuthor ? 'Для вас нет активных, заблокированных или запланированных на эту неделю задач.' : 'Имя автора сопоставляется с исполнителем задач и хранится только в этом файле.') : 'Под текущие фильтры ни одна задача не подходит. Попробуйте сбросить параметры.');
+      const icon = emptyProject
+        ? 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
+        : 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z';
+      const action = emptyProject
+        ? `<div class="flex flex-wrap items-center justify-center gap-2"><button type="button" onclick="openModal()" class="inline-flex items-center gap-1.5 h-9 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all cursor-pointer shadow-xs"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>Добавить задачу</button><button type="button" onclick="startDemo()" class="inline-flex items-center gap-1.5 h-9 px-3 bg-white hover:bg-violet-50 text-violet-600 border border-violet-200 text-xs font-semibold rounded-xl transition-all cursor-pointer">Посмотреть пример</button></div>`
+        : (myWeekEmpty
+          ? `<div class="flex flex-wrap items-center justify-center gap-2">${myWeekHasAuthor ? '' : `<button type="button" onclick="openSettingsModal()" class="inline-flex items-center gap-1.5 h-9 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all cursor-pointer shadow-xs">Указать себя</button>`}<button type="button" onclick="setWorkspaceMode('planning')" class="inline-flex items-center gap-1.5 h-9 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-xl border border-indigo-200/60 transition-all cursor-pointer">Открыть весь план</button></div>`
+          : `<button type="button" onclick="resetAllFilters()" class="inline-flex items-center gap-1.5 h-9 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-xl border border-indigo-200/60 transition-all cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Сбросить фильтры</button>`);
+      listContainer.innerHTML = `<div class="px-5 py-12 text-center bg-white"><div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl ${emptyProject ? 'bg-indigo-50 text-indigo-500' : 'bg-slate-100 text-slate-500'} mb-3"><svg aria-hidden="true" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="${icon}"></path></svg></div><div class="text-sm font-semibold text-slate-700 mb-1">${title}</div><div class="text-xs text-slate-500 mb-4 max-w-xs mx-auto">${description}</div>${action}</div>`;
+
+      const timelineTitle = emptyProject ? 'Таймлайн пока пуст' : (myWeekEmpty ? 'На таймлайне нет задач этой недели' : 'На таймлайне нет результатов');
+      const timelineDescription = emptyProject ? 'Добавьте задачу со сроками, и она появится на шкале.' : 'Здесь появятся только задачи, соответствующие выбранному режиму и фильтрам.';
+      barsContainer.innerHTML = `<div class="timeline-empty-state flex items-center justify-center px-6 py-12 text-center"><div class="max-w-sm"><div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-500"><svg aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 7h16M4 12h10M4 17h7"></path></svg></div><div class="text-sm font-semibold text-slate-700">${timelineTitle}</div><div class="mt-1 text-xs leading-5 text-slate-500">${timelineDescription}</div></div></div>`;
+    }
     function renderRoadmap(skipSave = false) {
       applyListDensity();
       var _prevLeftDate = null;
@@ -21855,6 +21902,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (typeof appView !== 'undefined') { try { if (appView === 'kanban') renderKanban(); else if (appView === 'forecast') renderForecast(); else if (appView === 'present') renderPresent(); else if (appView === 'summary') renderSummary(); } catch (e) { console.warn('Рендер вида упал:', appView, e); } }
       // в других видах скрытый Список+Гант не пересобираем: только общие панели и сохранение
       if (typeof appView !== 'undefined' && appView && appView !== 'list') {
+        document.body.classList.remove('roadmap-empty');
         try { renderStatusOverview(); } catch (e) {}
         try { if (typeof renderStateDashboard === 'function') renderStateDashboard(); } catch (e) {}
         if (!skipSave) { try { storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData)); scheduleAutoSaveFile(); } catch (e) {} }
@@ -21863,6 +21911,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const listContainer = document.getElementById('tasks-list-container');
       const barsContainer = document.getElementById('bars-container');
       const visibleTasks = roadmapData.filter(taskPassesFilters);
+      document.body.classList.toggle('roadmap-empty', visibleTasks.length === 0);
       const _indexApi = globalThis.RoadmapModules;
       const _visibleNormalTasks = visibleTasks.filter(t => t && !t.hidden);
       const _visibleIndex = _indexApi.createRoadmapIndex({ roadmapData: _visibleNormalTasks }, { includeArchived: false });
@@ -21885,6 +21934,14 @@ let resourceView = 'roles'; // 'roles' | 'load'
         barsContainer.addEventListener('mouseover', (e) => { const r = e.target.closest('[id^="task-row-right-"]'); if (r) { const id = parseInt(r.id.slice(15), 10); if (Number.isFinite(id)) highlightDependencyChain(id); } });
         barsContainer.addEventListener('mouseleave', () => clearDependencyHighlight());
         barsContainer._depBound = true;
+      }
+      if (visibleTasks.length === 0) {
+        renderRoadmapEmptyState(listContainer, barsContainer);
+        if (!skipSave) {
+          storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData));
+          scheduleAutoSaveFile();
+        }
+        return;
       }
       // Ближайшая будущая отсечка , для индикатора риска дедлайна
       const _nextCutoff = (customCutoffs || []).filter(c => c && c.date && !c.done && parseLocalDate(c.date) >= CURRENT_DATE).sort((a, b) => parseLocalDate(a.date) - parseLocalDate(b.date))[0] || null;
@@ -22021,41 +22078,6 @@ let resourceView = 'roles'; // 'roles' | 'load'
         cLine.appendChild(badgeBot);
         barsContainer.appendChild(cLine);
       });
-
-      if (visibleTasks.length === 0) {
-        // Различаем «проект пуст» (нет задач вообще) и «фильтры все скрыли»
-        const emptyProject = (roadmapData || []).length === 0;
-        const myWeekEmpty = !emptyProject && typeof workspaceMode !== 'undefined' && workspaceMode === 'myweek';
-        const myWeekHasAuthor = !myWeekEmpty || (typeof _authorName === 'function' && !!_authorName());
-        const lTitle = emptyProject ? 'Проект пуст' : (myWeekEmpty ? (myWeekHasAuthor ? 'На этой неделе задач нет' : 'Сначала укажите себя') : 'Ничего не найдено');
-        const lDesc = emptyProject
-          ? 'Добавьте первую задачу или загрузите данные из Jira (меню «Данные» в шапке).'
-          : (myWeekEmpty ? (myWeekHasAuthor ? 'Для вас нет активных, заблокированных или запланированных на эту неделю задач.' : 'Имя автора сопоставляется с исполнителем задач и хранится только в этом файле.') : 'Под текущие фильтры ни одна задача не подходит. Попробуйте сбросить параметры.');
-        const lIcon = emptyProject
-          ? 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
-          : 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z';
-        const lAction = emptyProject
-          ? `<div class="flex flex-wrap items-center justify-center gap-2"><button type="button" onclick="openModal()" class="inline-flex items-center gap-1.5 h-8 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-xs"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>Добавить задачу</button><button type="button" onclick="startDemo()" class="inline-flex items-center gap-1.5 h-8 px-3 bg-white hover:bg-violet-50 text-violet-600 border border-violet-200 text-xs font-semibold rounded-lg transition-all cursor-pointer">Посмотреть пример</button></div>`
-          : (myWeekEmpty
-            ? `<div class="flex flex-wrap items-center justify-center gap-2">${myWeekHasAuthor ? '' : `<button type="button" onclick="openSettingsModal()" class="inline-flex items-center gap-1.5 h-8 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-xs">Указать себя</button>`}<button type="button" onclick="setWorkspaceMode('planning')" class="inline-flex items-center gap-1.5 h-8 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-lg border border-indigo-200/60 transition-all cursor-pointer">Открыть весь план</button></div>`
-            : `<button type="button" onclick="resetAllFilters()" class="inline-flex items-center gap-1.5 h-8 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-lg border border-indigo-200/60 transition-all cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Сбросить фильтры</button>`);
-        listContainer.innerHTML = `
-          <div class="px-5 py-12 text-center bg-white">
-            <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl ${emptyProject ? 'bg-indigo-50 text-indigo-500' : 'bg-slate-100 text-slate-500'} mb-3">
-              <svg aria-hidden="true" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="${lIcon}"></path></svg>
-            </div>
-            <div class="text-sm font-semibold text-slate-700 mb-1">${lTitle}</div>
-            <div class="text-xs text-slate-500 mb-4 max-w-xs mx-auto">${lDesc}</div>
-            ${lAction}
-          </div>`;
-        // Сообщение в списке самодостаточно; отдельный оверлей на таймлайне центрировался
-        // по всей ширине прокрутки и «уезжал» вправо , поэтому его убрали.
-        if (!skipSave) {
-          storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData));
-          scheduleAutoSaveFile();
-        }
-        return;
-      }
 
       // Рендер секций плана + раздел «Скрытые» внизу
       // Скрывая секцию, прячем и ее вложенные подсекции (иначе родителя спрятали, а содержимое , фазы/истории , осталось видимым).
@@ -28110,6 +28132,56 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       epicCardModal: function(){ if (typeof closeEpicCard === 'function') closeEpicCard(); },
       settingsModal: function(){ if (typeof closeSettingsModal === 'function') closeSettingsModal(); }
     };
+    // Новое окно всегда поднимается над предыдущим. Закрытие по Esc работает
+    // в обратном порядке, а меню и подсказки не остаются поверх диалога.
+    let _modalLayerSerial = 1100;
+    function _resolveModalLayer(node) {
+      if (!node || node.nodeType !== 1) return null;
+      return node.closest('[data-modal-backdrop]') || node.closest('.fixed.inset-0') || node;
+    }
+    function _modalLayerIsOpen(layer) { return !!(layer && layer.isConnected && !layer.classList.contains('hidden')); }
+    function promoteModalLayer(node) {
+      const layer = _resolveModalLayer(node);
+      if (!layer || !_modalLayerIsOpen(layer)) return;
+      if (typeof closeAllPopovers === 'function') closeAllPopovers();
+      layer.style.setProperty('--rm-layer-z', String(++_modalLayerSerial));
+      layer.removeAttribute('aria-hidden');
+      if (layer.id === 'planBuilderPanel') {
+        const backdrop = document.getElementById('planBuilderBackdrop');
+        if (backdrop) backdrop.style.zIndex = String(_modalLayerSerial - 1);
+      }
+      if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
+    }
+    function reconcileModalLayers(root) {
+      const found = [];
+      const selector = '[data-modal-backdrop], [role="dialog"][aria-modal="true"]';
+      function collect(node) {
+        if (!node || node.nodeType !== 1) return;
+        if (node.matches(selector)) found.push(node);
+        node.querySelectorAll && node.querySelectorAll(selector).forEach(function (item) { found.push(item); });
+      }
+      collect(root || document.body);
+      found.map(_resolveModalLayer).filter(function (layer, index, all) {
+        return layer && all.indexOf(layer) === index && _modalLayerIsOpen(layer);
+      }).forEach(promoteModalLayer);
+    }
+    const _modalLayerObserver = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        if (mutation.type === 'attributes') {
+          const layer = _resolveModalLayer(mutation.target);
+          const oldClasses = String(mutation.oldValue || '').split(/\s+/);
+          const wasHidden = oldClasses.includes('hidden');
+          const becameOverlay = !oldClasses.includes('rm-dialog-overlay') && layer && layer.classList.contains('rm-dialog-overlay');
+          if (layer && mutation.target === layer && (wasHidden || becameOverlay) && _modalLayerIsOpen(layer)) promoteModalLayer(layer);
+        } else mutation.addedNodes.forEach(function (node) { if (node.nodeType === 1) reconcileModalLayers(node); });
+      });
+    });
+    function startModalLayerObserver() {
+      reconcileModalLayers(document.body);
+      _modalLayerObserver.observe(document.body, { subtree: true, childList: true, attributes: true, attributeOldValue: true, attributeFilter: ['class'] });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startModalLayerObserver, { once: true });
+    else startModalLayerObserver();
     function topVisibleModal() {
       let top = null, topZ = -1;
       Object.keys(MODAL_CLOSERS).forEach(id => {
@@ -29048,7 +29120,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     <h3 class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">
      <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-     <span id="appVersionBadge">v14.0, 29.07.2026</span>
+     <span id="appVersionBadge">v14.1, 29.07.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -29114,7 +29186,16 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </div>
 
    <div>
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v14.0 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v14.1 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Понятное переключение режимов</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">НАВИГАЦИЯ</span></div><p class="text-xs text-slate-600">Выбор режима всегда виден рядом с представлениями плана. Из «Руководства» и «Моей недели» можно вернуться в полный план одним действием, а плитки сводки открывают нужный список автоматически.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Чистый Гант при пустой выборке</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">ТАЙМЛАЙН</span></div><p class="text-xs text-slate-600">Когда задач нет, список и таймлайн показывают согласованное объяснение. Спринты, дата «Сегодня», релизы и другие метки больше не остаются поверх пустого экрана.</p></div>
+     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Предсказуемые окна и меню</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">UI/UX</span></div><p class="text-xs text-slate-600">Новое окно всегда открывается над текущим, лишние меню закрываются, а Esc возвращает в предыдущее окно. Подсказки не перекрывают диалоги.</p></div>
+    </div>
+   </div>
+
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v14.0</h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Адаптивный центр планирования</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">UI/UX</span></div><p class="text-xs text-slate-600">Режимы работы, сборка плана, здоровье и изменения Jira собраны в одном меню. На узких экранах статусы сворачиваются, а основные представления доступны в нижней навигации.</p></div>
      <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Быстрая работа с планом</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">ПЛАН</span></div><p class="text-xs text-slate-600">Появились компактные список и канбан, понятные счётчики иерархии, готовые диапазоны таймлайна и команды прямо в глобальном поиске.</p></div>
@@ -33247,7 +33328,7 @@ function saveAuditTeams(){
 try { if(typeof MODAL_CLOSERS!=='undefined') MODAL_CLOSERS.auditTeamsModal=closeAuditTeams; } catch(e){}
 // Escape для аудита и под-модалки «Команды» обрабатывает центральный MODAL_CLOSERS (закрывает строго верхнюю модалку по z-index).
 
-// v14.0: единая визуальная система для старых и динамически создаваемых окон.
+// v14.1: единая визуальная система для старых и динамически создаваемых окон.
 // Роли добавляются поверх существующей разметки, поэтому поведение форм и сохранение данных не меняются.
 function normalizeUiChrome(root) {
   if (!root) return;
