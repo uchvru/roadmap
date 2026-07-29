@@ -6523,6 +6523,82 @@
    #taskForm[data-task-tab="history"] #taskTalkBody { display:block !important; }
    #taskForm[data-task-tab="history"] .task-history-section .card-adv { display:block !important; }
 
+   /* v14.4: компактная двухуровневая рабочая область. Верхний уровень отвечает
+      за проект и действия, нижний объединяет виды, проверки и фильтры. */
+   #appHeader .app-header-grid {
+     grid-template-columns:minmax(20rem,auto) minmax(22rem,1fr);
+     padding:.75rem 1rem; gap:.625rem 1rem;
+   }
+   #appHeader .app-header-toolbar { align-self:start; }
+   #appHeader .app-header-actions { gap:.375rem; }
+   #appHeader .app-header-insight-row {
+     grid-column:1/-1; display:flex; align-items:center; gap:.5rem; min-width:0;
+     padding-top:.625rem; border-top:1px solid var(--rm-border);
+   }
+   .header-summary-btn {
+     min-height:2rem; padding:.35rem .625rem; border:1px solid var(--rm-border);
+     border-radius:.625rem; background:var(--rm-surface-soft); color:var(--rm-text);
+     display:inline-flex; align-items:center; gap:.4rem; white-space:nowrap;
+     font-size:.6875rem; font-weight:700; cursor:pointer;
+   }
+   .header-summary-btn:hover,.header-summary-btn[aria-expanded="true"] {
+     color:#4338ca; border-color:#c7d2fe; background:#eef2ff;
+   }
+   .header-summary-value { color:var(--rm-muted); font-weight:600; }
+   #headerInsightsPanel {
+     position:absolute; left:1rem; right:auto; width:min(46rem,calc(100% - 2rem)); top:calc(100% - .25rem); z-index:260;
+     padding:.75rem; border:1px solid var(--rm-border); border-radius:.875rem;
+     background:var(--rm-surface); box-shadow:0 18px 40px rgba(15,23,42,.16);
+   }
+   #headerInsightsPanel[hidden] { display:none !important; }
+   #headerInsightsPanel .header-insight-block[hidden] { display:none !important; }
+   #headerInsightsPanel #stateDashboard { padding-left:0 !important; overflow:visible; }
+   #headerInsightsPanel #headerCutoffsSep { align-items:center; }
+   #autosaveStatus { display:none !important; }
+
+   #planControlDeck {
+     margin-bottom:.75rem; border:1px solid var(--rm-border); border-radius:1rem;
+     background:var(--rm-surface); box-shadow:var(--rm-shadow-sm); overflow:visible;
+     display:flex; flex-direction:column;
+   }
+   #planControlDeck #planViewNav {
+     order:-1; margin:0 !important; border:0 !important; border-radius:1rem 1rem 0 0 !important;
+     box-shadow:none !important; overflow:visible; background:transparent !important;
+   }
+   #planControlDeck #planViewNav > div { padding:.5rem .625rem; }
+   #planControlDeck #planFilterBar {
+     margin:0 !important; padding:.5rem .625rem !important; gap:.5rem !important;
+     border:0 !important; border-top:1px solid var(--rm-border) !important;
+     border-radius:0 0 1rem 1rem !important; box-shadow:none !important;
+     background:transparent !important; overflow:visible !important;
+   }
+   #planControlDeck .plan-command-bar { border:0; background:transparent; padding:0; }
+   #filterToolsWrap {
+     display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; min-width:0;
+   }
+   #filterToolsWrap[hidden] { display:none !important; }
+   #filterToolsBtn {
+     min-height:2.25rem; padding:.4rem .7rem; border:1px solid var(--rm-border);
+     border-radius:.7rem; background:var(--rm-surface-soft); color:var(--rm-text);
+     display:inline-flex; align-items:center; gap:.4rem; font-size:.75rem; font-weight:700;
+   }
+   #filterToolsBtn:hover,#filterToolsBtn[aria-expanded="true"],#filterToolsBtn[data-active="1"] {
+     color:#4338ca; border-color:#c7d2fe; background:#eef2ff;
+   }
+   #statusOverview { flex:0 1 auto; }
+   #statusCompactWrap { flex:none; }
+   #statusCompactBtn { width:auto !important; min-width:8.75rem; }
+   #summaryView > div:first-child { min-height:3rem; }
+
+   @media (min-width:1101px) {
+     #planFilterBar { flex-direction:row !important; align-items:center !important; }
+     #statusCompactWrap { display:block !important; }
+   }
+   @media (max-width:1279px) {
+     #appHeader .app-header-grid { grid-template-columns:1fr; }
+     #appHeader .app-header-insight-row { grid-column:1; }
+   }
+
    @media (max-width:767px) {
      .rm-btn.rm-btn { min-height:2.75rem; }
      .rm-popover .rm-menu-action { min-height:2.75rem; }
@@ -6534,6 +6610,12 @@
      .task-card-tab { min-width:7.25rem; flex:0 0 auto; }
      .rm-form-grid.rm-form-grid { grid-template-columns:minmax(0,1fr) !important; }
      .rm-dialog-footer .rm-btn { flex:1 1 9rem; }
+     #appHeader .app-header-insight-row { overflow-x:auto; padding-bottom:.125rem; }
+     #headerInsightsPanel { position:fixed; left:.5rem; right:.5rem; width:auto; top:auto; bottom:5rem; max-height:55vh; overflow:auto; }
+     #planControlDeck { border-radius:.875rem; }
+     #planControlDeck #planViewNav { display:none !important; }
+     #planControlDeck #planFilterBar { border-top:0 !important; border-radius:.875rem !important; }
+     #filterToolsWrap { position:absolute; left:.5rem; right:.5rem; margin-top:.25rem; z-index:230; padding:.625rem; border:1px solid var(--rm-border); border-radius:.875rem; background:var(--rm-surface); box-shadow:0 14px 34px rgba(15,23,42,.18); }
    }
    @media (prefers-reduced-motion:reduce) { .rm-side-sheet { animation:none !important; } .rm-btn { transition:none !important; } }
    .timeline-empty-state { position:sticky; left:0; width:max(20rem,min(44rem,calc(100vw - 32rem))); min-height:34rem; }
@@ -6557,7 +6639,6 @@
      #appHeader .app-header-toolbar { width:100%; }
      #appHeader #reportsMenuWrap,#appHeader #autoSaveBtn,#appHeader #archiveBtn { display:none !important; }
      #planFilterBar { padding:.5rem; gap:.5rem; }
-     #planFilterBar > div:nth-of-type(3) { display:none !important; }
      #planViewNav { display:none; }
      .timeline-empty-state { width:min(100vw,36rem); }
      .pres-edit-row .pres-row-actions { opacity:1; }
@@ -6840,16 +6921,33 @@
         <input type="file" id="csvGenericFile" class="hidden" accept=".csv,text/csv,text/plain" onchange="onCsvFileChosen(event)">
         <input type="file" id="mergeFile" class="hidden" accept=".json,application/json" onchange="onMergeFileChosen(event)">
       </div>
-        <!-- pl-[52px] = лого w-10(40px) + gap-3(12px): пилюли выровнены под именем/иконкой РО -->
-        <div id="stateDashboard" class="hidden lg:flex flex-nowrap items-center gap-x-2 gap-y-1 min-w-0 overflow-x-auto no-scrollbar no-image-export lg:pl-[52px]"></div>
-        <div class="flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0 no-print">
-        <div id="headerCutoffsSep" class="flex flex-wrap items-center justify-start gap-1.5 min-w-0">
-          <span id="headerCutoffChips" class="contents"></span>
-          <button type="button" onclick="openHeaderCutoffPicker()" aria-label="Настроить отсечки в шапке" class="no-image-export group relative inline-flex items-center justify-center w-6 h-6 rounded-md text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer shrink-0" title="Какие метки показывать в шапке">
-            <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+        <div class="app-header-insight-row no-print no-image-export">
+          <button type="button" id="headerStateBtn" class="header-summary-btn" onclick="toggleHeaderInsights('state')" aria-expanded="false" aria-controls="headerInsightsPanel">
+            <svg aria-hidden="true" class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19V9m5 10V5m5 14v-7m5 7V3"></path></svg>
+            <span>Состояние плана</span>
+            <span id="headerStateSummary" class="header-summary-value"></span>
           </button>
+          <button type="button" id="headerDatesBtn" class="header-summary-btn" onclick="toggleHeaderInsights('dates')" aria-expanded="false" aria-controls="headerInsightsPanel">
+            <svg aria-hidden="true" class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <span>Ближайшие даты</span>
+            <span id="headerDatesCount" class="header-summary-value">0</span>
+          </button>
+          <span id="autosaveStatus" role="status" aria-live="polite" class="hidden"></span>
         </div>
-        <span id="autosaveStatus" role="status" aria-live="polite" class="hidden xl:inline ml-auto shrink min-w-0 text-[10px] font-medium tracking-wide text-slate-500 no-print no-image-export text-right"></span>
+        <div id="headerInsightsPanel" hidden>
+          <div id="headerInsightsState" class="header-insight-block">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Состояние плана</div>
+            <div id="stateDashboard" class="flex flex-wrap items-center gap-2 min-w-0 no-scrollbar"></div>
+          </div>
+          <div id="headerInsightsDates" class="header-insight-block" hidden>
+            <div class="flex items-center justify-between gap-3 mb-2">
+              <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Ближайшие даты</div>
+              <button type="button" onclick="openHeaderCutoffPicker()" class="text-[10px] font-semibold text-indigo-600 hover:underline cursor-pointer">Настроить</button>
+            </div>
+            <div id="headerCutoffsSep" class="flex flex-wrap items-center justify-start gap-1.5 min-w-0">
+              <span id="headerCutoffChips" class="contents"></span>
+            </div>
+          </div>
         </div>
       </div>
     </header>
@@ -6857,7 +6955,8 @@
     <!-- Сводка для PNG-снимка: видна только в режиме экспорта (image-export-mode) -->
     <div id="snapshotInfoBar" class="mb-6 px-5 py-4 bg-white rounded-2xl border border-slate-200/80 shadow-xs"></div>
 
-    <section id="planFilterBar" class="mb-2 bg-white rounded-2xl border border-slate-200/80 shadow-xs p-2 flex flex-col xl:flex-row items-center justify-between gap-3 overflow-x-auto no-scrollbar no-print no-image-export">
+    <div id="planControlDeck" class="no-print no-image-export">
+    <section id="planFilterBar" class="bg-white p-2 flex flex-col xl:flex-row items-center justify-between gap-3 overflow-x-auto no-scrollbar">
 
       <div class="flex items-center gap-2 grow overflow-x-auto no-scrollbar py-2 px-1" id="statusOverview"></div>
       <div id="statusCompactWrap" class="relative">
@@ -6867,6 +6966,14 @@
         </button>
         <div id="statusCompactMenu" class="hidden fixed w-72 max-h-80 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-[240]"></div>
       </div>
+
+      <button type="button" id="filterToolsBtn" onclick="toggleFilterTools()" aria-expanded="false" aria-controls="filterToolsWrap">
+        <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h18M6 12h12m-8 7h4"></path></svg>
+        <span>Фильтры</span>
+        <span id="filterToolsCount" class="hidden min-w-5 h-5 px-1 rounded-full bg-indigo-600 text-white text-[10px] font-bold items-center justify-center">0</span>
+      </button>
+
+      <div id="filterToolsWrap" hidden>
 
 
       <div class="hidden xl:block w-px h-7 bg-slate-200 shrink-0 mx-2"></div>
@@ -6915,6 +7022,7 @@
         <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
       </button>
       </div>
+      </div>
     </section>
 
     <!-- Выпадающие панели мультивыбора фильтров (fixed, чтобы не обрезались overflow секции) -->
@@ -6951,6 +7059,7 @@
         </div>
       </div>
     </nav>
+    </div>
 
     <nav id="mobilePlanNav" aria-label="Основные разделы">
       <button type="button" data-mobile-view="summary" onclick="setAppView('summary')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 5h7v7H4zM13 5h7v4h-7zM13 11h7v8h-7zM4 14h7v5H4z"/></svg><span>Сводка</span></button>
@@ -7419,7 +7528,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v14.3">
+<script data-roadmap-modules="v14.4">
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
@@ -8819,7 +8928,7 @@ if (typeof globalThis !== 'undefined') {
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '14.3';
+    const APP_VERSION = '14.4';
     const APP_VERSION_DATE = '29.07.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
@@ -8909,7 +9018,7 @@ if (typeof globalThis !== 'undefined') {
     }
 
     // Встроенные демо-данные (пример проекта) , для режима «Посмотреть демо» на стартовом экране. Отдельный демо-файл больше не нужен.
-    const DEMO_DATA = {"savedAt":"2026-07-22T20:00:00.000Z","title":"Запуск мобильного приложения","pageMeta":{"poName":"Алексей Смирнов"},"sections":["Initiative: Запуск мобильного приложения [PAY-1]","Epic: Исследование и дизайн [PAY-100]","Story: Исследование пользователей [PAY-110]","Story: Прототип и дизайн-система [PAY-120]","Epic: Архитектура и платформа [PAY-200]","Story: Техническая проработка [PAY-210]","Story: Базовая разработка [PAY-220]","Epic: Платежи и подписки [PAY-300]","Story: Подключение оплаты [PAY-310]","Story: Подписки [PAY-320]","Epic: Личный кабинет [LK-100]","Story: Профиль пользователя [LK-110]","Story: История заказов [LK-120]","Epic: Тестирование и запуск [PAY-400]","Story: Подготовка релиза [PAY-410]","Задачи без эпика"],"sectionColors":{"Initiative: Запуск мобильного приложения [PAY-1]":"bg-indigo-600 text-white","Epic: Исследование и дизайн [PAY-100]":"bg-violet-500 text-white","Story: Исследование пользователей [PAY-110]":"bg-emerald-500 text-white","Story: Прототип и дизайн-система [PAY-120]":"bg-teal-500 text-white","Epic: Архитектура и платформа [PAY-200]":"bg-blue-500 text-white","Story: Техническая проработка [PAY-210]":"bg-cyan-500 text-white","Story: Базовая разработка [PAY-220]":"bg-sky-500 text-white","Epic: Платежи и подписки [PAY-300]":"bg-fuchsia-500 text-white","Story: Подключение оплаты [PAY-310]":"bg-pink-500 text-white","Story: Подписки [PAY-320]":"bg-rose-500 text-white","Epic: Личный кабинет [LK-100]":"bg-amber-500 text-slate-900","Story: Профиль пользователя [LK-110]":"bg-orange-500 text-white","Story: История заказов [LK-120]":"bg-lime-500 text-slate-900","Epic: Тестирование и запуск [PAY-400]":"bg-purple-500 text-white","Story: Подготовка релиза [PAY-410]":"bg-indigo-500 text-white","Задачи без эпика":"bg-slate-400 text-white"},"resources":["PO","Тех лид","Дизайнер","QA","a.petrov","m.ivanova","d.kozlov","e.sokolova","i.morozov"],"resourceRoles":{"a.petrov":"Backend","m.ivanova":"Frontend","d.kozlov":"Backend","e.sokolova":"QA","i.morozov":"Frontend"},"cutoffs":[{"id":"c1","name":"Бета-тест","date":"2026-07-15","color":"border-blue-500 bg-blue-500","showInHeader":true,"pinned":true},{"id":"c2","name":"Релиз MVP","date":"2026-08-24","color":"border-rose-500 bg-rose-500","showInHeader":true,"pinned":true},{"id":"release-mvp-1-0","name":"Релиз MVP 1.0","date":"2026-07-01","color":"border-emerald-500 bg-emerald-500","showInHeader":true},{"id":"release-mvp-1-1","name":"Релиз MVP 1.1","date":"2026-07-20","color":"border-indigo-500 bg-indigo-500","showInHeader":true},{"id":"release-mvp-2-0","name":"Релиз MVP 2.0","date":"2026-08-24","color":"border-rose-500 bg-rose-500","showInHeader":false}],"collapsedSections":[],"roadmapData":[{"id":1,"section":"Story: Исследование пользователей [PAY-110]","name":"Интервью с пользователями","status":"completed","resource":"Дизайнер","start":"2026-06-01","end":"2026-06-08","jira":"PAY-111","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"Гипотезы и сегменты согласованы","dod":"Отчет с инсайтами готов","estimate":"","pred":"","release":"MVP 1.0","labels":[],"epicLink":"PAY-100","issueType":"Task","_jiraParentKey":"PAY-110","initiativeId":"demo-launch"},{"id":2,"section":"Story: Исследование пользователей [PAY-110]","name":"Карта пути пользователя (CJM)","status":"completed","resource":"Дизайнер","start":"2026-06-05","end":"2026-06-12","jira":"PAY-112","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"1","release":"MVP 1.0","labels":[],"epicLink":"PAY-100","issueType":"Task","_jiraParentKey":"PAY-110","initiativeId":"demo-launch"},{"id":3,"section":"Story: Прототип и дизайн-система [PAY-120]","name":"Прототип ключевых экранов","status":"in_progress","resource":"m.ivanova","start":"2026-06-10","end":"2026-06-24","jira":"PAY-121","isMilestone":false,"blocked":false,"notes":"","metrics":"Конверсия в регистрацию, время до первого действия","dor":"","dod":"","estimate":"","pred":"2","release":"MVP 1.1","labels":[],"epicLink":"PAY-100","issueType":"Task","_jiraParentKey":"PAY-120","initiativeId":"demo-launch"},{"id":4,"section":"Story: Прототип и дизайн-система [PAY-120]","name":"Дизайн-система и компоненты","status":"review","resource":"Дизайнер","start":"2026-06-16","end":"2026-06-28","jira":"PAY-122","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"3","release":"MVP 1.1","labels":[],"epicLink":"PAY-100","issueType":"Task","_jiraParentKey":"PAY-120","initiativeId":"demo-launch"},{"id":5,"section":"Story: Техническая проработка [PAY-210]","name":"Техническое описание API","status":"completed","resource":"Тех лид","start":"2026-06-08","end":"2026-06-16","jira":"PAY-211","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"2","release":"MVP 1.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-210","initiativeId":"demo-launch"},{"id":6,"section":"Story: Техническая проработка [PAY-210]","name":"Оценка и декомпозиция","status":"completed","resource":"Тех лид","start":"2026-06-16","end":"2026-06-20","jira":"PAY-212","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"5","release":"MVP 1.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-210","initiativeId":"demo-launch"},{"id":7,"section":"Story: Техническая проработка [PAY-210]","name":"Выбор стека и архитектура","status":"in_progress","resource":"a.petrov","start":"2026-06-18","end":"2026-06-30","jira":"PAY-213","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"6","release":"MVP 1.1","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-210","initiativeId":"demo-launch"},{"id":8,"section":"Story: Базовая разработка [PAY-220]","name":"Каркас приложения","status":"in_progress","resource":"a.petrov","start":"2026-06-25","end":"2026-07-10","jira":"PAY-221","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"7","release":"MVP 1.1","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-220","initiativeId":"demo-launch"},{"id":9,"section":"Story: Базовая разработка [PAY-220]","name":"Экран онбординга","status":"planned","resource":"m.ivanova","start":"2026-07-01","end":"2026-07-12","jira":"PAY-222","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"8","release":"MVP 2.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-220","initiativeId":"demo-launch"},{"id":10,"section":"Story: Базовая разработка [PAY-220]","name":"Лента и поиск","status":"planned","resource":"m.ivanova","start":"2026-07-08","end":"2026-07-25","jira":"PAY-223","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"9","release":"MVP 2.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-220","initiativeId":"demo-launch"},{"id":11,"section":"Story: Базовая разработка [PAY-220]","name":"Интеграция аналитики","status":"planned","resource":"d.kozlov","start":"2026-07-15","end":"2026-07-22","jira":"PAY-224","isMilestone":false,"blocked":true,"notes":"Ожидается доступ к тестовой системе аналитики","metrics":"","dor":"","dod":"","estimate":"","pred":"10","release":"MVP 2.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-220","initiativeId":"demo-launch"},{"id":12,"section":"Story: Базовая разработка [PAY-220]","name":"Push-уведомления","status":"planned","resource":"d.kozlov","start":"2026-07-20","end":"2026-07-30","jira":"PAY-225","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"10","release":"MVP 2.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-220","initiativeId":"demo-launch"},{"id":13,"section":"Story: Подготовка релиза [PAY-410]","name":"Тест-план и автотесты","status":"planned","resource":"QA","start":"2026-07-25","end":"2026-08-05","jira":"PAY-411","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"12","release":"MVP 2.0","labels":[],"epicLink":"PAY-400","issueType":"Task","_jiraParentKey":"PAY-410","initiativeId":"demo-launch"},{"id":14,"section":"Story: Подготовка релиза [PAY-410]","name":"Регресс и нагрузочное","status":"testing","resource":"e.sokolova","start":"2026-08-05","end":"2026-08-15","jira":"PAY-412","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"13","release":"MVP 2.0","labels":[],"epicLink":"PAY-400","issueType":"Task","_jiraParentKey":"PAY-410","initiativeId":"demo-launch"},{"id":15,"section":"Story: Подготовка релиза [PAY-410]","name":"Подготовка к релизу","status":"ready_release","resource":"Тех лид","start":"2026-08-15","end":"2026-08-22","jira":"PAY-413","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"14","release":"MVP 2.0","labels":[],"epicLink":"PAY-400","issueType":"Task","_jiraParentKey":"PAY-410","initiativeId":"demo-launch"},{"id":16,"section":"Story: Подготовка релиза [PAY-410]","name":"Запуск MVP","status":"planned","resource":"PO","start":"2026-08-24","end":"2026-08-24","jira":"PAY-414","isMilestone":true,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"15","release":"MVP 2.0","labels":[],"epicLink":"PAY-400","issueType":"Task","_jiraParentKey":"PAY-410","initiativeId":"demo-launch"},{"id":17,"section":"Story: Подключение оплаты [PAY-310]","name":"Подключение платежного провайдера","status":"in_progress","resource":"a.petrov","start":"2026-07-01","end":"2026-07-20","jira":"PAY-311","isMilestone":false,"blocked":false,"notes":"","metrics":"Доля успешных оплат","dor":"","dod":"","estimate":"","pred":"6","release":"MVP 1.1","labels":[],"epicLink":"PAY-300","issueType":"Task","_jiraParentKey":"PAY-310","initiativeId":"demo-launch"},{"id":18,"section":"Story: Подключение оплаты [PAY-310]","name":"Экран оплаты","status":"planned","resource":"m.ivanova","start":"2026-07-15","end":"2026-07-28","jira":"PAY-312","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"17","release":"MVP 2.0","labels":[],"epicLink":"PAY-300","issueType":"Task","_jiraParentKey":"PAY-310","initiativeId":"demo-launch"},{"id":19,"section":"Story: Подписки [PAY-320]","name":"Подписки и автосписание","status":"planned","resource":"i.morozov","start":"2026-07-25","end":"2026-08-10","jira":"PAY-321","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"18","release":"MVP 2.0","labels":[],"epicLink":"PAY-300","issueType":"Task","_jiraParentKey":"PAY-320","initiativeId":"demo-launch"},{"id":20,"section":"Story: Профиль пользователя [LK-110]","name":"Профиль и настройки","status":"planned","resource":"m.ivanova","start":"2026-07-10","end":"2026-07-24","jira":"LK-111","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"6","release":"MVP 2.0","labels":[],"epicLink":"LK-100","issueType":"Task","_jiraParentKey":"LK-110","initiativeId":"demo-launch"},{"id":21,"section":"Story: История заказов [LK-120]","name":"История заказов","status":"planned","resource":"i.morozov","start":"2026-07-20","end":"2026-08-02","jira":"LK-121","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"20","release":"MVP 2.0","labels":[],"epicLink":"LK-100","issueType":"Bug","_jiraParentKey":"LK-120","initiativeId":"demo-launch"},{"id":22,"section":"Задачи без эпика","name":"Обновить документацию","status":"planned","resource":"Тех лид","start":"2026-07-05","end":"2026-07-10","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"","labels":[],"epicLink":"","issueType":"Task","_jiraParentKey":"","initiativeId":"demo-launch"},{"id":23,"section":"Задачи без эпика","name":"Настроить CI/CD","status":"in_progress","resource":"d.kozlov","start":"2026-06-20","end":"2026-06-30","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"22","release":"MVP 1.1","labels":[],"epicLink":"","issueType":"Task","_jiraParentKey":"","initiativeId":"demo-launch"}],"archivedTasks":[],"hiddenSections":[],"projectStatuses":[{"id":"planned","name":"В плане","color":"bg-slate-100 text-slate-600","barTheme":"bg-slate-500 text-white"},{"id":"in_progress","name":"В работе","color":"bg-indigo-50 text-indigo-700","barTheme":"bg-indigo-500 text-white"},{"id":"review","name":"Ревью","color":"bg-violet-50 text-violet-700","barTheme":"bg-violet-500 text-white"},{"id":"testing","name":"Тестирование","color":"bg-amber-50 text-amber-700","barTheme":"bg-amber-500 text-white"},{"id":"ready_release","name":"Готов к релизу","color":"bg-teal-50 text-teal-700","barTheme":"bg-teal-500 text-white"},{"id":"completed","name":"Выполнено","color":"bg-emerald-50 text-emerald-700 font-medium","barTheme":"bg-emerald-500 text-white"}],"projectReleases":[{"name":"MVP 1.0","date":"2026-07-01"},{"name":"MVP 1.1","date":"2026-07-20"},{"name":"MVP 2.0","date":"2026-08-24"}],"epicStatuses":{"PAY-1":"in_progress","PAY-100":"completed","PAY-110":"completed","PAY-120":"review","PAY-200":"in_progress","PAY-210":"completed","PAY-220":"in_progress","PAY-300":"in_progress","PAY-310":"in_progress","PAY-320":"planned","LK-100":"planned","LK-110":"planned","LK-120":"planned","PAY-400":"planned","PAY-410":"planned"},"sectionMeta":{"Initiative: Запуск мобильного приложения [PAY-1]":{"key":"PAY-1","title":"Запуск мобильного приложения","kind":"initiative","status":"in_progress","plannedEnd":"2026-08-24","project":"PAY","fromJira":true},"Epic: Исследование и дизайн [PAY-100]":{"key":"PAY-100","title":"Исследование и дизайн","kind":"epic","status":"completed","plannedEnd":"2026-06-28","project":"PAY","fromJira":true,"wsjf":"18","metric":"Проверенные пользовательские сценарии","impact":"7","epicType":"Бизнесовый"},"Story: Исследование пользователей [PAY-110]":{"key":"PAY-110","title":"Исследование пользователей","kind":"story","status":"completed","plannedEnd":"2026-06-12","project":"PAY","fromJira":true},"Story: Прототип и дизайн-система [PAY-120]":{"key":"PAY-120","title":"Прототип и дизайн-система","kind":"story","status":"review","plannedEnd":"2026-06-28","project":"PAY","fromJira":true},"Epic: Архитектура и платформа [PAY-200]":{"key":"PAY-200","title":"Архитектура и платформа","kind":"epic","status":"in_progress","plannedEnd":"2026-07-30","project":"PAY","fromJira":true,"wsjf":"24","metric":"Стабильность сборки","impact":"8","epicType":"Технический"},"Story: Техническая проработка [PAY-210]":{"key":"PAY-210","title":"Техническая проработка","kind":"story","status":"completed","plannedEnd":"2026-06-30","project":"PAY","fromJira":true},"Story: Базовая разработка [PAY-220]":{"key":"PAY-220","title":"Базовая разработка","kind":"story","status":"in_progress","plannedEnd":"2026-07-30","project":"PAY","fromJira":true},"Epic: Платежи и подписки [PAY-300]":{"key":"PAY-300","title":"Платежи и подписки","kind":"epic","status":"in_progress","plannedEnd":"2026-08-10","project":"PAY","fromJira":true,"wsjf":"24","metric":"Доля успешных оплат","impact":"8","epicType":"Бизнесовый","desc":"Полный демонстрационный цикл оплаты и подписки."},"Story: Подключение оплаты [PAY-310]":{"key":"PAY-310","title":"Подключение оплаты","kind":"story","status":"in_progress","plannedEnd":"2026-07-28","project":"PAY","fromJira":true},"Story: Подписки [PAY-320]":{"key":"PAY-320","title":"Подписки","kind":"story","status":"planned","plannedEnd":"2026-08-10","project":"PAY","fromJira":true},"Epic: Личный кабинет [LK-100]":{"key":"LK-100","title":"Личный кабинет","kind":"epic","status":"planned","plannedEnd":"2026-08-02","project":"LK","fromJira":true,"wsjf":"15","metric":"Retention 30 дней","impact":"6","epicType":"Технический","desc":"Профиль, настройки и история заказов в синтетическом проекте."},"Story: Профиль пользователя [LK-110]":{"key":"LK-110","title":"Профиль пользователя","kind":"story","status":"planned","plannedEnd":"2026-07-24","project":"LK","fromJira":true},"Story: История заказов [LK-120]":{"key":"LK-120","title":"История заказов","kind":"story","status":"planned","plannedEnd":"2026-08-02","project":"LK","fromJira":true},"Epic: Тестирование и запуск [PAY-400]":{"key":"PAY-400","title":"Тестирование и запуск","kind":"epic","status":"planned","plannedEnd":"2026-08-24","project":"PAY","fromJira":true,"wsjf":"20","metric":"Доля успешных запусков","impact":"9","epicType":"Технический"},"Story: Подготовка релиза [PAY-410]":{"key":"PAY-410","title":"Подготовка релиза","kind":"story","status":"planned","plannedEnd":"2026-08-24","project":"PAY","fromJira":true}},"sectionLabels":{"Initiative: Запуск мобильного приложения [PAY-1]":["demo","26Q3"],"Epic: Исследование и дизайн [PAY-100]":["research"],"Epic: Архитектура и платформа [PAY-200]":["platform"],"Epic: Платежи и подписки [PAY-300]":["payments","26Q3"],"Epic: Личный кабинет [LK-100]":["profile","26Q3"],"Epic: Тестирование и запуск [PAY-400]":["release"]},"sectionParents":{"Epic: Исследование и дизайн [PAY-100]":"Initiative: Запуск мобильного приложения [PAY-1]","Epic: Архитектура и платформа [PAY-200]":"Initiative: Запуск мобильного приложения [PAY-1]","Epic: Платежи и подписки [PAY-300]":"Initiative: Запуск мобильного приложения [PAY-1]","Epic: Личный кабинет [LK-100]":"Initiative: Запуск мобильного приложения [PAY-1]","Epic: Тестирование и запуск [PAY-400]":"Initiative: Запуск мобильного приложения [PAY-1]","Story: Исследование пользователей [PAY-110]":"Epic: Исследование и дизайн [PAY-100]","Story: Прототип и дизайн-система [PAY-120]":"Epic: Исследование и дизайн [PAY-100]","Story: Техническая проработка [PAY-210]":"Epic: Архитектура и платформа [PAY-200]","Story: Базовая разработка [PAY-220]":"Epic: Архитектура и платформа [PAY-200]","Story: Подключение оплаты [PAY-310]":"Epic: Платежи и подписки [PAY-300]","Story: Подписки [PAY-320]":"Epic: Платежи и подписки [PAY-300]","Story: Профиль пользователя [LK-110]":"Epic: Личный кабинет [LK-100]","Story: История заказов [LK-120]":"Epic: Личный кабинет [LK-100]","Story: Подготовка релиза [PAY-410]":"Epic: Тестирование и запуск [PAY-400]"},"projectGoals":[{"id":"goal-demo-launch","name":"Запустить полезный MVP","owner":"PO","horizon":"2026 Q3","base":"0","target":"1000 активных пользователей"}],"projectInitiatives":[{"id":"demo-launch","name":"Запуск мобильного приложения","goalId":"goal-demo-launch","nnl":"now"}],"projectRaid":[{"id":"raid-demo-1","type":"risk","title":"Задержка доступа к аналитике","owner":"d.kozlov","status":"open"}]};
+    const DEMO_DATA = {"savedAt":"2026-07-22T20:00:00.000Z","title":"Запуск мобильного приложения","pageMeta":{"poName":"Владимир У"},"sections":["Initiative: Запуск мобильного приложения [PAY-1]","Epic: Исследование и дизайн [PAY-100]","Story: Исследование пользователей [PAY-110]","Story: Прототип и дизайн-система [PAY-120]","Epic: Архитектура и платформа [PAY-200]","Story: Техническая проработка [PAY-210]","Story: Базовая разработка [PAY-220]","Epic: Платежи и подписки [PAY-300]","Story: Подключение оплаты [PAY-310]","Story: Подписки [PAY-320]","Epic: Личный кабинет [LK-100]","Story: Профиль пользователя [LK-110]","Story: История заказов [LK-120]","Epic: Тестирование и запуск [PAY-400]","Story: Подготовка релиза [PAY-410]","Задачи без эпика"],"sectionColors":{"Initiative: Запуск мобильного приложения [PAY-1]":"bg-indigo-600 text-white","Epic: Исследование и дизайн [PAY-100]":"bg-violet-500 text-white","Story: Исследование пользователей [PAY-110]":"bg-emerald-500 text-white","Story: Прототип и дизайн-система [PAY-120]":"bg-teal-500 text-white","Epic: Архитектура и платформа [PAY-200]":"bg-blue-500 text-white","Story: Техническая проработка [PAY-210]":"bg-cyan-500 text-white","Story: Базовая разработка [PAY-220]":"bg-sky-500 text-white","Epic: Платежи и подписки [PAY-300]":"bg-fuchsia-500 text-white","Story: Подключение оплаты [PAY-310]":"bg-pink-500 text-white","Story: Подписки [PAY-320]":"bg-rose-500 text-white","Epic: Личный кабинет [LK-100]":"bg-amber-500 text-slate-900","Story: Профиль пользователя [LK-110]":"bg-orange-500 text-white","Story: История заказов [LK-120]":"bg-lime-500 text-slate-900","Epic: Тестирование и запуск [PAY-400]":"bg-purple-500 text-white","Story: Подготовка релиза [PAY-410]":"bg-indigo-500 text-white","Задачи без эпика":"bg-slate-400 text-white"},"resources":["PO","Тех лид","Дизайнер","QA","a.petrov","m.ivanova","d.kozlov","e.sokolova","i.morozov"],"resourceRoles":{"a.petrov":"Backend","m.ivanova":"Frontend","d.kozlov":"Backend","e.sokolova":"QA","i.morozov":"Frontend"},"cutoffs":[{"id":"c1","name":"Бета-тест","date":"2026-07-15","color":"border-blue-500 bg-blue-500","showInHeader":true,"pinned":true},{"id":"c2","name":"Релиз MVP","date":"2026-08-24","color":"border-rose-500 bg-rose-500","showInHeader":true,"pinned":true},{"id":"release-mvp-1-0","name":"Релиз MVP 1.0","date":"2026-07-01","color":"border-emerald-500 bg-emerald-500","showInHeader":true},{"id":"release-mvp-1-1","name":"Релиз MVP 1.1","date":"2026-07-20","color":"border-indigo-500 bg-indigo-500","showInHeader":true},{"id":"release-mvp-2-0","name":"Релиз MVP 2.0","date":"2026-08-24","color":"border-rose-500 bg-rose-500","showInHeader":false}],"collapsedSections":[],"roadmapData":[{"id":1,"section":"Story: Исследование пользователей [PAY-110]","name":"Интервью с пользователями","status":"completed","resource":"Дизайнер","start":"2026-06-01","end":"2026-06-08","jira":"PAY-111","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"Гипотезы и сегменты согласованы","dod":"Отчет с инсайтами готов","estimate":"","pred":"","release":"MVP 1.0","labels":[],"epicLink":"PAY-100","issueType":"Task","_jiraParentKey":"PAY-110","initiativeId":"demo-launch"},{"id":2,"section":"Story: Исследование пользователей [PAY-110]","name":"Карта пути пользователя (CJM)","status":"completed","resource":"Дизайнер","start":"2026-06-05","end":"2026-06-12","jira":"PAY-112","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"1","release":"MVP 1.0","labels":[],"epicLink":"PAY-100","issueType":"Task","_jiraParentKey":"PAY-110","initiativeId":"demo-launch"},{"id":3,"section":"Story: Прототип и дизайн-система [PAY-120]","name":"Прототип ключевых экранов","status":"in_progress","resource":"m.ivanova","start":"2026-06-10","end":"2026-06-24","jira":"PAY-121","isMilestone":false,"blocked":false,"notes":"","metrics":"Конверсия в регистрацию, время до первого действия","dor":"","dod":"","estimate":"","pred":"2","release":"MVP 1.1","labels":[],"epicLink":"PAY-100","issueType":"Task","_jiraParentKey":"PAY-120","initiativeId":"demo-launch"},{"id":4,"section":"Story: Прототип и дизайн-система [PAY-120]","name":"Дизайн-система и компоненты","status":"review","resource":"Дизайнер","start":"2026-06-16","end":"2026-06-28","jira":"PAY-122","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"3","release":"MVP 1.1","labels":[],"epicLink":"PAY-100","issueType":"Task","_jiraParentKey":"PAY-120","initiativeId":"demo-launch"},{"id":5,"section":"Story: Техническая проработка [PAY-210]","name":"Техническое описание API","status":"completed","resource":"Тех лид","start":"2026-06-08","end":"2026-06-16","jira":"PAY-211","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"2","release":"MVP 1.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-210","initiativeId":"demo-launch"},{"id":6,"section":"Story: Техническая проработка [PAY-210]","name":"Оценка и декомпозиция","status":"completed","resource":"Тех лид","start":"2026-06-16","end":"2026-06-20","jira":"PAY-212","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"5","release":"MVP 1.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-210","initiativeId":"demo-launch"},{"id":7,"section":"Story: Техническая проработка [PAY-210]","name":"Выбор стека и архитектура","status":"in_progress","resource":"a.petrov","start":"2026-06-18","end":"2026-06-30","jira":"PAY-213","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"6","release":"MVP 1.1","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-210","initiativeId":"demo-launch"},{"id":8,"section":"Story: Базовая разработка [PAY-220]","name":"Каркас приложения","status":"in_progress","resource":"a.petrov","start":"2026-06-25","end":"2026-07-10","jira":"PAY-221","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"7","release":"MVP 1.1","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-220","initiativeId":"demo-launch"},{"id":9,"section":"Story: Базовая разработка [PAY-220]","name":"Экран онбординга","status":"planned","resource":"m.ivanova","start":"2026-07-01","end":"2026-07-12","jira":"PAY-222","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"8","release":"MVP 2.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-220","initiativeId":"demo-launch"},{"id":10,"section":"Story: Базовая разработка [PAY-220]","name":"Лента и поиск","status":"planned","resource":"m.ivanova","start":"2026-07-08","end":"2026-07-25","jira":"PAY-223","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"9","release":"MVP 2.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-220","initiativeId":"demo-launch"},{"id":11,"section":"Story: Базовая разработка [PAY-220]","name":"Интеграция аналитики","status":"planned","resource":"d.kozlov","start":"2026-07-15","end":"2026-07-22","jira":"PAY-224","isMilestone":false,"blocked":true,"notes":"Ожидается доступ к тестовой системе аналитики","metrics":"","dor":"","dod":"","estimate":"","pred":"10","release":"MVP 2.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-220","initiativeId":"demo-launch"},{"id":12,"section":"Story: Базовая разработка [PAY-220]","name":"Push-уведомления","status":"planned","resource":"d.kozlov","start":"2026-07-20","end":"2026-07-30","jira":"PAY-225","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"10","release":"MVP 2.0","labels":[],"epicLink":"PAY-200","issueType":"Task","_jiraParentKey":"PAY-220","initiativeId":"demo-launch"},{"id":13,"section":"Story: Подготовка релиза [PAY-410]","name":"Тест-план и автотесты","status":"planned","resource":"QA","start":"2026-07-25","end":"2026-08-05","jira":"PAY-411","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"12","release":"MVP 2.0","labels":[],"epicLink":"PAY-400","issueType":"Task","_jiraParentKey":"PAY-410","initiativeId":"demo-launch"},{"id":14,"section":"Story: Подготовка релиза [PAY-410]","name":"Регресс и нагрузочное","status":"testing","resource":"e.sokolova","start":"2026-08-05","end":"2026-08-15","jira":"PAY-412","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"13","release":"MVP 2.0","labels":[],"epicLink":"PAY-400","issueType":"Task","_jiraParentKey":"PAY-410","initiativeId":"demo-launch"},{"id":15,"section":"Story: Подготовка релиза [PAY-410]","name":"Подготовка к релизу","status":"ready_release","resource":"Тех лид","start":"2026-08-15","end":"2026-08-22","jira":"PAY-413","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"14","release":"MVP 2.0","labels":[],"epicLink":"PAY-400","issueType":"Task","_jiraParentKey":"PAY-410","initiativeId":"demo-launch"},{"id":16,"section":"Story: Подготовка релиза [PAY-410]","name":"Запуск MVP","status":"planned","resource":"PO","start":"2026-08-24","end":"2026-08-24","jira":"PAY-414","isMilestone":true,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"15","release":"MVP 2.0","labels":[],"epicLink":"PAY-400","issueType":"Task","_jiraParentKey":"PAY-410","initiativeId":"demo-launch"},{"id":17,"section":"Story: Подключение оплаты [PAY-310]","name":"Подключение платежного провайдера","status":"in_progress","resource":"a.petrov","start":"2026-07-01","end":"2026-07-20","jira":"PAY-311","isMilestone":false,"blocked":false,"notes":"","metrics":"Доля успешных оплат","dor":"","dod":"","estimate":"","pred":"6","release":"MVP 1.1","labels":[],"epicLink":"PAY-300","issueType":"Task","_jiraParentKey":"PAY-310","initiativeId":"demo-launch"},{"id":18,"section":"Story: Подключение оплаты [PAY-310]","name":"Экран оплаты","status":"planned","resource":"m.ivanova","start":"2026-07-15","end":"2026-07-28","jira":"PAY-312","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"17","release":"MVP 2.0","labels":[],"epicLink":"PAY-300","issueType":"Task","_jiraParentKey":"PAY-310","initiativeId":"demo-launch"},{"id":19,"section":"Story: Подписки [PAY-320]","name":"Подписки и автосписание","status":"planned","resource":"i.morozov","start":"2026-07-25","end":"2026-08-10","jira":"PAY-321","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"18","release":"MVP 2.0","labels":[],"epicLink":"PAY-300","issueType":"Task","_jiraParentKey":"PAY-320","initiativeId":"demo-launch"},{"id":20,"section":"Story: Профиль пользователя [LK-110]","name":"Профиль и настройки","status":"planned","resource":"m.ivanova","start":"2026-07-10","end":"2026-07-24","jira":"LK-111","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"6","release":"MVP 2.0","labels":[],"epicLink":"LK-100","issueType":"Task","_jiraParentKey":"LK-110","initiativeId":"demo-launch"},{"id":21,"section":"Story: История заказов [LK-120]","name":"История заказов","status":"planned","resource":"i.morozov","start":"2026-07-20","end":"2026-08-02","jira":"LK-121","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"20","release":"MVP 2.0","labels":[],"epicLink":"LK-100","issueType":"Bug","_jiraParentKey":"LK-120","initiativeId":"demo-launch"},{"id":22,"section":"Задачи без эпика","name":"Обновить документацию","status":"planned","resource":"Тех лид","start":"2026-07-05","end":"2026-07-10","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"","release":"","labels":[],"epicLink":"","issueType":"Task","_jiraParentKey":"","initiativeId":"demo-launch"},{"id":23,"section":"Задачи без эпика","name":"Настроить CI/CD","status":"in_progress","resource":"d.kozlov","start":"2026-06-20","end":"2026-06-30","jira":"","isMilestone":false,"blocked":false,"notes":"","metrics":"","dor":"","dod":"","estimate":"","pred":"22","release":"MVP 1.1","labels":[],"epicLink":"","issueType":"Task","_jiraParentKey":"","initiativeId":"demo-launch"}],"archivedTasks":[],"hiddenSections":[],"projectStatuses":[{"id":"planned","name":"В плане","color":"bg-slate-100 text-slate-600","barTheme":"bg-slate-500 text-white"},{"id":"in_progress","name":"В работе","color":"bg-indigo-50 text-indigo-700","barTheme":"bg-indigo-500 text-white"},{"id":"review","name":"Ревью","color":"bg-violet-50 text-violet-700","barTheme":"bg-violet-500 text-white"},{"id":"testing","name":"Тестирование","color":"bg-amber-50 text-amber-700","barTheme":"bg-amber-500 text-white"},{"id":"ready_release","name":"Готов к релизу","color":"bg-teal-50 text-teal-700","barTheme":"bg-teal-500 text-white"},{"id":"completed","name":"Выполнено","color":"bg-emerald-50 text-emerald-700 font-medium","barTheme":"bg-emerald-500 text-white"}],"projectReleases":[{"name":"MVP 1.0","date":"2026-07-01"},{"name":"MVP 1.1","date":"2026-07-20"},{"name":"MVP 2.0","date":"2026-08-24"}],"epicStatuses":{"PAY-1":"in_progress","PAY-100":"completed","PAY-110":"completed","PAY-120":"review","PAY-200":"in_progress","PAY-210":"completed","PAY-220":"in_progress","PAY-300":"in_progress","PAY-310":"in_progress","PAY-320":"planned","LK-100":"planned","LK-110":"planned","LK-120":"planned","PAY-400":"planned","PAY-410":"planned"},"sectionMeta":{"Initiative: Запуск мобильного приложения [PAY-1]":{"key":"PAY-1","title":"Запуск мобильного приложения","kind":"initiative","status":"in_progress","plannedEnd":"2026-08-24","project":"PAY","fromJira":true},"Epic: Исследование и дизайн [PAY-100]":{"key":"PAY-100","title":"Исследование и дизайн","kind":"epic","status":"completed","plannedEnd":"2026-06-28","project":"PAY","fromJira":true,"wsjf":"18","metric":"Проверенные пользовательские сценарии","impact":"7","epicType":"Бизнесовый"},"Story: Исследование пользователей [PAY-110]":{"key":"PAY-110","title":"Исследование пользователей","kind":"story","status":"completed","plannedEnd":"2026-06-12","project":"PAY","fromJira":true},"Story: Прототип и дизайн-система [PAY-120]":{"key":"PAY-120","title":"Прототип и дизайн-система","kind":"story","status":"review","plannedEnd":"2026-06-28","project":"PAY","fromJira":true},"Epic: Архитектура и платформа [PAY-200]":{"key":"PAY-200","title":"Архитектура и платформа","kind":"epic","status":"in_progress","plannedEnd":"2026-07-30","project":"PAY","fromJira":true,"wsjf":"24","metric":"Стабильность сборки","impact":"8","epicType":"Технический"},"Story: Техническая проработка [PAY-210]":{"key":"PAY-210","title":"Техническая проработка","kind":"story","status":"completed","plannedEnd":"2026-06-30","project":"PAY","fromJira":true},"Story: Базовая разработка [PAY-220]":{"key":"PAY-220","title":"Базовая разработка","kind":"story","status":"in_progress","plannedEnd":"2026-07-30","project":"PAY","fromJira":true},"Epic: Платежи и подписки [PAY-300]":{"key":"PAY-300","title":"Платежи и подписки","kind":"epic","status":"in_progress","plannedEnd":"2026-08-10","project":"PAY","fromJira":true,"wsjf":"24","metric":"Доля успешных оплат","impact":"8","epicType":"Бизнесовый","desc":"Полный демонстрационный цикл оплаты и подписки."},"Story: Подключение оплаты [PAY-310]":{"key":"PAY-310","title":"Подключение оплаты","kind":"story","status":"in_progress","plannedEnd":"2026-07-28","project":"PAY","fromJira":true},"Story: Подписки [PAY-320]":{"key":"PAY-320","title":"Подписки","kind":"story","status":"planned","plannedEnd":"2026-08-10","project":"PAY","fromJira":true},"Epic: Личный кабинет [LK-100]":{"key":"LK-100","title":"Личный кабинет","kind":"epic","status":"planned","plannedEnd":"2026-08-02","project":"LK","fromJira":true,"wsjf":"15","metric":"Retention 30 дней","impact":"6","epicType":"Технический","desc":"Профиль, настройки и история заказов в синтетическом проекте."},"Story: Профиль пользователя [LK-110]":{"key":"LK-110","title":"Профиль пользователя","kind":"story","status":"planned","plannedEnd":"2026-07-24","project":"LK","fromJira":true},"Story: История заказов [LK-120]":{"key":"LK-120","title":"История заказов","kind":"story","status":"planned","plannedEnd":"2026-08-02","project":"LK","fromJira":true},"Epic: Тестирование и запуск [PAY-400]":{"key":"PAY-400","title":"Тестирование и запуск","kind":"epic","status":"planned","plannedEnd":"2026-08-24","project":"PAY","fromJira":true,"wsjf":"20","metric":"Доля успешных запусков","impact":"9","epicType":"Технический"},"Story: Подготовка релиза [PAY-410]":{"key":"PAY-410","title":"Подготовка релиза","kind":"story","status":"planned","plannedEnd":"2026-08-24","project":"PAY","fromJira":true}},"sectionLabels":{"Initiative: Запуск мобильного приложения [PAY-1]":["demo","26Q3"],"Epic: Исследование и дизайн [PAY-100]":["research"],"Epic: Архитектура и платформа [PAY-200]":["platform"],"Epic: Платежи и подписки [PAY-300]":["payments","26Q3"],"Epic: Личный кабинет [LK-100]":["profile","26Q3"],"Epic: Тестирование и запуск [PAY-400]":["release"]},"sectionParents":{"Epic: Исследование и дизайн [PAY-100]":"Initiative: Запуск мобильного приложения [PAY-1]","Epic: Архитектура и платформа [PAY-200]":"Initiative: Запуск мобильного приложения [PAY-1]","Epic: Платежи и подписки [PAY-300]":"Initiative: Запуск мобильного приложения [PAY-1]","Epic: Личный кабинет [LK-100]":"Initiative: Запуск мобильного приложения [PAY-1]","Epic: Тестирование и запуск [PAY-400]":"Initiative: Запуск мобильного приложения [PAY-1]","Story: Исследование пользователей [PAY-110]":"Epic: Исследование и дизайн [PAY-100]","Story: Прототип и дизайн-система [PAY-120]":"Epic: Исследование и дизайн [PAY-100]","Story: Техническая проработка [PAY-210]":"Epic: Архитектура и платформа [PAY-200]","Story: Базовая разработка [PAY-220]":"Epic: Архитектура и платформа [PAY-200]","Story: Подключение оплаты [PAY-310]":"Epic: Платежи и подписки [PAY-300]","Story: Подписки [PAY-320]":"Epic: Платежи и подписки [PAY-300]","Story: Профиль пользователя [LK-110]":"Epic: Личный кабинет [LK-100]","Story: История заказов [LK-120]":"Epic: Личный кабинет [LK-100]","Story: Подготовка релиза [PAY-410]":"Epic: Тестирование и запуск [PAY-400]"},"projectGoals":[{"id":"goal-demo-launch","name":"Запустить полезный MVP","owner":"PO","horizon":"2026 Q3","base":"0","target":"1000 активных пользователей"}],"projectInitiatives":[{"id":"demo-launch","name":"Запуск мобильного приложения","goalId":"goal-demo-launch","nnl":"now"}],"projectRaid":[{"id":"raid-demo-1","type":"risk","title":"Задержка доступа к аналитике","owner":"d.kozlov","status":"open"}]};
     // п.4 Выгрузка только для просмотра: данные берем из вшитого снимка, в localStorage получателя НЕ пишем.
     let READ_ONLY_MODE = (typeof window !== 'undefined' && window.__READ_ONLY__ === true);
     if (READ_ONLY_MODE && window.__SHARE_DATA__) {
@@ -12753,6 +12862,47 @@ if (typeof globalThis !== 'undefined') {
     // Просрочен , красная, до 14 дней , янтарная, дальше , нейтральная. Максимум 4 + «еще N».
     let _headerPillsExpanded = false;
     function toggleHeaderPills() { _headerPillsExpanded = !_headerPillsExpanded; renderHeaderCutoffChips(); }
+    function closeHeaderInsights() {
+      const panel = document.getElementById('headerInsightsPanel');
+      if (panel) panel.hidden = true;
+      ['headerStateBtn', 'headerDatesBtn'].forEach(id => { const b = document.getElementById(id); if (b) b.setAttribute('aria-expanded', 'false'); });
+    }
+    function toggleHeaderInsights(kind) {
+      const panel = document.getElementById('headerInsightsPanel');
+      const state = document.getElementById('headerInsightsState');
+      const dates = document.getElementById('headerInsightsDates');
+      if (!panel || !state || !dates) return;
+      const next = kind === 'dates' ? 'dates' : 'state';
+      const sameOpen = !panel.hidden && panel.dataset.kind === next;
+      if (sameOpen) { closeHeaderInsights(); return; }
+      if (typeof closeAllPopovers === 'function') closeAllPopovers();
+      panel.dataset.kind = next;
+      panel.hidden = false;
+      state.hidden = next !== 'state';
+      dates.hidden = next !== 'dates';
+      const sb = document.getElementById('headerStateBtn'), db = document.getElementById('headerDatesBtn');
+      if (sb) sb.setAttribute('aria-expanded', next === 'state' ? 'true' : 'false');
+      if (db) db.setAttribute('aria-expanded', next === 'dates' ? 'true' : 'false');
+    }
+    function updateHeaderSummary() {
+      const out = document.getElementById('headerStateSummary');
+      if (!out) return;
+      const tasks = (Array.isArray(roadmapData) ? roadmapData : []).filter(t => t && !t.hidden && !t.isMilestone);
+      const done = tasks.filter(t => t.status === 'completed').length;
+      const pct = tasks.length ? Math.round(done / tasks.length * 100) : 0;
+      const horizon = (typeof milestoneWarningThreshold === 'number') ? milestoneWarningThreshold : 7;
+      const soon = (Array.isArray(customCutoffs) ? customCutoffs : []).filter(c => {
+        if (!c || c.done || !c.date) return false;
+        try { const d = parseLocalDate(c.date); const dd = Math.round((d - CURRENT_DATE) / 86400000); return dd >= 0 && dd <= horizon; } catch (e) { return false; }
+      }).length;
+      out.textContent = pct + '% · ' + tasks.length + ' задач' + (soon ? ' · ' + soon + ' скоро' : '');
+    }
+    document.addEventListener('click', function (event) {
+      const panel = document.getElementById('headerInsightsPanel');
+      if (!panel || panel.hidden) return;
+      const inside = panel.contains(event.target) || ['headerStateBtn', 'headerDatesBtn'].some(id => { const b = document.getElementById(id); return b && b.contains(event.target); });
+      if (!inside) closeHeaderInsights();
+    });
     function renderHeaderCutoffChips() {
       const chips = document.getElementById('headerCutoffChips');
       const sep = document.getElementById('headerCutoffsSep');
@@ -12793,8 +12943,11 @@ if (typeof globalThis !== 'undefined') {
       if (sep) sep.classList.remove('hidden');
       if (!list.length) {
         chips.innerHTML = '';
+        const count = document.getElementById('headerDatesCount'); if (count) count.textContent = '0';
+        updateHeaderSummary();
         return;
       }
+      const count = document.getElementById('headerDatesCount'); if (count) count.textContent = String(list.length);
       const MAX_PILLS = 3;
       const shown = _headerPillsExpanded ? list : list.slice(0, MAX_PILLS);
       const restN = list.length - shown.length;
@@ -12827,6 +12980,7 @@ if (typeof globalThis !== 'undefined') {
         moreBtn = `<button type="button" onclick="toggleHeaderPills()" class="no-image-export inline-flex items-center h-6 px-2.5 rounded-full border border-dashed border-slate-200 bg-white text-slate-500 hover:text-indigo-600 hover:border-indigo-300 text-[10px] font-medium transition-colors cursor-pointer" title="Оставить только первые ${MAX_PILLS}">свернуть</button>`;
       }
       chips.innerHTML = pillHtml + moreBtn;
+      updateHeaderSummary();
     }
     function openHeaderCutoffPicker() {
       const modal = document.getElementById('headerCutoffModal');
@@ -15339,7 +15493,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
     let _lastSavedAt = '', _lastSavedBy = '';
     function _relTimeRu(iso) { try { if (!iso) return ''; var t = new Date(iso).getTime(); if (!t) return ''; var diff = Date.now() - t; if (diff < 0) diff = 0; var m = Math.round(diff/60000); if (m < 1) return 'только что'; if (m < 60) return m + ' мин назад'; var h = Math.round(m/60); if (h < 24) return h + ' ч назад'; var d = Math.round(h/24); if (d < 30) return d + ' дн назад'; return new Date(iso).toLocaleDateString('ru-RU'); } catch (e) { return ''; } }
     function _setSaveMeta(by, at) { _lastSavedBy = (by == null ? '' : String(by)); _lastSavedAt = (at == null ? '' : String(at)); if (typeof _renderSaveBadge === 'function') _renderSaveBadge(); }
-    function _renderSaveBadge() { var el = document.getElementById('autosaveStatus'); if (!el) return; if (typeof autoSaveFileHandle !== 'undefined' && autoSaveFileHandle) return; if (!_lastSavedAt && !_lastSavedBy) return; var rel = _relTimeRu(_lastSavedAt); el.className = 'hidden xl:block shrink max-w-[280px] truncate text-[10px] ml-auto text-right no-image-export text-slate-400'; el.textContent = 'Сохранил: ' + (_lastSavedBy || 'не указан') + (rel ? ' · ' + rel : ''); el.title = 'Кто и когда последний раз сохранял этот файл' + (_lastSavedAt ? ': ' + new Date(_lastSavedAt).toLocaleString('ru-RU') : ''); }
+    function _renderSaveBadge() { var el = document.getElementById('autosaveStatus'); if (!el) return; if (typeof autoSaveFileHandle !== 'undefined' && autoSaveFileHandle) return; if (!_lastSavedAt && !_lastSavedBy) return; var rel = _relTimeRu(_lastSavedAt); var shortText = 'Сохранил: ' + (_lastSavedBy || 'не указан') + (rel ? ' · ' + rel : ''); var fullText = 'Кто и когда последний раз сохранял этот файл' + (_lastSavedAt ? ': ' + new Date(_lastSavedAt).toLocaleString('ru-RU') : ''); el.className = 'hidden'; el.textContent = shortText; el.title = fullText; var btn = document.getElementById('autoSaveBtn'); if (btn && !(typeof autoSaveFileHandle !== 'undefined' && autoSaveFileHandle)) { btn.title = shortText; btn.setAttribute('aria-label', shortText); } }
     function _auditClock() { try { const d = new Date(); const p = n => (n < 10 ? '0' : '') + n; return p(d.getHours()) + ':' + p(d.getMinutes()); } catch (e) { return ''; } }
     function setAuthorName() {
       if (READ_ONLY_MODE) return;
@@ -16168,7 +16322,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       pop.addEventListener('click', (e) => e.stopPropagation());
     }
     document.addEventListener('click', (e) => { if (_cutoffPopoverEl && !e.target.closest('#cutoffClusterPopover')) closeCutoffClusterPopover(); });
-    function closeAllPopovers() { closeAllFilterPanels(); if (typeof closeReleaseFilterMenu === 'function') closeReleaseFilterMenu(); if (typeof closeTaskMovePanel === 'function') closeTaskMovePanel(); if (typeof closeDataMenu === 'function') closeDataMenu(); if (typeof closeMoreMenu === 'function') closeMoreMenu(); if (typeof closeReportsMenu === 'function') closeReportsMenu(); if (typeof closeSortMenu === 'function') closeSortMenu(); if (typeof closePresetMenu === 'function') closePresetMenu(); if (typeof closeBulkPopover === 'function') closeBulkPopover(); if (typeof closeDepMenu === 'function') closeDepMenu(); try { var _vm = document.getElementById('viewMenu'); if (_vm && !_vm.classList.contains('hidden')) { _vm.classList.add('hidden'); var _vb = document.getElementById('viewMenuToggle'); if (_vb) _vb.setAttribute('aria-expanded', 'false'); } } catch (e) {} try { var _dl = document.getElementById('depLinesMenu'); if (_dl && !_dl.classList.contains('hidden')) { _dl.classList.add('hidden'); var _db = document.getElementById('depLinesToggle'); if (_db) _db.setAttribute('aria-expanded', 'false'); } } catch (e) {} closeCutoffClusterPopover(); if (typeof closeSectionMenu === 'function') closeSectionMenu(); }
+    function closeAllPopovers() { closeAllFilterPanels(); if (typeof closeHeaderInsights === 'function') closeHeaderInsights(); if (typeof toggleFilterTools === 'function') toggleFilterTools(false); try { var _sm = document.getElementById('statusCompactMenu'), _sb = document.getElementById('statusCompactBtn'); if (_sm) _sm.classList.add('hidden'); if (_sb) _sb.setAttribute('aria-expanded', 'false'); } catch (e) {} if (typeof closeReleaseFilterMenu === 'function') closeReleaseFilterMenu(); if (typeof closeTaskMovePanel === 'function') closeTaskMovePanel(); if (typeof closeDataMenu === 'function') closeDataMenu(); if (typeof closeMoreMenu === 'function') closeMoreMenu(); if (typeof closeReportsMenu === 'function') closeReportsMenu(); if (typeof closeSortMenu === 'function') closeSortMenu(); if (typeof closePresetMenu === 'function') closePresetMenu(); if (typeof closeBulkPopover === 'function') closeBulkPopover(); if (typeof closeDepMenu === 'function') closeDepMenu(); try { var _vm = document.getElementById('viewMenu'); if (_vm && !_vm.classList.contains('hidden')) { _vm.classList.add('hidden'); var _vb = document.getElementById('viewMenuToggle'); if (_vb) _vb.setAttribute('aria-expanded', 'false'); } } catch (e) {} try { var _dl = document.getElementById('depLinesMenu'); if (_dl && !_dl.classList.contains('hidden')) { _dl.classList.add('hidden'); var _db = document.getElementById('depLinesToggle'); if (_db) _db.setAttribute('aria-expanded', 'false'); } } catch (e) {} closeCutoffClusterPopover(); if (typeof closeSectionMenu === 'function') closeSectionMenu(); }
     // Некоторые браузеры отправляют resize без реального изменения viewport
     // (например, сразу после открытия фиксированного меню). Такой служебный
     // сигнал не должен мгновенно закрывать только что открытую панель.
@@ -21878,7 +22032,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         _tp.sort(function (a, b) { return _tcfg.order.indexOf(a.key) - _tcfg.order.indexOf(b.key); });
         tiles = _tp.filter(function (x) { return _tcfg.hidden.indexOf(x.key) < 0; }).map(function (x) { return x.html; });
       } catch (e) {}
-      var head = '<div class="px-4 py-2.5 border-b border-slate-200 bg-slate-50/80 shrink-0 flex items-center justify-between gap-3 flex-wrap no-print no-image-export"><span class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700"><svg aria-hidden="true" class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h7v7H4zM13 5h7v4h-7zM13 11h7v8h-7zM4 14h7v5H4z"></path></svg>Сводка , главное одним взглядом</span>' + '<span class="inline-flex items-center gap-1.5 shrink-0 ml-auto"><button onclick="printSummaryPage()" title="Собрать сводку на одну страницу A4 и открыть окно печати , выберите Сохранить как PDF" class="inline-flex items-center h-8 px-2.5 rounded-lg border border-slate-200 bg-white text-[11px] font-medium text-slate-600 hover:bg-slate-100 cursor-pointer">Печать/PDF</button><button onclick="copySummaryText()" title="Скопировать сводку коротким текстом для чата или письма" class="inline-flex items-center h-8 px-2.5 rounded-lg border border-slate-200 bg-white text-[11px] font-medium text-slate-600 hover:bg-slate-100 cursor-pointer">Текстом</button><button onclick="_sumTilesMenu()" title="Выбрать, какие плитки показывать и в каком порядке" class="inline-flex items-center h-8 px-2.5 rounded-lg border border-slate-200 bg-white text-[11px] font-medium text-slate-600 hover:bg-slate-100 cursor-pointer">Плитки</button></span>' + ((typeof _viewSwitcherBtnHtml === 'function') ? _viewSwitcherBtnHtml() : '') + '</div>';
+      var head = '<div class="px-4 py-2.5 border-b border-slate-200 bg-slate-50/80 shrink-0 flex items-center justify-between gap-3 flex-wrap no-print no-image-export"><span class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700"><svg aria-hidden="true" class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h7v7H4zM13 5h7v4h-7zM13 11h7v8h-7zM4 14h7v5H4z"></path></svg>Состояние продукта</span>' + '<span class="inline-flex items-center gap-1.5 shrink-0 ml-auto"><button onclick="printSummaryPage()" title="Собрать сводку на одну страницу A4 и открыть окно печати , выберите Сохранить как PDF" class="inline-flex items-center h-8 px-2.5 rounded-lg border border-slate-200 bg-white text-[11px] font-medium text-slate-600 hover:bg-slate-100 cursor-pointer">Печать/PDF</button><button onclick="copySummaryText()" title="Скопировать сводку коротким текстом для чата или письма" class="inline-flex items-center h-8 px-2.5 rounded-lg border border-slate-200 bg-white text-[11px] font-medium text-slate-600 hover:bg-slate-100 cursor-pointer">Текстом</button><button onclick="_sumTilesMenu()" title="Выбрать, какие плитки показывать и в каком порядке" class="inline-flex items-center h-8 px-2.5 rounded-lg border border-slate-200 bg-white text-[11px] font-medium text-slate-600 hover:bg-slate-100 cursor-pointer">Плитки</button></span>' + ((typeof _viewSwitcherBtnHtml === 'function') ? _viewSwitcherBtnHtml() : '') + '</div>';
       var _fltOn = (typeof anyTaskFilterActive === 'function' && anyTaskFilterActive()) || (typeof statusFilterSel !== 'undefined' && statusFilterSel && statusFilterSel.size);
       var note = '<div class="text-[11px] text-slate-500 mt-3 max-w-3xl">' + (_fltOn ? 'Плитки считаются по текущему срезу фильтров шапки. <button onclick="resetAllFilters()" class="underline font-semibold cursor-pointer text-indigo-600">Сбросить фильтры</button>. ' : 'Плитки считаются по всем задачам плана. ') + 'Клик по плитке открывает список с нужным фильтром.</div>';
       v.innerHTML = head + '<div class="p-4 grow overflow-auto"><div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 max-w-5xl">' + tiles.join('') + '</div>' + note + '</div>';
@@ -24013,6 +24167,34 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         box.innerHTML = chips.join('');
       } catch (e) { try { box.innerHTML = ''; } catch (x) {} }
     }
+    function activeFilterToolCount() {
+      let n = 0;
+      try { n += projectFilterSel.size + resourceFilterSel.size + releaseFilterSel.size + labelFilterSel.size + componentFilterSel.size; } catch (e) {}
+      try { n += _cfActiveFieldCount(); } catch (e) {}
+      try { if (_goritMode) n++; } catch (e) {}
+      try { if (_mineMode) n++; } catch (e) {}
+      try { if (_kindFilter) n++; } catch (e) {}
+      try { if (_noGoalFilter) n++; } catch (e) {}
+      return n;
+    }
+    function updateFilterToolsSummary() {
+      const btn = document.getElementById('filterToolsBtn'), badge = document.getElementById('filterToolsCount');
+      if (!btn || !badge) return;
+      const n = activeFilterToolCount();
+      btn.dataset.active = n ? '1' : '0';
+      badge.textContent = String(n);
+      badge.classList.toggle('hidden', !n);
+      badge.classList.toggle('inline-flex', !!n);
+    }
+    function toggleFilterTools(forceOpen) {
+      const wrap = document.getElementById('filterToolsWrap'), btn = document.getElementById('filterToolsBtn');
+      if (!wrap || !btn) return;
+      const open = (typeof forceOpen === 'boolean') ? forceOpen : wrap.hidden;
+      if (open && typeof closeAllPopovers === 'function') closeAllPopovers();
+      wrap.hidden = !open;
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) { const first = wrap.querySelector('button,[tabindex]'); if (first) setTimeout(() => first.focus({ preventScroll:true }), 0); }
+    }
     // Клик по «Просрочено»: включаем режим «Горит» (если еще не включен) , показать всю горящую работу.
     function renderStatusOverview() {
       const container = document.getElementById('statusOverview');
@@ -24038,7 +24220,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       // Общий % готовности проекта показываем в чипе «Всего N (P%)» ниже
       chips.push(`<button onclick="setStatusFilter('all')" aria-pressed="${sel.size === 0}" title="Общий прогресс проекта: готово ${doneCount} из ${totalTasks} (${overallPct}%)" class="transition-all inline-flex items-center gap-2 pl-2 pr-3.5 py-[7px] rounded-xl shrink-0 whitespace-nowrap bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold cursor-pointer ${getStyle(sel.size === 0)}">Все <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">${totalTasks}</span></button>`);
 
-      projectStatuses.forEach(s => {
+      const primaryStatusIds = new Set(['planned', 'in_progress', 'completed']);
+      projectStatuses.filter(s => primaryStatusIds.has(s.id) || sel.has(s.id)).forEach(s => {
         const count = roadmapData.filter(t => !t.isMilestone && t.status === s.id && inScope(t)).length;
         // Показываем ВСЕ статусы, не схлопываем и не прячем пустые (п.5).
         // Единый спокойный чип: белый фон + цветная точка (цвет статуса), без радуги фонов.
@@ -24054,9 +24237,9 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const ovActive = sel.has('overdue');
       if (overdueCount > 0 || ovActive) chips.push(specChip('overdue', ovActive, 'Просрочено', 'bg-rose-500', overdueCount));
       const msActive = sel.has('milestone');
-      if (milestoneCount > 0 || msActive) chips.push(specChip('milestone', msActive, 'Вехи', 'bg-amber-500', milestoneCount));
+      if (msActive) chips.push(specChip('milestone', msActive, 'Вехи', 'bg-amber-500', milestoneCount));
       const blActive = sel.has('blocked');
-      if (blockedCount > 0 || blActive) chips.push(specChip('blocked', blActive, 'Блокеры', 'bg-rose-600', blockedCount, 'Заблокированные задачи'));
+      if (blActive) chips.push(specChip('blocked', blActive, 'Блокеры', 'bg-rose-600', blockedCount, 'Заблокированные задачи'));
 
       // Сводка активных фильтров (по проекту/ресурсу/релизу/меткам/компонентам) + быстрый сброс ,
       // иначе непонятно, почему часть задач скрыта.
@@ -24077,6 +24260,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       requestAnimationFrame(updateStatusOverflowArrow);
       renderStatusCompactMenu();
       if (typeof renderPlanHealthBadge === 'function') renderPlanHealthBadge();
+      updateFilterToolsSummary();
+      updateHeaderSummary();
     }
     function renderStatusCompactMenu() {
       const menu = document.getElementById('statusCompactMenu'), label = document.getElementById('statusCompactLabel'), countEl = document.getElementById('statusCompactCount');
@@ -24088,7 +24273,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         if (id === 'overdue') names.push('Просрочено'); else if (id === 'milestone') names.push('Вехи'); else if (id === 'blocked') names.push('Блокеры');
         else { const st = (projectStatuses || []).find(s => s.id === id); if (st) names.push(st.name); }
       });
-      label.textContent = names.length ? (names.length === 1 ? names[0] : 'Статусы: ' + names.length) : 'Все статусы';
+      label.textContent = names.length ? (names.length === 1 ? names[0] : 'Статусы: ' + names.length) : 'Ещё статусы';
       countEl.textContent = String(total);
       const row = (id, name, n, dot) => { const on = statusFilterSel.has(id); return `<button type="button" onclick="setStatusFilter('${escAttr(id)}');renderStatusCompactMenu()" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-left text-xs ${on ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}"><span class="w-2 h-2 rounded-full ${dot || 'bg-slate-400'}"></span><span class="grow truncate">${escHtml(name)}</span><span class="tabular-nums text-[10px] ${on ? 'text-indigo-600' : 'text-slate-500'}">${n}</span></button>`; };
       let html = `<button type="button" onclick="setStatusFilter('all');renderStatusCompactMenu()" class="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs ${statusFilterSel.size ? 'text-slate-700 hover:bg-slate-50' : 'bg-indigo-50 text-indigo-700 font-semibold'}"><span>Все статусы</span><span>${total}</span></button>`;
@@ -24102,7 +24287,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     function toggleStatusCompactMenu(e) {
       if (e) e.stopPropagation(); const menu = document.getElementById('statusCompactMenu'), btn = document.getElementById('statusCompactBtn'); if (!menu || !btn) return;
       const open = menu.classList.contains('hidden');
-      if (open) { renderStatusCompactMenu(); menu.classList.remove('hidden'); const r = btn.getBoundingClientRect(); const w = Math.min(288, window.innerWidth - 16); menu.style.width = w + 'px'; menu.style.left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8)) + 'px'; menu.style.top = (r.bottom + 6) + 'px'; }
+      if (open) { if (typeof closeAllPopovers === 'function') closeAllPopovers(); renderStatusCompactMenu(); menu.classList.remove('hidden'); const r = btn.getBoundingClientRect(); const w = Math.min(288, window.innerWidth - 16); menu.style.width = w + 'px'; menu.style.left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8)) + 'px'; menu.style.top = (r.bottom + 6) + 'px'; }
       else menu.classList.add('hidden');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
@@ -25282,9 +25467,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const el = document.getElementById('autosaveStatus');
       if (!el) return;
       if (!text && (typeof autoSaveFileHandle === 'undefined' || !autoSaveFileHandle) && (typeof _lastSavedBy !== 'undefined') && (_lastSavedBy || _lastSavedAt)) { if (typeof _renderSaveBadge === 'function') _renderSaveBadge(); return; }
-      el.className = 'hidden xl:block shrink max-w-[280px] truncate text-[10px] ml-auto text-right no-image-export ' + (
-        tone === 'ok' ? 'text-slate-400' : tone === 'warn' ? 'text-amber-600' : tone === 'error' ? 'text-rose-600' : 'text-slate-400'
-      );
+      el.className = 'hidden';
       { let _d = String(text || '').replace(/^Автосохранение:\s*/, ''); const _tm = _d.match(/(\d{1,2}:\d{2})/); if (/сохранено/i.test(_d) && _tm) { _d = 'автосохранено в ' + _tm[1]; if (typeof _lastSavedBy !== 'undefined' && _lastSavedBy) _d = 'Сохранил: ' + _lastSavedBy + ' · ' + _d; } el.textContent = _d; }
       if (text) el.title = String(text);
       // Дублируем время сохранения в подсказку дискеты , индикатор тихий, детали по наведению
@@ -29372,7 +29555,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     <h3 class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">
      <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-     <span id="appVersionBadge">v14.3, 29.07.2026</span>
+     <span id="appVersionBadge">v14.4, 29.07.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -29438,7 +29621,16 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </div>
 
    <div>
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v14.3 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v14.4 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Два уровня управления</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">НАВИГАЦИЯ</span></div><p class="text-xs text-slate-600">Проект и основные действия находятся в верхней строке, а виды, проверки, статусы и фильтры — в одной компактной панели ниже. Повторяющиеся блоки убраны.</p></div>
+     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Показатели по запросу</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">ФОКУС</span></div><p class="text-xs text-slate-600">Готовность, объём и ближайшие даты сведены в две короткие кнопки. Подробности открываются в одной панели и не занимают постоянное место в шапке.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Чище статусы и фильтры</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">ПЛАН</span></div><p class="text-xs text-slate-600">На виду остаются основные статусы. Редкие статусы, проекты, исполнители и быстрые условия раскрываются только когда нужны, но активный фильтр всегда заметен.</p></div>
+    </div>
+   </div>
+
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v14.3</h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Единые формы и действия</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">UI/UX</span></div><p class="text-xs text-slate-600">Поля, кнопки, состояния, отступы и выпадающие меню приведены к единому ритму. Основное действие заметно, опасное отделено, а фокус и ошибки видны одинаково во всех окнах.</p></div>
      <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Карточка без длинной прокрутки</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">ЗАДАЧИ</span></div><p class="text-xs text-slate-600">Задача открывается в боковой панели. Поля разделены на «Основное», «Планирование», «Jira и связи» и «Историю», поэтому нужный блок находится за одно действие.</p></div>
