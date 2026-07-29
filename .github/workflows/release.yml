@@ -116,7 +116,7 @@ jobs:
       - name: Verify again before Pages
         run: node .quality/verify-public.mjs
       - name: Configure Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Build tracked-only Pages artifact
         shell: bash
         run: |
@@ -134,4 +134,4 @@ jobs:
           retention-days: 1
       - name: Deploy Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
