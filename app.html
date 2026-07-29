@@ -6713,7 +6713,367 @@
      .timeline-empty-state { width:min(100vw,36rem); }
      .pres-edit-row .pres-row-actions { opacity:1; }
    }
-  }
+
+   /* Единый визуальный язык рабочих экранов.
+      Один размерный ряд применяется к кнопкам, полям, окнам, меню,
+      подсказкам и настройкам независимо от возраста исходной разметки. */
+   :root {
+     --rm-font-sans:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+     --rm-font-xs:.6875rem;
+     --rm-font-sm:.75rem;
+     --rm-font-md:.8125rem;
+     --rm-font-lg:1rem;
+     --rm-line-tight:1.25;
+     --rm-line-body:1.45;
+     --rm-weight-medium:550;
+     --rm-weight-semibold:650;
+     --rm-weight-bold:750;
+     --rm-control-h:2.5rem;
+     --rm-toolbar-h:2.5rem;
+     --rm-field-h:2.75rem;
+     --rm-radius-xs:.5rem;
+     --rm-radius-sm:.625rem;
+     --rm-radius-md:.75rem;
+     --rm-radius-lg:1rem;
+     --rm-dialog-radius:1.5rem;
+     --rm-popover-radius:1rem;
+     --rm-ring:0 0 0 3px rgba(79,70,229,.16);
+     --rm-shadow-xs:0 1px 2px rgba(15,23,42,.06);
+     --rm-shadow-sm:0 8px 24px rgba(15,23,42,.08);
+     --rm-dialog-shadow:0 28px 72px rgba(15,23,42,.22),0 8px 24px rgba(15,23,42,.10);
+     --rm-popover-shadow:0 18px 44px rgba(15,23,42,.16),0 4px 12px rgba(15,23,42,.07);
+   }
+   html,body,button,input,select,textarea { font-family:var(--rm-font-sans); }
+   body { font-size:var(--rm-font-md); line-height:var(--rm-line-body); }
+   button,input,select,textarea { font-size:inherit; }
+
+   /* Кнопки: три уровня (основная, вторичная, тихая) и один размерный ряд. */
+   .rm-btn.rm-btn {
+     min-height:var(--rm-control-h); padding:.5625rem .875rem;
+     border-radius:var(--rm-radius-md) !important;
+     font-size:var(--rm-font-sm); font-weight:var(--rm-weight-semibold); line-height:var(--rm-line-tight);
+     letter-spacing:0; box-shadow:none;
+     transition:background-color .14s ease,border-color .14s ease,color .14s ease,box-shadow .14s ease,opacity .14s ease;
+   }
+   .rm-btn:hover:not(:disabled),.rm-btn:active:not(:disabled) { transform:none; }
+   .rm-btn-primary { box-shadow:var(--rm-shadow-xs) !important; }
+   .rm-btn-secondary { background:var(--rm-surface-soft) !important; }
+   .rm-btn-secondary:hover:not(:disabled) { color:#4338ca !important; background:#eef2ff !important; border-color:#c7d2fe !important; }
+   .rm-btn-ghost { color:var(--rm-muted) !important; }
+   .rm-btn-icon { width:var(--rm-control-h); min-width:var(--rm-control-h); padding:0 !important; }
+   .rm-btn svg,.rm-action svg { width:1rem; height:1rem; flex:none; stroke-width:2; }
+   .rm-btn:focus-visible,.rm-action:focus-visible,
+   .rm-control:focus-visible,button:focus-visible,[role="button"]:focus-visible,a:focus-visible {
+     outline:2px solid var(--rm-focus); outline-offset:2px; box-shadow:var(--rm-ring);
+   }
+   #appHeader button,#appHeader select,#planFilterBar button,#planFilterBar select,
+   #planViewNav button,#timeline-header button { min-height:var(--rm-toolbar-h); border-radius:var(--rm-radius-md); }
+   #appHeader .app-header-toolbar > button:first-child { border-radius:var(--rm-radius-md); }
+
+   /* Поля и подписи: одинаковая высота, фон, текст и фокус во всех формах. */
+   .rm-dialog-surface .rm-control,
+   #settingsModal input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+   #settingsModal select,#settingsModal textarea {
+     min-height:var(--rm-field-h) !important; padding:.6875rem .875rem !important;
+     border:1px solid var(--rm-border) !important; border-radius:var(--rm-radius-md) !important;
+     background:var(--rm-control-bg) !important; color:var(--rm-text) !important;
+     font-size:var(--rm-font-md) !important; line-height:var(--rm-line-tight);
+   }
+   .rm-field-label {
+     margin-bottom:.375rem !important; color:var(--rm-muted) !important;
+     font-size:var(--rm-font-xs) !important; font-weight:var(--rm-weight-semibold) !important;
+     line-height:var(--rm-line-tight); letter-spacing:0; text-transform:none;
+   }
+   .rm-choice-label { font-size:var(--rm-font-md); font-weight:var(--rm-weight-medium); }
+   .rm-field-help,.rm-field-error { font-size:var(--rm-font-xs); line-height:var(--rm-line-body); }
+
+   /* Окна: единая шапка, заголовок, тело, футер и кнопка закрытия. */
+   .rm-dialog-overlay.rm-dialog-overlay { background:rgba(15,23,42,.56) !important; backdrop-filter:blur(5px) !important; }
+   .rm-dialog-surface.rm-dialog-surface { border-radius:var(--rm-dialog-radius) !important; overflow:visible; }
+   .rm-dialog-header.rm-dialog-header {
+     min-height:4rem; padding:.875rem 1.25rem !important; gap:.75rem;
+     border-radius:calc(var(--rm-dialog-radius) - 1px) calc(var(--rm-dialog-radius) - 1px) 0 0;
+   }
+   .rm-dialog-content.rm-dialog-content { padding:1.25rem !important; }
+   .rm-dialog-footer.rm-dialog-footer {
+     min-height:4rem; padding:.75rem 1.25rem !important;
+     border-radius:0 0 calc(var(--rm-dialog-radius) - 1px) calc(var(--rm-dialog-radius) - 1px);
+   }
+   .rm-dialog-surface > :first-child:not(.rm-dialog-header) {
+     border-radius:calc(var(--rm-dialog-radius) - 1px) calc(var(--rm-dialog-radius) - 1px) 0 0;
+   }
+   .rm-dialog-surface > :last-child:not(.rm-dialog-footer) {
+     border-radius:0 0 calc(var(--rm-dialog-radius) - 1px) calc(var(--rm-dialog-radius) - 1px);
+   }
+   .rm-dialog-title { margin:0; color:var(--rm-text) !important; font-size:1.125rem !important; font-weight:var(--rm-weight-bold) !important; line-height:1.2 !important; letter-spacing:-.012em; }
+   .rm-dialog-subtitle { margin-top:.1875rem; color:var(--rm-muted) !important; font-size:var(--rm-font-sm) !important; line-height:var(--rm-line-body) !important; }
+   .rm-dialog-close.rm-dialog-close { width:2.5rem !important; height:2.5rem !important; min-width:2.5rem !important; min-height:2.5rem !important; }
+
+   /* Всплывающие меню: одинаковая ширина строк, заголовки, иконки и скролл. */
+   .rm-popover.rm-popover {
+     padding:.5rem !important; border-radius:var(--rm-popover-radius) !important;
+     box-shadow:var(--rm-popover-shadow) !important; overflow:auto; scrollbar-gutter:stable;
+   }
+   .rm-popover .rm-menu-heading,
+   .rm-popover > div[class*="uppercase"][class*="tracking"] {
+     padding:.625rem .625rem .375rem !important; color:var(--rm-muted) !important;
+     font-size:var(--rm-font-xs) !important; font-weight:var(--rm-weight-bold) !important;
+     line-height:1.2; letter-spacing:.035em; text-transform:uppercase;
+   }
+   .rm-popover .rm-menu-action {
+     min-height:2.75rem; padding:.5rem .625rem !important; gap:.625rem !important;
+     border:1px solid transparent; border-radius:var(--rm-radius-sm) !important;
+     color:var(--rm-text); font-size:var(--rm-font-md); line-height:var(--rm-line-tight);
+   }
+   .rm-popover .rm-menu-action:hover { border-color:var(--rm-border); background:var(--rm-surface-soft) !important; }
+   .rm-popover .rm-menu-action > span:first-child[class*="w-"][class*="h-"]:not(.grow) { width:2rem !important; height:2rem !important; border-radius:var(--rm-radius-sm) !important; }
+   .rm-menu-item-title { color:var(--rm-text) !important; font-size:var(--rm-font-md) !important; font-weight:var(--rm-weight-semibold) !important; line-height:1.25 !important; }
+   .rm-menu-item-subtitle { margin-top:.125rem; color:var(--rm-muted) !important; font-size:var(--rm-font-xs) !important; font-weight:400 !important; line-height:1.35 !important; }
+
+   body #moreMenu.rm-popover {
+     width:min(23rem,calc(100vw - 1rem)) !important; max-height:min(76vh,42rem);
+     padding:.625rem !important; border-radius:var(--rm-popover-radius) !important;
+   }
+   body #reportsMenu.rm-popover,body #dataMenu.rm-popover,body #presetMenu.rm-popover,
+   body #releaseFilterMenu.rm-popover,body #zoomMenu.rm-popover,body #depLinesMenu.rm-popover,
+   body #sortMenu.rm-popover,body #taskMovePanel.rm-popover,body [data-filter-panel].rm-popover,
+   #filterToolsWrap,#headerInsightsPanel {
+     border-radius:var(--rm-popover-radius) !important;
+   }
+   #moreMenu .workspace-menu-heading { padding-top:.375rem !important; }
+   #moreMenu .workspace-menu-modes {
+     padding:.25rem; gap:.25rem; border:1px solid var(--rm-border);
+     border-radius:var(--rm-radius-md); background:var(--rm-surface-soft);
+   }
+   #moreMenu .workspace-menu-modes button {
+     min-height:2.5rem; padding:.45rem .5rem; border:0 !important;
+     border-radius:var(--rm-radius-sm) !important; background:transparent;
+     color:var(--rm-muted); font-size:var(--rm-font-sm); font-weight:var(--rm-weight-semibold);
+   }
+   #moreMenu .workspace-menu-modes button:hover { color:var(--rm-text); background:var(--rm-surface) !important; }
+   #moreMenu .workspace-menu-modes button[aria-pressed="true"],
+   #moreMenu .workspace-menu-modes button[data-active="1"] {
+     color:#4338ca; background:var(--rm-surface) !important; box-shadow:var(--rm-shadow-xs);
+   }
+   #moreMenu .rm-workspace-card {
+     min-height:4rem; padding:.625rem .75rem !important;
+     border:1px solid var(--rm-border) !important; border-radius:var(--rm-radius-md) !important;
+     color:var(--rm-text) !important; background:var(--rm-surface-soft) !important;
+     box-shadow:none; font-size:var(--rm-font-md) !important;
+   }
+   #moreMenu .rm-workspace-card:hover { border-color:#c7d2fe !important; background:#eef2ff !important; }
+   #moreMenu .rm-workspace-card .rm-menu-item-subtitle { color:var(--rm-muted) !important; }
+   #moreMenu #planningJiraChanges { min-height:2.75rem; border:1px solid #fde68a; border-radius:var(--rm-radius-md) !important; }
+
+   /* Настройки: окно и его содержимое строятся из тех же компонентов. */
+   #settingsModal .rm-settings-dialog { width:min(58rem,100%) !important; max-width:58rem !important; }
+   #settingsModal .rm-settings-layout { min-height:0; background:var(--rm-surface); }
+   #settingsModal .rm-settings-tabs {
+     width:11rem; padding:.75rem .5rem; gap:.25rem;
+     border-color:var(--rm-border) !important; background:var(--rm-surface-soft) !important;
+     border-radius:0 0 0 calc(var(--rm-dialog-radius) - 1px);
+   }
+   #settingsModal .rm-settings-tabs [role="tab"] {
+     width:100%; min-height:2.5rem; padding:.5rem .625rem !important;
+     border:1px solid transparent; border-radius:var(--rm-radius-sm) !important;
+     color:var(--rm-muted); font-size:var(--rm-font-sm); font-weight:var(--rm-weight-semibold);
+   }
+   #settingsModal .rm-settings-tabs [role="tab"]:hover { color:var(--rm-text); border-color:var(--rm-border); background:var(--rm-surface) !important; }
+   #settingsModal .rm-settings-tabs [role="tab"][aria-selected="true"] { color:#4338ca; border-color:#c7d2fe; background:#eef2ff !important; }
+   #settingsModal #settingsContent {
+     padding:1rem !important; background:var(--rm-surface-soft);
+     border-radius:0 0 calc(var(--rm-dialog-radius) - 1px) 0;
+   }
+   #settingsModal .rm-settings-intro { margin:0 0 .75rem !important; padding:0 .125rem !important; color:var(--rm-muted) !important; font-size:var(--rm-font-sm) !important; line-height:var(--rm-line-body); }
+   #settingsModal .rm-settings-heading {
+     margin:1rem 0 .5rem !important; padding:0 .125rem !important;
+     color:var(--rm-muted) !important; font-size:var(--rm-font-xs) !important;
+     font-weight:var(--rm-weight-bold) !important; letter-spacing:.035em !important;
+   }
+   #settingsModal .rm-settings-card {
+     min-height:4.25rem; padding:.75rem !important; border:1px solid var(--rm-border) !important;
+     border-radius:var(--rm-radius-md) !important; background:var(--rm-surface) !important;
+     box-shadow:none !important;
+   }
+   #settingsModal .rm-settings-card > .flex.items-center.min-w-0 {
+     flex:1 1 18rem; min-width:0;
+   }
+   #settingsModal .rm-settings-card > .rm-btn,
+   #settingsModal .rm-settings-card > .rm-control,
+   #settingsModal .rm-settings-card > input,
+   #settingsModal .rm-settings-card > select {
+     flex:0 0 auto;
+   }
+   #settingsModal button.rm-settings-card:hover,#settingsModal label.rm-settings-card:hover { border-color:#c7d2fe !important; background:#f8faff !important; }
+   #settingsModal .rm-settings-card > span:first-child,
+   #settingsModal .rm-settings-card > div > span:first-child {
+     border-radius:var(--rm-radius-sm) !important; box-shadow:none !important;
+   }
+   #settingsModal .rm-segmented {
+     min-height:2.5rem; padding:.25rem; gap:.25rem !important;
+     border:1px solid var(--rm-border); border-radius:var(--rm-radius-md) !important;
+     background:var(--rm-surface-soft) !important;
+   }
+   #settingsModal .rm-segmented .rm-btn { min-height:2rem; padding:.375rem .625rem; border:0 !important; background:transparent !important; }
+   #settingsModal .rm-segmented .rm-btn[aria-pressed="true"],#settingsModal .rm-segmented .rm-btn[data-active="1"] { color:#4338ca !important; background:var(--rm-surface) !important; box-shadow:var(--rm-shadow-xs) !important; }
+
+   /* Плашки, счетчики, уведомления и подсказки используют те же шрифты и углы. */
+   .rm-chip { min-height:1.75rem; padding:.25rem .55rem; border-radius:999px; font-size:var(--rm-font-xs); font-weight:var(--rm-weight-semibold); }
+   .rm-counter,.plan-health-badge,.planning-hub-badge { font-family:var(--rm-font-sans); font-size:.625rem; font-weight:var(--rm-weight-bold); }
+   .rm-toast.rm-toast {
+     min-height:3rem; padding:.75rem 1rem !important; border:1px solid var(--rm-border);
+     border-radius:var(--rm-radius-md) !important; background:var(--rm-surface); color:var(--rm-text);
+     font-size:var(--rm-font-sm); font-weight:var(--rm-weight-medium); line-height:var(--rm-line-body);
+   }
+   #appTooltip {
+     padding:.5rem .625rem !important; border:1px solid var(--rm-border) !important;
+     border-radius:var(--rm-radius-sm) !important; background:var(--rm-surface) !important;
+     color:var(--rm-text) !important; font-family:var(--rm-font-sans) !important;
+     font-size:var(--rm-font-xs) !important; font-weight:var(--rm-weight-medium) !important;
+     line-height:1.4 !important; box-shadow:var(--rm-popover-shadow) !important;
+   }
+
+   /* Рабочая панель: навигация и фильтры выглядят как одна система. */
+   #planViewNav .plan-command-bar { padding:.25rem; border-radius:var(--rm-radius-md); }
+   #planViewNav .plan-command-bar button { min-height:2.5rem; padding:.5rem .75rem; font-size:var(--rm-font-sm); font-weight:var(--rm-weight-semibold); border-radius:var(--rm-radius-sm) !important; }
+   #planFilterBar #statusOverview > button { min-height:2.25rem; padding:.4rem .65rem; font-size:var(--rm-font-sm); border-radius:999px !important; }
+   #filterToolsBtn { min-height:2.25rem; border-radius:var(--rm-radius-md); font-size:var(--rm-font-sm); }
+   #activeFiltersBar { min-height:2.625rem; }
+   .active-filter-chip { min-height:1.875rem; border-radius:var(--rm-radius-sm); font-size:var(--rm-font-xs); }
+
+   /* Рабочие окна открываются одной правой шторкой. Короткие подтверждения
+      остаются компактными, чтобы простое действие не занимало весь экран. */
+   .rm-right-drawer-overlay.rm-right-drawer-overlay {
+     align-items:stretch !important; justify-content:flex-end !important; padding:0 !important;
+   }
+   .rm-right-drawer-surface.rm-right-drawer-surface {
+     width:min(44rem,100vw) !important; max-width:min(44rem,100vw) !important;
+     height:100dvh !important; max-height:100dvh !important; margin:0 !important;
+     border-radius:var(--rm-dialog-radius) 0 0 var(--rm-dialog-radius) !important;
+     box-shadow:var(--rm-dialog-shadow) !important; animation:rm-drawer-in .18s ease-out both;
+   }
+   .rm-right-drawer-surface.rm-dialog-lg { width:min(52rem,100vw) !important; max-width:min(52rem,100vw) !important; }
+   .rm-right-drawer-surface.rm-dialog-sm { width:min(34rem,100vw) !important; max-width:min(34rem,100vw) !important; }
+   .rm-right-drawer-surface .rm-dialog-header,
+   .rm-right-drawer-surface > :first-child:not(.rm-dialog-header) {
+     border-radius:calc(var(--rm-dialog-radius) - 1px) 0 0 0 !important;
+   }
+   .rm-right-drawer-surface .rm-dialog-footer,
+   .rm-right-drawer-surface > :last-child:not(.rm-dialog-footer) {
+     border-radius:0 0 0 calc(var(--rm-dialog-radius) - 1px) !important;
+   }
+   @keyframes rm-drawer-in { from { opacity:.45; transform:translateX(1.5rem); } to { opacity:1; transform:translateX(0); } }
+
+   /* Выпадающие рабочие меню используют ту же шторку и больше не прыгают
+      вокруг кнопки на разных размерах экрана. */
+   .rm-drawer-scrim {
+     position:fixed; inset:0; z-index:2180; background:rgba(15,23,42,.34);
+     backdrop-filter:blur(2px); opacity:1; transition:opacity .14s ease;
+   }
+   .rm-drawer-scrim.hidden { display:none !important; opacity:0; }
+   body .rm-drawer-popover.rm-drawer-popover {
+     position:fixed !important; inset:.75rem .75rem .75rem auto !important;
+     width:min(27rem,calc(100vw - 1.5rem)) !important; height:calc(100dvh - 1.5rem) !important;
+     max-width:min(27rem,calc(100vw - 1.5rem)) !important; max-height:calc(100dvh - 1.5rem) !important;
+     margin:0 !important; padding:.5rem !important; z-index:2200 !important;
+     border-radius:var(--rm-dialog-radius) !important; overflow-y:auto !important; overflow-x:hidden !important;
+     background:var(--rm-surface) !important; box-shadow:var(--rm-dialog-shadow) !important;
+     animation:rm-drawer-in .18s ease-out both; scrollbar-gutter:stable;
+   }
+   body #moreMenu.rm-drawer-popover,body #dataMenu.rm-drawer-popover,
+   body #reportsMenu.rm-drawer-popover,body #presetMenu.rm-drawer-popover,
+   body #releaseFilterMenu.rm-drawer-popover,body #zoomMenu.rm-drawer-popover,
+   body #depLinesMenu.rm-drawer-popover,body #sortMenu.rm-drawer-popover,
+   body #taskMovePanel.rm-drawer-popover,body #statusCompactMenu.rm-drawer-popover,
+   body #viewMenu.rm-drawer-popover,body [data-filter-panel].rm-drawer-popover {
+     position:fixed !important; inset:.75rem .75rem .75rem auto !important;
+     left:auto !important; top:.75rem !important; right:.75rem !important; bottom:.75rem !important;
+     width:min(27rem,calc(100vw - 1.5rem)) !important; height:calc(100dvh - 1.5rem) !important;
+     max-width:min(27rem,calc(100vw - 1.5rem)) !important; max-height:calc(100dvh - 1.5rem) !important;
+     margin:0 !important; padding:.5rem !important; z-index:2200 !important;
+     border-radius:var(--rm-dialog-radius) !important; overflow-y:auto !important; overflow-x:hidden !important;
+   }
+   /* Старые ID-правила фильтров имели более высокий приоритет и оставляли
+      эти две панели под общей затемняющей подложкой. Явные ID сохраняют
+      единый слой всех правых шторок и делают элементы кликабельными. */
+   body #projectFilterPanel.rm-drawer-popover,
+   body #resourceFilterPanel.rm-drawer-popover {
+     z-index:2200 !important;
+   }
+   body .rm-drawer-popover.hidden { display:none !important; }
+   .rm-drawer-popover .rm-drawer-header {
+     position:sticky; top:-.5rem; z-index:4; min-height:3.75rem;
+     margin:-.5rem -.5rem .5rem; padding:.75rem .875rem;
+     display:flex; align-items:center; justify-content:space-between; gap:.75rem;
+     border-bottom:1px solid var(--rm-border); border-radius:calc(var(--rm-dialog-radius) - 1px) calc(var(--rm-dialog-radius) - 1px) 0 0;
+     background:color-mix(in srgb,var(--rm-surface) 94%,transparent); backdrop-filter:blur(10px);
+   }
+   .rm-drawer-title { min-width:0; color:var(--rm-text); font-size:var(--rm-font-lg); font-weight:var(--rm-weight-bold); line-height:1.2; }
+   .rm-drawer-close { flex:0 0 auto; }
+   .rm-drawer-popover .grid-cols-2,.rm-drawer-popover [class~="sm:grid-cols-2"] { grid-template-columns:minmax(0,1fr) !important; }
+   .rm-drawer-popover .rm-menu-action {
+     width:100%; min-width:0; min-height:3rem; height:auto !important;
+     white-space:normal; overflow-wrap:anywhere; text-wrap:pretty;
+   }
+   .rm-drawer-popover .rm-menu-item-title { font-size:var(--rm-font-sm) !important; white-space:normal; overflow-wrap:anywhere; }
+   .rm-drawer-popover .rm-menu-item-subtitle { white-space:normal; overflow-wrap:anywhere; }
+   .rm-drawer-popover .rm-menu-action > .grow,.rm-drawer-popover .rm-menu-action > .min-w-0 { min-width:0; max-width:100%; }
+   .rm-drawer-popover button[aria-label="Удалить"],.rm-drawer-popover .rm-btn-icon {
+     width:2.5rem !important; min-width:2.5rem !important; padding:0 !important;
+   }
+   .rm-drawer-popover .workspace-menu-modes button {
+     min-width:0; padding-inline:.375rem !important; font-size:var(--rm-font-xs) !important;
+     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+   }
+   #moreMenu.rm-drawer-popover .workspace-menu-modes { grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+   #moreMenu.rm-drawer-popover .rm-workspace-card { min-height:3.5rem; }
+   #moreMenu.rm-drawer-popover #planningJiraChanges { display:flex; align-items:center; }
+   #moreMenu.rm-drawer-popover #planningJiraChanges > span:first-child { white-space:nowrap; }
+   #dataMenu.rm-drawer-popover .grid { display:grid !important; grid-template-columns:minmax(0,1fr) !important; }
+   #dataMenu.rm-drawer-popover [class~="sm:col-span-2"] { grid-column:1 !important; }
+   #dataMenu.rm-drawer-popover .rm-menu-action { align-items:center; }
+   #presetMenu.rm-drawer-popover > div { max-height:none !important; }
+
+   /* Текст всегда помещается в управляющий элемент: короткие кнопки не
+      раздуваются, длинные действия получают перенос и достаточную высоту. */
+   .rm-btn.rm-btn { max-width:100%; white-space:nowrap; }
+   .rm-dialog-surface .rm-btn:not(.rm-btn-icon),.rm-drawer-popover .rm-btn:not(.rm-btn-icon) {
+     height:auto; overflow-wrap:anywhere;
+   }
+   .rm-dialog-surface .rm-btn > span,.rm-drawer-popover button > span { min-width:0; }
+   #appHeader .rm-btn,#planViewNav .rm-btn,#planFilterBar .rm-btn { font-size:clamp(.6875rem,.72vw,.75rem); }
+
+   #settingsModal .rm-settings-dialog { width:min(52rem,100vw) !important; max-width:min(52rem,100vw) !important; }
+   #settingsModal .rm-settings-tabs { border-radius:0 0 0 calc(var(--rm-dialog-radius) - 1px); }
+   #settingsModal #settingsContent { border-radius:0 !important; }
+   #planBuilderPanel {
+     width:min(44rem,100vw) !important; max-width:min(44rem,100vw) !important;
+     border-radius:var(--rm-dialog-radius) !important;
+   }
+
+   body.theme-dark #moreMenu .workspace-menu-modes button[aria-pressed="true"],
+   body.theme-dark #moreMenu .workspace-menu-modes button[data-active="1"],
+   body.theme-dark #settingsModal .rm-settings-tabs [role="tab"][aria-selected="true"] { color:#c7d2fe; border-color:#6366f1; background:#1e2545 !important; }
+   body.theme-dark #moreMenu .rm-workspace-card:hover,body.theme-dark #settingsModal .rm-settings-card:hover { border-color:#6366f1 !important; background:#1e2545 !important; }
+
+   @media (max-width:640px) {
+     #settingsModal .rm-settings-dialog { max-height:calc(100dvh - 1rem) !important; }
+     #settingsModal .rm-settings-layout { flex-direction:column !important; }
+     #settingsModal .rm-settings-tabs {
+       width:100%; flex-direction:row !important; overflow-x:auto; padding:.5rem;
+       border-right:0 !important; border-bottom:1px solid var(--rm-border) !important;
+       border-radius:0;
+     }
+     #settingsModal .rm-settings-tabs [role="tab"] { width:auto; flex:none; }
+     #settingsModal .rm-settings-card { align-items:flex-start; }
+     #settingsModal .rm-settings-card input,#settingsModal .rm-settings-card select { width:100% !important; }
+     #settingsModal #settingsContent { border-radius:0 0 0 calc(var(--rm-dialog-radius) - 1px) !important; }
+     body .rm-drawer-popover.rm-drawer-popover {
+       inset:.5rem .5rem .5rem auto !important; width:calc(100vw - 1rem) !important;
+       max-width:calc(100vw - 1rem) !important; height:calc(100dvh - 1rem) !important;
+       max-height:calc(100dvh - 1rem) !important;
+     }
+   }
 </style>
 </head>
 <body class="bg-[#f8fafc] text-slate-900 antialiased selection:bg-indigo-100 overflow-x-clip">
@@ -7606,7 +7966,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v14.4">
+<script data-roadmap-modules="v14.5">
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
@@ -9010,8 +9370,8 @@ if (typeof globalThis !== 'undefined') {
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '14.4';
-    const APP_VERSION_DATE = '29.07.2026';
+    const APP_VERSION = '14.5';
+    const APP_VERSION_DATE = '30.07.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'версия ' + APP_VERSION; } catch (e) {}
@@ -15860,7 +16220,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (uiMode === 'simple') root.classList.add('mode-simple'); else root.classList.remove('mode-simple');
       if (!document.getElementById('modeSimpleStyle')) { const st = document.createElement('style'); st.id = 'modeSimpleStyle'; st.textContent = 'html.mode-simple [data-adv]{display:none !important;} #taskModal.ms-on .ms-hide{display:none !important;} #taskModal.ms-on .ms-collapse{grid-template-columns:1fr !important;} html.mode-simple #taskModal:not(.card-adv-open) .card-adv{display:none !important;} #taskModal .card-more-wrap{display:none;} html.mode-simple #taskModal .card-more-wrap{display:flex;}'; document.head.appendChild(st); }
       const sb = document.getElementById('modeSimpleBtn'), ab = document.getElementById('modeAdvBtn');
-      const base = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ';
+      const base = 'rm-action rm-btn rm-btn-ghost px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ';
       if (sb) sb.className = base + (uiMode === 'simple' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500 hover:text-slate-900');
       if (ab) ab.className = base + (uiMode === 'advanced' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500 hover:text-slate-900');
     }
@@ -16345,7 +16705,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
     }
     function dataMenuAway(e) {
       const w = document.getElementById('dataMenuWrap');
-      if (w && !w.contains(e.target)) closeDataMenu();
+      const m = document.getElementById('dataMenu');
+      if ((!w || !w.contains(e.target)) && (!m || !m.contains(e.target))) closeDataMenu();
     }
     // Меню «Еще»: дополнительные проверки и настройки рядом с представлениями плана.
     function toggleMoreMenu(ev) {
@@ -16412,7 +16773,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
     }
     function reportsMenuAway(e) {
       const w = document.getElementById('reportsMenuWrap');
-      if (w && !w.contains(e.target)) closeReportsMenu();
+      const m = document.getElementById('reportsMenu');
+      if ((!w || !w.contains(e.target)) && (!m || !m.contains(e.target))) closeReportsMenu();
     }
     // п.4 Кластер отсечек: поповер со списком всех меток на близкие даты
     let _cutoffPopoverEl = null;
@@ -29728,7 +30090,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     <h3 class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">
      <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-     <span id="appVersionBadge">v14.4, 29.07.2026</span>
+     <span id="appVersionBadge">v14.5, 30.07.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -29794,7 +30156,16 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </div>
 
    <div>
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v14.4 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v14.5 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Единые боковые панели</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">UI/UX</span></div><p class="text-xs text-slate-600">Формы, настройки и рабочие инструменты открываются справа по одному правилу. Заголовок, кнопка закрытия, отступы, скругления и прокрутка согласованы между экранами.</p></div>
+     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Текст без обрезки</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">ДОСТУПНОСТЬ</span></div><p class="text-xs text-slate-600">Кнопки и карточки получили безопасную ширину, читаемую типографику и предсказуемый перенос. Подписи больше не распадаются на отдельные буквы на узких экранах.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Обновлённая демонстрация</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">МЕДИА</span></div><p class="text-xs text-slate-600">Каталог функций и плавный видеообзор пересобраны из актуальной синтетической демоверсии в светлой и тёмной теме.</p></div>
+    </div>
+   </div>
+
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v14.4</h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Два уровня управления</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">НАВИГАЦИЯ</span></div><p class="text-xs text-slate-600">Проект и основные действия находятся в верхней строке, а виды, проверки, статусы и фильтры — в одной компактной панели ниже. Повторяющиеся блоки убраны.</p></div>
      <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Показатели по запросу</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">ФОКУС</span></div><p class="text-xs text-slate-600">Готовность, объём и ближайшие даты сведены в две короткие кнопки. Подробности открываются в одной панели и не занимают постоянное место в шапке.</p></div>
@@ -33962,6 +34333,62 @@ try { if(typeof MODAL_CLOSERS!=='undefined') MODAL_CLOSERS.auditTeamsModal=close
 
 // v14.1: единая визуальная система для старых и динамически создаваемых окон.
 // Роли добавляются поверх существующей разметки, поэтому поведение форм и сохранение данных не меняются.
+function _drawerPopupTitle(popup) {
+  var titles = {
+    moreMenu:'Планирование', dataMenu:'Данные и версии', reportsMenu:'Отчёты и выгрузки',
+    presetMenu:'Наборы фильтров', releaseFilterMenu:'Релизы и метки', zoomMenu:'Масштаб',
+    depLinesMenu:'Связи задач', sortMenu:'Сортировка', taskMovePanel:'Перемещение задачи',
+    statusCompactMenu:'Статусы', viewMenu:'Виды плана',
+    projectFilterPanel:'Проекты', resourceFilterPanel:'Исполнители',
+    sectionActionsMenu:'Действия с секцией', bulkPopover:'Массовые действия',
+    cutoffClusterPopover:'Метки на близкие даты'
+  };
+  return titles[popup.id] || popup.getAttribute('aria-label') || 'Параметры';
+}
+function _closeDrawerPopover(popup) {
+  if (!popup) return;
+  if (typeof closeAllPopovers === 'function') closeAllPopovers();
+  else popup.classList.add('hidden');
+  _syncDrawerScrim();
+}
+function _decorateDrawerPopover(popup) {
+  if (!popup || popup.classList.contains('rm-no-drawer')) return;
+  popup.classList.add('rm-drawer-popover');
+  if (popup.parentElement !== document.body) document.body.appendChild(popup);
+  if (!popup.querySelector(':scope > .rm-drawer-header')) {
+    var header = document.createElement('div');
+    header.className = 'rm-drawer-header no-print no-image-export';
+    var title = document.createElement('div');
+    title.className = 'rm-drawer-title';
+    title.textContent = _drawerPopupTitle(popup);
+    var close = document.createElement('button');
+    close.type = 'button';
+    close.className = 'rm-action rm-btn rm-btn-ghost rm-btn-icon rm-drawer-close';
+    close.setAttribute('aria-label', 'Закрыть');
+    close.setAttribute('title', 'Закрыть');
+    close.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+    close.addEventListener('click', function (event) { event.stopPropagation(); _closeDrawerPopover(popup); });
+    header.appendChild(title); header.appendChild(close); popup.insertBefore(header, popup.firstChild);
+  }
+}
+function _syncDrawerScrim() {
+  var scrim = document.getElementById('rmDrawerScrim');
+  if (!scrim) {
+    scrim = document.createElement('div');
+    scrim.id = 'rmDrawerScrim';
+    scrim.className = 'rm-drawer-scrim hidden no-print no-image-export';
+    scrim.setAttribute('aria-hidden', 'true');
+    scrim.addEventListener('pointerdown', function () { if (typeof closeAllPopovers === 'function') closeAllPopovers(); _syncDrawerScrim(); });
+    document.body.appendChild(scrim);
+  }
+  var opened = Array.prototype.some.call(document.querySelectorAll('.rm-drawer-popover'), function (popup) {
+    return !popup.classList.contains('hidden') && getComputedStyle(popup).display !== 'none';
+  });
+  scrim.classList.toggle('hidden', !opened);
+  var tooltip = document.getElementById('appTooltip');
+  if (opened && tooltip) { tooltip.style.opacity = '0'; tooltip.style.left = '-9999px'; tooltip.style.top = '-9999px'; }
+}
+function _scheduleDrawerSync() { setTimeout(_syncDrawerScrim, 0); }
 function normalizeUiChrome(root) {
   if (!root) return;
   var overlaySelector = '.fixed.inset-0, [data-modal-backdrop]';
@@ -33987,6 +34414,11 @@ function normalizeUiChrome(root) {
       || children[0];
     if (!surface) return;
     surface.classList.add('rm-dialog-surface');
+    var compactDialog = /^(inputModal|sectionColorModal|leaderChooserModal|startupModal)$/.test(overlay.id || '');
+    if (!compactDialog) {
+      overlay.classList.add('rm-right-drawer-overlay');
+      surface.classList.add('rm-right-drawer-surface');
+    }
     if (overlay.id === 'taskModal' || overlay.id === 'epicCardModal') {
       overlay.classList.add('rm-side-sheet-overlay');
       surface.classList.add('rm-side-sheet');
@@ -34009,6 +34441,15 @@ function normalizeUiChrome(root) {
     }
     if (last && (overlay.id === 'sectionColorModal' || /border-t/.test(last.className || '') || (/justify-end/.test(last.className || '') && last.querySelectorAll('button').length > 0))) {
       last.classList.add('rm-dialog-footer');
+    }
+    if (first && first.classList.contains('rm-dialog-header')) {
+      var dialogTitle = first.querySelector('h1,h2,h3,h4');
+      if (dialogTitle) {
+        dialogTitle.classList.add('rm-dialog-title');
+        var titleWrap = dialogTitle.parentElement;
+        var dialogSubtitle = titleWrap && titleWrap.querySelector('p');
+        if (dialogSubtitle) dialogSubtitle.classList.add('rm-dialog-subtitle');
+      }
     }
     parts.forEach(function (part) {
       if (part === first && part.classList.contains('rm-dialog-header')) return;
@@ -34063,9 +34504,31 @@ function normalizeUiChrome(root) {
       badge.classList.add(/health|error|warn|risk/i.test(badge.id || '') ? 'rm-counter-danger' : 'rm-counter-neutral');
     });
     surface.querySelectorAll('.rm-dialog-footer button').forEach(function (button) { button.classList.add('rm-dialog-action'); });
+
+    if (overlay.id === 'settingsModal') {
+      surface.classList.add('rm-settings-dialog');
+      var settingsTabs = surface.querySelector('nav[role="tablist"]');
+      if (settingsTabs) {
+        settingsTabs.classList.add('rm-settings-tabs');
+        if (settingsTabs.parentElement) settingsTabs.parentElement.classList.add('rm-settings-layout');
+      }
+      surface.querySelectorAll('[data-settings-panel]').forEach(function (panel) {
+        var intro = panel.querySelector(':scope > p:first-child');
+        if (intro) intro.classList.add('rm-settings-intro');
+        panel.querySelectorAll('div[class*="uppercase"][class*="tracking"]').forEach(function (heading) {
+          heading.classList.add('rm-settings-heading');
+        });
+        panel.querySelectorAll('.bg-white.border.border-slate-200').forEach(function (card) {
+          if (!card.matches('button,input,select,textarea,[role="button"]')) card.classList.add('rm-settings-card');
+        });
+        panel.querySelectorAll('[role="group"]').forEach(function (group) {
+          group.classList.add('rm-segmented');
+        });
+      });
+    }
   });
 
-  var popupSelector = '[role="menu"], [data-filter-panel], #taskMovePanel, #reportsMenu, #moreMenu, #dataMenu, #presetMenu, #releaseFilterMenu, #zoomMenu, #depLinesMenu, #sortMenu';
+  var popupSelector = '[role="menu"], [data-filter-panel], #taskMovePanel, #reportsMenu, #moreMenu, #dataMenu, #presetMenu, #releaseFilterMenu, #zoomMenu, #depLinesMenu, #sortMenu, #bulkPopover, #cutoffClusterPopover, #sectionActionsMenu';
   var popups = [];
   if (root.nodeType === 1 && root.matches(popupSelector)) popups.push(root);
   if (root.querySelectorAll) root.querySelectorAll(popupSelector).forEach(function (el) { popups.push(el); });
@@ -34075,8 +34538,28 @@ function normalizeUiChrome(root) {
       button.classList.add('rm-menu-action');
       var textValue = (button.textContent || '') + ' ' + (button.getAttribute('onclick') || '');
       if (/delete|remove|clear|удал|очист/i.test(textValue)) button.classList.add('rm-menu-danger');
+      var copy = button.querySelector('.grow') || button.querySelector('.min-w-0');
+      if (copy) {
+        var copyParts = Array.prototype.filter.call(copy.children || [], function (child) { return child && child.tagName === 'SPAN'; });
+        if (copyParts[0]) copyParts[0].classList.add('rm-menu-item-title');
+        if (copyParts[1]) copyParts[1].classList.add('rm-menu-item-subtitle');
+      }
     });
     popup.querySelectorAll('div[class*="uppercase"][class*="tracking"]').forEach(function (heading) { heading.classList.add('rm-menu-heading'); });
+    if (popup.id === 'moreMenu') {
+      popup.classList.add('rm-workspace-menu');
+      var modes = popup.querySelector('.workspace-menu-modes');
+      var featureGrid = modes && modes.nextElementSibling;
+      if (featureGrid) Array.prototype.forEach.call(featureGrid.children || [], function (button) {
+        if (button && button.tagName === 'BUTTON') {
+          button.classList.add('rm-workspace-card');
+          var parts = button.querySelectorAll(':scope > span');
+          if (parts[0]) parts[0].classList.add('rm-menu-item-title');
+          if (parts[1]) parts[1].classList.add('rm-menu-item-subtitle');
+        }
+      });
+    }
+    _decorateDrawerPopover(popup);
   });
   var toastHost = document.getElementById('toastHost');
   if (toastHost) Array.prototype.forEach.call(toastHost.children, function (toast) { toast.classList.add('rm-toast'); });
@@ -34084,9 +34567,18 @@ function normalizeUiChrome(root) {
 try {
   normalizeUiChrome(document.body);
   var _uiChromeObserver = new MutationObserver(function (mutations) {
-    mutations.forEach(function (mutation) { mutation.addedNodes.forEach(normalizeUiChrome); });
+    mutations.forEach(function (mutation) {
+      var popup = mutation.target && mutation.target.closest ? mutation.target.closest('.rm-drawer-popover') : null;
+      if (popup) normalizeUiChrome(popup);
+      mutation.addedNodes.forEach(normalizeUiChrome);
+    });
+    _scheduleDrawerSync();
   });
   _uiChromeObserver.observe(document.body, { subtree:true, childList:true });
+  document.addEventListener('click', _scheduleDrawerSync, true);
+  document.addEventListener('pointerdown', _scheduleDrawerSync, true);
+  document.addEventListener('keydown', _scheduleDrawerSync, true);
+  _syncDrawerScrim();
 } catch (e) { console.warn('UI chrome normalization unavailable:', e); }
 
 // Типографическая доводка пользовательского текста. Старые строки интерфейса местами содержат
