@@ -6789,16 +6789,23 @@
 
    /* Окна: единая шапка, заголовок, тело, футер и кнопка закрытия. */
    .rm-dialog-overlay.rm-dialog-overlay { background:rgba(15,23,42,.56) !important; backdrop-filter:blur(5px) !important; }
-   .rm-dialog-surface.rm-dialog-surface { border-radius:var(--rm-dialog-radius) !important; overflow:visible; }
+   .rm-dialog-surface.rm-dialog-surface {
+     min-width:0; min-height:0;
+     border-radius:var(--rm-dialog-radius) !important;
+     overflow:hidden !important;
+   }
    .rm-dialog-header.rm-dialog-header {
      min-height:4rem; padding:.875rem 1.25rem !important; gap:.75rem;
+     flex:0 0 auto;
      border-radius:calc(var(--rm-dialog-radius) - 1px) calc(var(--rm-dialog-radius) - 1px) 0 0;
    }
-   .rm-dialog-content.rm-dialog-content { padding:1.25rem !important; }
+   .rm-dialog-content.rm-dialog-content { min-width:0; min-height:0; padding:1.25rem !important; }
    .rm-dialog-footer.rm-dialog-footer {
      min-height:4rem; padding:.75rem 1.25rem !important;
+     flex:0 0 auto;
      border-radius:0 0 calc(var(--rm-dialog-radius) - 1px) calc(var(--rm-dialog-radius) - 1px);
    }
+   .rm-dialog-scroll-surface.rm-dialog-scroll-surface { overflow-y:auto !important; overflow-x:hidden !important; }
    .rm-dialog-surface > :first-child:not(.rm-dialog-header) {
      border-radius:calc(var(--rm-dialog-radius) - 1px) calc(var(--rm-dialog-radius) - 1px) 0 0;
    }
@@ -6881,6 +6888,7 @@
    #settingsModal .rm-settings-tabs [role="tab"]:hover { color:var(--rm-text); border-color:var(--rm-border); background:var(--rm-surface) !important; }
    #settingsModal .rm-settings-tabs [role="tab"][aria-selected="true"] { color:#4338ca; border-color:#c7d2fe; background:#eef2ff !important; }
    #settingsModal #settingsContent {
+     min-width:0; min-height:0; overflow:auto;
      padding:1rem !important; background:var(--rm-surface-soft);
      border-radius:0 0 calc(var(--rm-dialog-radius) - 1px) 0;
    }
@@ -6944,23 +6952,24 @@
    /* Рабочие окна открываются одной правой шторкой. Короткие подтверждения
       остаются компактными, чтобы простое действие не занимало весь экран. */
    .rm-right-drawer-overlay.rm-right-drawer-overlay {
-     align-items:stretch !important; justify-content:flex-end !important; padding:0 !important;
+     align-items:stretch !important; justify-content:flex-end !important;
+     padding:max(.75rem,env(safe-area-inset-top)) max(.75rem,env(safe-area-inset-right)) max(.75rem,env(safe-area-inset-bottom)) max(.75rem,env(safe-area-inset-left)) !important;
    }
    .rm-right-drawer-surface.rm-right-drawer-surface {
-     width:min(44rem,100vw) !important; max-width:min(44rem,100vw) !important;
-     height:100dvh !important; max-height:100dvh !important; margin:0 !important;
-     border-radius:var(--rm-dialog-radius) 0 0 var(--rm-dialog-radius) !important;
+     width:min(44rem,calc(100vw - 1.5rem)) !important; max-width:min(44rem,calc(100vw - 1.5rem)) !important;
+     height:calc(100dvh - 1.5rem) !important; max-height:calc(100dvh - 1.5rem) !important; margin:0 !important;
+     border-radius:var(--rm-dialog-radius) !important;
      box-shadow:var(--rm-dialog-shadow) !important; animation:rm-drawer-in .18s ease-out both;
    }
-   .rm-right-drawer-surface.rm-dialog-lg { width:min(52rem,100vw) !important; max-width:min(52rem,100vw) !important; }
-   .rm-right-drawer-surface.rm-dialog-sm { width:min(34rem,100vw) !important; max-width:min(34rem,100vw) !important; }
+   .rm-right-drawer-surface.rm-dialog-lg { width:min(52rem,calc(100vw - 1.5rem)) !important; max-width:min(52rem,calc(100vw - 1.5rem)) !important; }
+   .rm-right-drawer-surface.rm-dialog-sm { width:min(34rem,calc(100vw - 1.5rem)) !important; max-width:min(34rem,calc(100vw - 1.5rem)) !important; }
    .rm-right-drawer-surface .rm-dialog-header,
    .rm-right-drawer-surface > :first-child:not(.rm-dialog-header) {
-     border-radius:calc(var(--rm-dialog-radius) - 1px) 0 0 0 !important;
+     border-radius:calc(var(--rm-dialog-radius) - 1px) calc(var(--rm-dialog-radius) - 1px) 0 0 !important;
    }
    .rm-right-drawer-surface .rm-dialog-footer,
    .rm-right-drawer-surface > :last-child:not(.rm-dialog-footer) {
-     border-radius:0 0 0 calc(var(--rm-dialog-radius) - 1px) !important;
+     border-radius:0 0 calc(var(--rm-dialog-radius) - 1px) calc(var(--rm-dialog-radius) - 1px) !important;
    }
    @keyframes rm-drawer-in { from { opacity:.45; transform:translateX(1.5rem); } to { opacity:1; transform:translateX(0); } }
 
@@ -7013,10 +7022,10 @@
    .rm-drawer-popover .grid-cols-2,.rm-drawer-popover [class~="sm:grid-cols-2"] { grid-template-columns:minmax(0,1fr) !important; }
    .rm-drawer-popover .rm-menu-action {
      width:100%; min-width:0; min-height:3rem; height:auto !important;
-     white-space:normal; overflow-wrap:anywhere; text-wrap:pretty;
+     white-space:normal; overflow-wrap:normal; word-break:normal; text-wrap:pretty;
    }
-   .rm-drawer-popover .rm-menu-item-title { font-size:var(--rm-font-sm) !important; white-space:normal; overflow-wrap:anywhere; }
-   .rm-drawer-popover .rm-menu-item-subtitle { white-space:normal; overflow-wrap:anywhere; }
+   .rm-drawer-popover .rm-menu-item-title { font-size:var(--rm-font-sm) !important; white-space:normal; overflow-wrap:normal; word-break:normal; }
+   .rm-drawer-popover .rm-menu-item-subtitle { white-space:normal; overflow-wrap:normal; word-break:normal; }
    .rm-drawer-popover .rm-menu-action > .grow,.rm-drawer-popover .rm-menu-action > .min-w-0 { min-width:0; max-width:100%; }
    .rm-drawer-popover button[aria-label="Удалить"],.rm-drawer-popover .rm-btn-icon {
      width:2.5rem !important; min-width:2.5rem !important; padding:0 !important;
@@ -7036,20 +7045,56 @@
 
    /* Текст всегда помещается в управляющий элемент: короткие кнопки не
       раздуваются, длинные действия получают перенос и достаточную высоту. */
-   .rm-btn.rm-btn { max-width:100%; white-space:nowrap; }
+   .rm-btn.rm-btn { max-width:100%; white-space:normal; line-height:1.25; }
    .rm-dialog-surface .rm-btn:not(.rm-btn-icon),.rm-drawer-popover .rm-btn:not(.rm-btn-icon) {
-     height:auto; overflow-wrap:anywhere;
+     height:auto; overflow-wrap:normal; word-break:normal;
    }
    .rm-dialog-surface .rm-btn > span,.rm-drawer-popover button > span { min-width:0; }
-   #appHeader .rm-btn,#planViewNav .rm-btn,#planFilterBar .rm-btn { font-size:clamp(.6875rem,.72vw,.75rem); }
+   #appHeader .rm-btn,#planViewNav .rm-btn,#planFilterBar .rm-btn {
+     font-size:clamp(.6875rem,.72vw,.75rem); white-space:nowrap;
+   }
 
-   #settingsModal .rm-settings-dialog { width:min(52rem,100vw) !important; max-width:min(52rem,100vw) !important; }
-   #settingsModal .rm-settings-tabs { border-radius:0 0 0 calc(var(--rm-dialog-radius) - 1px); }
+   #settingsModal .rm-settings-dialog { width:min(52rem,calc(100vw - 1.5rem)) !important; max-width:min(52rem,calc(100vw - 1.5rem)) !important; }
+   #settingsModal .rm-settings-tabs { border-radius:0; }
    #settingsModal #settingsContent { border-radius:0 !important; }
    #planBuilderPanel {
-     width:min(44rem,100vw) !important; max-width:min(44rem,100vw) !important;
-     border-radius:var(--rm-dialog-radius) !important;
+     top:.75rem !important; right:.75rem !important; bottom:.75rem !important; left:auto !important;
+     width:min(44rem,calc(100vw - 1.5rem)) !important; max-width:min(44rem,calc(100vw - 1.5rem)) !important;
+     height:auto !important; max-height:calc(100dvh - 1.5rem) !important;
+     border:1px solid var(--rm-border) !important; border-radius:var(--rm-dialog-radius) !important;
+     overflow:hidden !important; box-shadow:var(--rm-dialog-shadow) !important;
    }
+
+   /* Последний слой контракта: поверхность всегда сама обрезает фон по
+      скруглению, а прокрутка остается только у содержимого. */
+   .rm-dialog-surface > .overflow-y-auto,
+   .rm-dialog-surface > .overflow-auto,
+   .rm-dialog-surface .rm-dialog-content { min-height:0; min-width:0; }
+   .rm-side-sheet.rm-side-sheet {
+     width:min(48rem,calc(100vw - 1.5rem)) !important;
+     height:calc(100dvh - 1.5rem) !important; max-height:calc(100dvh - 1.5rem) !important;
+     border:1px solid var(--rm-border) !important; border-radius:var(--rm-dialog-radius) !important;
+   }
+   #epicCardModal .rm-side-sheet { width:min(42rem,calc(100vw - 1.5rem)) !important; }
+   .rm-dialog-close.rm-dialog-close:focus-visible {
+     outline:2px solid var(--rm-focus) !important; outline-offset:-2px !important; box-shadow:none !important;
+   }
+
+   /* Архив: поиск и закрытие больше не накладываются друг на друга. */
+   #archiveModal .rm-dialog-header { display:grid; grid-template-columns:minmax(0,1fr) minmax(15rem,24rem) auto; align-items:center; }
+   #archiveSearch { padding-right:2.75rem !important; }
+   #archiveSearchClear.rm-btn {
+     right:.375rem !important; width:1.75rem !important; height:1.75rem !important;
+     min-width:1.75rem !important; min-height:1.75rem !important; padding:0 !important;
+   }
+
+   /* Предпросмотр Jira: сводка занимает собственную строку и никогда не
+      перекрывает первую задачу, даже при длинных названиях. */
+   #jiraImportPreviewModal .jira-import-preview-header { display:block !important; height:auto !important; flex:none; }
+   #jiraImportPreviewModal .jira-import-preview-summary { display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.5rem; margin-top:.75rem; }
+   #jiraImportPreviewModal .jira-import-preview-list { min-height:0; overflow-y:auto; }
+   #jiraImportPreviewModal .jira-import-preview-footer { flex:none; }
+   #jiraImportPreviewModal [data-jira-preview] { flex:none; }
 
    body.theme-dark #moreMenu .workspace-menu-modes button[aria-pressed="true"],
    body.theme-dark #moreMenu .workspace-menu-modes button[data-active="1"],
@@ -7057,7 +7102,21 @@
    body.theme-dark #moreMenu .rm-workspace-card:hover,body.theme-dark #settingsModal .rm-settings-card:hover { border-color:#6366f1 !important; background:#1e2545 !important; }
 
    @media (max-width:640px) {
-     #settingsModal .rm-settings-dialog { max-height:calc(100dvh - 1rem) !important; }
+     .rm-right-drawer-overlay.rm-right-drawer-overlay { padding:max(.5rem,env(safe-area-inset-top)) max(.5rem,env(safe-area-inset-right)) max(.5rem,env(safe-area-inset-bottom)) max(.5rem,env(safe-area-inset-left)) !important; }
+     .rm-right-drawer-surface.rm-right-drawer-surface,
+     .rm-side-sheet.rm-side-sheet {
+       width:calc(100vw - 1rem) !important; max-width:calc(100vw - 1rem) !important;
+       height:calc(100dvh - 1rem) !important; max-height:calc(100dvh - 1rem) !important;
+       border:1px solid var(--rm-border) !important; border-radius:1rem !important;
+     }
+     #planBuilderPanel { top:.5rem !important; right:.5rem !important; bottom:.5rem !important; width:calc(100vw - 1rem) !important; max-width:calc(100vw - 1rem) !important; max-height:calc(100dvh - 1rem) !important; }
+     /* ID-специфичное правило настроек не должно оставлять лишний второй
+        отступ слева поверх padding оверлея. На мобильном все шторки имеют
+        одинаковые 8px от каждого края. */
+     #settingsModal .rm-settings-dialog {
+       width:calc(100vw - 1rem) !important; max-width:calc(100vw - 1rem) !important;
+       max-height:calc(100dvh - 1rem) !important;
+     }
      #settingsModal .rm-settings-layout { flex-direction:column !important; }
      #settingsModal .rm-settings-tabs {
        width:100%; flex-direction:row !important; overflow-x:auto; padding:.5rem;
@@ -7067,11 +7126,24 @@
      #settingsModal .rm-settings-tabs [role="tab"] { width:auto; flex:none; }
      #settingsModal .rm-settings-card { align-items:flex-start; }
      #settingsModal .rm-settings-card input,#settingsModal .rm-settings-card select { width:100% !important; }
-     #settingsModal #settingsContent { border-radius:0 0 0 calc(var(--rm-dialog-radius) - 1px) !important; }
+     #settingsModal #settingsContent { border-radius:0 !important; }
+     #archiveModal .rm-dialog-header { grid-template-columns:minmax(0,1fr) auto; }
+     #archiveModal .rm-dialog-header > div:nth-child(2) { grid-column:1 / -1; grid-row:2; max-width:none; width:100%; }
+     #jiraImportPreviewModal .jira-import-preview-summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
+     #jiraImportPreviewModal .jira-import-preview-footer { align-items:stretch !important; }
+     #jiraImportPreviewModal .jira-import-preview-footer > div { width:100%; }
+     #jiraImportPreviewModal .jira-import-preview-footer button { flex:1 1 0; }
      body .rm-drawer-popover.rm-drawer-popover {
        inset:.5rem .5rem .5rem auto !important; width:calc(100vw - 1rem) !important;
        max-width:calc(100vw - 1rem) !important; height:calc(100dvh - 1rem) !important;
        max-height:calc(100dvh - 1rem) !important;
+     }
+   }
+   /* Этот блок расположен после всех drawer-анимаций: системная настройка
+      уменьшения движения всегда имеет последний приоритет. */
+   @media (prefers-reduced-motion: reduce) {
+     .rm-right-drawer-surface,.rm-drawer-popover,#planBuilderPanel {
+       animation:none !important; transition:none !important;
      }
    }
 </style>
@@ -7595,7 +7667,7 @@
             <svg aria-hidden="true" class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
           </a>
         </div>
-        <button onclick="requestCloseModal()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-all cursor-pointer" aria-label="Закрыть" title="Закрыть">
+        <button type="button" onclick="requestCloseModal()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-all cursor-pointer" aria-label="Закрыть" title="Закрыть">
           <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
       </div>
@@ -7644,14 +7716,15 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Дата старта</label>
-            <input type="date" id="taskStart" min="2000-01-01" max="2100-12-31" onchange="syncMilestoneDates();checkTaskDeadline()" class="w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 transition-all">
+            <input type="date" id="taskStart" min="2000-01-01" max="2100-12-31" aria-describedby="taskDateError" onchange="clearTaskDateError();syncMilestoneDates();checkTaskDeadline()" class="w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 transition-all">
           </div>
           <div id="end-date-container">
             <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Дата окончания</label>
-            <input type="date" id="taskEnd" min="2000-01-01" max="2100-12-31" onchange="checkTaskDeadline()" oninput="this.classList.remove('border-rose-400')" class="w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 transition-all">
+            <input type="date" id="taskEnd" min="2000-01-01" max="2100-12-31" aria-describedby="taskDateError" onchange="clearTaskDateError();checkTaskDeadline()" oninput="clearTaskDateError()" class="w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 transition-all">
             <div id="taskDeadlineWarn" class="hidden mt-1 text-[10px] font-medium text-amber-700"></div>
           </div>
         </div>
+        <div id="taskDateError" role="alert" class="hidden mt-1 text-[10px] font-medium text-rose-600"></div>
         <div id="taskSlipDiary" class="hidden mt-2 px-2.5 py-2 rounded-lg bg-amber-50 border border-amber-100 text-[11px] text-amber-800"></div>
 
         <!-- ===== Зона «Подробнее» (Q1): по умолчанию свернута, состояние запоминается ===== -->
@@ -7927,7 +8000,7 @@
     <div class="bg-white rounded-2xl max-w-sm w-full shadow-2xl border border-slate-200/60 flex flex-col overflow-hidden max-h-[80vh]">
       <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
         <h3 class="text-lg font-semibold text-slate-800">Отсечка / релиз <button type="button" tabindex="-1" class="ml-1 align-middle inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-help shrink-0" aria-label="Об этом окне" title="Вертикальная линия-отсечка на таймлайне: веха, релиз или дедлайн с датой и цветом. По релизам считаются готовность и прогноз дат в окне «Прогресс по релизам»."><svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></button></h3>
-        <button onclick="closeCutoffModal()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-all cursor-pointer" aria-label="Закрыть" title="Закрыть">
+        <button type="button" onclick="closeCutoffModal()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-all cursor-pointer" aria-label="Закрыть" title="Закрыть">
           <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
       </div>
@@ -7966,7 +8039,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v14.5">
+<script data-roadmap-modules="v14.6">
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
@@ -8973,6 +9046,7 @@ if (typeof globalThis !== 'undefined') {
     // === Global Search (Cmd+K / Ctrl+K) ===
     let globalSearchHighlightIdx = 0;
     let globalSearchResultsCache = [];
+    let globalSearchCacheQuery = '';
 
     function openGlobalSearch() {
       const modal = document.getElementById('globalSearchModal');
@@ -8981,6 +9055,7 @@ if (typeof globalThis !== 'undefined') {
       modal.classList.remove('hidden');
       input.value = '';
       globalSearchHighlightIdx = 0;
+      globalSearchCacheQuery = '';
       runGlobalSearch();
       setTimeout(() => input.focus(), 50);
       if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
@@ -9068,12 +9143,15 @@ if (typeof globalThis !== 'undefined') {
       const out = document.getElementById('globalSearchResults');
       if (!input || !out) return;
       const q = input.value.trim().toLowerCase();
+      globalSearchCacheQuery = q;
       const index = buildSearchIndex();
       const results = q
         ? index.filter(i => i.hay.includes(q))
         : index.slice(0, 30); // показываем первые 30 при пустом запросе
 
       if (results.length === 0) {
+        globalSearchResultsCache = [];
+        globalSearchHighlightIdx = 0;
         out.innerHTML = `
           <div class="px-4 py-12 text-center">
             <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-100 text-slate-500 mb-3">
@@ -9156,6 +9234,15 @@ if (typeof globalThis !== 'undefined') {
     }
 
     function handleGlobalSearchKey(event) {
+      // oninput обновляет выдачу с debounce. Пользователь может успеть нажать
+      // Enter/стрелку раньше таймера; в этот момент нельзя применять результат
+      // предыдущего запроса. Перед клавиатурным действием синхронно сверяем кэш
+      // с фактическим текстом поля.
+      if (event.key === 'Enter' || event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        const input = document.getElementById('globalSearchInput');
+        const actualQuery = input ? input.value.trim().toLowerCase() : '';
+        if (actualQuery !== globalSearchCacheQuery) runGlobalSearch();
+      }
       const results = globalSearchResultsCache;
       if (event.key === 'ArrowDown') {
         event.preventDefault();
@@ -9370,8 +9457,8 @@ if (typeof globalThis !== 'undefined') {
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '14.5';
-    const APP_VERSION_DATE = '30.07.2026';
+    const APP_VERSION = '14.6';
+    const APP_VERSION_DATE = '31.07.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'версия ' + APP_VERSION; } catch (e) {}
@@ -12006,6 +12093,7 @@ if (typeof globalThis !== 'undefined') {
       ].join('');
       var ov = document.createElement('div');
       ov.id = 'ganttLegend';
+      ov.setAttribute('data-modal-backdrop', '');
       ov.className = 'fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 no-print';
       ov.style.zIndex = '950';
       ov.innerHTML = '<div role="dialog" aria-modal="true" aria-label="Легенда таймлайна" class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md max-h-[80vh] overflow-auto p-5"><div class="flex items-center justify-between mb-2"><div class="text-sm font-bold text-slate-800">Что значат цвета и значки</div><button type="button" onclick="showGanttLegend()" aria-label="Закрыть" title="Закрыть" class="w-8 h-8 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 cursor-pointer inline-flex items-center justify-center"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button></div>' + items + '</div>';
@@ -12756,6 +12844,7 @@ if (typeof globalThis !== 'undefined') {
       var old = document.getElementById('depsOverview'); if (old) { old.remove(); return; }
       var ov = document.createElement('div');
       ov.id = 'depsOverview';
+      ov.setAttribute('data-modal-backdrop', '');
       ov.className = 'fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 no-print';
       ov.style.zIndex = '950';
       ov.innerHTML = '<div role="dialog" aria-modal="true" aria-label="Связи и зависимости" class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-6xl max-h-[88vh] flex flex-col p-5"><div id="depsOverviewBody" class="overflow-auto grow min-h-0"></div><div class="pt-3 flex justify-end shrink-0"><button type="button" onclick="openDepsOverview()" class="inline-flex items-center h-9 px-4 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold hover:bg-slate-200 cursor-pointer">Закрыть</button></div></div>';
@@ -15498,6 +15587,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         if (btn) btn.setAttribute('data-active', FILTER_DEFS[kind].set().size ? '1' : '0');
       });
     }
+    let _filterPanelOpenedAt = 0;
     function toggleFilterPanel(kind) {
       const panel = document.getElementById(kind + 'FilterPanel');
       if (!panel) return;
@@ -15511,6 +15601,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (!panel || !btn) return;
       renderFilterPanelBody(kind);
       panel.classList.remove('hidden');
+      _filterPanelOpenedAt = performance.now();
       const r = btn.getBoundingClientRect();
       const pw = panel.offsetWidth || 224;
       let left = r.left;
@@ -15523,7 +15614,12 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (e.target.closest('[data-filter-panel]') || e.target.closest('[data-filter-btn]')) return;
       closeAllFilterPanels();
     }
-    function closeAllFilterPanels() {
+    function closeAllFilterPanels(force) {
+      const opened = ['resource', 'status', 'project'].some(kind => {
+        const panel = document.getElementById(kind + 'FilterPanel');
+        return panel && !panel.classList.contains('hidden');
+      });
+      if (!force && opened && performance.now() - _filterPanelOpenedAt < 280) return;
       ['resource', 'status', 'project'].forEach(kind => {
         const p = document.getElementById(kind + 'FilterPanel');
         if (p) p.classList.add('hidden');
@@ -15934,7 +16030,11 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function logJiraStatusChange(task, mapped) {
       if (!task || !mapped || !mapped.status) return;
       const sourceAt = (mapped.status === 'completed' && mapped._jiraResolved) ? mapped._jiraResolved : (mapped.updated || '');
+      // CSV без Resolved/Updated не содержит дату перехода. Не подставляем дату
+      // импорта: такая запись выглядела бы как реальная история, хотя источника нет.
+      if (!sourceAt) return false;
       logStatusChange(task, mapped.status, { at: sourceAt, time: '', by: 'Jira', source: 'jira' });
+      return true;
     }
     function statusNameById(sid) { const s = (projectStatuses || []).find(x => x.id === sid); return s ? s.name : (sid || '-'); }
     function renderTaskStatusHistory(task) {
@@ -16376,6 +16476,20 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (!tabs.dataset.overflowBound) {
         tabs.dataset.overflowBound = '1';
         tabs.addEventListener('scroll', syncSettingsTabsOverflow, {passive:true});
+        tabs.addEventListener('keydown', function (event) {
+          if (!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(event.key)) return;
+          const items = Array.from(tabs.querySelectorAll('[data-settings-tab]'));
+          if (!items.length) return;
+          let index = Math.max(0, items.indexOf(document.activeElement));
+          if (event.key === 'Home') index = 0;
+          else if (event.key === 'End') index = items.length - 1;
+          else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') index = (index + 1) % items.length;
+          else index = (index - 1 + items.length) % items.length;
+          event.preventDefault();
+          const target = items[index];
+          settingsTab(target.getAttribute('data-settings-tab'));
+          target.focus();
+        });
       }
       const atEnd = tabs.scrollLeft + tabs.clientWidth >= tabs.scrollWidth - 2;
       tabs.setAttribute('data-at-end', atEnd ? 'true' : 'false');
@@ -16383,12 +16497,23 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function settingsTab(name) {
       _settingsTab = name || 'proj';
       const root = document.getElementById('settingsModal'); if (!root) return;
-      root.querySelectorAll('[data-settings-panel]').forEach(p => p.classList.toggle('hidden', p.getAttribute('data-settings-panel') !== _settingsTab));
+      root.querySelectorAll('[data-settings-panel]').forEach(p => {
+        const key = p.getAttribute('data-settings-panel');
+        const on = key === _settingsTab;
+        p.id = p.id || ('settings-panel-' + key);
+        p.setAttribute('role', 'tabpanel');
+        p.setAttribute('aria-labelledby', 'settings-tab-' + key);
+        p.classList.toggle('hidden', !on);
+      });
       let activeTab = null;
       root.querySelectorAll('[data-settings-tab]').forEach(b => {
         const on = b.getAttribute('data-settings-tab') === _settingsTab;
+        const key = b.getAttribute('data-settings-tab');
         if (on) activeTab = b;
+        b.id = b.id || ('settings-tab-' + key);
+        b.setAttribute('aria-controls', 'settings-panel-' + key);
         b.setAttribute('aria-selected', on ? 'true' : 'false');
+        b.tabIndex = on ? 0 : -1;
         b.classList.toggle('bg-white', on);
         b.classList.toggle('text-indigo-700', on);
         b.classList.toggle('shadow-sm', on);
@@ -16683,6 +16808,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
     document.addEventListener('click', (e) => { const m = document.getElementById('presetMenu'); if (m && !m.classList.contains('hidden') && !e.target.closest('#presetMenu') && !e.target.closest('[onclick*="togglePresetMenu"]')) m.classList.add('hidden'); });
     // Закрываем выпадающие панели (фильтры и перенос задачи) при скролле / ресайзе / Esc
     // Выпадающее меню «Данные» (Jira CSV / импорт / экспорт)
+    let _dataMenuOpenedAt = 0;
     function toggleDataMenu(ev) {
       if (ev) ev.stopPropagation();
       const m = document.getElementById('dataMenu');
@@ -16692,12 +16818,14 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (willOpen) {
         if (typeof renderDataMenuJiraDate === 'function') renderDataMenuJiraDate();
         m.classList.remove('hidden');
+        _dataMenuOpenedAt = performance.now();
         setTimeout(function () { if (!m.classList.contains('hidden')) document.addEventListener('pointerdown', dataMenuAway, true); }, 0);
       }
       const btn = document.getElementById('dataMenuBtn'); if (btn) btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
     }
-    function closeDataMenu() {
+    function closeDataMenu(force) {
       const m = document.getElementById('dataMenu');
+      if (!force && m && !m.classList.contains('hidden') && performance.now() - _dataMenuOpenedAt < 280) return;
       const btn = document.getElementById('dataMenuBtn'); if (btn) btn.setAttribute('aria-expanded', 'false');
       if (m && !m.classList.contains('hidden')) m.classList.add('hidden');
       document.removeEventListener('click', dataMenuAway, true);
@@ -16709,38 +16837,51 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if ((!w || !w.contains(e.target)) && (!m || !m.contains(e.target))) closeDataMenu();
     }
     // Меню «Еще»: дополнительные проверки и настройки рядом с представлениями плана.
+    let _moreMenuOpenedAt = 0;
     function toggleMoreMenu(ev) {
       if (ev) ev.stopPropagation();
       const m = document.getElementById('moreMenu');
       if (!m) return;
+      const btn = document.getElementById('moreMenuBtn');
+      if (btn) btn.removeAttribute('data-drawer-error');
       const willOpen = m.classList.contains('hidden');
-      closeAllPopovers();
-      const btn = document.getElementById('moreMenuBtn'); if (btn) btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-      const trigger = ev && ev.currentTarget && typeof ev.currentTarget.getBoundingClientRect === 'function' ? ev.currentTarget : btn;
-      if (willOpen && trigger) {
-        // Меню живет в body, а не внутри шапки: так оно не попадает под
-        // соседнюю панель фильтров или таймлайн из-за stacking context браузера.
-        if (m.parentElement !== document.body) document.body.appendChild(m);
-        m.classList.remove('hidden');
-        const r = trigger.getBoundingClientRect();
-        const gap = 6;
-        const edge = 8;
-        const width = Math.min(288, window.innerWidth - edge * 2);
-        m.style.width = width + 'px';
-        m.style.left = Math.max(edge, Math.min(r.right - width, window.innerWidth - width - edge)) + 'px';
-        const menuHeight = Math.min(m.scrollHeight, window.innerHeight - edge * 2);
-        const below = r.bottom + gap;
-        const above = r.top - gap - menuHeight;
-        m.style.top = (below + menuHeight <= window.innerHeight - edge ? below : Math.max(edge, above)) + 'px';
-        m.style.maxHeight = Math.max(180, window.innerHeight - edge * 2) + 'px';
-        m.style.overflowY = 'auto';
-        // Подключаем закрытие вне панели после завершения текущего клика. Иначе
-        // тот же жест открытия может попасть в capture-обработчик и сразу закрыть меню.
-        setTimeout(function () { if (!m.classList.contains('hidden')) document.addEventListener('pointerdown', moreMenuAway, true); }, 0);
+      try {
+        closeAllPopovers();
+        if (btn) btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        const trigger = ev && ev.currentTarget && typeof ev.currentTarget.getBoundingClientRect === 'function' ? ev.currentTarget : btn;
+        if (willOpen && trigger) {
+          // Меню живет в body, а не внутри шапки: так оно не попадает под
+          // соседнюю панель фильтров или таймлайн из-за stacking context браузера.
+          if (m.parentElement !== document.body) document.body.appendChild(m);
+          m.classList.remove('hidden');
+          _moreMenuOpenedAt = performance.now();
+          const r = trigger.getBoundingClientRect();
+          const gap = 6;
+          const edge = 8;
+          const width = Math.min(288, window.innerWidth - edge * 2);
+          m.style.width = width + 'px';
+          m.style.left = Math.max(edge, Math.min(r.right - width, window.innerWidth - width - edge)) + 'px';
+          const menuHeight = Math.min(m.scrollHeight, window.innerHeight - edge * 2);
+          const below = r.bottom + gap;
+          const above = r.top - gap - menuHeight;
+          m.style.top = (below + menuHeight <= window.innerHeight - edge ? below : Math.max(edge, above)) + 'px';
+          m.style.maxHeight = Math.max(180, window.innerHeight - edge * 2) + 'px';
+          m.style.overflowY = 'auto';
+          if (typeof _syncDrawerScrim === 'function') _syncDrawerScrim();
+          // Подключаем закрытие вне панели после завершения текущего клика. Иначе
+          // тот же жест открытия может попасть в capture-обработчик и сразу закрыть меню.
+          setTimeout(function () { if (!m.classList.contains('hidden')) document.addEventListener('pointerdown', moreMenuAway, true); }, 0);
+        }
+      } catch (error) {
+        if (btn) btn.setAttribute('data-drawer-error', String(error && error.message || error));
+        console.error('Не удалось открыть меню планирования:', error);
       }
     }
-    function closeMoreMenu() {
+    function closeMoreMenu(force) {
       const m = document.getElementById('moreMenu');
+      // Pointerdown/click/focus/scroll дают несколько служебных событий подряд.
+      // Не позволяем событию того же жеста тут же отменить открытие шторки.
+      if (!force && m && !m.classList.contains('hidden') && performance.now() - _moreMenuOpenedAt < 280) return;
       const btn = document.getElementById('moreMenuBtn'); if (btn) btn.setAttribute('aria-expanded', 'false');
       if (m && !m.classList.contains('hidden')) m.classList.add('hidden');
       if (m) { m.style.left = ''; m.style.top = ''; m.style.width = ''; m.style.maxHeight = ''; m.style.overflowY = ''; }
@@ -16752,6 +16893,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const m = document.getElementById('moreMenu');
       if ((!w || !w.contains(e.target)) && (!m || !m.contains(e.target))) closeMoreMenu();
     }
+    let _reportsMenuOpenedAt = 0;
     function toggleReportsMenu(ev) {
       if (ev) ev.stopPropagation();
       const m = document.getElementById('reportsMenu');
@@ -16760,12 +16902,14 @@ let resourceView = 'roles'; // 'roles' | 'load'
       closeAllPopovers();
       if (willOpen) {
         m.classList.remove('hidden');
+        _reportsMenuOpenedAt = performance.now();
         setTimeout(function () { if (!m.classList.contains('hidden')) document.addEventListener('pointerdown', reportsMenuAway, true); }, 0);
       }
       const btn = document.getElementById('reportsMenuBtn'); if (btn) btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
     }
-    function closeReportsMenu() {
+    function closeReportsMenu(force) {
       const m = document.getElementById('reportsMenu');
+      if (!force && m && !m.classList.contains('hidden') && performance.now() - _reportsMenuOpenedAt < 280) return;
       const btn = document.getElementById('reportsMenuBtn'); if (btn) btn.setAttribute('aria-expanded', 'false');
       if (m && !m.classList.contains('hidden')) m.classList.add('hidden');
       document.removeEventListener('click', reportsMenuAway, true);
@@ -16801,7 +16945,52 @@ let resourceView = 'roles'; // 'roles' | 'load'
       pop.addEventListener('click', (e) => e.stopPropagation());
     }
     document.addEventListener('click', (e) => { if (_cutoffPopoverEl && !e.target.closest('#cutoffClusterPopover')) closeCutoffClusterPopover(); });
-    function closeAllPopovers() { closeAllFilterPanels(); if (typeof closeHeaderInsights === 'function') closeHeaderInsights(); if (typeof toggleFilterTools === 'function') toggleFilterTools(false); try { var _sm = document.getElementById('statusCompactMenu'), _sb = document.getElementById('statusCompactBtn'); if (_sm) _sm.classList.add('hidden'); if (_sb) _sb.setAttribute('aria-expanded', 'false'); } catch (e) {} if (typeof closeReleaseFilterMenu === 'function') closeReleaseFilterMenu(); if (typeof closeTaskMovePanel === 'function') closeTaskMovePanel(); if (typeof closeDataMenu === 'function') closeDataMenu(); if (typeof closeMoreMenu === 'function') closeMoreMenu(); if (typeof closeReportsMenu === 'function') closeReportsMenu(); if (typeof closeSortMenu === 'function') closeSortMenu(); if (typeof closePresetMenu === 'function') closePresetMenu(); if (typeof closeBulkPopover === 'function') closeBulkPopover(); if (typeof closeDepMenu === 'function') closeDepMenu(); try { var _vm = document.getElementById('viewMenu'); if (_vm && !_vm.classList.contains('hidden')) { _vm.classList.add('hidden'); var _vb = document.getElementById('viewMenuToggle'); if (_vb) _vb.setAttribute('aria-expanded', 'false'); } } catch (e) {} try { var _dl = document.getElementById('depLinesMenu'); if (_dl && !_dl.classList.contains('hidden')) { _dl.classList.add('hidden'); var _db = document.getElementById('depLinesToggle'); if (_db) _db.setAttribute('aria-expanded', 'false'); } } catch (e) {} closeCutoffClusterPopover(); if (typeof closeSectionMenu === 'function') closeSectionMenu(); }
+    function closeAllPopovers(force) {
+      // Один устаревший или еще не инициализированный поповер не должен
+      // блокировать открытие всех остальных кнопок. Каждое закрытие изолировано.
+      // MutationObserver помечает момент открытия любой правой шторки. Защита
+      // нужна от resize/scroll/pointerdown того же пользовательского жеста.
+      if (!force && typeof _drawerOpenGuardUntil === 'number' && performance.now() < _drawerOpenGuardUntil) {
+        if (typeof _scheduleDrawerSync === 'function') _scheduleDrawerSync();
+        return;
+      }
+      const safely = (fn) => { try { if (typeof fn === 'function') fn(); } catch (e) { console.warn('Popover close skipped:', e); } };
+      safely(typeof closeAllFilterPanels === 'function' ? () => closeAllFilterPanels(force) : null);
+      safely(typeof closeHeaderInsights === 'function' ? closeHeaderInsights : null);
+      safely(typeof toggleFilterTools === 'function' ? () => toggleFilterTools(false) : null);
+      safely(() => {
+        const menu = document.getElementById('statusCompactMenu');
+        const button = document.getElementById('statusCompactBtn');
+        if (menu) menu.classList.add('hidden');
+        if (button) button.setAttribute('aria-expanded', 'false');
+      });
+      [
+        typeof closeReleaseFilterMenu === 'function' ? closeReleaseFilterMenu : null,
+        typeof closeTaskMovePanel === 'function' ? closeTaskMovePanel : null,
+        typeof closeDataMenu === 'function' ? () => closeDataMenu(force) : null,
+        typeof closeMoreMenu === 'function' ? () => closeMoreMenu(force) : null,
+        typeof closeReportsMenu === 'function' ? () => closeReportsMenu(force) : null,
+        typeof closeSortMenu === 'function' ? closeSortMenu : null,
+        typeof closePresetMenu === 'function' ? closePresetMenu : null,
+        typeof closeBulkPopover === 'function' ? closeBulkPopover : null,
+        typeof closeDepMenu === 'function' ? closeDepMenu : null
+      ].forEach(safely);
+      safely(() => {
+        const menu = document.getElementById('viewMenu');
+        const button = document.getElementById('viewMenuToggle');
+        if (menu) menu.classList.add('hidden');
+        if (button) button.setAttribute('aria-expanded', 'false');
+      });
+      safely(() => {
+        const menu = document.getElementById('depLinesMenu');
+        const button = document.getElementById('depLinesToggle');
+        if (menu) menu.classList.add('hidden');
+        if (button) button.setAttribute('aria-expanded', 'false');
+      });
+      safely(typeof closeCutoffClusterPopover === 'function' ? closeCutoffClusterPopover : null);
+      safely(typeof closeSectionMenu === 'function' ? closeSectionMenu : null);
+      safely(typeof _scheduleDrawerSync === 'function' ? _scheduleDrawerSync : null);
+    }
     // Некоторые браузеры отправляют resize без реального изменения viewport
     // (например, сразу после открытия фиксированного меню). Такой служебный
     // сигнал не должен мгновенно закрывать только что открытую панель.
@@ -16813,6 +17002,15 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (nextWidth === _popoverViewportWidth && nextHeight === _popoverViewportHeight) return;
       _popoverViewportWidth = nextWidth;
       _popoverViewportHeight = nextHeight;
+      // Правые шторки адаптивны и должны переживать появление системной полосы
+      // прокрутки, поворот экрана и изменение окна. Раньше этот resize сразу
+      // отменял тот же жест, которым пользователь открыл панель.
+      const openedDrawer = Array.from(document.querySelectorAll('.rm-drawer-popover'))
+        .some(popup => !popup.classList.contains('hidden') && getComputedStyle(popup).display !== 'none');
+      if (openedDrawer) {
+        if (typeof _syncDrawerScrim === 'function') _scheduleDrawerSync();
+        return;
+      }
       closeAllPopovers();
     });
     // Закрываем поповеры только при прокрутке самой страницы. Горизонтальная
@@ -16822,6 +17020,11 @@ let resourceView = 'roles'; // 'roles' | 'load'
     document.addEventListener('scroll', (e) => {
       const t = e.target;
       if (t !== document && t !== document.documentElement && t !== document.body) return;
+      // Правая шторка — самостоятельный рабочий экран. Перевод фокуса в неё
+      // иногда создаёт служебный scroll корня; закрывать окно из-за этого нельзя.
+      const openedDrawer = Array.from(document.querySelectorAll('.rm-drawer-popover'))
+        .some(popup => !popup.classList.contains('hidden') && getComputedStyle(popup).display !== 'none');
+      if (openedDrawer) return;
       closeAllPopovers();
     }, true);
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllPopovers(); });
@@ -17205,12 +17408,29 @@ let resourceView = 'roles'; // 'roles' | 'load'
         const _restoredIds = new Set(restored.map(t => t.id));
         archivedTasks = archivedTasks.filter(t => !_restoredIds.has(t.id));
         restored.forEach(t => {
+          const _path = Array.isArray(t._archivedSectionPath) ? t._archivedSectionPath : [];
+          _path.forEach(_sec => {
+            if (!_sec || !_sec.name) return;
+            const _wasPresent = planSections.includes(_sec.name);
+            if (!_wasPresent) planSections.push(_sec.name);
+            if (!_wasPresent && _sec.color && !sectionColors[_sec.name]) sectionColors[_sec.name] = _sec.color;
+            if (!_wasPresent && _sec.labels != null && sectionLabels[_sec.name] == null) sectionLabels[_sec.name] = _sec.labels;
+            if (!_wasPresent && _sec.meta != null && sectionMeta[_sec.name] == null) sectionMeta[_sec.name] = _sec.meta;
+            if (!_wasPresent && _sec.deps != null && sectionDeps[_sec.name] == null) sectionDeps[_sec.name] = _sec.deps;
+            if (_sec.parent && planSections.includes(_sec.parent) && !sectionParents[_sec.name]) sectionParents[_sec.name] = _sec.parent;
+          });
           if (t.section && !planSections.includes(t.section)) planSections.push(t.section);
+          delete t._archivedSectionPath;
           roadmapData.push(t);
         });
         storage.set('gantt_archived_tasks', JSON.stringify(archivedTasks));
         storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData));
         storage.set('gantt_sections_list', JSON.stringify(planSections));
+        storage.set('gantt_section_colors', JSON.stringify(sectionColors));
+        storage.set('gantt_section_labels', JSON.stringify(sectionLabels));
+        storage.set('gantt_section_meta', JSON.stringify(sectionMeta));
+        storage.set('gantt_section_parents', JSON.stringify(sectionParents));
+        storage.set('gantt_section_deps', JSON.stringify(sectionDeps));
         updateArchiveBadge();
         renderArchiveList();
         renderRoadmap();
@@ -17340,7 +17560,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
           c = String(c).slice(0, 10);
           if (/^\d{4}-\d{2}-\d{2}$/.test(c) && c <= today) return c;
         }
-        return today;
+        return '';
       } catch (e) { return ''; }
     }
     // Завершенная задача не может стоять в будущем: если у нее старт или конец позже сегодня
@@ -17423,7 +17643,17 @@ let resourceView = 'roles'; // 'roles' | 'load'
           if (!st || st <= today) return; // старт не в будущем , не трогаем
           var oldStart = st, oldEnd = t.end || '';
           var js = (t._jiraSync && t._jiraSync.start) ? String(t._jiraSync.start) : '';
-          var real = (js && /^\d{4}-\d{2}-\d{2}$/.test(js) && js < today) ? (js < floor ? floor : js) : today;
+          var transition = '';
+          (t.statusLog || []).forEach(function (entry) {
+            var at = entry && String(entry.at || '').slice(0, 10);
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(at) || at > today) return;
+            if (entry.to === t.status && (!transition || at > transition)) transition = at;
+          });
+          var source = (js && /^\d{4}-\d{2}-\d{2}$/.test(js) && js <= today) ? js : transition;
+          // Без даты Jira или журнала оставляем ручной план как есть. Текущая дата
+          // не является доказательством фактического начала работы.
+          if (!source) return;
+          var real = source < floor ? floor : source;
           t.start = real;
           if (t.end && t.end < t.start) t.end = t.start; // конец не раньше старта
           moved++;
@@ -21268,6 +21498,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       closeSprintCfg();
       var ov = document.createElement('div');
       ov.id = 'sprintCfgModal';
+      ov.setAttribute('data-modal-backdrop', '');
       ov.className = 'fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/50 p-4 no-print no-image-export';
       ov.addEventListener('click', function (e) { if (e.target === ov) closeSprintCfg(); });
       ov.innerHTML = '<div class="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-lg max-h-[85vh] flex flex-col" role="dialog" aria-modal="true" aria-label="Настройки раскладки и спринтов">' +
@@ -24301,7 +24532,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       let ov = document.getElementById('sectionInitOverlay');
       if (!ov) {
         ov = document.createElement('div'); ov.id = 'sectionInitOverlay';
-        ov.className = 'fixed inset-0 z-[1000] hidden flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 no-print'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', 'Привязать секцию к инициативе');
+        ov.className = 'fixed inset-0 z-[1000] hidden flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 no-print'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', 'Привязать секцию к инициативе'); ov.setAttribute('data-modal-backdrop', '');
         ov.addEventListener('mousedown', e => { if (e.target === ov) closeSectionInit(); });
         document.body.appendChild(ov);
         document.addEventListener('keydown', e => { if (e.key === 'Escape') { const o = document.getElementById('sectionInitOverlay'); if (o && !o.classList.contains('hidden')) closeSectionInit(); } });
@@ -24516,6 +24747,28 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       archiveTasksList(direct, `секцию «${cleanSectionName(sectionName)}»`, [sectionName]);
     }
     // Общая логика переноса в архив. forceRemoveSections , секции, которые надо убрать целиком (даже пустые).
+    function _captureArchivedSectionPath(sectionName) {
+      if (!sectionName) return [];
+      const chain = [], seen = new Set();
+      let current = sectionName;
+      const clone = value => {
+        if (value == null) return value;
+        try { return JSON.parse(JSON.stringify(value)); } catch (_) { return value; }
+      };
+      while (current && !seen.has(current)) {
+        seen.add(current);
+        chain.unshift({
+          name: current,
+          parent: sectionParents[current] || '',
+          color: sectionColors[current] || '',
+          labels: clone(sectionLabels[current]),
+          meta: clone(sectionMeta[current]),
+          deps: clone(sectionDeps[current])
+        });
+        current = sectionParents[current] || '';
+      }
+      return chain;
+    }
     function archiveTasksList(list, label, forceRemoveSections) {
       if (READ_ONLY_MODE) return;
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
@@ -24527,7 +24780,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const ids = new Set(list.map(t => t.id));
       const affectedSections = new Set([...list.map(t => t.section).filter(Boolean), ...force]);
       roadmapData = roadmapData.filter(t => !ids.has(t.id));
-      list.forEach(t => { delete t.hidden; archivedTasks.push(t); });
+      list.forEach(t => {
+        delete t.hidden;
+        if (t.section) t._archivedSectionPath = _captureArchivedSectionPath(t.section);
+        archivedTasks.push(t);
+      });
       // Убираем секции: принудительные , всегда; остальные , если опустели
       let removedSections = 0;
       const removedSectionNames = new Set();
@@ -25189,11 +25446,27 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       input.classList.toggle('border-rose-400',!ok&&!!showError); input.setAttribute('aria-invalid',(!ok&&!!showError)?'true':'false');
       if(error)error.classList.toggle('hidden',ok||!showError); if(save)save.disabled=!ok; return ok;
     }
+    function clearTaskDateError() {
+      ['taskStart','taskEnd'].forEach(function (id) {
+        const field = document.getElementById(id);
+        if (field) { field.classList.remove('border-rose-400'); field.setAttribute('aria-invalid', 'false'); }
+      });
+      const error = document.getElementById('taskDateError');
+      if (error) { error.textContent = ''; error.classList.add('hidden'); }
+    }
+    function showTaskDateError(message, focusId) {
+      clearTaskDateError();
+      const field = document.getElementById(focusId);
+      const error = document.getElementById('taskDateError');
+      if (field) { field.classList.add('border-rose-400'); field.setAttribute('aria-invalid', 'true'); field.focus(); }
+      if (error) { error.textContent = message; error.classList.remove('hidden'); }
+      if (typeof showToast === 'function') showToast(message, 'warn', 4000);
+    }
     function openModal(task = null) {
       window._archivedEditId = null; // обычное открытие сбрасывает пометку архивной задачи
       const modal = document.getElementById('taskModal');
       _resLoadCache = (typeof _buildResLoadCache === 'function') ? _buildResLoadCache() : null;
-      populateSectionSelects(); updateResourceSelects(); updateStatusSelects(); updateReleaseSelects(); if (typeof _populateTaskKindSelect === 'function') _populateTaskKindSelect(); if (typeof _populateInitiativeSelect === 'function') _populateInitiativeSelect(); modal.classList.remove('hidden'); _taskDirty = false;
+      populateSectionSelects(); updateResourceSelects(); updateStatusSelects(); updateReleaseSelects(); if (typeof _populateTaskKindSelect === 'function') _populateTaskKindSelect(); if (typeof _populateInitiativeSelect === 'function') _populateInitiativeSelect(); modal.classList.remove('hidden'); _taskDirty = false; clearTaskDateError();
       // базовый тип (без учета вехи) , чтобы переключатель «Веха» мог корректно обновлять бейдж туда-обратно
       window._modalNonMilestoneType = task ? taskTypeLabel({ issueType: task.issueType, jira: task.jira, notes: task.notes, external: task.external }) : 'Моя задача';
       { const tb = document.getElementById('modalTypeBadge'); if (tb) { const _tp = taskTypeLabel(task); tb.textContent = _tp; tb.className = 'text-[10px] px-2 py-0.5 rounded font-semibold ' + jiraTypeBadgeClass(_tp); } }
@@ -25459,9 +25732,9 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const id = document.getElementById('taskId').value; syncMilestoneDates();
       // Веха обязана иметь дату (ромб без даты не построить); обычной задаче даты не обязательны
       { const _ms = document.getElementById('taskIsMilestone').checked;
-        if (_ms && !document.getElementById('taskStart').value) { if (typeof showToast === 'function') showToast('У вехи должна быть дата', 'warn', 3500); const _sf = document.getElementById('taskStart'); if (_sf) { _sf.classList.add('border-rose-400'); _sf.focus(); } return false; } }
+        if (_ms && !document.getElementById('taskStart').value) { showTaskDateError('У вехи должна быть дата', 'taskStart'); return false; } }
       { const _s = document.getElementById('taskStart').value, _e = document.getElementById('taskEnd').value;
-       if (_s && _e && _e < _s) { showToast('Дата окончания раньше даты начала', 'warn', 4000); const _ee = document.getElementById('taskEnd'); if (_ee) { _ee.classList.add('border-rose-400'); _ee.focus(); } return false; } }
+       if (_s && _e && _e < _s) { showTaskDateError('Дата окончания раньше даты начала', 'taskEnd'); return false; } }
       { const _sec = document.getElementById('taskSection').value;
         if (!validateTaskTargetSection(_sec)) { const _sf = document.getElementById('taskSection'); if (_sf) _sf.focus(); return false; } }
       const taskObj = {
@@ -26906,9 +27179,9 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
     // Предпросмотр последствий импорта без изменения данных , показываем в окне подтверждения.
     function previewJiraMerge(issues) {
-      const existingKeys = new Set();
-      (roadmapData || []).forEach(t => { if (t.jira) existingKeys.add(String(t.jira).trim()); });
-      (archivedTasks || []).forEach(t => { if (t.jira) existingKeys.add(String(t.jira).trim()); });
+      const existingByKey = new Map();
+      (roadmapData || []).forEach(t => { const key = _jiraPreviewKey(t && t.jira); if (key) existingByKey.set(key, t); });
+      (archivedTasks || []).forEach(t => { const key = _jiraPreviewKey(t && t.jira); if (key && !existingByKey.has(key)) existingByKey.set(key, t); });
       const archivedSectionKeys = new Set();
       (archivedTasks || []).forEach(t => {
         const sectionKey = jiraSectionKey(t && t.section);
@@ -26925,18 +27198,20 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       });
       const usedNames = new Set();
       const keys = new Set();
-      let nw = 0, upd = 0;
+      let nw = 0, upd = 0, unchanged = 0;
       const newSecs = new Set();
       (issues || []).forEach(iss => {
         const k = firstNonEmpty(iss, ['Ключ проблемы', 'Issue key', 'Key']);
         const ttl = firstNonEmpty(iss, ['Тема', 'Summary']);
         // как mapJiraIssueToTask: строка без ключа ИЛИ без названия импортом пропускается , не считаем
-        if (!k || !ttl || keys.has(k)) return; keys.add(k);
-        if (existingKeys.has(k)) { upd++; }
+        const normalizedKey = _jiraPreviewKey(k);
+        if (!normalizedKey || !ttl || keys.has(normalizedKey)) return; keys.add(normalizedKey);
+        const existing = existingByKey.get(normalizedKey);
+        if (existing) { if (_jiraPreviewHasChanges(existing, iss)) upd++; else unchanged++; }
         else {
           const nm = _normTaskName(ttl);
           const cand = nm ? byName.get(nm) : null;
-          if (cand && cand !== 'DUP' && !usedNames.has(nm)) { upd++; usedNames.add(nm); }
+          if (cand && cand !== 'DUP' && !usedNames.has(nm)) { if (_jiraPreviewHasChanges(cand, iss)) upd++; else unchanged++; usedNames.add(nm); }
           else nw++;
         }
         try {
@@ -26944,10 +27219,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           const secKey = jiraSectionKey(sec);
           // Секция, сохраненная у задачи в архиве, не является новой: повторный импорт
           // не должен обещать ее создание и затем показывать пустой контейнер.
-          if (sec && !planSections.includes(sec) && !existingKeys.has(k) && !(secKey && archivedSectionKeys.has(secKey))) newSecs.add(sec);
+          if (sec && !planSections.includes(sec) && !existing && !(secKey && archivedSectionKeys.has(secKey))) newSecs.add(sec);
         } catch (e) {}
       });
-      return { total: keys.size, newCount: nw, updateCount: upd, sectionCount: newSecs.size };
+      return { total: keys.size, newCount: nw, updateCount: upd, unchangedCount: unchanged, sectionCount: newSecs.size };
     }
 
     // Удаляет только те Jira-контейнеры, которые закрыты или уже представлены в архиве
@@ -27015,6 +27290,53 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       return removed;
     }
 
+    // Jira обновляет только принадлежащие источнику поля. Ручные заметки, критерии,
+    // метрики, связи и история архивной задачи должны переживать повторный импорт.
+    function applyJiraFieldsToArchived(existing, mapped) {
+      if (!existing || !mapped) return existing;
+      if (mapped.name) existing.name = mapped.name;
+      if (mapped.status && existing.status !== mapped.status) {
+        if (typeof logJiraStatusChange === 'function') logJiraStatusChange(existing, mapped);
+        existing.status = mapped.status;
+      }
+      if (mapped.updated) existing.updated = mapped.updated;
+      if (typeof mapped.blocked === 'boolean') existing.blocked = mapped.blocked;
+      const syncStart = (existing._jiraSync && existing._jiraSync.start) || '';
+      const syncEnd = (existing._jiraSync && existing._jiraSync.end) || '';
+      const manualStart = !existing._jiraSync || (existing.start || '') !== syncStart;
+      const manualEnd = !existing._jiraSync || (existing.end || '') !== syncEnd;
+      if (mapped._jiraHasRealStart && !manualStart) existing.start = mapped.start;
+      if (mapped.status === 'completed' && mapped._jiraResolved) existing.end = mapped._jiraResolved;
+      else if (mapped._jiraHasRealEnd && !manualEnd) existing.end = mapped.end;
+      if (existing.start && existing.end && String(existing.end) < String(existing.start)) existing.end = existing.start;
+      if (mapped.resource) existing.resource = mapped.resource;
+      if (mapped.release) existing.release = mapped.release;
+      if (mapped.issueType) existing.issueType = mapped.issueType;
+      if (mapped.storyPoints) existing.storyPoints = mapped.storyPoints;
+      if (mapped.estimate) existing.estimate = mapped.estimate;
+      if (mapped.roleEst && Object.keys(mapped.roleEst).length) existing.roleEst = mapped.roleEst;
+      if (mapped.labels && mapped.labels.length) existing.labels = mapped.labels.slice();
+      if (mapped.components && mapped.components.length) existing.components = mapped.components.slice();
+      if (mapped.section) existing.section = mapped.section;
+      if (mapped.sprint) existing.sprint = mapped.sprint;
+      if (mapped.epic) existing.epic = mapped.epic;
+      if (mapped.epicName) existing.epicName = mapped.epicName;
+      if (mapped.epicLink) existing.epicLink = mapped.epicLink;
+      if (mapped._jiraParentKey) existing._jiraParentKey = mapped._jiraParentKey;
+      if (mapped.conf) existing.conf = mapped.conf;
+      if (mapped.figma) existing.figma = mapped.figma;
+      existing._jiraPredKeys = (mapped._predKeys || []).map(_jiraPreviewKey);
+      existing._jiraSync = {
+        status: existing.status || '',
+        start: mapped._jiraHasRealStart ? mapped.start : syncStart,
+        end: (mapped.status === 'completed' && mapped._jiraResolved) ? mapped._jiraResolved : (mapped._jiraHasRealEnd ? mapped.end : syncEnd),
+        resource: existing.resource || '',
+        storyPoints: existing.storyPoints || ''
+      };
+      existing._jiraChange = { kind: 'upd', fields: ['Jira'] };
+      return existing;
+    }
+
     function mergeJiraTasks(issues) {
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
       if (!issues || !issues.length) {
@@ -27049,15 +27371,16 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
       // Реконсиляция дублей от прежнего поведения: если ключ есть и в архиве, и в активных списках ,
       // оставляем версию в архиве (пользователь сам ее туда отправил), из основного списка убираем.
+      const _jiraKey = (value) => String(value || '').trim().toUpperCase();
       if (Array.isArray(archivedTasks) && archivedTasks.length) {
-        const _archKeys = new Set(archivedTasks.map(t => (t && t.jira) ? String(t.jira).trim() : '').filter(Boolean));
-        if (_archKeys.size) roadmapData = roadmapData.filter(t => !(t && t.jira && _archKeys.has(String(t.jira).trim())));
+        const _archKeys = new Set(archivedTasks.map(t => _jiraKey(t && t.jira)).filter(Boolean));
+        if (_archKeys.size) roadmapData = roadmapData.filter(t => !(t && t.jira && _archKeys.has(_jiraKey(t.jira))));
       }
       const byJira = new Map();
-      roadmapData.forEach(task => { if (task.jira) byJira.set(String(task.jira).trim(), task); });
+      roadmapData.forEach(task => { const key = _jiraKey(task && task.jira); if (key) byJira.set(key, task); });
       // Включаем и архив в индекс , если такая задача уже когда-то импортировалась, обновим ее на месте
       const byJiraArchived = new Map();
-      archivedTasks.forEach(task => { if (task.jira) byJiraArchived.set(String(task.jira).trim(), task); });
+      archivedTasks.forEach(task => { const key = _jiraKey(task && task.jira); if (key) byJiraArchived.set(key, task); });
       // Сопоставление по названию: задача без ключа Jira (созданная вручную или через быстрое добавление)
       // с тем же названием связывается с задачей из CSV вместо дубля. Только при однозначном совпадении имени.
       const _normTaskName = (s) => String(s || '').toLowerCase().replace(/\s+/g, ' ').trim();
@@ -27188,7 +27511,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             sectionMeta[secName]._jiraParentKey = mapped._jiraParentKey || '';
           }
           // Если контейнер был добавлен задачей старой версией — убираем дубль независимо от секции.
-          const dupIdx = roadmapData.findIndex(t => t.jira === mapped.jira);
+          const dupIdx = roadmapData.findIndex(t => _jiraKey(t && t.jira) === _jiraKey(mapped.jira));
           if (dupIdx >= 0) roadmapData.splice(dupIdx, 1);
           return;
         }
@@ -27199,19 +27522,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
         if (isArchive) {
           // Архив , отдельная коллекция, не попадает в основной Gantt
-          const existingArch = byJiraArchived.get(mapped.jira);
+          const existingArch = byJiraArchived.get(_jiraKey(mapped.jira));
           if (existingArch) {
-            const _aS0 = existingArch.start, _aE0 = existingArch.end;
-            const _asyncS = (existingArch._jiraSync && existingArch._jiraSync.start) || '', _asyncE = (existingArch._jiraSync && existingArch._jiraSync.end) || '';
-            const _amanS = !existingArch._jiraSync || (_aS0 || '') !== _asyncS, _amanE = !existingArch._jiraSync || (_aE0 || '') !== _asyncE;
-            if (mapped.status && existingArch.status !== mapped.status && typeof logJiraStatusChange === 'function') { try { logJiraStatusChange(existingArch, mapped); } catch (e) {} }
-            Object.assign(existingArch, mapped);
-            existingArch.start = (mapped._jiraHasRealStart && !_amanS) ? mapped.start : _aS0;
-            existingArch.end = (mapped.status === 'completed' && mapped._jiraResolved) ? mapped._jiraResolved : ((mapped._jiraHasRealEnd && !_amanE) ? mapped.end : _aE0);
-            existingArch._jiraSync = { status: existingArch.status || '', start: (mapped._jiraHasRealStart ? mapped.start : _asyncS), end: ((mapped.status === 'completed' && mapped._jiraResolved) ? mapped._jiraResolved : (mapped._jiraHasRealEnd ? mapped.end : _asyncE)), resource: existingArch.resource || '', storyPoints: existingArch.storyPoints || '' };
+            applyJiraFieldsToArchived(existingArch, mapped);
           } else {
             // Также убираем из основной коллекции если там была
-            const idxInMain = roadmapData.findIndex(t => t.jira === mapped.jira);
+            const idxInMain = roadmapData.findIndex(t => _jiraKey(t && t.jira) === _jiraKey(mapped.jira));
             if (idxInMain >= 0) roadmapData.splice(idxInMain, 1);
             archivedTasks.push({ id: nextTaskId(), ...mapped });
             archived++;
@@ -27222,23 +27538,13 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         // 1.5) Ключ уже в АРХИВЕ (и нет в активных) , обновляем запись в архиве на месте,
         //   не создаем ни новую задачу, ни секцию. Скрытые задачи лежат в roadmapData (в byJira)
         //   и обновляются ниже как обычные , дублей по ним тоже не возникает.
-        if (mapped.jira && !byJira.has(mapped.jira) && byJiraArchived.has(mapped.jira)) {
+        if (mapped.jira && !byJira.has(_jiraKey(mapped.jira)) && byJiraArchived.has(_jiraKey(mapped.jira))) {
           // Задача в АРХИВЕ , она там и остается: импорт не возвращает ее в основной список (пользователь
           // сам решает, когда вернуть из архива). Обновляем на месте статус/даты/имя/исполнителя из Jira,
           // ручные поля (dor/dod/метрики/заметки/связи) не трогаем.
-          const _archObj = byJiraArchived.get(mapped.jira);
+          const _archObj = byJiraArchived.get(_jiraKey(mapped.jira));
           if (_archObj) {
-            if (mapped.name) _archObj.name = mapped.name;
-            if (mapped.status && _archObj.status !== mapped.status) { if (typeof logJiraStatusChange === 'function') logJiraStatusChange(_archObj, mapped); _archObj.status = mapped.status; }
-            const _asyncS2 = (_archObj._jiraSync && _archObj._jiraSync.start) || '', _asyncE2 = (_archObj._jiraSync && _archObj._jiraSync.end) || '';
-            const _amanS2 = !_archObj._jiraSync || (_archObj.start || '') !== _asyncS2, _amanE2 = !_archObj._jiraSync || (_archObj.end || '') !== _asyncE2;
-            if (mapped._jiraHasRealStart && !_amanS2) _archObj.start = mapped.start;
-            if (mapped.status === 'completed' && mapped._jiraResolved) _archObj.end = mapped._jiraResolved;
-            else if (mapped._jiraHasRealEnd && !_amanE2) _archObj.end = mapped.end;
-            _archObj._jiraSync = { status: _archObj.status || '', start: (mapped._jiraHasRealStart ? mapped.start : _asyncS2), end: ((mapped.status === 'completed' && mapped._jiraResolved) ? mapped._jiraResolved : (mapped._jiraHasRealEnd ? mapped.end : _asyncE2)), resource: _archObj.resource || '', storyPoints: _archObj.storyPoints || '' };
-            if (mapped.resource) _archObj.resource = mapped.resource;
-            if (mapped.release) _archObj.release = mapped.release;
-            _archObj._jiraChange = true;
+            applyJiraFieldsToArchived(_archObj, mapped);
           }
           return; // остается в архиве, в основной список не добавляем
         }
@@ -27261,11 +27567,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           }
         }
 
-        let existing = byJira.get(mapped.jira);
+        let existing = byJira.get(_jiraKey(mapped.jira));
         if (!existing && mapped.jira) {
           const _nm = _normTaskName(mapped.name);
           const cand = _nm ? byName.get(_nm) : null;
-          if (cand && cand !== 'DUP' && !cand.jira) { existing = cand; existing.jira = mapped.jira; byJira.set(mapped.jira, existing); byName.delete(_nm); }
+          if (cand && cand !== 'DUP' && !cand.jira) { existing = cand; existing.jira = mapped.jira; byJira.set(_jiraKey(mapped.jira), existing); byName.delete(_nm); }
         }
         if (existing) {
           let _chg = false; const _cf = [];
@@ -27351,6 +27657,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           if (removed.length && t.depMeta) { removed.forEach(id => { delete t.depMeta[id]; }); if (!Object.keys(t.depMeta).length) delete t.depMeta; }
           t.pred = finalSet.join(',');
           t._jiraPredIds = jiraNow.slice();
+          t._jiraPredKeys = (t._predKeys || []).map(_jiraPreviewKey);
           delete t._predKeys;
         });
       }
@@ -27863,19 +28170,104 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (_undo && typeof offerUndo === 'function') offerUndo(_csvMsg, _undo); else if (typeof showToast === 'function') showToast(_csvMsg, 'ok', 6000);
     }
     let _jiraPreviewRows = [];
+    function _jiraPreviewKey(value) { return String(value || '').trim().toUpperCase(); }
+    function _jiraPreviewList(value) {
+      const source = Array.isArray(value) ? value : (value == null || value === '' ? [] : String(value).split(','));
+      return source.map(v => String(v || '').trim().toLowerCase()).filter(Boolean).sort();
+    }
+    function _jiraPreviewSameList(a, b) { return JSON.stringify(_jiraPreviewList(a)) === JSON.stringify(_jiraPreviewList(b)); }
+    function _jiraPreviewSameRoleEst(a, b) {
+      const normalize = value => Object.keys(value && typeof value === 'object' ? value : {}).sort().reduce((out, key) => {
+        const n = Number(value[key]); if (n > 0) out[key] = n; return out;
+      }, {});
+      return JSON.stringify(normalize(a)) === JSON.stringify(normalize(b));
+    }
+    function _jiraPreviewExistingPredKeys(existing) {
+      if (Array.isArray(existing && existing._jiraPredKeys)) return existing._jiraPredKeys.map(_jiraPreviewKey).filter(Boolean).sort();
+      const ids = Array.isArray(existing && existing._jiraPredIds) ? existing._jiraPredIds.map(String) : [];
+      if (!ids.length) return [];
+      const byId = new Map((roadmapData || []).concat(archivedTasks || []).filter(Boolean).map(t => [String(t.id), _jiraPreviewKey(t.jira)]));
+      return ids.map(id => byId.get(id)).filter(Boolean).sort();
+    }
+    function _jiraPreviewHasChanges(existing, issue) {
+      if (!existing) return true;
+      const title = firstNonEmpty(issue, ['Тема', 'Summary']);
+      if (title && String(existing.name || '') !== String(title)) return true;
+      const rawStatus = firstNonEmpty(issue, ['Статус', 'Status']);
+      const mappedStatus = classifyJiraStatus(rawStatus);
+      if (rawStatus && String(existing.status || '') !== String(mappedStatus)) return true;
+      if (typeof isBlockerRaw === 'function' && Boolean(existing.blocked) !== Boolean(isBlockerRaw(rawStatus))) return true;
+      const resource = firstNonEmpty(issue, ['Исполнитель', 'Assignee', 'Пользовательское поле (Owner)', 'Пользовательское поле (Owner).1']);
+      if (resource && String(existing.resource || '') !== String(resource)) return true;
+      const release = getIssueRelease(issue);
+      if (release && String(existing.release || '') !== String(release)) return true;
+      const issueType = firstNonEmpty(issue, ['Тип задачи', 'Тип запроса', 'Тип проблемы', 'Issue Type', 'Issue type']);
+      if (issueType && String(existing.issueType || '') !== String(issueType)) return true;
+      const storyPoints = firstNonEmpty(issue, ['Пользовательское поле (Story Points)', 'Story Points', 'Пользовательское поле (Estimate)']);
+      if (storyPoints && String(existing.storyPoints || '') !== String(storyPoints)) return true;
+      const roleEst = readRoleEstimates(issue);
+      if (Object.keys(roleEst).length && !_jiraPreviewSameRoleEst(existing.roleEst, roleEst)) return true;
+      const labels = getJiraLabels(issue), components = getJiraComponents(issue);
+      if (labels && labels.length && !_jiraPreviewSameList(existing.labels, labels)) return true;
+      if (components && components.length && !_jiraPreviewSameList(existing.components, components)) return true;
+      const sprint = getJiraSprint(issue);
+      if (sprint && String(existing.sprint || '') !== String(sprint)) return true;
+      const conf = firstNonEmpty(issue, ['Пользовательское поле (Confluence Pages)']);
+      if (conf && String(existing.conf || '') !== String(conf)) return true;
+      const figma = firstNonEmpty(issue, ['Пользовательское поле (link to design)']);
+      if (figma && String(existing.figma || '') !== String(figma)) return true;
+      const section = getJiraEpicSection(issue);
+      if (section && String(existing.section || '') !== String(section)) return true;
+      const hp = resolveJiraParents(issue);
+      const rank = jiraHierarchyRankFromType(issueType);
+      const epicLink = hp.epicKey || '';
+      const storyParent = hp.storyKey || '';
+      const parentKey = hp.directParent || (rank === 1 ? hp.initiativeKey : (rank === 2 ? epicLink : (rank === 3 ? storyParent : '')));
+      let epicName = getEpicNameField(issue);
+      const linkedEpic = epicLink || storyParent;
+      if (!epicName && linkedEpic && window.tempEpicDict && window.tempEpicDict[linkedEpic]) epicName = window.tempEpicDict[linkedEpic];
+      const epic = epicName || epicLink;
+      const targetEpicLink = epicLink || epicName;
+      if (epic && String(existing.epic || '') !== String(epic)) return true;
+      if (epicName && String(existing.epicName || '') !== String(epicName)) return true;
+      if (targetEpicLink && String(existing.epicLink || '') !== String(targetEpicLink)) return true;
+      if (String(existing._jiraParentKey || '') !== String(parentKey || '')) return true;
+      const predKeys = getJiraPredKeys(issue).map(_jiraPreviewKey).filter(Boolean).sort();
+      if (JSON.stringify(_jiraPreviewExistingPredKeys(existing)) !== JSON.stringify(predKeys)) return true;
+      const updated = parseJiraDate(firstNonEmpty(issue, UPDATED_COL_KEYS));
+      if (updated && String(existing.updated || '') !== String(updated)) return true;
+      if (!existing.notes) {
+        const rawNotes = firstNonEmpty(issue, ['Описание', 'Description']);
+        const priority = firstNonEmpty(issue, ['Приоритет', 'Priority']);
+        if (rawNotes || issueType || priority || (components && components.length) || sprint || epicName || epicLink) return true;
+      }
+      let start = parseJiraDate(firstNonEmpty(issue, START_COL_KEYS));
+      let end = parseJiraDate(firstNonEmpty(issue, END_COL_KEYS));
+      const resolved = parseJiraDate(firstNonEmpty(issue, RESOLVED_COL_KEYS));
+      if (start && end && String(end) < String(start)) { const tmp = end; end = start; start = tmp; }
+      const syncStart = (existing._jiraSync && existing._jiraSync.start) || '';
+      const syncEnd = (existing._jiraSync && existing._jiraSync.end) || '';
+      const manualStart = !existing._jiraSync || String(existing.start || '') !== String(syncStart);
+      const manualEnd = !existing._jiraSync || String(existing.end || '') !== String(syncEnd);
+      if (start && !manualStart && String(existing.start || '') !== String(start)) return true;
+      const targetEnd = mappedStatus === 'completed' && resolved ? resolved : end;
+      if (targetEnd && (resolved || !manualEnd) && String(existing.end || '') !== String(targetEnd)) return true;
+      return false;
+    }
     function openJiraImportPreview(issues) {
-      const active=new Set((roadmapData||[]).map(t=>String((t&&t.jira)||'').trim()).filter(Boolean));
-      const archived=new Set((archivedTasks||[]).map(t=>String((t&&t.jira)||'').trim()).filter(Boolean));
+      const active=new Map((roadmapData||[]).map(t=>[_jiraPreviewKey(t&&t.jira),t]).filter(pair=>pair[0]));
+      const archived=new Map((archivedTasks||[]).map(t=>[_jiraPreviewKey(t&&t.jira),t]).filter(pair=>pair[0]));
       const seen=new Set(); _jiraPreviewRows=[];
-      (issues||[]).forEach(function(iss){const key=firstNonEmpty(iss,['Ключ проблемы','Issue key','Key']),title=firstNonEmpty(iss,['Тема','Summary']);if(!key||!title||seen.has(key))return;seen.add(key);const state=active.has(key)?'update':(archived.has(key)?'skip':'new');_jiraPreviewRows.push({issue:iss,key:key,title:title,state:state});});
+      (issues||[]).forEach(function(iss){const key=firstNonEmpty(iss,['Ключ проблемы','Issue key','Key']),title=firstNonEmpty(iss,['Тема','Summary']),normKey=_jiraPreviewKey(key);if(!normKey||!title||seen.has(normKey))return;seen.add(normKey);const activeTask=active.get(normKey),archivedTask=archived.get(normKey);let state='new';if(activeTask)state=_jiraPreviewHasChanges(activeTask,iss)?'update':'unchanged';else if(archivedTask)state=_jiraPreviewHasChanges(archivedTask,iss)?'archive':'unchanged';_jiraPreviewRows.push({issue:iss,key:key,title:title,state:state});});
       let modal=document.getElementById('jiraImportPreviewModal'); if(modal)modal.remove(); modal=document.createElement('div');modal.id='jiraImportPreviewModal';modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label','Предпросмотр импорта из Jira');modal.setAttribute('data-modal-backdrop','');modal.className='fixed inset-0 z-[1250] bg-slate-900/55 backdrop-blur-sm flex items-center justify-center p-4';
-      const counts={new:0,update:0,skip:0};_jiraPreviewRows.forEach(r=>counts[r.state]++);
-      const rows=_jiraPreviewRows.map(function(r,i){const skip=r.state==='skip',badgeText=r.state==='new'?'Новая':(r.state==='update'?'Обновится':'В архиве · пропуск'),badgeClass=r.state==='new'?'text-emerald-700 bg-emerald-50':(r.state==='update'?'text-indigo-700 bg-indigo-50':'text-slate-500 bg-slate-100');return `<label class="flex items-start gap-2.5 px-3 py-2 border-b border-slate-100 last:border-0 ${skip?'opacity-60':'hover:bg-slate-50 cursor-pointer'}"><input data-jira-preview="${i}" type="checkbox" ${skip?'disabled':'checked'} class="mt-0.5 rounded border-slate-300 text-indigo-600"><div class="grow min-w-0"><div class="text-xs font-semibold text-slate-800 truncate">${escHtml(r.title)}</div><div class="text-[10px] text-slate-500 mt-0.5">${escHtml(r.key)}</div></div><span class="shrink-0 text-[9px] font-bold rounded-full px-2 py-1 ${badgeClass}">${badgeText}</span></label>`;}).join('');
-      modal.innerHTML=`<div class="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-3xl max-h-[88vh] flex flex-col overflow-hidden"><div class="px-5 py-4 border-b border-slate-100"><div class="flex items-start justify-between gap-3"><div><h3 class="text-lg font-semibold text-slate-900">Проверьте импорт из Jira</h3><p class="text-xs text-slate-500 mt-1">Данные еще не изменены. Снимите галочку, если строку не нужно загружать.</p></div><button type="button" onclick="closeJiraImportPreview()" class="w-9 h-9 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50">×</button></div><div class="grid grid-cols-3 gap-2 mt-3"><div class="rounded-xl bg-emerald-50 p-2.5"><b class="text-emerald-700">${counts.new}</b><span class="block text-[10px] text-emerald-700">новых</span></div><div class="rounded-xl bg-indigo-50 p-2.5"><b class="text-indigo-700">${counts.update}</b><span class="block text-[10px] text-indigo-700">обновятся</span></div><div class="rounded-xl bg-slate-100 p-2.5"><b class="text-slate-700">${counts.skip}</b><span class="block text-[10px] text-slate-600">пропуск</span></div></div></div><div class="overflow-y-auto grow">${rows||'<div class="p-8 text-center text-sm text-slate-500">Нет задач для импорта</div>'}</div><div class="px-5 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3"><span class="text-[10px] text-slate-500">Задачи из архива не восстанавливаются</span><div class="flex gap-2"><button type="button" onclick="closeJiraImportPreview()" class="h-9 px-4 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Отмена</button><button type="button" onclick="applyJiraImportPreview()" class="h-9 px-4 rounded-xl bg-indigo-600 text-white text-xs font-semibold">Применить выбранное</button></div></div></div>`;
+      const counts={new:0,update:0,archive:0,unchanged:0};_jiraPreviewRows.forEach(r=>counts[r.state]++);
+      const selectable=counts.new+counts.update+counts.archive;
+      const rows=_jiraPreviewRows.map(function(r,i){const skip=r.state==='unchanged',badgeText=r.state==='new'?'Новая':(r.state==='update'?'Изменится':(r.state==='archive'?'Обновится в архиве':'Без изменений')),badgeClass=r.state==='new'?'text-emerald-700 bg-emerald-50':(r.state==='update'?'text-indigo-700 bg-indigo-50':(r.state==='archive'?'text-amber-800 bg-amber-50':'text-slate-500 bg-slate-100'));return `<label class="flex items-start gap-2.5 px-3 py-2 border-b border-slate-100 last:border-0 ${skip?'opacity-60':'hover:bg-slate-50 cursor-pointer'}"><input data-jira-preview="${i}" type="checkbox" ${skip?'disabled':'checked'} class="mt-0.5 rounded border-slate-300 text-indigo-600"><div class="grow min-w-0"><div class="text-xs font-semibold text-slate-800 truncate">${escHtml(r.title)}</div><div class="text-[10px] text-slate-500 mt-0.5">${escHtml(r.key)}</div></div><span class="shrink-0 text-[9px] font-bold rounded-full px-2 py-1 ${badgeClass}">${badgeText}</span></label>`;}).join('');
+      modal.innerHTML=`<div class="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-3xl max-h-[88vh] flex flex-col overflow-hidden"><div class="jira-import-preview-header px-5 py-4 border-b border-slate-100"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><h3 class="text-lg font-semibold text-slate-900">Проверьте импорт из Jira</h3><p class="text-xs text-slate-500 mt-1">Данные еще не изменены. Снимите галочку, если строку не нужно загружать.</p></div><button type="button" onclick="closeJiraImportPreview()" aria-label="Закрыть" title="Закрыть" class="shrink-0 w-9 h-9 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50">×</button></div><div class="jira-import-preview-summary"><div class="rounded-xl bg-emerald-50 p-2.5"><b class="text-emerald-700">${counts.new}</b><span class="block text-[10px] text-emerald-700">новых</span></div><div class="rounded-xl bg-indigo-50 p-2.5"><b class="text-indigo-700">${counts.update}</b><span class="block text-[10px] text-indigo-700">изменятся</span></div><div class="rounded-xl bg-amber-50 p-2.5"><b class="text-amber-800">${counts.archive}</b><span class="block text-[10px] text-amber-800">в архиве</span></div><div class="rounded-xl bg-slate-100 p-2.5"><b class="text-slate-700">${counts.unchanged}</b><span class="block text-[10px] text-slate-600">без изменений</span></div></div></div><div class="jira-import-preview-list overflow-y-auto grow">${rows||'<div class="p-8 text-center text-sm text-slate-500">Нет задач для импорта</div>'}</div><div class="jira-import-preview-footer px-5 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3"><span class="text-[10px] text-slate-500">Задачи в архиве обновятся на месте и не вернутся в план</span><div class="flex gap-2"><button type="button" onclick="closeJiraImportPreview()" class="h-9 px-4 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Отмена</button><button id="jiraImportPreviewApply" type="button" onclick="applyJiraImportPreview()" ${selectable?'':'disabled'} class="h-9 px-4 rounded-xl bg-indigo-600 text-white text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed">Применить выбранное</button></div></div></div>`;
       document.body.appendChild(modal); if(typeof syncBodyScrollLock==='function')syncBodyScrollLock(); setTimeout(function(){const first=modal.querySelector('input:not([disabled]),button');if(first)first.focus();},40);
     }
     function closeJiraImportPreview(){const m=document.getElementById('jiraImportPreviewModal');if(m)m.remove();if(typeof syncBodyScrollLock==='function')syncBodyScrollLock();}
-    function applyJiraImportPreview(){const selected=[];document.querySelectorAll('[data-jira-preview]:checked').forEach(function(el){const r=_jiraPreviewRows[parseInt(el.getAttribute('data-jira-preview'),10)];if(r)selected.push(r.issue);});if(!selected.length){showToast('Не выбрано ни одной задачи','warn');return;}closeJiraImportPreview();mergeJiraTasks(selected);}
+    function applyJiraImportPreview(){const modal=document.getElementById('jiraImportPreviewModal'),selected=[];(modal?modal.querySelectorAll('[data-jira-preview]:checked'):[]).forEach(function(el){const r=_jiraPreviewRows[parseInt(el.getAttribute('data-jira-preview'),10)];if(r&&r.state!=='unchanged')selected.push(r.issue);});if(!selected.length){showToast('Не выбрано ни одной задачи','warn');return;}closeJiraImportPreview();mergeJiraTasks(selected);}
     function importJiraCsv(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -29047,8 +29439,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     const MODAL_CLOSERS = {
       planBuilderPanel: function(){ if (typeof closePlanBuilder === 'function') closePlanBuilder(); },
       planToolModal: closePlanTool,
+      ganttLegend: function(){ var m=document.getElementById('ganttLegend'); if(m)m.remove(); },
       depsOverview: function(){ var m=document.getElementById('depsOverview'); if(m)m.remove(); },
       sprintCfgModal: function(){ if (typeof closeSprintCfg === 'function') closeSprintCfg(); },
+      sectionInitOverlay: function(){ if (typeof closeSectionInit === 'function') closeSectionInit(); },
       leaderChooserModal: function(){ var m=document.getElementById('leaderChooserModal'); if(m)m.classList.add('hidden'); },
       taskModal: requestCloseModal,
       cutoffModal: closeCutoffModal,
@@ -29102,8 +29496,16 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       // класса hidden с обычного меню ошибочно вызывало promoteModalLayer(), а он
       // сразу закрывал все поповеры. В результате казалось, что «не работают все
       // кнопки» с выпадающими панелями.
-      var explicitLayer = node.closest('[data-modal-backdrop], [role="dialog"][aria-modal="true"]');
-      if (explicitLayer) return explicitLayer;
+      // Всегда поднимаем весь backdrop, а не вложенную белую поверхность.
+      // Иначе backdrop остаётся под другими шторками и появляется «окно за окном».
+      var backdrop = node.closest('[data-modal-backdrop]');
+      if (backdrop) return backdrop;
+      var dialog = node.closest('[role="dialog"][aria-modal="true"]');
+      if (dialog) {
+        var dialogBackdrop = dialog.parentElement && dialog.parentElement.matches('[data-modal-backdrop], .fixed.inset-0') ? dialog.parentElement : null;
+        if (dialogBackdrop && (MODAL_CLOSERS[dialogBackdrop.id] || dialogBackdrop.hasAttribute('data-modal-backdrop'))) return dialogBackdrop;
+        return dialog;
+      }
       var fixedLayer = node.closest('.fixed.inset-0');
       if (fixedLayer && (MODAL_CLOSERS[fixedLayer.id] || fixedLayer.id === 'planBuilderPanel')) return fixedLayer;
       if (MODAL_CLOSERS[node.id] || node.id === 'planBuilderPanel') return node;
@@ -29114,6 +29516,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const layer = _resolveModalLayer(node);
       if (!layer || !_modalLayerIsOpen(layer)) return;
       if (typeof closeAllPopovers === 'function') closeAllPopovers();
+      if (typeof _syncDrawerScrim === 'function') _syncDrawerScrim();
       layer.style.setProperty('--rm-layer-z', String(++_modalLayerSerial));
       layer.removeAttribute('aria-hidden');
       if (layer.id === 'planBuilderPanel') {
@@ -29135,6 +29538,14 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         return layer && all.indexOf(layer) === index && _modalLayerIsOpen(layer);
       }).forEach(promoteModalLayer);
     }
+    let _bodyLockSyncFrame = 0;
+    function scheduleBodyScrollLockSync() {
+      if (_bodyLockSyncFrame) cancelAnimationFrame(_bodyLockSyncFrame);
+      _bodyLockSyncFrame = requestAnimationFrame(function () {
+        _bodyLockSyncFrame = 0;
+        syncBodyScrollLock();
+      });
+    }
     const _modalLayerObserver = new MutationObserver(function (mutations) {
       mutations.forEach(function (mutation) {
         if (mutation.type === 'attributes') {
@@ -29145,6 +29556,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           if (layer && mutation.target === layer && (wasHidden || becameOverlay) && _modalLayerIsOpen(layer)) promoteModalLayer(layer);
         } else mutation.addedNodes.forEach(function (node) { if (node.nodeType === 1) reconcileModalLayers(node); });
       });
+      // Прямые обработчики крестиков и кнопок «Отмена» меняют class/remove()
+      // не через общий реестр. Единый observer гарантированно снимает body-lock
+      // после любого такого закрытия, включая динамические окна.
+      scheduleBodyScrollLockSync();
     });
     function startModalLayerObserver() {
       reconcileModalLayers(document.body);
@@ -29191,7 +29606,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     });
     // === Доступность модалок: ловушка Tab + возврат фокуса на источник ===
     (function modalFocusA11y() {
-      const MODAL_IDS = ['taskModal','cutoffModal','sectionColorModal','statusModal','taskKindsModal','resourceModal','infoModal','globalSearchModal','reportModal','releaseProgressModal','quickAddModal','baselineModal','archiveModal','headerCutoffModal','epicAuditModal','auditTeamsModal','jiraSyncModal','jiraChangesModal','jiraImportPreviewModal','backPlanModal','inputModal','startupModal','versionsModal','dataQualityModal','projectJournalModal','csvMapModal','resourceReplaceModal','mergeModal','duplicateModal','sectionNestModal','exportSliceModal','roExportModal','reportBuilderModal','moneyModal','customFieldsModal','settingsModal','epicCardModal','kanbanColsModal','goalsModal','raidModal','insightsModal','leaderChooserModal','depsOverview','sprintCfgModal','planToolModal','planBuilderPanel'];
+      const MODAL_IDS = ['taskModal','cutoffModal','sectionColorModal','statusModal','taskKindsModal','resourceModal','infoModal','globalSearchModal','reportModal','releaseProgressModal','quickAddModal','baselineModal','archiveModal','headerCutoffModal','epicAuditModal','auditTeamsModal','jiraSyncModal','jiraChangesModal','jiraImportPreviewModal','backPlanModal','inputModal','startupModal','versionsModal','dataQualityModal','projectJournalModal','csvMapModal','resourceReplaceModal','mergeModal','duplicateModal','sectionNestModal','exportSliceModal','roExportModal','reportBuilderModal','moneyModal','customFieldsModal','settingsModal','epicCardModal','kanbanColsModal','goalsModal','raidModal','insightsModal','leaderChooserModal','ganttLegend','depsOverview','sprintCfgModal','sectionInitOverlay','planToolModal','planBuilderPanel'];
       let lastFocus = null;
       const anyOpen = () => MODAL_IDS.some(id => { const e = document.getElementById(id); return e && !e.classList.contains('hidden'); });
       function topModalEl() {
@@ -29208,7 +29623,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         // окнам, которые сами фокусируют поле (поиск/ввод имени/название и т.п.).
         if (open) { const m = topModalEl(); if (m && !m.contains(document.activeElement)) { setTimeout(() => { try { if (!m.contains(document.activeElement)) { const f = focusables(m); if (f.length) { window.__progFocusNoTip = true; f[0].focus(); window.__progFocusNoTip = false; } } } catch (e) { window.__progFocusNoTip = false; } }, 40); } }
       });
-      function start() { MODAL_IDS.forEach(id => { const e = document.getElementById(id); if (e) obs.observe(e, { attributes: true, attributeFilter: ['class'] }); }); }
+      function start() {
+        // Наблюдаем весь корень, потому что Jira preview, легенда, зависимости,
+        // настройки спринтов и колонок создаются после загрузки страницы.
+        obs.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['class'] });
+      }
       if (document.readyState !== 'loading') start(); else document.addEventListener('DOMContentLoaded', start);
       document.addEventListener('keydown', (e) => {
         if (e.key !== 'Tab') return;
@@ -29222,14 +29641,26 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     })();
     // Доступность: связываем <label> с соседним полем (for/id), чтобы скринридер называл поля форм.
     (function autoAssociateLabels() {
-      function assoc() {
-        document.querySelectorAll('label:not([for])').forEach(lab => {
+      function assoc(root) {
+        const scope = root && root.querySelectorAll ? root : document;
+        const labels = [];
+        if (root && root.matches && root.matches('label:not([for])')) labels.push(root);
+        scope.querySelectorAll('label:not([for])').forEach(function (lab) { labels.push(lab); });
+        labels.forEach(lab => {
           let f = lab.nextElementSibling;
           if (!(f && /^(INPUT|SELECT|TEXTAREA)$/.test(f.tagName) && f.id)) f = lab.parentElement ? lab.parentElement.querySelector('input:not([type=hidden]),select,textarea') : null;
           if (f && f.id && f.type !== 'hidden') lab.htmlFor = f.id;
         });
       }
-      if (document.readyState !== 'loading') assoc(); else document.addEventListener('DOMContentLoaded', assoc);
+      function start() {
+        assoc(document);
+        new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            mutation.addedNodes.forEach(function (node) { if (node.nodeType === 1) assoc(node); });
+          });
+        }).observe(document.body, { subtree: true, childList: true });
+      }
+      if (document.readyState !== 'loading') start(); else document.addEventListener('DOMContentLoaded', start, { once:true });
     })();
     // Перехватываем все open/close для синхронизации body-overflow и автофокуса
     (function patchModals() {
@@ -29515,15 +29946,15 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       </div>
      </div>
      <div class="flex items-center gap-2 shrink-0">
-      <button onclick="openAuditTeams()" aria-label="Команды" title="Сопоставление проектов и людей с командами (хранится у вас, в файл не попадает)" class="inline-flex items-center gap-1.5 h-8 px-3 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 text-slate-600 hover:text-indigo-700 rounded-lg text-xs font-medium transition-colors cursor-pointer">
+      <button type="button" onclick="openAuditTeams()" aria-label="Команды" title="Сопоставление проектов и людей с командами (хранится у вас, в файл не попадает)" class="inline-flex items-center gap-1.5 h-8 px-3 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 text-slate-600 hover:text-indigo-700 rounded-lg text-xs font-medium transition-colors cursor-pointer">
        <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4zm6 0a3 3 0 10-2-5.24"></path></svg>
        Команды
       </button>
-      <button onclick="refreshEpicAudit()" aria-label="Обновить аудит" title="Пересчитать аудит по текущим данным проекта" class="inline-flex items-center gap-1.5 h-8 px-3 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 text-slate-600 hover:text-indigo-700 rounded-lg text-xs font-medium transition-colors cursor-pointer">
+      <button type="button" onclick="refreshEpicAudit()" aria-label="Обновить аудит" title="Пересчитать аудит по текущим данным проекта" class="inline-flex items-center gap-1.5 h-8 px-3 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 text-slate-600 hover:text-indigo-700 rounded-lg text-xs font-medium transition-colors cursor-pointer">
        <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
        Обновить
       </button>
-      <button onclick="closeEpicAudit()" aria-label="Закрыть" title="Закрыть" class="text-slate-500 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+      <button type="button" onclick="closeEpicAudit()" aria-label="Закрыть" title="Закрыть" class="text-slate-500 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
      </div>
     </div>
     <div id="epicAuditBody" class="grow overflow-auto bg-slate-50 px-5 py-4"></div>
@@ -29535,7 +29966,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200/60 w-full max-w-lg flex flex-col max-h-[88vh]">
     <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
      <h3 class="text-lg font-semibold text-slate-800 leading-tight">Команды для аудита <button type="button" tabindex="-1" class="ml-1 align-middle inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-help shrink-0" aria-label="Об этом окне" title="Выбор команд (проектов), эпики которых попадут в аудит. Аудит проверяет, у всех ли эпиков заполнены тип, описание, метрика и приоритет."><svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></button></h3>
-     <button onclick="closeAuditTeams()" aria-label="Закрыть" title="Закрыть" class="text-slate-500 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+     <button type="button" onclick="closeAuditTeams()" aria-label="Закрыть" title="Закрыть" class="text-slate-500 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
     </div>
     <div class="p-6 overflow-y-auto flex-1 space-y-5">
      <p class="text-xs text-slate-600 leading-relaxed">Сопоставьте проекты и людей с командами , «Аудит эпиков» сгруппирует эпики по командам. Настройка хранится только у вас в браузере и <b>не попадает в файл</b>, поэтому им можно делиться.</p>
@@ -30090,7 +30521,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     <h3 class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">
      <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-     <span id="appVersionBadge">v14.5, 30.07.2026</span>
+     <span id="appVersionBadge">v14.6, 31.07.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -30156,7 +30587,16 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </div>
 
    <div>
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v14.5 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v14.6 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Надёжные окна и управление фокусом</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">UI/UX</span></div><p class="text-xs text-slate-600">Статические и динамические окна получили единые четыре скруглённых угла, безопасные отступы, прокрутку, закрытие по Esc и возврат фокуса к исходной кнопке.</p></div>
+     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Безопасное обновление из Jira</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">ДАННЫЕ</span></div><p class="text-xs text-slate-600">Предпросмотр замечает изменения оценок, меток, спринтов, родителей и связей. Повторный импорт обновляет архивную задачу, не стирая ручные заметки, критерии, метрики и историю.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Честные даты и устойчивый поиск</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">НАДЁЖНОСТЬ</span></div><p class="text-xs text-slate-600">Дата импорта больше не подменяет отсутствующую дату смены статуса. Глобальный поиск не открывает устаревший результат при быстром вводе и нажатии Enter.</p></div>
+    </div>
+   </div>
+
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v14.5</h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Единые боковые панели</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">UI/UX</span></div><p class="text-xs text-slate-600">Формы, настройки и рабочие инструменты открываются справа по одному правилу. Заголовок, кнопка закрытия, отступы, скругления и прокрутка согласованы между экранами.</p></div>
      <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Текст без обрезки</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">ДОСТУПНОСТЬ</span></div><p class="text-xs text-slate-600">Кнопки и карточки получили безопасную ширину, читаемую типографику и предсказуемый перенос. Подписи больше не распадаются на отдельные буквы на узких экранах.</p></div>
@@ -33634,7 +34074,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 14.0</span>
+              <span id="appVersionStartup">версия 14.6</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
@@ -34347,14 +34787,27 @@ function _drawerPopupTitle(popup) {
 }
 function _closeDrawerPopover(popup) {
   if (!popup) return;
-  if (typeof closeAllPopovers === 'function') closeAllPopovers();
+  if (typeof closeAllPopovers === 'function') closeAllPopovers(true);
   else popup.classList.add('hidden');
   _syncDrawerScrim();
 }
+var _drawerOpenGuardUntil = 0;
 function _decorateDrawerPopover(popup) {
   if (!popup || popup.classList.contains('rm-no-drawer')) return;
   popup.classList.add('rm-drawer-popover');
+  popup.setAttribute('role', 'dialog');
+  popup.setAttribute('aria-modal', 'true');
+  if (!popup.getAttribute('aria-label')) popup.setAttribute('aria-label', _drawerPopupTitle(popup));
   if (popup.parentElement !== document.body) document.body.appendChild(popup);
+  if (popup.getAttribute('data-rm-drawer-watch') !== '1') {
+    popup.setAttribute('data-rm-drawer-watch', '1');
+    var wasHidden = popup.classList.contains('hidden');
+    new MutationObserver(function () {
+      var hidden = popup.classList.contains('hidden');
+      if (wasHidden && !hidden) _drawerOpenGuardUntil = performance.now() + 280;
+      wasHidden = hidden;
+    }).observe(popup, { attributes:true, attributeFilter:['class'] });
+  }
   if (!popup.querySelector(':scope > .rm-drawer-header')) {
     var header = document.createElement('div');
     header.className = 'rm-drawer-header no-print no-image-export';
@@ -34381,16 +34834,54 @@ function _syncDrawerScrim() {
     scrim.addEventListener('pointerdown', function () { if (typeof closeAllPopovers === 'function') closeAllPopovers(); _syncDrawerScrim(); });
     document.body.appendChild(scrim);
   }
-  var opened = Array.prototype.some.call(document.querySelectorAll('.rm-drawer-popover'), function (popup) {
+  var openedPopup = Array.prototype.find.call(document.querySelectorAll('.rm-drawer-popover'), function (popup) {
     return !popup.classList.contains('hidden') && getComputedStyle(popup).display !== 'none';
   });
+  var opened = !!openedPopup;
+  if (opened && !_drawerWasOpen) {
+    var active = document.activeElement;
+    _drawerLastFocus = active && active !== document.body && !openedPopup.contains(active) ? active : null;
+    setTimeout(function () {
+      if (!openedPopup.isConnected || openedPopup.classList.contains('hidden') || openedPopup.contains(document.activeElement)) return;
+      var focusable = openedPopup.querySelector('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])');
+      if (focusable) focusable.focus();
+    }, 30);
+  } else if (!opened && _drawerWasOpen && _drawerLastFocus) {
+    try { _drawerLastFocus.focus(); } catch (e) {}
+    _drawerLastFocus = null;
+  }
+  _drawerWasOpen = opened;
   scrim.classList.toggle('hidden', !opened);
   var tooltip = document.getElementById('appTooltip');
   if (opened && tooltip) { tooltip.style.opacity = '0'; tooltip.style.left = '-9999px'; tooltip.style.top = '-9999px'; }
 }
+var _drawerLastFocus = null;
+var _drawerWasOpen = false;
 function _scheduleDrawerSync() { setTimeout(_syncDrawerScrim, 0); }
+document.addEventListener('keydown', function (event) {
+  if (event.key !== 'Tab') return;
+  var popup = Array.prototype.find.call(document.querySelectorAll('.rm-drawer-popover'), function (item) {
+    return !item.classList.contains('hidden') && getComputedStyle(item).display !== 'none';
+  });
+  if (!popup) return;
+  var focusable = Array.prototype.filter.call(popup.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'), function (item) { return item.offsetParent !== null; });
+  if (!focusable.length) return;
+  var first = focusable[0], last = focusable[focusable.length - 1];
+  if (!popup.contains(document.activeElement)) { event.preventDefault(); first.focus(); }
+  else if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+  else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+});
 function normalizeUiChrome(root) {
   if (!root) return;
+  var rootButtons = [];
+  if (root.nodeType === 1 && root.matches('button')) rootButtons.push(root);
+  if (root.querySelectorAll) root.querySelectorAll('button').forEach(function (button) { rootButtons.push(button); });
+  rootButtons.forEach(function (button) {
+    // Явный type защищает динамически перемещённую кнопку от случайного submit.
+    if (!button.hasAttribute('type') && (!button.closest('form') || button.hasAttribute('onclick'))) button.type = 'button';
+    // Контекстная справка должна быть достижима клавиатурой.
+    if (button.getAttribute('aria-label') === 'Об этом окне' && button.getAttribute('tabindex') === '-1') button.removeAttribute('tabindex');
+  });
   var overlaySelector = '.fixed.inset-0, [data-modal-backdrop]';
   var overlays = [];
   function collectOverlay(el) {
@@ -34414,6 +34905,9 @@ function normalizeUiChrome(root) {
       || children[0];
     if (!surface) return;
     surface.classList.add('rm-dialog-surface');
+    if (surface.matches('.overflow-auto,.overflow-y-auto') || /(?:^|\s)overflow-(?:auto|y-auto)(?:\s|$)/.test(surface.className || '')) {
+      surface.classList.add('rm-dialog-scroll-surface');
+    }
     var compactDialog = /^(inputModal|sectionColorModal|leaderChooserModal|startupModal)$/.test(overlay.id || '');
     if (!compactDialog) {
       overlay.classList.add('rm-right-drawer-overlay');
@@ -34465,12 +34959,16 @@ function normalizeUiChrome(root) {
       var label = (button.getAttribute('aria-label') || button.getAttribute('title') || '').trim().toLowerCase();
       var action = button.getAttribute('onclick') || '';
       var iconOnlyClose = !button.textContent.trim() && button.querySelector('svg') && /close/i.test(action);
+      var inlineClear = /Clear$/.test(button.id || '') || (/очистить/i.test(label) && !!button.closest('.relative'));
+      var isCloseControl = label === 'закрыть' || label === 'close' || iconOnlyClose || (/close[A-Z_]/.test(action) && (!button.textContent.trim() || /^×$/.test(button.textContent.trim())));
       var isTab = !!button.closest('[role="tablist"], .startup-shell');
       if (!isTab && (button.textContent.trim() || button.querySelector('svg'))) {
         button.classList.add('rm-action', 'rm-btn');
         var rawClass = button.className || '';
         var actionText = (button.textContent || '') + ' ' + label + ' ' + action;
-        if (/delete|remove|clear|удал|очист/i.test(actionText) || /(?:text|bg|border)-(?:rose|red)-/.test(rawClass)) {
+        if (inlineClear) {
+          button.classList.add('rm-btn-ghost', 'rm-btn-icon');
+        } else if (/delete|remove|clear|удал|очист/i.test(actionText) || /(?:text|bg|border)-(?:rose|red)-/.test(rawClass)) {
           button.classList.add('rm-btn-danger');
         } else if (button.type === 'submit' || /bg-(?:indigo|blue|emerald|green)-6|bg-(?:indigo|blue|emerald|green)-7/.test(rawClass)) {
           button.classList.add('rm-btn-primary');
@@ -34480,7 +34978,7 @@ function normalizeUiChrome(root) {
           button.classList.add('rm-btn-secondary');
         }
       }
-      if (label === 'закрыть' || label === 'close' || iconOnlyClose) {
+      if (isCloseControl) {
         button.classList.add('rm-dialog-close', 'rm-btn-ghost', 'rm-btn-icon');
         if (!button.getAttribute('aria-label')) button.setAttribute('aria-label', 'Закрыть');
       }
@@ -34528,7 +35026,7 @@ function normalizeUiChrome(root) {
     }
   });
 
-  var popupSelector = '[role="menu"], [data-filter-panel], #taskMovePanel, #reportsMenu, #moreMenu, #dataMenu, #presetMenu, #releaseFilterMenu, #zoomMenu, #depLinesMenu, #sortMenu, #bulkPopover, #cutoffClusterPopover, #sectionActionsMenu';
+  var popupSelector = '[role="menu"], [data-filter-panel], #taskMovePanel, #reportsMenu, #moreMenu, #dataMenu, #presetMenu, #releaseFilterMenu, #statusCompactMenu, #zoomMenu, #depLinesMenu, #sortMenu, #bulkPopover, #cutoffClusterPopover, #sectionActionsMenu';
   var popups = [];
   if (root.nodeType === 1 && root.matches(popupSelector)) popups.push(root);
   if (root.querySelectorAll) root.querySelectorAll(popupSelector).forEach(function (el) { popups.push(el); });
