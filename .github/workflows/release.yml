@@ -42,13 +42,22 @@ jobs:
           package-manager-cache: false
       - name: Verify public build
         run: node .quality/verify-public.mjs
-      - name: Build reproducible ZIP from tracked files
-        run: git archive --format=zip --output=roadmap-site.zip HEAD
+      - name: Build reproducible public ZIP from an explicit allowlist
+        run: >-
+          git archive --format=zip --output=roadmap-site-public.zip HEAD
+          README.md LICENSE app.html avatar.jpg catalog-img catalog.html index.html
+          media robots.txt schemas Инструкция_Roadmap.md
+      - name: Verify the release ZIP excludes private material
+        run: |
+          if unzip -Z1 roadmap-site-public.zip | grep -Eq '(^|/)private/|(^|/)roadmap-data\.json$'; then
+            echo "Release ZIP contains private material." >&2
+            exit 1
+          fi
       - name: Upload dry-run artifact
         uses: actions/upload-artifact@v7
         with:
           name: roadmap-static-${{ github.sha }}
-          path: roadmap-site.zip
+          path: roadmap-site-public.zip
           if-no-files-found: error
           retention-days: 14
 
@@ -86,10 +95,10 @@ jobs:
           TAG: ${{ steps.tag.outputs.tag }}
         run: |
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" roadmap-site.zip --clobber
+            gh release upload "$TAG" roadmap-site-public.zip --clobber
             gh release edit "$TAG" --target "$GITHUB_SHA" --title "Roadmap $TAG"
           else
-            gh release create "$TAG" roadmap-site.zip --target "$GITHUB_SHA" --generate-notes --title "Roadmap $TAG"
+            gh release create "$TAG" roadmap-site-public.zip --target "$GITHUB_SHA" --generate-notes --title "Roadmap $TAG"
           fi
 
   pages:
