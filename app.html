@@ -5805,9 +5805,8 @@
   #epicAuditBody .pts{display:flex;gap:4px;flex-wrap:wrap;}
   #epicAuditBody .ptag{font-size:10px;background:#eef2ff;color:#4338ca;padding:2px 8px;border-radius:6px;font-weight:600;border:1px solid #e0e7ff;}
   /* Фильтр-бар */
-  #epicAuditBody .filter-bar{padding:10px 16px;background:#fcfdff;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;}
-  #epicAuditBody .filter-bar input{font-size:12px;padding:7px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--s);color:var(--t);width:260px;transition:border-color .15s,box-shadow .15s;}
-  #epicAuditBody .filter-bar input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(79,70,229,.12);}
+  #epicAuditBody .filter-bar{padding:10px 16px;background:#fcfdff;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  #epicAuditBody .filter-bar .epic-audit-search{width:min(260px,100%);flex:0 1 260px;}
   #epicAuditBody .filter-bar .fc{font-size:11px;color:var(--m);}
   /* Таблица эпиков */
   #epicAuditBody .tw{overflow-x:auto;}
@@ -5959,6 +5958,11 @@
    body.theme-dark .text-slate-500 { color:#9aa6b8 !important; }
    body.theme-dark .text-slate-400 { color:#8694a8 !important; }
    body.theme-dark .text-slate-300 { color:#74829a !important; }
+   body.theme-dark .text-indigo-900,
+   body.theme-dark .text-indigo-800 { color:#c7d2fe !important; }
+   body.theme-dark .text-indigo-700 { color:#a5b4fc !important; }
+   body.theme-dark .text-indigo-600,
+   body.theme-dark .text-indigo-500 { color:#818cf8 !important; }
    body.theme-dark .cursor-help { background-color:#323f50 !important; color:#aab6c6 !important; }
    body.theme-dark thead, body.theme-dark thead tr, body.theme-dark th { background-color:#2a3844 !important; }
    /* Границы */
@@ -6457,7 +6461,7 @@
    button:focus-visible,[role="button"]:focus-visible,a:focus-visible {
      outline:3px solid rgba(99,102,241,.24); outline-offset:2px;
    }
-   #appHeader button,#appHeader select,#planFilterBar button,#planFilterBar select,
+   #appHeader .app-header-toolbar button,#appHeader .app-header-toolbar select,#planFilterBar button,#planFilterBar select,
    #planViewNav button,#timeline-header button { min-height:var(--rm-toolbar-h); }
 
    .rm-chip {
@@ -6535,6 +6539,33 @@
    #appHeader .app-header-toolbar { grid-column:2; grid-row:1; align-self:center; }
    #appHeader .app-header-toolbar > button:first-child { min-width:9rem; }
    #appHeader .app-header-actions { gap:.375rem; }
+   #appHeader .app-header-brand { width:2.5rem; flex:none; }
+   #appHeader #appLogoBtn { width:2.5rem; height:2.5rem; min-width:2.5rem; min-height:2.5rem; flex:none; }
+   #appHeader #roadmapTitle { font-size:1.125rem; line-height:1.25; }
+   #appHeader #titleContainer > button {
+     width:2rem; height:2rem; min-width:2rem; min-height:2rem; padding:0;
+     display:inline-flex; align-items:center; justify-content:center;
+   }
+   #appHeader #titleContainer > button:focus-visible { opacity:1; }
+   #appHeader .app-header-meta-chip {
+     height:2rem; min-height:2rem; padding:0 .625rem;
+     border-radius:var(--rm-radius-sm); font-size:var(--rm-font-sm); line-height:1;
+   }
+   #appHeader .app-header-po-chip { flex:0 1 auto; max-width:min(16rem,100%); }
+   #appHeader #appVerChip {
+     width:100%; min-height:1rem; padding:.125rem 0;
+     display:inline-flex; align-items:center; justify-content:center;
+     flex:none; color:var(--rm-muted); background:transparent; border:0;
+     border-radius:.375rem; font-size:.6875rem; line-height:1;
+     font-weight:var(--rm-weight-semibold);
+   }
+   #appHeader #appVerChip:hover { color:var(--rm-brand); background:var(--rm-surface-soft); }
+   #appHeader #titleEditContainer {
+     width:100%; min-width:0; display:grid; grid-template-columns:minmax(0,1fr) auto auto;
+     align-items:center; gap:.5rem;
+   }
+   #appHeader #titleEditContainer.hidden { display:none !important; }
+   #appHeader #titleInput { min-width:0; width:100%; height:var(--rm-toolbar-h); font-size:1.125rem; }
    #appHeader .app-header-insight-row {
      grid-column:1; grid-row:2; display:flex; align-items:center; gap:.375rem; min-width:0;
      padding:0 0 0 3.25rem; border:0;
@@ -6654,10 +6685,14 @@
    @media (max-width:767px) {
      .rm-btn.rm-btn { min-height:2.75rem; }
      .rm-popover .rm-menu-action { min-height:2.75rem; }
-     #appHeader button,#appHeader select,#planFilterBar button,#planFilterBar select,
+     #appHeader .app-header-toolbar button,#appHeader .app-header-toolbar select,#planFilterBar button,#planFilterBar select,
      #timeline-header button { min-height:2.75rem; }
-     .rm-side-sheet.rm-side-sheet { width:100% !important; max-width:none !important; height:100dvh !important; border-radius:0 !important; border:0 !important; }
-     #taskModal.rm-side-sheet-overlay,#epicCardModal.rm-side-sheet-overlay { padding:0 !important; }
+     .rm-side-sheet.rm-side-sheet {
+       width:calc(100vw - 1rem) !important; max-width:calc(100vw - 1rem) !important;
+       height:calc(100dvh - 1rem) !important; max-height:calc(100dvh - 1rem) !important;
+       border:1px solid var(--rm-border) !important; border-radius:1rem !important;
+     }
+     #taskModal.rm-side-sheet-overlay,#epicCardModal.rm-side-sheet-overlay { padding:.5rem !important; }
      .task-card-tabs { overflow-x:auto; scrollbar-width:none; }
      .task-card-tab { min-width:7.25rem; flex:0 0 auto; }
      .rm-form-grid.rm-form-grid { grid-template-columns:minmax(0,1fr) !important; }
@@ -6668,7 +6703,7 @@
      }
      #appHeader .app-header-grid > :first-child { gap:.25rem; }
      #appHeader .app-header-meta { margin-top:0 !important; flex-wrap:nowrap; }
-     #appHeader .app-header-date,#appHeader #appVerChip { display:none !important; }
+     #appHeader .app-header-date { display:none !important; }
      #appHeader #roadmapTitle { font-size:1rem; }
      #appHeader .app-header-toolbar { gap:.375rem; }
      #appHeader .app-header-toolbar > button:first-child { min-width:0; }
@@ -6766,7 +6801,7 @@
    .rm-control:focus-visible,button:focus-visible,[role="button"]:focus-visible,a:focus-visible {
      outline:2px solid var(--rm-focus); outline-offset:2px; box-shadow:var(--rm-ring);
    }
-   #appHeader button,#appHeader select,#planFilterBar button,#planFilterBar select,
+   #appHeader .app-header-toolbar button,#appHeader .app-header-toolbar select,#planFilterBar button,#planFilterBar select,
    #planViewNav button,#timeline-header button { min-height:var(--rm-toolbar-h); border-radius:var(--rm-radius-md); }
    #appHeader .app-header-toolbar > button:first-child { border-radius:var(--rm-radius-md); }
 
@@ -6786,6 +6821,40 @@
    }
    .rm-choice-label { font-size:var(--rm-font-md); font-weight:var(--rm-weight-medium); }
    .rm-field-help,.rm-field-error { font-size:var(--rm-font-xs); line-height:var(--rm-line-body); }
+
+   /* Поиск: иконка, текст и очистка занимают собственные зоны и никогда
+      не накладываются друг на друга. Контракт одинаков для встроенных форм,
+      модальных окон и правых шторок. */
+   .rm-search-field {
+     position:relative; display:flex; align-items:center; min-width:0;
+   }
+   .rm-search-input.rm-search-input {
+     width:100%; height:var(--rm-control-h) !important; min-height:var(--rm-control-h) !important;
+     padding:0 2.5rem !important; border:1px solid var(--rm-border) !important;
+     border-radius:var(--rm-radius-md) !important; background:var(--rm-control-bg) !important;
+     color:var(--rm-text) !important; font-size:var(--rm-font-md) !important;
+     line-height:var(--rm-line-tight); appearance:none; -webkit-appearance:none;
+   }
+   .rm-search-input.rm-search-input:focus {
+     outline:none; border-color:var(--rm-focus) !important; box-shadow:var(--rm-ring);
+   }
+   .rm-search-input::placeholder { color:#94a3b8; opacity:1; }
+   .rm-search-input::-webkit-search-decoration,
+   .rm-search-input::-webkit-search-cancel-button { display:none; -webkit-appearance:none; }
+   .rm-search-icon {
+     position:absolute; inset-inline-start:.875rem; top:50%; z-index:1;
+     width:1rem !important; height:1rem !important; transform:translateY(-50%);
+     color:var(--rm-muted); pointer-events:none;
+   }
+   .rm-search-clear.rm-search-clear {
+     position:absolute !important; inset-inline-end:.375rem !important; top:50% !important;
+     width:1.75rem !important; height:1.75rem !important;
+     min-width:1.75rem !important; min-height:1.75rem !important;
+     padding:0 !important; transform:translateY(-50%) !important;
+     border-radius:var(--rm-radius-xs) !important;
+   }
+   .rm-search-field--compact .rm-search-input { height:2.25rem !important; min-height:2.25rem !important; font-size:var(--rm-font-sm) !important; }
+   .rm-search-field--large .rm-search-input { height:var(--rm-field-h) !important; min-height:var(--rm-field-h) !important; font-size:1rem !important; }
 
    /* Окна: единая шапка, заголовок, тело, футер и кнопка закрытия. */
    .rm-dialog-overlay.rm-dialog-overlay { background:rgba(15,23,42,.56) !important; backdrop-filter:blur(5px) !important; }
@@ -6833,7 +6902,8 @@
      color:var(--rm-text); font-size:var(--rm-font-md); line-height:var(--rm-line-tight);
    }
    .rm-popover .rm-menu-action:hover { border-color:var(--rm-border); background:var(--rm-surface-soft) !important; }
-   .rm-popover .rm-menu-action > span:first-child[class*="w-"][class*="h-"]:not(.grow) { width:2rem !important; height:2rem !important; border-radius:var(--rm-radius-sm) !important; }
+   .rm-popover .rm-menu-action > span:first-child[class*="w-"][class*="h-"]:not(.grow):not(.rm-choice-indicator) { width:2rem !important; height:2rem !important; border-radius:var(--rm-radius-sm) !important; }
+   .rm-choice-indicator { width:1rem !important; height:1rem !important; min-width:1rem !important; min-height:1rem !important; border-radius:.3125rem !important; }
    .rm-menu-item-title { color:var(--rm-text) !important; font-size:var(--rm-font-md) !important; font-weight:var(--rm-weight-semibold) !important; line-height:1.25 !important; }
    .rm-menu-item-subtitle { margin-top:.125rem; color:var(--rm-muted) !important; font-size:var(--rm-font-xs) !important; font-weight:400 !important; line-height:1.35 !important; }
 
@@ -7011,14 +7081,20 @@
    }
    body .rm-drawer-popover.hidden { display:none !important; }
    .rm-drawer-popover .rm-drawer-header {
-     position:sticky; top:-.5rem; z-index:4; min-height:3.75rem;
+     position:sticky; top:-.5rem; z-index:20; min-height:3.75rem;
      margin:-.5rem -.5rem .5rem; padding:.75rem .875rem;
      display:flex; align-items:center; justify-content:space-between; gap:.75rem;
      border-bottom:1px solid var(--rm-border); border-radius:calc(var(--rm-dialog-radius) - 1px) calc(var(--rm-dialog-radius) - 1px) 0 0;
      background:color-mix(in srgb,var(--rm-surface) 94%,transparent); backdrop-filter:blur(10px);
    }
    .rm-drawer-title { min-width:0; color:var(--rm-text); font-size:var(--rm-font-lg); font-weight:var(--rm-weight-bold); line-height:1.2; }
-   .rm-drawer-close { flex:0 0 auto; }
+   .rm-drawer-close {
+     flex:0 0 auto; width:2.25rem !important; min-width:2.25rem !important;
+     height:2.25rem !important; min-height:2.25rem !important;
+     border-color:transparent !important; background:transparent !important;
+   }
+   .rm-drawer-close:hover { background:var(--rm-surface-soft) !important; }
+   .rm-drawer-popover .rm-drawer-search-sticky { top:3.25rem !important; z-index:10; }
    .rm-drawer-popover .grid-cols-2,.rm-drawer-popover [class~="sm:grid-cols-2"] { grid-template-columns:minmax(0,1fr) !important; }
    .rm-drawer-popover .rm-menu-action {
      width:100%; min-width:0; min-height:3rem; height:auto !important;
@@ -7027,7 +7103,7 @@
    .rm-drawer-popover .rm-menu-item-title { font-size:var(--rm-font-sm) !important; white-space:normal; overflow-wrap:normal; word-break:normal; }
    .rm-drawer-popover .rm-menu-item-subtitle { white-space:normal; overflow-wrap:normal; word-break:normal; }
    .rm-drawer-popover .rm-menu-action > .grow,.rm-drawer-popover .rm-menu-action > .min-w-0 { min-width:0; max-width:100%; }
-   .rm-drawer-popover button[aria-label="Удалить"],.rm-drawer-popover .rm-btn-icon {
+   .rm-drawer-popover button[aria-label="Удалить"],.rm-drawer-popover .rm-btn-icon:not(.rm-drawer-close) {
      width:2.5rem !important; min-width:2.5rem !important; padding:0 !important;
    }
    .rm-drawer-popover .workspace-menu-modes button {
@@ -7082,7 +7158,7 @@
 
    /* Архив: поиск и закрытие больше не накладываются друг на друга. */
    #archiveModal .rm-dialog-header { display:grid; grid-template-columns:minmax(0,1fr) minmax(15rem,24rem) auto; align-items:center; }
-   #archiveSearch { padding-right:2.75rem !important; }
+   #archiveSearch { padding-left:2.5rem !important; padding-right:2.5rem !important; }
    #archiveSearchClear.rm-btn {
      right:.375rem !important; width:1.75rem !important; height:1.75rem !important;
      min-width:1.75rem !important; min-height:1.75rem !important; padding:0 !important;
@@ -7188,14 +7264,14 @@
       <div class="app-header-grid grid grid-cols-[auto_1fr] gap-x-3 sm:gap-x-4 gap-y-2 px-5 pt-3.5 pb-3.5 items-center min-w-0">
       <div class="flex flex-col gap-1.5 min-w-0">
         <div class="flex items-center gap-3 min-w-0">
-        <div class="flex flex-col items-center shrink-0 gap-1">
-          <button type="button" id="appLogoBtn" onclick="openStartupModal()" aria-label="Стартовый экран: новый проект или открыть файл" class="no-image-export flex items-center select-none cursor-pointer rounded-xl hover:opacity-90 transition-opacity" title="Стартовый экран: новый проект / открыть файл">
-            <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 text-white shadow-sm">
-              <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
-            </span>
-          </button>
-          <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export text-[10px] leading-none font-semibold text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer mt-1" title="Версия приложения , нажмите, чтобы посмотреть , что нового"></button>
-        </div>
+          <div class="app-header-brand flex flex-col items-center gap-1 shrink-0">
+            <button type="button" id="appLogoBtn" onclick="openStartupModal()" aria-label="Стартовый экран: новый проект или открыть файл" class="no-image-export flex items-center select-none cursor-pointer rounded-xl hover:opacity-90 transition-opacity shrink-0" title="Стартовый экран: новый проект / открыть файл">
+              <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 text-white shadow-sm">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
+              </span>
+            </button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v14.7</button>
+          </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
           <h1 id="roadmapTitle" onclick="startEditTitle()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();startEditTitle();}" aria-label="Название карты, нажмите чтобы переименовать" class="text-lg font-semibold tracking-tight text-slate-900 leading-snug cursor-pointer hover:bg-slate-50 px-1.5 py-0.5 rounded-lg border border-transparent hover:border-slate-200/60 transition-all truncate min-w-0">
@@ -7205,17 +7281,17 @@
             <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
           </button>
         </div>
-        <div id="titleEditContainer" class="hidden flex items-center gap-2">
+        <div id="titleEditContainer" class="hidden">
           <input type="text" id="titleInput" aria-label="Название роадмапа" maxlength="200" onkeydown="if(event.key==='Enter'){event.preventDefault();saveTitle();}else if(event.key==='Escape'){event.preventDefault();cancelEditTitle();}" class="text-xl font-semibold tracking-tight text-slate-900 bg-white border border-indigo-500 ring-2 ring-indigo-500/15 rounded-xl px-3 h-9 focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full max-w-md transition-all">
           <button onclick="saveTitle()" class="inline-flex items-center justify-center h-10 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all cursor-pointer shadow-xs">Сохранить</button>
           <button onclick="cancelEditTitle()" class="inline-flex items-center justify-center h-10 px-3 text-slate-500 hover:text-slate-700 hover:bg-slate-100 text-xs font-medium rounded-xl transition-all cursor-pointer">Отмена</button>
         </div>
         <div class="app-header-meta text-xs text-slate-500 mt-0.5 px-1.5 flex flex-wrap items-center justify-start gap-1.5 min-w-0">
-          <button type="button" onclick="editPoName()" class="no-image-export inline-flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-slate-500 hover:text-indigo-700 hover:border-indigo-200 hover:bg-indigo-50/40 transition-colors cursor-pointer shrink-0 min-w-0" title="Продакт-оунер (РО) , чей это роадмап. Нажмите, чтобы поменять имя">
+          <button type="button" onclick="editPoName()" class="app-header-meta-chip app-header-po-chip no-image-export inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-slate-500 hover:text-indigo-700 hover:border-indigo-200 hover:bg-indigo-50/40 transition-colors cursor-pointer min-w-0" title="Продакт-оунер (РО) , чей это роадмап. Нажмите, чтобы поменять имя">
             <svg aria-hidden="true" class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
             <span class="truncate">РО: <span id="poNameDisplay" class="font-semibold text-slate-600">Фамилия Имя</span></span>
           </button>
-          <span class="app-header-date shrink-0 inline-flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-slate-600" title="Текущая дата проекта">
+          <span class="app-header-meta-chip app-header-date shrink-0 inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-slate-600" title="Текущая дата проекта">
             <svg aria-hidden="true" class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
             Сегодня <span id="currentProjectDate" class="font-medium text-slate-600"></span>
           </span>
@@ -7519,7 +7595,7 @@
       <button type="button" id="goritModeBtn" data-label="Горящее" onclick="toggleGoritMode()" aria-pressed="false" aria-label="Только горящее" title="Только горящее: просрочено, срок в ближайшую неделю или блокеры" class="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl border transition-colors cursor-pointer bg-slate-50 border-slate-200 text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path></svg></button>
       <button type="button" id="mineModeBtn" data-label="Мои задачи" onclick="toggleMineMode()" aria-pressed="false" aria-label="Мои задачи" title="Мои задачи (исполнитель , имя автора из Настроек)" class="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl border transition-colors cursor-pointer bg-slate-50 border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></button>
       <div class="relative shrink-0">
-        <button type="button" id="releaseFilterBtn" data-label="Метки и релизы" onclick="toggleReleaseFilterMenu(event)" class="relative inline-flex items-center justify-center h-9 w-9 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl transition-colors cursor-pointer" title="Фильтр по метке, компоненту, релизу и своим полям" aria-label="Фильтр по метке, компоненту, релизу и своим полям" aria-haspopup="menu"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5a1.99 1.99 0 011.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z"></path></svg><span id="releaseFilterCount" class="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 bg-indigo-600 text-white text-[10px] font-semibold leading-none rounded-full ring-2 ring-white inline-flex items-center justify-center tabular-nums" style="display:none">0</span></button>
+        <button type="button" id="releaseFilterBtn" data-label="Метки и релизы" onclick="toggleReleaseFilterMenu(event)" class="relative inline-flex items-center justify-center h-9 w-9 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl transition-colors cursor-pointer" title="Фильтр по метке, компоненту, релизу и своим полям" aria-label="Фильтр по метке, компоненту, релизу и своим полям" aria-haspopup="dialog" aria-expanded="false"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5a1.99 1.99 0 011.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z"></path></svg><span id="releaseFilterCount" class="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 bg-indigo-600 text-white text-[10px] font-semibold leading-none rounded-full ring-2 ring-white inline-flex items-center justify-center tabular-nums" style="display:none">0</span></button>
         <div id="releaseFilterMenu" role="menu" class="hidden fixed w-60 max-h-72 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-[110] no-print no-image-export"></div>
       </div>
       <div class="relative shrink-0">
@@ -8039,7 +8115,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v14.6">
+<script data-roadmap-modules="v14.7">
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
@@ -9457,8 +9533,8 @@ if (typeof globalThis !== 'undefined') {
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '14.6';
-    const APP_VERSION_DATE = '31.07.2026';
+    const APP_VERSION = '14.7';
+    const APP_VERSION_DATE = '18.08.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'версия ' + APP_VERSION; } catch (e) {}
@@ -12776,7 +12852,7 @@ if (typeof globalThis !== 'undefined') {
           ? '<div class="text-[11px] text-indigo-700 font-semibold mb-2 bg-indigo-50 border border-indigo-200 rounded-lg px-3 py-1.5">Предшественник: «' + esc(selT.name || '') + '». Теперь кликните задачу, которая пойдет ПОСЛЕ нее. Клик по ней же , отмена.</div>'
           : '<div class="text-[11px] text-slate-500 mb-2">Перетащите карточку на другую , она пойдет после нее. Или кликните предшественника, затем зависимую. Клик по стрелке , убрать связь. Двойной клик , карточка. Цвет: зеленый встык, янтарный зазор, красный нарушение.</div>');
       var toolbar = '<div class="flex items-center gap-3 flex-wrap mb-2">'
-        + '<input type="search" value="' + escA(_depsMapQ) + '" onchange="_depsMapQ=this.value;refreshDepsOverview()" placeholder="Найти задачу и нажать Enter" aria-label="Фильтр задач на карте" class="h-8 px-2.5 bg-white border border-slate-200 rounded-lg text-[11px] text-slate-700 focus:outline-none focus:border-indigo-500" style="width:230px">'
+        + '<div class="rm-search-field rm-search-field--compact" style="width:230px"><svg aria-hidden="true" class="rm-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><input type="search" value="' + escA(_depsMapQ) + '" onchange="_depsMapQ=this.value;refreshDepsOverview()" placeholder="Найти задачу и нажать Enter" aria-label="Фильтр задач на карте" class="rm-search-input"></div>'
         + '<label class="inline-flex items-center gap-1.5 cursor-pointer text-[11px] text-slate-600"><input type="checkbox" ' + (_depsMapHideDone ? 'checked' : '') + ' onchange="_depsMapHideDone=this.checked;refreshDepsOverview()" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">скрыть завершенные</label>'
         + '<label class="inline-flex items-center gap-1.5 cursor-pointer text-[11px] text-slate-600"><input type="checkbox" ' + (_depsMapShowLoose ? 'checked' : '') + ' onchange="_depsMapShowLoose=this.checked;refreshDepsOverview()" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">показывать «Без связей»</label>'
         + (q ? '<button type="button" onclick="_depsMapQ=\'\';refreshDepsOverview()" class="text-[11px] text-indigo-600 hover:underline cursor-pointer">сбросить поиск</button>' : '')
@@ -16686,16 +16762,16 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const sel = kind === 'label' ? labelFilterSel : (kind === 'component' ? componentFilterSel : releaseFilterSel);
       const on = sel.has(name);
       const fn = kind === 'label' ? 'setLabelFilter' : (kind === 'component' ? 'setComponentFilter' : 'setReleaseFilter');
-      return `<button type="button" onclick="${fn}('${escJsArg(name)}')" class="w-full flex items-center gap-2 text-left text-xs px-2 py-1.5 rounded-lg ${on ? 'bg-indigo-50/70 text-indigo-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'} cursor-pointer">
-        <span class="w-4 h-4 rounded border flex items-center justify-center shrink-0 ${on ? 'bg-indigo-600 border-indigo-600' : 'border-slate-300 bg-white'}">${on ? '<svg aria-hidden="true" class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>' : ''}</span>
+      return `<button type="button" onclick="event.stopPropagation(); ${fn}('${escJsArg(name)}')" class="w-full flex items-center gap-2 text-left text-xs px-2 py-1.5 rounded-lg ${on ? 'bg-indigo-50/70 text-indigo-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'} cursor-pointer">
+        <span class="rm-choice-indicator w-4 h-4 rounded border flex items-center justify-center shrink-0 ${on ? 'bg-indigo-600 border-indigo-600' : 'border-slate-300 bg-white'}">${on ? '<svg aria-hidden="true" class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>' : ''}</span>
         <span class="truncate grow">${escHtml(name)}</span>
       </button>`;
     }
     function _cfFilterRow(fid, val, label) {
       const s = customFieldFilterSel[fid];
       const on = !!(s && s.has(val));
-      return `<button type="button" onclick="setCustomFieldFilter('${escJsArg(fid)}','${escJsArg(val)}')" class="w-full flex items-center gap-2 text-left text-xs px-2 py-1.5 rounded-lg ${on ? 'bg-indigo-50/70 text-indigo-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'} cursor-pointer">
-        <span class="w-4 h-4 rounded border flex items-center justify-center shrink-0 ${on ? 'bg-indigo-600 border-indigo-600' : 'border-slate-300 bg-white'}">${on ? '<svg aria-hidden="true" class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>' : ''}</span>
+      return `<button type="button" onclick="event.stopPropagation(); setCustomFieldFilter('${escJsArg(fid)}','${escJsArg(val)}')" class="w-full flex items-center gap-2 text-left text-xs px-2 py-1.5 rounded-lg ${on ? 'bg-indigo-50/70 text-indigo-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'} cursor-pointer">
+        <span class="rm-choice-indicator w-4 h-4 rounded border flex items-center justify-center shrink-0 ${on ? 'bg-indigo-600 border-indigo-600' : 'border-slate-300 bg-white'}">${on ? '<svg aria-hidden="true" class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>' : ''}</span>
         <span class="truncate grow">${escHtml(label)}</span>
       </button>`;
     }
@@ -16720,8 +16796,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const grpHead = (t) => `<div class="px-2 pt-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">${t}</div>`;
       const sep = '<div class="my-1 h-px bg-slate-100"></div>';
       // Поиск внутри фильтра по меткам/компонентам/релизам (п.)
-      const relClearBtn = relFilterQuery ? `<button type="button" onmousedown="event.preventDefault()" onclick="event.stopPropagation(); relFilterQuery=''; renderReleaseFilterMenu();" aria-label="Очистить поиск" class="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center text-slate-400 hover:text-slate-600 cursor-pointer"><svg aria-hidden="true" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>` : '';
-      const search = `<div class="sticky top-0 bg-white px-1 pb-1.5 mb-0.5 z-10 border-b border-slate-100"><div class="relative"><input id="relFilterSearch" type="text" value="${escAttr(relFilterQuery)}" oninput="relFilterQuery=this.value; renderReleaseFilterMenu();" onclick="event.stopPropagation()" placeholder="Поиск" aria-label="Поиск по меткам, компонентам, релизам" class="w-full h-8 pl-2 pr-7 text-xs bg-slate-50 border border-slate-200 rounded-md focus:outline-none focus:border-indigo-400 focus:bg-white">${relClearBtn}</div></div>`;
+      const relClearBtn = relFilterQuery ? `<button type="button" onmousedown="event.preventDefault()" onclick="event.stopPropagation(); relFilterQuery=''; renderReleaseFilterMenu();" aria-label="Очистить поиск" class="rm-search-clear text-slate-400 hover:text-slate-600 cursor-pointer"><svg aria-hidden="true" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>` : '';
+      const search = `<div class="rm-drawer-search-sticky sticky bg-white px-1 pb-1.5 mb-0.5 border-b border-slate-100"><div class="rm-search-field"><svg aria-hidden="true" class="rm-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><input id="relFilterSearch" type="search" value="${escAttr(relFilterQuery)}" oninput="relFilterQuery=this.value; renderReleaseFilterMenu();" onclick="event.stopPropagation()" placeholder="Поиск по меткам и релизам" aria-label="Поиск по меткам, компонентам, релизам" class="rm-search-input">${relClearBtn}</div></div>`;
       let html = '';
       if (labels.length) html += grpHead('Метки (Jira Labels)') + labels.map(n => _filterRow('label', n)).join('');
       if (comps.length) html += (html ? sep : '') + grpHead('Компоненты') + comps.map(n => _filterRow('component', n)).join('');
@@ -16737,7 +16813,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       });
       if (!html) html = `<div class="px-2 py-4 text-xs text-slate-500 text-center">Ничего не найдено</div>`;
       const total = labelFilterSel.size + releaseFilterSel.size + componentFilterSel.size + _cfFilterCount();
-      if (total) html += sep + `<button type="button" onclick="clearReleaseFilter()" class="w-full text-left text-xs px-2 py-1.5 rounded-lg text-rose-600 hover:bg-rose-50 cursor-pointer">Сбросить (${total})</button>`;
+      if (total) html += sep + `<button type="button" onclick="event.stopPropagation(); clearReleaseFilter()" class="w-full text-left text-xs px-2 py-1.5 rounded-lg text-rose-600 hover:bg-rose-50 cursor-pointer">Сбросить (${total})</button>`;
       const inp0 = document.getElementById('relFilterSearch');
       const wasFocused = inp0 && document.activeElement === inp0;
       m.innerHTML = search + html;
@@ -16770,12 +16846,24 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (e) e.stopPropagation();
       const m = document.getElementById('releaseFilterMenu'); if (!m) return;
       if (m.classList.contains('hidden')) {
+        // «Метки и релизы» открываются как отдельная правая шторка. Сначала
+        // закрываем родительские фильтры: две шторки в одном слое перекрывали
+        // друг друга, и наблюдатель модалок тут же закрывал новую панель.
+        if (typeof closeAllPopovers === 'function') closeAllPopovers(true);
+        if (typeof _drawerOpenGuardUntil === 'number') _drawerOpenGuardUntil = performance.now() + 420;
         if (m.parentElement !== document.body) document.body.appendChild(m);
         relFilterQuery = ''; renderReleaseFilterMenu();
-        // меню теперь fixed (в общем ряду фильтров) , позиционируем под кнопкой, как у пресетов
         const btn = document.getElementById('releaseFilterBtn');
+        if (btn) btn.setAttribute('aria-expanded', 'true');
         m.style.maxHeight = ''; m.style.overflowY = '';
         m.classList.remove('hidden');
+        // После нормализации интерфейса это единая правая шторка: старое
+        // позиционирование относительно кнопки ей не требуется.
+        if (m.classList.contains('rm-drawer-popover')) {
+          if (typeof _scheduleDrawerSync === 'function') _scheduleDrawerSync();
+          return;
+        }
+        // Резерв для раннего запуска до инициализации единой системы окон.
         if (btn) {
           const r = btn.getBoundingClientRect();
           m.style.left = Math.max(8, Math.min(r.left, window.innerWidth - 248)) + 'px';
@@ -16801,9 +16889,15 @@ let resourceView = 'roles'; // 'roles' | 'load'
             m.style.overflowY = 'auto';
           }
         }
-      } else m.classList.add('hidden');
+      } else closeReleaseFilterMenu();
     }
-    function closeReleaseFilterMenu() { const m = document.getElementById('releaseFilterMenu'); if (m) m.classList.add('hidden'); }
+    function closeReleaseFilterMenu() {
+      const m = document.getElementById('releaseFilterMenu');
+      const b = document.getElementById('releaseFilterBtn');
+      if (m) m.classList.add('hidden');
+      if (b) b.setAttribute('aria-expanded', 'false');
+      if (typeof _scheduleDrawerSync === 'function') _scheduleDrawerSync();
+    }
     document.addEventListener('click', (e) => { const m = document.getElementById('releaseFilterMenu'); if (m && !m.classList.contains('hidden') && !e.target.closest('#releaseFilterMenu') && !e.target.closest('#releaseFilterBtn')) m.classList.add('hidden'); });
     document.addEventListener('click', (e) => { const m = document.getElementById('presetMenu'); if (m && !m.classList.contains('hidden') && !e.target.closest('#presetMenu') && !e.target.closest('[onclick*="togglePresetMenu"]')) m.classList.add('hidden'); });
     // Закрываем выпадающие панели (фильтры и перенос задачи) при скролле / ресайзе / Esc
@@ -21899,7 +21993,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         + '</div></div>';
     }
     // === Вид «Презентация»: курируемый роадмап для показа (наборы, ручные группы MVP, алиасы, колбаски, A4 PDF). Состав/алиасы живут в наборе, не в задачах. ===
-    var _presPickGid = null, _presPickSel = null;
+    var _presPickGid = null, _presPickSel = null, _presPickQuery = '';
     var _PB = 'inline-flex items-center gap-1 h-8 px-2.5 rounded-lg border border-slate-200 bg-white text-[12px] text-slate-600 hover:bg-slate-50 cursor-pointer';
     function _presActive() { var sets = (presentations && presentations.sets) || []; if (!sets.length) return null; return sets.filter(function (s) { return s.id === presentations.activeId; })[0] || sets[0]; }
     function _presGroupById(gid) { var s = _presActive(); if (!s) return null; return (s.groups || []).filter(function (g) { return g.id === gid; })[0] || null; }
@@ -21950,13 +22044,16 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function _presStatusChipView(t) { var sd = (projectStatuses || []).filter(function (s) { return s && s.id === t.status; })[0]; if (!sd) return ''; var cls = sd.color || 'bg-slate-100 text-slate-600'; return '<span class="' + escAttr(cls) + ' text-[10px] px-1.5 py-0.5 rounded font-medium">' + escHtml(sd.name || '') + '</span>'; }
     function _presNZad(n) { n = Math.abs(Number(n) || 0); var d = n % 100, u = n % 10; if (d > 10 && d < 20) return 'задач'; if (u === 1) return 'задача'; if (u >= 2 && u <= 4) return 'задачи'; return 'задач'; }
     var _PRES_GCOL = ['#6366f1', '#10b981', '#f59e0b', '#f43f5e', '#8b5cf6', '#14b8a6', '#0ea5e9', '#ec4899'];
+    function _presTaskIsCurrent(t) {
+      return !!(t && !t.isMilestone && t.name && t.status !== 'completed');
+    }
     function _presPrep(set) {
       var byId = {}; (roadmapData || []).forEach(function (t) { if (t) byId[t.id] = t; });
       var lo = '', hi = '';
       var groups = (set.groups || []).filter(function (g) { return !g.hidden; }).map(function (g, _gi) {
         var gStart = '', gEnd = '', gVis = '', cnt = 0;
         var items = (g.items || []).map(function (it) {
-          var t = byId[it.taskId]; if (!t) return null;
+          var t = byId[it.taskId]; if (!_presTaskIsCurrent(t)) return null;
           var nm = (it.alias && it.alias.trim()) ? it.alias : (t.name || '');
           var st = t.start || '', en = t.end || t.start || ''; if (st && en && en < st) en = st;
           var ven = t.isMilestone ? en : (_statusTimelineEnd(t) || en); // факт тянется только до реальной смены статуса, не до даты просмотра
@@ -21974,13 +22071,123 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function _presDelete() { var s = _presActive(); if (!s || _presRo()) return; openConfirm({ title: 'Удалить набор', danger: true, okText: 'Удалить', desc: 'Удалить набор «' + (s.title || '') + '»? Реальные задачи не пострадают, удаляется только этот показ.', onOk: function () { presentations.sets = presentations.sets.filter(function (x) { return x.id !== s.id; }); presentations.activeId = (presentations.sets[0] && presentations.sets[0].id) || null; _presPersist(); renderPresent(); } }); }
     function _presDuplicate() { var s = _presActive(); if (!s || _presRo()) return; var c; try { c = JSON.parse(JSON.stringify(s)); } catch (e) { return; } c.id = _presNewId('pr'); c.title = (s.title || 'Роадмап') + ' (копия)'; c.savedAt = toYmdLocal(CURRENT_DATE); (c.groups || []).forEach(function (g) { g.id = _presNewId('g'); }); presentations.sets.push(c); presentations.activeId = c.id; _presPersist(); renderPresent(); if (typeof showToast === 'function') showToast('Набор скопирован, правьте копию , оригинал не тронут', 'ok', 3500); }
     function _presReleaseDate(rel) { try { var pr = (typeof projectReleases !== 'undefined' && Array.isArray(projectReleases)) ? projectReleases : []; for (var i = 0; i < pr.length; i++) { var r = pr[i]; var nm = (r && r.name) ? r.name : r; if (nm === rel && r && r.date) return r.date; } var cc = (typeof customCutoffs !== 'undefined' && Array.isArray(customCutoffs)) ? customCutoffs : []; var best = ''; cc.forEach(function (c) { if (!c || !c.date) return; var n = String(c.name || ''); if (n === rel || n === 'Релиз ' + rel || n.indexOf(rel) >= 0) { if (!best) best = c.date; } }); return best; } catch (e) { return ''; } }
-    function _presBuildFromReleases() { if (_presRo()) return; var rd = roadmapData || []; var byRel = {}; rd.forEach(function (t) { if (!t || t.isMilestone || !t.release) return; if (!byRel[t.release]) byRel[t.release] = { items: [], minS: '' }; byRel[t.release].items.push(t); var st = t.start || ''; if (st && (!byRel[t.release].minS || st < byRel[t.release].minS)) byRel[t.release].minS = st; }); var rels = Object.keys(byRel); if (!rels.length) { if (typeof showToast === 'function') showToast('У задач не заданы релизы, проставьте релизы или соберите набор вручную', 'info', 4500); return; } rels.sort(function (a, b) { var sa = byRel[a].minS || '9999', sb = byRel[b].minS || '9999'; return sa < sb ? -1 : (sa > sb ? 1 : (a < b ? -1 : 1)); }); var groups = rels.map(function (rel) { return { id: _presNewId('g'), name: rel, due: _presReleaseDate(rel) || '', items: byRel[rel].items.map(function (t) { return { taskId: t.id, alias: '', showAs: 'bar' }; }) }; }); var title = ''; try { var rt = document.getElementById('roadmapTitle'); title = (rt && rt.textContent && rt.textContent.trim()) || ''; } catch (e) {} var set = { id: _presNewId('pr'), title: title || 'Роадмап по релизам', subtitle: 'Собрано из релизов плана', savedAt: toYmdLocal(CURRENT_DATE), groups: groups }; presentations.sets.push(set); presentations.activeId = set.id; _presPersist(); renderPresent(); if (typeof showToast === 'function') showToast('Набор собран из релизов (' + rels.length + '), правьте под показ', 'ok', 4000); }
+    function _presBuildFromReleases() {
+      if (_presRo()) return;
+      var byRel = {};
+      (roadmapData || []).filter(_presTaskIsCurrent).forEach(function (t) {
+        if (!t.release) return;
+        if (!byRel[t.release]) byRel[t.release] = { items: [], minS: '' };
+        byRel[t.release].items.push(t);
+        var st = t.start || '';
+        if (st && (!byRel[t.release].minS || st < byRel[t.release].minS)) byRel[t.release].minS = st;
+      });
+      var rels = Object.keys(byRel);
+      if (!rels.length) {
+        if (typeof showToast === 'function') showToast('У незавершённых задач не заданы релизы — проставьте релизы или соберите набор вручную', 'info', 4500);
+        return;
+      }
+      rels.sort(function (a, b) {
+        var sa = byRel[a].minS || '9999', sb = byRel[b].minS || '9999';
+        return sa < sb ? -1 : (sa > sb ? 1 : (a < b ? -1 : 1));
+      });
+      var groups = rels.map(function (rel) {
+        return {
+          id: _presNewId('g'),
+          name: rel,
+          due: _presReleaseDate(rel) || '',
+          items: byRel[rel].items.map(function (t) { return { taskId: t.id, alias: '', showAs: 'bar' }; })
+        };
+      });
+      var title = '';
+      try {
+        var rt = document.getElementById('roadmapTitle');
+        title = (rt && rt.textContent && rt.textContent.trim()) || '';
+      } catch (e) {}
+      var set = {
+        id: _presNewId('pr'),
+        title: title || 'Роадмап по релизам',
+        subtitle: 'Собрано из незавершённых задач по релизам плана',
+        savedAt: toYmdLocal(CURRENT_DATE),
+        groups: groups
+      };
+      presentations.sets.push(set);
+      presentations.activeId = set.id;
+      _presPersist();
+      renderPresent();
+      if (typeof showToast === 'function') showToast('Набор собран из активных задач по релизам (' + rels.length + ')', 'ok', 4000);
+    }
     function _presSetActive(id) { presentations.activeId = id; if (!_presRo()) _presPersist(); renderPresent(); }
     function _presRefreshDeck() { var dk = document.getElementById('presentDeck'); var set = _presActive(); if (!dk || !set) { renderPresent(); return; } var tmp = document.createElement('div'); tmp.innerHTML = _presDeckHtml(set); var nd = tmp.firstElementChild; if (nd && dk.parentNode) dk.parentNode.replaceChild(nd, dk); try { _presDrawDeps(); } catch (e) {} }
-    function _presIssues(set) { var byId = {}; (roadmapData || []).forEach(function (t) { if (t) byId[t.id] = t; }); var missing = 0, late = []; (set.groups || []).forEach(function (g) { var maxEnd = ''; (g.items || []).forEach(function (it) { var t = byId[it.taskId]; if (!t) { missing++; return; } if (it.showAs === 'hide') return; var st = t.start || ''; var en = t.end || t.start || ''; if (st && en && en < st) en = st; if (en && (!maxEnd || en > maxEnd)) maxEnd = en; }); if (g.due && maxEnd && maxEnd !== g.due) late.push(g.name || 'MVP'); }); return { missing: missing, late: late }; }
-    function _presWarnHtml(set) { var iss = _presIssues(set); if (!iss.missing && !iss.late.length) return ''; var parts = []; if (iss.missing) parts.push(iss.missing + ' ' + _presNZad(iss.missing) + ' из набора больше нет в плане'); if (iss.late.length) parts.push('сроки групп расходятся с планом: ' + iss.late.join(', ')); return '<div class="mb-3 text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 flex items-start gap-2"><svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path></svg><span>Показ мог устареть: ' + escHtml(parts.join('; ')) + '. Проверьте состав и сроки групп.' + (iss.late.length ? ' <button type="button" onclick="_presSyncDues()" class="underline font-semibold cursor-pointer">Подтянуть сроки по плану</button>' : '') + (iss.missing ? ' <button type="button" onclick="_presCleanMissing()" class="underline font-semibold cursor-pointer">Убрать удаленные</button>' : '') + '</span></div>'; }
-    function _presCleanMissing() { var s = _presActive(); if (!s || _presRo()) return; var byId = {}; (roadmapData || []).forEach(function (t) { if (t) byId[t.id] = 1; }); (s.groups || []).forEach(function (g) { g.items = (g.items || []).filter(function (it) { return byId[it.taskId]; }); }); _presPersist(); renderPresent(); }
-    function _presSyncDues() { var s = _presActive(); if (!s || _presRo()) return; var byId = {}; (roadmapData || []).forEach(function (t) { if (t) byId[t.id] = t; }); var n = 0; (s.groups || []).forEach(function (g) { var maxEnd = ''; (g.items || []).forEach(function (it) { if (it.showAs === 'hide') return; var t = byId[it.taskId]; if (!t) return; var st = t.start || ''; var en = t.end || t.start || ''; if (st && en && en < st) en = st; if (en && (!maxEnd || en > maxEnd)) maxEnd = en; }); if (maxEnd && maxEnd !== (g.due || '')) { g.due = maxEnd; n++; } }); _presPersist(); renderPresent(); if (typeof showToast === 'function') showToast(n ? ('Сроки групп подтянуты по плану: ' + n) : 'Сроки групп уже соответствуют плану', 'ok', 3500); }
+    function _presIssues(set) {
+      var byId = {}, used = {}, missingIds = {}, completedIds = {}, late = [];
+      (roadmapData || []).forEach(function (t) { if (t) byId[t.id] = t; });
+      (set.groups || []).forEach(function (g) {
+        var maxEnd = '';
+        (g.items || []).forEach(function (it) {
+          var t = byId[it.taskId];
+          if (!t) { missingIds[it.taskId] = 1; return; }
+          if (!_presTaskIsCurrent(t)) { completedIds[it.taskId] = 1; return; }
+          used[t.id] = 1;
+          if (it.showAs === 'hide') return;
+          var st = t.start || '', en = t.end || t.start || '';
+          if (st && en && en < st) en = st;
+          if (en && (!maxEnd || en > maxEnd)) maxEnd = en;
+        });
+        if (g.due && maxEnd && maxEnd !== g.due) late.push(g.name || 'MVP');
+      });
+      var unassigned = (roadmapData || []).filter(function (t) { return _presTaskIsCurrent(t) && !used[t.id]; }).length;
+      return { missing: Object.keys(missingIds).length, completed: Object.keys(completedIds).length, unassigned: unassigned, late: late };
+    }
+    function _presWarnHtml(set) {
+      var iss = _presIssues(set);
+      if (!iss.missing && !iss.completed && !iss.unassigned && !iss.late.length) return '';
+      var parts = [];
+      if (iss.completed) parts.push(iss.completed + ' завершённых ' + _presNZad(iss.completed) + ' скрыто из показа');
+      if (iss.missing) parts.push(iss.missing + ' ' + _presNZad(iss.missing) + ' больше нет в плане');
+      if (iss.unassigned) parts.push(iss.unassigned + ' активных ' + _presNZad(iss.unassigned) + ' ещё не распределено по группам');
+      if (iss.late.length) parts.push('сроки групп расходятся с планом: ' + iss.late.join(', '));
+      var cleanup = (iss.missing || iss.completed) ? ' <button type="button" onclick="_presCleanMissing()" class="underline font-semibold cursor-pointer">Убрать закрытые и удалённые</button>' : '';
+      var sync = iss.late.length ? ' <button type="button" onclick="_presSyncDues()" class="underline font-semibold cursor-pointer">Подтянуть сроки по плану</button>' : '';
+      var hint = iss.unassigned ? ' Новые задачи можно добавить кнопкой «+ Задачи» в нужной группе.' : '';
+      return '<div class="mb-3 text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 flex items-start gap-2"><svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path></svg><span>' + escHtml(parts.join('; ')) + '.' + hint + cleanup + sync + '</span></div>';
+    }
+    function _presCleanMissing() {
+      var s = _presActive();
+      if (!s || _presRo()) return;
+      var byId = {};
+      (roadmapData || []).forEach(function (t) { if (t) byId[t.id] = t; });
+      var removed = 0;
+      (s.groups || []).forEach(function (g) {
+        var before = (g.items || []).length;
+        g.items = (g.items || []).filter(function (it) { return _presTaskIsCurrent(byId[it.taskId]); });
+        removed += before - g.items.length;
+      });
+      _presPersist();
+      renderPresent();
+      if (typeof showToast === 'function') showToast(removed ? ('Из показа убрано: ' + removed) : 'Состав уже актуален', 'ok', 3000);
+    }
+    function _presSyncDues() {
+      var s = _presActive();
+      if (!s || _presRo()) return;
+      var byId = {};
+      (roadmapData || []).forEach(function (t) { if (t) byId[t.id] = t; });
+      var n = 0;
+      (s.groups || []).forEach(function (g) {
+        var maxEnd = '';
+        (g.items || []).forEach(function (it) {
+          if (it.showAs === 'hide') return;
+          var t = byId[it.taskId];
+          if (!_presTaskIsCurrent(t)) return;
+          var st = t.start || '', en = t.end || t.start || '';
+          if (st && en && en < st) en = st;
+          if (en && (!maxEnd || en > maxEnd)) maxEnd = en;
+        });
+        if (maxEnd && maxEnd !== (g.due || '')) { g.due = maxEnd; n++; }
+      });
+      _presPersist();
+      renderPresent();
+      if (typeof showToast === 'function') showToast(n ? ('Сроки групп подтянуты по активным задачам: ' + n) : 'Сроки групп уже соответствуют активному плану', 'ok', 3500);
+    }
     function _presSetField(f, val) { var s = _presActive(); if (!s || _presRo()) return; if (f === 'title') s.title = val; else if (f === 'subtitle') s.subtitle = val; _presPersist(); _presRefreshDeck(); }
     function _presAddGroup() { var s = _presActive(); if (!s || _presRo()) return; s.groups = s.groups || []; s.groups.push({ id: _presNewId('g'), name: 'Группа ' + (s.groups.length + 1), due: '', items: [], collapsed: false }); _presPersist(); renderPresent(); }
     function _presMoveGroup(gid, dir) { var s = _presActive(); if (!s || _presRo()) return; var gs = s.groups || []; var i = -1; for (var k = 0; k < gs.length; k++) if (gs[k].id === gid) { i = k; break; } var j = i + dir; if (i < 0 || j < 0 || j >= gs.length) return; var tmp = gs[i]; gs[i] = gs[j]; gs[j] = tmp; _presPersist(); renderPresent(); }
@@ -21996,14 +22203,36 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function _presSetItemShow(gid, taskId, val) { if (_presRo()) return; var g = _presGroupById(gid); if (!g) return; var it = (g.items || []).filter(function (x) { return x.taskId === taskId; })[0]; if (it) { it.showAs = val; _presPersist(); renderPresent(); } }
     function _presDelItem(gid, taskId) { if (_presRo()) return; var g = _presGroupById(gid); if (!g) return; g.items = (g.items || []).filter(function (x) { return x.taskId !== taskId; }); _presPersist(); renderPresent(); if (typeof showToast === 'function') showToast('Задача убрана из показа', 'ok', 2500); }
     // ---- выбор задач (инлайн-пикер) ----
-    function _presOpenPicker(gid) { if (_presRo()) return; _presPickGid = gid; _presPickSel = {}; renderPresent(); try { var p = document.getElementById('presPicker'); if (p) p.scrollIntoView({ block: 'nearest' }); } catch (e) {} }
-    function _presClosePicker() { _presPickGid = null; _presPickSel = null; renderPresent(); }
+    function _presOpenPicker(gid) { if (_presRo()) return; _presPickGid = gid; _presPickSel = {}; _presPickQuery = ''; renderPresent(); try { var p = document.getElementById('presPicker'); if (p) p.scrollIntoView({ block: 'nearest' }); } catch (e) {} }
+    function _presClosePicker() { _presPickGid = null; _presPickSel = null; _presPickQuery = ''; renderPresent(); }
+    function _presPickSearch(value) {
+      _presPickQuery = String(value || '');
+      renderPresent();
+      requestAnimationFrame(function () {
+        var input = document.getElementById('presPickSearch');
+        if (!input) return;
+        input.focus({ preventScroll: true });
+        try { input.setSelectionRange(input.value.length, input.value.length); } catch (e) {}
+      });
+    }
     function _presPickToggle(id, btn) { id = parseInt(id, 10); if (!_presPickSel) _presPickSel = {}; if (_presPickSel[id]) delete _presPickSel[id]; else _presPickSel[id] = 1; var on = !!_presPickSel[id]; if (btn) { btn.className = 'inline-flex items-center justify-center w-4 h-4 rounded border shrink-0 ' + (on ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-slate-300'); } var c = document.getElementById('presPickCount'); if (c) c.textContent = String(Object.keys(_presPickSel).length); }
-    function _presAddPicked() { if (_presRo()) { _presClosePicker(); return; } var g = _presGroupById(_presPickGid); if (!g || !_presPickSel) { _presClosePicker(); return; } Object.keys(_presPickSel).forEach(function (k) { var id = parseInt(k, 10); if (!(g.items || []).some(function (it) { return it.taskId === id; })) { g.items.push({ taskId: id, alias: '', showAs: 'bar' }); } }); _presPickGid = null; _presPickSel = null; _presPersist(); renderPresent(); }
+    function _presAddPicked() { if (_presRo()) { _presClosePicker(); return; } var g = _presGroupById(_presPickGid); if (!g || !_presPickSel) { _presClosePicker(); return; } Object.keys(_presPickSel).forEach(function (k) { var id = parseInt(k, 10); if (!(g.items || []).some(function (it) { return it.taskId === id; })) { g.items.push({ taskId: id, alias: '', showAs: 'bar' }); } }); _presPickGid = null; _presPickSel = null; _presPickQuery = ''; _presPersist(); renderPresent(); }
     function _presPickerHtml(gid) {
       var grp = _presGroupById(gid); if (!grp) return '';
       var existing = {}; (grp.items || []).forEach(function (it) { existing[it.taskId] = 1; });
-      var tasks = (roadmapData || []).filter(function (t) { return t && !t.isMilestone && t.name; });
+      var tasks = (roadmapData || []).filter(_presTaskIsCurrent).sort(function (a, b) {
+        var au = String(a.updated || a.start || ''), bu = String(b.updated || b.start || '');
+        if (au !== bu) return au > bu ? -1 : 1;
+        return String(a.name || '').localeCompare(String(b.name || ''), 'ru');
+      });
+      var q = String(_presPickQuery || '').trim().toLowerCase();
+      if (q) tasks = tasks.filter(function (t) {
+        var labels = Array.isArray(t.labels) ? t.labels.join(' ') : String(t.labels || '');
+        var components = Array.isArray(t.components) ? t.components.join(' ') : String(t.components || '');
+        return [t.name, t.jira, t.section, t.resource, t.release, labels, components]
+          .map(function (value) { return String(value || '').toLowerCase(); })
+          .join(' ').indexOf(q) >= 0;
+      });
       var bySec = {}, order = [];
       tasks.forEach(function (t) { var s = t.section || 'Без секции'; if (!bySec[s]) { bySec[s] = []; order.push(s); } bySec[s].push(t); });
       var rows = order.map(function (sec) {
@@ -22015,8 +22244,10 @@ let resourceView = 'roles'; // 'roles' | 'load'
         return head + lis;
       }).join('');
       return '<div id="presPicker" class="mt-2 bg-white border border-indigo-200 rounded-lg p-3">'
-        + '<div class="flex items-center justify-between mb-1"><div class="text-[12px] font-semibold text-indigo-800">Выбрать задачи в группу «' + escHtml(grp.name || 'группа') + '»</div><div class="text-[11px] text-slate-500">выбрано <span id="presPickCount">0</span></div></div>'
-        + '<div class="max-h-72 overflow-auto pr-1">' + (rows || '<div class="text-[12px] text-slate-400 py-2">Нет задач в плане</div>') + '</div>'
+        + '<div class="flex items-center justify-between mb-1"><div class="text-[12px] font-semibold text-indigo-800">Выбрать задачи в группу «' + escHtml(grp.name || 'группа') + '»</div><div class="text-[11px] text-slate-500">найдено ' + tasks.length + ' · выбрано <span id="presPickCount">' + Object.keys(_presPickSel || {}).length + '</span></div></div>'
+        + '<div class="text-[11px] text-slate-500 mb-1.5">Только незавершённые задачи · недавно обновлённые выше</div>'
+        + '<div class="rm-search-field mb-2"><svg aria-hidden="true" class="rm-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><input id="presPickSearch" type="search" value="' + escAttr(_presPickQuery || '') + '" oninput="_presPickSearch(this.value)" placeholder="Название, Jira, раздел, исполнитель, метка или релиз" aria-label="Поиск задач для презентационной группы" class="rm-search-input"></div>'
+        + '<div class="max-h-72 overflow-auto pr-1">' + (rows || '<div class="text-[12px] text-slate-400 py-2">' + (q ? 'По запросу ничего не найдено' : 'Нет незавершённых задач в плане') + '</div>') + '</div>'
         + '<div class="flex items-center gap-2 mt-2"><button onclick="_presAddPicked()" class="inline-flex items-center h-8 px-3 rounded-lg bg-indigo-600 text-white text-[12px] font-semibold hover:bg-indigo-700 cursor-pointer">Добавить выбранные</button><button onclick="_presClosePicker()" class="' + _PB + '">Отмена</button></div>'
         + '</div>';
     }
@@ -22024,7 +22255,10 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function _presToggleEdColl(gid) { var g = _presGroupById(gid); if (!g) return; g.edColl = !g.edColl; _presPersist(); renderPresent(); }
     function _presEdCollAll() { var st = _presActive(); if (!st || !(st.groups || []).length) return; var anyOpen = st.groups.some(function (g) { return !g.edColl; }); st.groups.forEach(function (g) { g.edColl = anyOpen; }); _presPersist(); renderPresent(); }
     function _presGroupEditHtml(g, _gi, _gtotal) {
-      var items = (g.items || []).map(function (it, _ii, _arr) {
+      var currentItems = (g.items || []).filter(function (it) {
+        return _presTaskIsCurrent((roadmapData || []).filter(function (x) { return x && x.id === it.taskId; })[0]);
+      });
+      var items = currentItems.map(function (it, _ii, _arr) {
         var _isFirst = _ii === 0, _isLast = _ii === _arr.length - 1;
         var t = (roadmapData || []).filter(function (x) { return x && x.id === it.taskId; })[0];
         var realName = t ? (t.name || ('Задача ' + t.id)) : ('задача ' + it.taskId + ' (нет в плане)');
@@ -22038,7 +22272,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
           + '<button type="button" aria-label="Убрать задачу из группы" onclick="_presDelItem(\'' + escAttr(g.id) + '\',' + it.taskId + ')" title="Убрать задачу" class="shrink-0 w-6 h-7 text-slate-400 hover:text-rose-600 cursor-pointer">&times;</button></span>'
           + '</div>';
       }).join('');
-      var _cnt = (g.items || []).length;
+      var _cnt = currentItems.length;
       return '<div class="bg-white border border-slate-200 rounded-lg p-2.5 mb-2' + (g.hidden ? ' opacity-60' : '') + '">'
         + '<div class="flex items-center gap-1.5' + (g.edColl ? '' : ' mb-1.5') + ' flex-wrap">'
         + '<button type="button" onclick="_presToggleEdColl(\'' + escAttr(g.id) + '\')" title="' + (g.edColl ? 'Развернуть задачи группы' : 'Свернуть задачи группы') + '" aria-label="' + (g.edColl ? 'Развернуть' : 'Свернуть') + '" class="shrink-0 inline-flex items-center justify-center w-7 h-8 rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" style="' + (g.edColl ? '' : 'transform:rotate(90deg)') + '" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>'
@@ -29491,6 +29725,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     let _modalLayerSerial = 1100;
     function _resolveModalLayer(node) {
       if (!node || node.nodeType !== 1) return null;
+      // Правые рабочие шторки имеют role="dialog" для доступности, но это не
+      // модальные окна. Иначе наблюдатель модалок закрывает шторку в момент
+      // открытия (в частности, фильтр «Метки и релизы»).
+      if (node.closest('.rm-drawer-popover')) return null;
       // Наблюдатель ниже получает изменения классов от всего интерфейса, включая
       // выпадающие меню. Возвращаем только настоящий слой диалога: иначе снятие
       // класса hidden с обычного меню ошибочно вызывало promoteModalLayer(), а он
@@ -29826,8 +30064,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
   <div id="globalSearchModal" role="dialog" aria-modal="true" aria-label="Поиск по проекту" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1000] flex items-start justify-center pt-[10vh] px-4 hidden" data-modal-backdrop>
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl flex flex-col max-h-[80vh] border border-slate-200/60">
       <div class="px-5 py-4 border-b border-slate-100 flex items-center gap-3">
-        <svg aria-hidden="true" class="w-6 h-6 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-        <input type="text" id="globalSearchInput" aria-label="Поиск и команды" placeholder="Найти задачу или ввести команду…" autocomplete="off" oninput="_debGlobalSearch()" onkeydown="handleGlobalSearchKey(event)" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl h-11 px-3.5 text-base text-slate-800 placeholder:text-slate-400 outline-none focus:border-indigo-400 focus:bg-white transition-colors">
+        <div class="rm-search-field rm-search-field--large grow"><svg aria-hidden="true" class="rm-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><input type="search" id="globalSearchInput" aria-label="Поиск и команды" placeholder="Найти задачу или ввести команду…" autocomplete="off" oninput="_debGlobalSearch()" onkeydown="handleGlobalSearchKey(event)" class="rm-search-input"></div>
         <button type="button" onclick="closeGlobalSearch()" class="w-8 h-8 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-colors cursor-pointer" aria-label="Закрыть" title="Закрыть">
           <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
@@ -29853,10 +30090,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           </div>
         </div>
         <div class="flex-1 max-w-md min-w-0">
-          <div class="relative">
-            <svg aria-hidden="true" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            <input type="text" id="archiveSearch" aria-label="Поиск в архиве" oninput="_debArchiveList()" placeholder="Поиск: ключ, название, исполнитель…" class="w-full h-9 pl-9 pr-9 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all">
-            <button type="button" id="archiveSearchClear" onclick="clearArchiveSearch()" aria-label="Очистить поиск" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-md text-slate-500 hover:text-slate-700 hover:bg-slate-200 flex items-center justify-center transition-colors cursor-pointer" title="Очистить">
+          <div class="rm-search-field">
+            <svg aria-hidden="true" class="rm-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="search" id="archiveSearch" aria-label="Поиск в архиве" oninput="_debArchiveList()" placeholder="Ключ, название или исполнитель" class="rm-search-input">
+            <button type="button" id="archiveSearchClear" onclick="clearArchiveSearch()" aria-label="Очистить поиск" class="rm-search-clear hidden text-slate-500 hover:text-slate-700 hover:bg-slate-200 flex items-center justify-center transition-colors cursor-pointer" title="Очистить">
               <svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
           </div>
@@ -30056,7 +30293,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         </div>
         <div class="rm-operational-toolbar flex items-center gap-2 flex-wrap shrink-0">
           <select id="dataQualityCategory" onchange="renderDataQualityCenter()" class="rm-control h-9 px-3 text-xs min-w-48" aria-label="Категория проблем"><option value="all">Вся очередь</option><option value="schedule">Расписание и сроки</option><option value="capacity">Загрузка команды</option><option value="readiness">Готовность к прогнозу</option><option value="data">Качество данных</option><option value="dependencies">Связи</option><option value="structure">Структура</option><option value="status">Статусы</option><option value="duplicates">Дубли</option></select>
-          <input id="dataQualitySearch" type="search" oninput="renderDataQualityCenter()" class="rm-control h-9 px-3 text-xs grow min-w-52" placeholder="Поиск по задаче, ключу или причине" aria-label="Поиск по проблемам качества данных">
+          <div class="rm-search-field grow min-w-52"><svg aria-hidden="true" class="rm-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><input id="dataQualitySearch" type="search" oninput="renderDataQualityCenter()" class="rm-control rm-search-input" placeholder="Задача, ключ или причина" aria-label="Поиск по проблемам качества данных"></div>
           <button type="button" onclick="analyzeProjectDataQuality(); renderDataQualityCenter(); renderPlanHealthBadge();" class="rm-action h-9 px-3 border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50">Проверить снова</button>
         </div>
         <div id="dataQualityList" class="rm-operational-list overflow-y-auto min-h-0 space-y-2 pr-1" aria-live="polite"></div>
@@ -30073,7 +30310,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       <div class="p-4 sm:p-6 flex flex-col min-h-0 gap-3">
         <div class="rm-operational-toolbar flex items-center gap-2 flex-wrap shrink-0">
           <select id="projectJournalAction" onchange="renderProjectJournal()" class="rm-control h-9 px-3 text-xs" aria-label="Тип действия"><option value="all">Все действия</option><option value="task_create">Создание</option><option value="task_update">Изменение</option><option value="task_delete">Удаление</option><option value="archive">Архив</option><option value="bulk">Массовые операции</option><option value="import">Импорт</option><option value="restore">Восстановление</option><option value="snapshot">Снимки</option><option value="project_reset">Новый проект</option><option value="undo">Отмена</option></select>
-          <input id="projectJournalSearch" type="search" oninput="renderProjectJournal()" class="rm-control h-9 px-3 text-xs grow min-w-48" placeholder="Поиск по описанию или автору" aria-label="Поиск в журнале">
+          <div class="rm-search-field grow min-w-48"><svg aria-hidden="true" class="rm-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><input id="projectJournalSearch" type="search" oninput="renderProjectJournal()" class="rm-control rm-search-input" placeholder="Описание или автор" aria-label="Поиск в журнале"></div>
           <span id="projectJournalCount" class="text-[10px] text-slate-500 shrink-0" aria-live="polite"></span>
           <button type="button" onclick="exportProjectJournal()" class="rm-action h-9 px-3 border border-indigo-200 text-indigo-700 text-xs font-semibold hover:bg-indigo-50">Экспорт JSON</button>
           <button type="button" onclick="clearProjectJournal()" class="rm-action h-9 px-3 border border-rose-200 text-rose-700 text-xs font-semibold hover:bg-rose-50">Очистить</button>
@@ -30521,7 +30758,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     <h3 class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">
      <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-     <span id="appVersionBadge">v14.6, 31.07.2026</span>
+     <span id="appVersionBadge">v14.7, 18.08.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -30587,7 +30824,16 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </div>
 
    <div>
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v14.6 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v14.7 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Единый поиск без наложений</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">UI/UX</span></div><p class="text-xs text-slate-600">Поиск в презентации, релизах, архиве, проверках, журнале и карте зависимостей получил общую высоту, скругление и отдельные зоны для иконки, текста и очистки.</p></div>
+     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Согласованные шторки</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">НАВИГАЦИЯ</span></div><p class="text-xs text-slate-600">Заголовок, поиск, прокрутка и кнопка закрытия больше не перекрывают друг друга. На мобильном экране сохраняются скругления и безопасные поля.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Компактная шапка проекта</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">ПРОЕКТ</span></div><p class="text-xs text-slate-600">Версия расположена под логотипом, а имя владельца и дата выровнены по единой высоте. Длинные имена безопасно сокращаются.</p></div>
+   </div>
+  </div>
+
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v14.6</h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Надёжные окна и управление фокусом</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">UI/UX</span></div><p class="text-xs text-slate-600">Статические и динамические окна получили единые четыре скруглённых угла, безопасные отступы, прокрутку, закрытие по Esc и возврат фокуса к исходной кнопке.</p></div>
      <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Безопасное обновление из Jira</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">ДАННЫЕ</span></div><p class="text-xs text-slate-600">Предпросмотр замечает изменения оценок, меток, спринтов, родителей и связей. Повторный импорт обновляет архивную задачу, не стирая ручные заметки, критерии, метрики и историю.</p></div>
@@ -34074,7 +34320,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 14.6</span>
+              <span id="appVersionStartup">версия 14.7</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
@@ -34406,8 +34652,11 @@ function renderResults() {
    </div>
    ${(funnelTotal + holdN + doneN + noStN) > 0 ? `<div class="funnel">${funnelSteps}${holdH}${doneH}${noStH}</div>` : ''}
    <div class="filter-bar">
-    <input type="text" aria-label="Фильтр эпиков по любому полю" placeholder="Фильтр по любому полю…" value="${_aEsc(fv)}"
-     oninput="setFilter('${tid}',this.value)">
+    <div class="rm-search-field rm-search-field--compact epic-audit-search">
+     <svg aria-hidden="true" class="rm-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+     <input class="rm-search-input" type="search" aria-label="Фильтр эпиков по любому полю" placeholder="Фильтр по любому полю…" value="${_aEsc(fv)}"
+      oninput="setFilter('${tid}',this.value)">
+    </div>
     ${sortSel}
     <span class="fc">Показано: ${filtered.length} из ${teamEpics.length}</span>
    </div>
@@ -35032,6 +35281,9 @@ function normalizeUiChrome(root) {
   if (root.querySelectorAll) root.querySelectorAll(popupSelector).forEach(function (el) { popups.push(el); });
   popups.forEach(function (popup) {
     if (/fixed|absolute/.test(popup.className || '') || popup.id) popup.classList.add('rm-popover');
+    popup.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]), select, textarea').forEach(function (control) {
+      control.classList.add('rm-control');
+    });
     popup.querySelectorAll('button,[role="menuitem"]').forEach(function (button) {
       button.classList.add('rm-menu-action');
       var textValue = (button.textContent || '') + ' ' + (button.getAttribute('onclick') || '');
