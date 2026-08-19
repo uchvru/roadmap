@@ -6089,8 +6089,8 @@
    body.theme-dark .from-violet-100 { background-image:none !important; background-color:#241a45 !important; }
    body.theme-dark .from-sky-100 { background-image:none !important; background-color:#0e2c44 !important; }
    body.theme-dark .from-slate-100 { background-image:none !important; background-color:#212d3d !important; }
-   /* Общая всплывающая подсказка (стрелки связей, точки статусов) , в тон темной теме */
-   body.theme-dark #appTooltip { background:#1a2332 !important; color:#e2e8f0 !important; border-color:#34465a !important; }
+   /* Подсказки остаются светлыми в обеих темах: один визуальный контракт. */
+   body.theme-dark #appTooltip { background:#fff !important; color:#334155 !important; border-color:transparent !important; }
    /* Светлые фоны с прозрачностью , темные эквиваленты */
    body.theme-dark .bg-slate-50\/80, body.theme-dark .bg-slate-50\/60, body.theme-dark .bg-slate-50\/50, body.theme-dark .bg-slate-50\/40, body.theme-dark .bg-slate-50\/30 { background-color:#212d3d !important; }
    body.theme-dark .bg-slate-100\/90, body.theme-dark .bg-slate-100\/50, body.theme-dark .bg-slate-100\/40 { background-color:#2a3844 !important; }
@@ -6285,8 +6285,6 @@
    }
    .plan-health-badge.hidden { display:none; }
    #planHealthBtn { padding-left:.75rem; padding-right:.5rem; }
-   body:has(.rm-dialog-overlay:not(.hidden)) #appTooltip { opacity:0 !important; left:-9999px !important; }
-
    /* Compact first-run screen: one introduction, one action hierarchy, no dead space. */
    #startupModal .startup-shell { max-width:56rem; max-height:calc(100dvh - 2rem); display:flex; flex-direction:column; overflow:hidden; }
    #startupModal .startup-header { flex:none; }
@@ -7215,6 +7213,317 @@
        max-height:calc(100dvh - 1rem) !important;
      }
    }
+
+   /* v15.0: спокойная визуальная иерархия. Поверхность отделяется воздухом
+      и одной мягкой тенью; рамки остаются только у полей и выбранных состояний. */
+   :root {
+     --rm-dialog-radius:1.25rem;
+     --rm-popover-radius:1.25rem;
+     --rm-border:#e7ebf1;
+     --rm-surface-soft:#f6f8fb;
+     --rm-ring:0 0 0 2px rgba(79,70,229,.18);
+     --rm-shadow-xs:0 1px 2px rgba(15,23,42,.035);
+     --rm-shadow-sm:0 6px 18px rgba(15,23,42,.055);
+     --rm-dialog-shadow:0 20px 48px rgba(15,23,42,.16);
+     --rm-popover-shadow:0 12px 30px rgba(15,23,42,.12);
+   }
+   body.theme-dark {
+     --rm-border:#2f4053;
+     --rm-surface-soft:#1e2938;
+     --rm-dialog-shadow:0 20px 48px rgba(2,6,23,.42);
+     --rm-popover-shadow:0 12px 30px rgba(2,6,23,.34);
+   }
+   body { background:#f5f7fa !important; }
+   body.theme-dark { background:#0b1220 !important; }
+
+   /* Один видимый focus-ring вместо сочетания outline + дополнительной тени. */
+   .rm-btn:focus-visible,.rm-action:focus-visible,.rm-control:focus-visible,
+   button:focus-visible,[role="button"]:focus-visible,a:focus-visible,
+   .rm-dialog-close:focus-visible,.rm-dialog-action:focus-visible,
+   .rm-popover button:focus-visible {
+     outline:2px solid var(--rm-focus) !important;
+     outline-offset:2px !important;
+     box-shadow:none !important;
+   }
+
+   /* Все окна, шторки и меню имеют один радиус и одну тень. */
+   .rm-dialog-surface.rm-dialog-surface,
+   .rm-right-drawer-surface.rm-right-drawer-surface,
+   .rm-side-sheet.rm-side-sheet,
+   body .rm-drawer-popover.rm-drawer-popover,
+   .rm-popover.rm-popover,
+   #planBuilderPanel {
+     border-color:transparent !important;
+     border-radius:var(--rm-dialog-radius) !important;
+     box-shadow:var(--rm-dialog-shadow) !important;
+   }
+   .rm-popover.rm-popover { box-shadow:var(--rm-popover-shadow) !important; }
+   body.theme-dark .rm-dialog-surface,
+   body.theme-dark .rm-right-drawer-surface,
+   body.theme-dark .rm-side-sheet,
+   body.theme-dark .rm-drawer-popover,
+   body.theme-dark .rm-popover,
+   body.theme-dark #planBuilderPanel { border-color:var(--rm-border) !important; }
+   .rm-dialog-header.rm-dialog-header,
+   .rm-dialog-footer.rm-dialog-footer,
+   .rm-drawer-popover .rm-drawer-header {
+     border-top:0 !important;
+     border-bottom:0 !important;
+     background:var(--rm-surface) !important;
+   }
+   .rm-dialog-footer.rm-dialog-footer { border-radius:0 0 var(--rm-dialog-radius) var(--rm-dialog-radius) !important; }
+   .rm-dialog-overlay.rm-dialog-overlay {
+     background:rgba(15,23,42,.48) !important;
+     -webkit-backdrop-filter:blur(2px) !important;
+     backdrop-filter:blur(2px) !important;
+   }
+   .rm-dialog-close.rm-dialog-close,.rm-drawer-close.rm-drawer-close {
+     width:2.5rem !important; min-width:2.5rem !important;
+     height:2.5rem !important; min-height:2.5rem !important;
+     padding:0 !important; border-radius:var(--rm-radius-md) !important;
+     border-color:transparent !important;
+     background:transparent !important;
+     box-shadow:none !important;
+   }
+   .rm-dialog-header { position:relative; }
+   .rm-dialog-close-injected {
+     position:absolute !important;
+     inset-block-start:.75rem !important;
+     inset-inline-end:1.25rem !important;
+     z-index:2;
+   }
+   .rm-dialog-header:has(> .rm-dialog-close-injected) {
+     padding-inline-end:4.5rem !important;
+   }
+   .rm-dialog-close:hover,.rm-drawer-close:hover { background:var(--rm-surface-soft) !important; }
+   .rm-dialog-close.rm-dialog-close:focus-visible,
+   .rm-drawer-close.rm-drawer-close:focus-visible {
+     outline:2px solid var(--rm-focus) !important;
+     outline-offset:2px !important;
+     box-shadow:none !important;
+   }
+
+   /* Единые вертикальный ритм и отступы всех правых рабочих шторок. */
+   .rm-right-drawer-surface .rm-dialog-header,
+   .rm-side-sheet .rm-dialog-header,
+   .rm-drawer-popover .rm-drawer-header {
+     min-height:4rem !important;
+     padding:.75rem 1.25rem !important;
+     gap:.75rem !important;
+   }
+   .rm-right-drawer-surface .rm-dialog-content,
+   .rm-side-sheet .rm-dialog-content { padding:1.25rem !important; }
+   .rm-right-drawer-surface .rm-dialog-footer,
+   .rm-side-sheet .rm-dialog-footer { min-height:4rem; padding:.75rem 1.25rem !important; }
+   .rm-drawer-popover .rm-drawer-header {
+     margin:-.5rem -.5rem .75rem !important;
+     border-radius:var(--rm-dialog-radius) var(--rm-dialog-radius) 0 0 !important;
+   }
+
+   /* Все кнопки «i» и их подсказки — одного светлого вида даже в тёмной теме. */
+   .rm-info-button,.rm-dialog-header .cursor-help {
+     width:1.75rem !important; min-width:1.75rem !important;
+     height:1.75rem !important; min-height:1.75rem !important;
+     padding:0 !important; border:0 !important; border-radius:999px !important;
+     background:var(--rm-surface-soft) !important; color:#64748b !important;
+     box-shadow:none !important;
+   }
+   .rm-info-button:hover,.rm-dialog-header .cursor-help:hover {
+     background:#eef2ff !important; color:#4f46e5 !important;
+   }
+   #appTooltip,.rm-inline-help,
+   body.theme-dark #appTooltip,body.theme-dark .rm-inline-help {
+     color:#334155 !important; background:#fff !important;
+     border:0 !important; border-radius:var(--rm-radius-md) !important;
+     box-shadow:var(--rm-popover-shadow) !important;
+   }
+
+   /* Фильтры и мастер используют ту же спокойную геометрию без разделителей. */
+   #filterToolsWrap {
+     border-color:transparent !important;
+     border-radius:var(--rm-dialog-radius) !important;
+     box-shadow:var(--rm-popover-shadow) !important;
+   }
+   #filterToolsWrap .filter-tools-header { border-bottom:0 !important; padding-bottom:.25rem !important; }
+   #filterToolsWrap .filter-tools-close {
+     width:2.5rem !important; min-width:2.5rem !important;
+     height:2.5rem !important; min-height:2.5rem !important;
+     border:0 !important; border-radius:var(--rm-radius-md) !important;
+     background:transparent !important;
+   }
+   #filterToolsWrap .filter-tools-close:hover { background:var(--rm-surface-soft) !important; }
+   #planBuilderPanel > :first-child,
+   #planBuilderProgress,
+   #planBuilderPanel > :last-child { border-top:0 !important; border-bottom:0 !important; }
+   #planBuilderPanel > :first-child { min-height:4rem; padding:.75rem 1.25rem !important; }
+   #planBuilderPanel > :last-child { min-height:4rem; padding:.75rem 1.25rem !important; }
+   #planBuilderPanel > :first-child > button[aria-label*="Закрыть"] {
+     width:2.5rem !important; min-width:2.5rem !important;
+     height:2.5rem !important; min-height:2.5rem !important;
+     padding:0 !important; border-radius:var(--rm-radius-md) !important;
+   }
+
+   /* Высокоуровневые блоки рабочей области больше не обведены каждый отдельно. */
+   #appHeader,#planControlDeck {
+     border-color:transparent !important;
+     box-shadow:var(--rm-shadow-sm) !important;
+   }
+   #planControlDeck #planFilterBar { border-top:0 !important; }
+   #activeFiltersBar { border-top:0 !important; background:transparent !important; }
+   .rm-panel { border-color:transparent; box-shadow:none; }
+   .rm-toast.rm-toast,#appTooltip { border-color:transparent !important; }
+   .task-card-tabs,#settingsModal .rm-segmented { border-color:transparent !important; }
+   #settingsModal .rm-settings-card { border-color:transparent !important; }
+   #settingsModal button.rm-settings-card:hover,#settingsModal label.rm-settings-card:hover {
+     border-color:transparent !important; background:var(--rm-surface-soft) !important;
+   }
+
+   /* Сводка плана: один спокойный триггер и показатели без коробок внутри коробки. */
+   .header-summary-btn {
+     border-color:transparent !important;
+     background:transparent !important;
+     box-shadow:none !important;
+   }
+   .header-summary-btn:hover,.header-summary-btn[aria-expanded="true"] {
+     border-color:transparent !important;
+     background:#eef2ff !important;
+   }
+   body.theme-dark .header-summary-btn:hover,body.theme-dark .header-summary-btn[aria-expanded="true"] { background:#1e2545 !important; }
+   #headerInsightsPanel {
+     padding:1rem !important;
+     border:0 !important;
+     border-radius:var(--rm-dialog-radius) !important;
+     box-shadow:var(--rm-popover-shadow) !important;
+   }
+   #headerInsightsDates { margin-top:.75rem; padding-top:.5rem; border-top:0 !important; }
+   #headerInsightsPanel .header-insight-block > div[class*="uppercase"] {
+     text-transform:none !important; letter-spacing:0 !important;
+     font-size:var(--rm-font-sm) !important; font-weight:var(--rm-weight-semibold) !important;
+   }
+   #headerInsightsPanel #stateDashboard { gap:.75rem !important; }
+   #headerInsightsPanel #stateDashboard > button {
+     padding:.25rem .125rem !important;
+     border:0 !important;
+     background:transparent !important;
+     box-shadow:none !important;
+   }
+   #headerInsightsPanel #stateDashboard > button:not(:disabled):hover { background:var(--rm-surface-soft) !important; }
+   #headerCutoffsSep button {
+     border-color:transparent !important;
+     box-shadow:none !important;
+   }
+   #headerCutoffsSep button.border-dashed { background:transparent !important; }
+
+   /* Справка: версия — обычная метаинформация, шаги и карточки без лишних теней. */
+   #infoModal .info-version-meta {
+     padding:.25rem .5rem !important;
+     border:0 !important;
+     border-radius:var(--rm-radius-sm) !important;
+     background:var(--rm-surface-soft) !important;
+     color:var(--rm-muted) !important;
+     font-size:var(--rm-font-xs) !important;
+     font-weight:var(--rm-weight-semibold) !important;
+     letter-spacing:0 !important;
+     text-transform:none !important;
+   }
+   #infoModal .rm-dialog-content .shadow-sm { box-shadow:none !important; }
+   #infoModal .rm-dialog-content > div:first-child { border-color:transparent !important; }
+   #infoModal .info-release-latest [class*="bg-gradient-to-br"],
+   #infoModal .info-history [class*="bg-gradient-to-br"] {
+     border-color:transparent !important;
+     box-shadow:none !important;
+   }
+   #infoModal .info-history > summary { list-style:none; border-radius:var(--rm-radius-md); }
+   #infoModal .info-history > summary::-webkit-details-marker { display:none; }
+   #infoModal .info-history > summary:hover { background:var(--rm-surface-soft); }
+   #infoModal .info-history .info-history-chevron { transition:transform .18s ease; }
+   #infoModal .info-history[open] .info-history-chevron { transform:rotate(180deg); }
+
+   /* Шторка меток: только рамка поля; группы разделяются воздухом, строки — фоном. */
+   .rm-drawer-popover .rm-drawer-search-sticky {
+     margin-bottom:.5rem !important; padding-bottom:.25rem !important;
+     border-bottom:0 !important; background:var(--rm-surface) !important;
+   }
+   .rm-drawer-popover .rm-search-input {
+     border-color:transparent !important;
+     background:var(--rm-surface-soft) !important;
+   }
+   .rm-drawer-popover .rm-search-input:focus {
+     border-color:var(--rm-focus) !important;
+     box-shadow:none !important;
+     outline:2px solid var(--rm-focus) !important;
+     outline-offset:2px !important;
+   }
+   .rm-drawer-popover .rm-menu-action:hover,.rm-drawer-popover .rm-filter-option:hover {
+     border-color:transparent !important;
+     background:var(--rm-surface-soft) !important;
+   }
+   .rm-drawer-popover .rm-filter-option:focus-visible {
+     outline:2px solid var(--rm-focus) !important;
+     outline-offset:2px !important;
+     box-shadow:none !important;
+   }
+   .rm-drawer-popover .rm-menu-heading,
+   .rm-drawer-popover > div[class*="uppercase"][class*="tracking"] {
+     padding:.625rem .625rem .25rem !important;
+     text-transform:none !important; letter-spacing:0 !important;
+     font-size:var(--rm-font-sm) !important; font-weight:var(--rm-weight-semibold) !important;
+   }
+   .rm-filter-group-gap { height:.625rem; }
+
+   /* Финальная выверка v15: одинаковая геометрия, типографика и фокус во всех поверхностях. */
+   body.theme-dark .rm-info-button,
+   body.theme-dark .rm-dialog-header .cursor-help {
+     background:#f8fafc !important;
+     color:#64748b !important;
+   }
+   body.theme-dark .rm-info-button:hover,
+   body.theme-dark .rm-dialog-header .cursor-help:hover {
+     background:#eef2ff !important;
+     color:#4f46e5 !important;
+   }
+   .rm-search-input.rm-search-input:focus,
+   .rm-search-input.rm-search-input:focus-visible {
+     border-color:var(--rm-focus) !important;
+     outline:2px solid var(--rm-focus) !important;
+     outline-offset:2px !important;
+     box-shadow:none !important;
+   }
+   #quickActionsGroup button,
+   #autoSaveBtn,#settingsBtn,#archiveBtn {
+     width:2.5rem !important;
+     min-width:2.5rem !important;
+     height:2.5rem !important;
+     min-height:2.5rem !important;
+   }
+   #appHeader .app-header-toolbar > button,
+   #appHeader .app-header-toolbar #reportsMenuBtn,
+   #appHeader .app-header-toolbar #dataMenuBtn {
+     font-size:var(--rm-font-md) !important;
+   }
+   #planBuilderProgress { padding-inline:1.25rem !important; }
+   #planBuilderPanel > :last-child { background:var(--rm-surface) !important; }
+   #tourTip {
+     border-radius:var(--rm-dialog-radius) !important;
+     box-shadow:var(--rm-dialog-shadow) !important;
+   }
+   #tourTip button {
+     min-height:2.5rem !important;
+     height:2.5rem !important;
+     border-radius:var(--rm-radius-md) !important;
+   }
+   #statusOverview button:hover { transform:none !important; }
+
+   @media (max-width:640px) {
+     .rm-right-drawer-surface.rm-right-drawer-surface,
+     .rm-side-sheet.rm-side-sheet,
+     body .rm-drawer-popover.rm-drawer-popover,
+     .rm-dialog-surface.rm-dialog-surface,
+     #planBuilderPanel { border-radius:var(--rm-dialog-radius) !important; }
+     #planControlDeck,
+     #planControlDeck #planViewNav,
+     #planControlDeck #planFilterBar { border-radius:var(--rm-radius-lg) !important; }
+   }
    /* Этот блок расположен после всех drawer-анимаций: системная настройка
       уменьшения движения всегда имеет последний приоритет. */
    @media (prefers-reduced-motion: reduce) {
@@ -7270,7 +7579,7 @@
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v14.7</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v15.0</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -8115,7 +8424,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v14.7">
+<script data-roadmap-modules="v15.0">
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
@@ -9533,8 +9842,8 @@ if (typeof globalThis !== 'undefined') {
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '14.7';
-    const APP_VERSION_DATE = '18.08.2026';
+    const APP_VERSION = '15.0';
+    const APP_VERSION_DATE = '19.08.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'версия ' + APP_VERSION; } catch (e) {}
@@ -12148,8 +12457,17 @@ if (typeof globalThis !== 'undefined') {
       var b = document.getElementById('cardMoreBtn'); if (b) b.textContent = open ? 'Скрыть дополнительные поля' : 'Дополнительные поля';
     }
     // Легенда таймлайна: что значат цвета и значки. Открывается кнопкой «?» в панели масштаба.
+    var _ganttLegendEscHandler = null;
+    function closeGanttLegend() {
+      var layer = document.getElementById('ganttLegend');
+      if (layer) layer.remove();
+      if (_ganttLegendEscHandler) {
+        document.removeEventListener('keydown', _ganttLegendEscHandler);
+        _ganttLegendEscHandler = null;
+      }
+    }
     function showGanttLegend() {
-      var old = document.getElementById('ganttLegend'); if (old) { old.remove(); return; }
+      var old = document.getElementById('ganttLegend'); if (old) { closeGanttLegend(); return; }
       function row(sample, name, desc) { return '<div class="flex items-start gap-3 py-1.5 border-b border-slate-100 last:border-0"><div class="shrink-0 w-14 h-6 relative flex items-center justify-center">' + sample + '</div><div class="min-w-0"><div class="text-[12px] font-semibold text-slate-800">' + name + '</div><div class="text-[11px] text-slate-500">' + desc + '</div></div></div>'; }
       var items = [
         row('<div class="w-12 h-3.5 rounded-md bg-indigo-500"></div>', 'Полоса задачи', 'Цвет , цвет секции. Длина , от начала до конца задачи.'),
@@ -12172,9 +12490,10 @@ if (typeof globalThis !== 'undefined') {
       ov.setAttribute('data-modal-backdrop', '');
       ov.className = 'fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 no-print';
       ov.style.zIndex = '950';
-      ov.innerHTML = '<div role="dialog" aria-modal="true" aria-label="Легенда таймлайна" class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md max-h-[80vh] overflow-auto p-5"><div class="flex items-center justify-between mb-2"><div class="text-sm font-bold text-slate-800">Что значат цвета и значки</div><button type="button" onclick="showGanttLegend()" aria-label="Закрыть" title="Закрыть" class="w-8 h-8 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 cursor-pointer inline-flex items-center justify-center"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button></div>' + items + '</div>';
-      ov.addEventListener('click', function (e) { if (e.target === ov) ov.remove(); });
-      document.addEventListener('keydown', function esc(e) { if (e.key === 'Escape') { var l = document.getElementById('ganttLegend'); if (l) l.remove(); document.removeEventListener('keydown', esc); } });
+      ov.innerHTML = '<div role="dialog" aria-modal="true" aria-label="Легенда таймлайна" class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md max-h-[80vh] overflow-auto p-5"><div class="flex items-center justify-between mb-2"><div class="text-sm font-bold text-slate-800">Что значат цвета и значки</div><button type="button" onclick="closeGanttLegend()" aria-label="Закрыть" title="Закрыть" class="w-8 h-8 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 cursor-pointer inline-flex items-center justify-center"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button></div>' + items + '</div>';
+      ov.addEventListener('click', function (e) { if (e.target === ov) closeGanttLegend(); });
+      _ganttLegendEscHandler = function (e) { if (e.key === 'Escape') closeGanttLegend(); };
+      document.addEventListener('keydown', _ganttLegendEscHandler);
       document.body.appendChild(ov);
     }
     function toggleTeamBand(e) { if (e) e.stopPropagation(); var on = false; try { on = storage.get('gantt_team_band') === '1'; } catch (x) {} on = !on; try { storage.set('gantt_team_band', on ? '1' : ''); } catch (x) {} renderTeamAbsenceBand(); if (on) { try { var _lv = (typeof resourceLeave !== 'undefined' && resourceLeave) ? resourceLeave : {}; var _has = Object.keys(_lv).some(function (n) { var a = _lv[n]; return Array.isArray(a) && a.some(function (p) { return p && p.from && p.to; }); }); if (!_has && typeof showToast === 'function') showToast('Отсутствий пока нет. Добавьте отпуска и больничные в «Команде» (меню Инструменты).', 'info', 5000); } catch (e2) {} } }
@@ -12916,16 +13235,26 @@ if (typeof globalThis !== 'undefined') {
       _addDepLinkCore(pid, id);
       refreshDepsOverview();
     }
+    var _depsOverviewEscHandler = null;
+    function closeDepsOverview() {
+      var layer = document.getElementById('depsOverview');
+      if (layer) layer.remove();
+      if (_depsOverviewEscHandler) {
+        document.removeEventListener('keydown', _depsOverviewEscHandler);
+        _depsOverviewEscHandler = null;
+      }
+    }
     function openDepsOverview() {
-      var old = document.getElementById('depsOverview'); if (old) { old.remove(); return; }
+      var old = document.getElementById('depsOverview'); if (old) { closeDepsOverview(); return; }
       var ov = document.createElement('div');
       ov.id = 'depsOverview';
       ov.setAttribute('data-modal-backdrop', '');
       ov.className = 'fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 no-print';
       ov.style.zIndex = '950';
-      ov.innerHTML = '<div role="dialog" aria-modal="true" aria-label="Связи и зависимости" class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-6xl max-h-[88vh] flex flex-col p-5"><div id="depsOverviewBody" class="overflow-auto grow min-h-0"></div><div class="pt-3 flex justify-end shrink-0"><button type="button" onclick="openDepsOverview()" class="inline-flex items-center h-9 px-4 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold hover:bg-slate-200 cursor-pointer">Закрыть</button></div></div>';
-      ov.addEventListener('click', function (e) { if (e.target === ov) ov.remove(); });
-      document.addEventListener('keydown', function _esc(e) { if (e.key === 'Escape') { var l = document.getElementById('depsOverview'); if (l) l.remove(); document.removeEventListener('keydown', _esc); } });
+      ov.innerHTML = '<div role="dialog" aria-modal="true" aria-labelledby="depsOverviewTitle" class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-6xl max-h-[88vh] flex flex-col"><div class="rm-dialog-header flex items-center justify-between gap-3"><h3 id="depsOverviewTitle" class="rm-dialog-title">Связи и зависимости</h3><button type="button" onclick="closeDepsOverview()" aria-label="Закрыть" title="Закрыть" class="rm-action rm-btn rm-btn-ghost rm-btn-icon rm-dialog-close"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button></div><div id="depsOverviewBody" class="rm-dialog-content overflow-auto grow min-h-0"></div></div>';
+      ov.addEventListener('click', function (e) { if (e.target === ov) closeDepsOverview(); });
+      _depsOverviewEscHandler = function (e) { if (e.key === 'Escape') closeDepsOverview(); };
+      document.addEventListener('keydown', _depsOverviewEscHandler);
       document.body.appendChild(ov);
       refreshDepsOverview();
       setTimeout(function () { try { var fb = ov.querySelector('button'); if (fb) fb.focus(); } catch (e) {} }, 0);
@@ -15445,8 +15774,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
         const own = Array.isArray(t.labels) ? t.labels : [];
         const epic = (t.section && sectionLabels && Array.isArray(sectionLabels[t.section])) ? sectionLabels[t.section] : [];
         let ok = false;
-        for (const l of own) { if (labelFilterSel.has(String(l))) { ok = true; break; } }
-        if (!ok) for (const l of epic) { if (labelFilterSel.has(String(l))) { ok = true; break; } }
+        for (const l of own) { if (_filterSetHasNormalized(labelFilterSel, l)) { ok = true; break; } }
+        if (!ok) for (const l of epic) { if (_filterSetHasNormalized(labelFilterSel, l)) { ok = true; break; } }
         if (!ok) return false;
       }
       if (componentFilterSel.size) {
@@ -15501,8 +15830,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
         const own = Array.isArray(t.labels) ? t.labels : [];
         const epic = (t.section && sectionLabels && Array.isArray(sectionLabels[t.section])) ? sectionLabels[t.section] : [];
         let ok = false;
-        for (const l of own) { if (labelFilterSel.has(String(l))) { ok = true; break; } }
-        if (!ok) for (const l of epic) { if (labelFilterSel.has(String(l))) { ok = true; break; } }
+        for (const l of own) { if (_filterSetHasNormalized(labelFilterSel, l)) { ok = true; break; } }
+        if (!ok) for (const l of epic) { if (_filterSetHasNormalized(labelFilterSel, l)) { ok = true; break; } }
         if (!ok) return false;
       }
       if (componentFilterSel.size) {
@@ -16741,15 +17070,23 @@ let resourceView = 'roles'; // 'roles' | 'load'
       return [...set].sort((a, b) => a.localeCompare(b, 'ru'));
     }
     function getAllLabels() {
-      const set = new Set();
+      const labelsByKey = new Map();
       const add = arr => {
         if (typeof arr === 'string') arr = arr.split(/[;,]+/);
-        (Array.isArray(arr) ? arr : []).forEach(l => { const s = String(l || '').trim(); if (s) set.add(s); });
+        (Array.isArray(arr) ? arr : []).forEach(l => {
+          const s = String(l || '').trim();
+          const key = _normFilterText(s);
+          if (!key) return;
+          const previous = labelsByKey.get(key);
+          const hasDisplayCapital = /^[A-ZА-ЯЁ]/.test(s);
+          const previousHasDisplayCapital = previous && /^[A-ZА-ЯЁ]/.test(previous);
+          if (!previous || (hasDisplayCapital && !previousHasDisplayCapital)) labelsByKey.set(key, s);
+        });
       };
       (roadmapData || []).forEach(t => add(t && t.labels));
       (archivedTasks || []).forEach(t => add(t && t.labels));
       Object.values(sectionLabels || {}).forEach(add);
-      return [...set].sort((a, b) => a.localeCompare(b, 'ru'));
+      return [...labelsByKey.values()].sort((a, b) => a.localeCompare(b, 'ru'));
     }
     function getAllComponents() {
       const set = new Set();
@@ -16758,11 +17095,28 @@ let resourceView = 'roles'; // 'roles' | 'load'
       (archivedTasks || []).forEach(t => add(t && t.components));
       return [...set].sort((a, b) => a.localeCompare(b, 'ru'));
     }
+    function _normFilterText(value) {
+      return String(value == null ? '' : value).trim().toLocaleLowerCase('ru');
+    }
+    function _filterSetHasNormalized(set, value) {
+      const key = _normFilterText(value);
+      if (!key || !set || !set.size) return false;
+      for (const item of set) if (_normFilterText(item) === key) return true;
+      return false;
+    }
+    function _toggleNormalizedSelection(set, value) {
+      const key = _normFilterText(value);
+      if (!key || !set) return;
+      const matches = [];
+      for (const item of set) if (_normFilterText(item) === key) matches.push(item);
+      if (matches.length) matches.forEach(item => set.delete(item));
+      else set.add(String(value).trim());
+    }
     function _filterRow(kind, name) {
       const sel = kind === 'label' ? labelFilterSel : (kind === 'component' ? componentFilterSel : releaseFilterSel);
-      const on = sel.has(name);
+      const on = kind === 'label' ? _filterSetHasNormalized(sel, name) : sel.has(name);
       const fn = kind === 'label' ? 'setLabelFilter' : (kind === 'component' ? 'setComponentFilter' : 'setReleaseFilter');
-      return `<button type="button" onclick="event.stopPropagation(); ${fn}('${escJsArg(name)}')" class="w-full flex items-center gap-2 text-left text-xs px-2 py-1.5 rounded-lg ${on ? 'bg-indigo-50/70 text-indigo-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'} cursor-pointer">
+      return `<button type="button" aria-pressed="${on ? 'true' : 'false'}" onclick="event.stopPropagation(); ${fn}('${escJsArg(name)}')" class="rm-filter-option w-full flex items-center gap-2 text-left text-xs px-2 py-1.5 rounded-lg ${on ? 'bg-indigo-50/70 text-indigo-700 font-semibold' : 'text-slate-700'} cursor-pointer">
         <span class="rm-choice-indicator w-4 h-4 rounded border flex items-center justify-center shrink-0 ${on ? 'bg-indigo-600 border-indigo-600' : 'border-slate-300 bg-white'}">${on ? '<svg aria-hidden="true" class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>' : ''}</span>
         <span class="truncate grow">${escHtml(name)}</span>
       </button>`;
@@ -16770,7 +17124,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function _cfFilterRow(fid, val, label) {
       const s = customFieldFilterSel[fid];
       const on = !!(s && s.has(val));
-      return `<button type="button" onclick="event.stopPropagation(); setCustomFieldFilter('${escJsArg(fid)}','${escJsArg(val)}')" class="w-full flex items-center gap-2 text-left text-xs px-2 py-1.5 rounded-lg ${on ? 'bg-indigo-50/70 text-indigo-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'} cursor-pointer">
+      return `<button type="button" aria-pressed="${on ? 'true' : 'false'}" onclick="event.stopPropagation(); setCustomFieldFilter('${escJsArg(fid)}','${escJsArg(val)}')" class="rm-filter-option w-full flex items-center gap-2 text-left text-xs px-2 py-1.5 rounded-lg ${on ? 'bg-indigo-50/70 text-indigo-700 font-semibold' : 'text-slate-700'} cursor-pointer">
         <span class="rm-choice-indicator w-4 h-4 rounded border flex items-center justify-center shrink-0 ${on ? 'bg-indigo-600 border-indigo-600' : 'border-slate-300 bg-white'}">${on ? '<svg aria-hidden="true" class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>' : ''}</span>
         <span class="truncate grow">${escHtml(label)}</span>
       </button>`;
@@ -16793,13 +17147,13 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const q = (relFilterQuery || '').trim().toLowerCase();
       const flt = arr => q ? arr.filter(x => String(x).toLowerCase().includes(q)) : arr;
       const labels = flt(allLabels), comps = flt(allComps), rels = flt(allRels);
-      const grpHead = (t) => `<div class="px-2 pt-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">${t}</div>`;
-      const sep = '<div class="my-1 h-px bg-slate-100"></div>';
+      const grpHead = (t) => `<div class="rm-menu-heading px-2 pt-1.5 pb-1 text-xs font-semibold text-slate-500">${t}</div>`;
+      const sep = '<div class="rm-filter-group-gap" aria-hidden="true"></div>';
       // Поиск внутри фильтра по меткам/компонентам/релизам (п.)
       const relClearBtn = relFilterQuery ? `<button type="button" onmousedown="event.preventDefault()" onclick="event.stopPropagation(); relFilterQuery=''; renderReleaseFilterMenu();" aria-label="Очистить поиск" class="rm-search-clear text-slate-400 hover:text-slate-600 cursor-pointer"><svg aria-hidden="true" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>` : '';
-      const search = `<div class="rm-drawer-search-sticky sticky bg-white px-1 pb-1.5 mb-0.5 border-b border-slate-100"><div class="rm-search-field"><svg aria-hidden="true" class="rm-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><input id="relFilterSearch" type="search" value="${escAttr(relFilterQuery)}" oninput="relFilterQuery=this.value; renderReleaseFilterMenu();" onclick="event.stopPropagation()" placeholder="Поиск по меткам и релизам" aria-label="Поиск по меткам, компонентам, релизам" class="rm-search-input">${relClearBtn}</div></div>`;
+      const search = `<div class="rm-drawer-search-sticky sticky px-1 pb-1.5"><div class="rm-search-field"><svg aria-hidden="true" class="rm-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><input id="relFilterSearch" type="search" value="${escAttr(relFilterQuery)}" oninput="relFilterQuery=this.value; renderReleaseFilterMenu();" onclick="event.stopPropagation()" placeholder="Поиск по меткам и релизам" aria-label="Поиск по меткам, компонентам, релизам" class="rm-search-input">${relClearBtn}</div></div>`;
       let html = '';
-      if (labels.length) html += grpHead('Метки (Jira Labels)') + labels.map(n => _filterRow('label', n)).join('');
+      if (labels.length) html += grpHead('Метки') + labels.map(n => _filterRow('label', n)).join('');
       if (comps.length) html += (html ? sep : '') + grpHead('Компоненты') + comps.map(n => _filterRow('component', n)).join('');
       if (rels.length) html += (html ? sep : '') + grpHead('Релизы') + rels.map(n => _filterRow('release', n)).join('');
       else if (!q && !allRels.length) html += (html ? sep : '') + grpHead('Релизы') + '<div class="px-2 py-1.5 text-[10px] text-slate-500 leading-snug">Не найдено в выгрузке. Проверьте колонку Fix Version в CSV.</div>';
@@ -16825,7 +17179,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       renderReleaseFilterMenu(); updateReleaseFilterBtn(); renderRoadmap(true);
     }
     function setLabelFilter(name) {
-      if (labelFilterSel.has(name)) labelFilterSel.delete(name); else labelFilterSel.add(name);
+      _toggleNormalizedSelection(labelFilterSel, name);
       renderReleaseFilterMenu(); updateReleaseFilterBtn(); renderRoadmap(true);
     }
     function setComponentFilter(name) {
@@ -17066,8 +17420,10 @@ let resourceView = 'roles'; // 'roles' | 'load'
         typeof closeReportsMenu === 'function' ? () => closeReportsMenu(force) : null,
         typeof closeSortMenu === 'function' ? closeSortMenu : null,
         typeof closePresetMenu === 'function' ? closePresetMenu : null,
+        typeof closeZoomMenu === 'function' ? closeZoomMenu : null,
         typeof closeBulkPopover === 'function' ? closeBulkPopover : null,
-        typeof closeDepMenu === 'function' ? closeDepMenu : null
+        typeof closeDepMenu === 'function' ? closeDepMenu : null,
+        typeof closeCutoffClusterPopover === 'function' ? closeCutoffClusterPopover : null
       ].forEach(safely);
       safely(() => {
         const menu = document.getElementById('viewMenu');
@@ -18573,7 +18929,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       };
       const projectVal = (document.getElementById('reportProject') || {}).value || 'all';
       const S = _periodReportSets(fromStr, toStr, projectVal, _currentReportScope());
-      const { pool, done, doneByParent, doneStandalone, escalation, nextWeek, inWork, srcTag, todayDays } = S;
+      const { done, doneByParent, doneStandalone, escalation, nextWeek, inWork, srcTag, todayDays } = S;
 
       // Эпик считаем «закрытым» только если его собственный статус (epicStatusByKey) , завершен.
       const isEpicClosed = (section) => {
@@ -18707,32 +19063,6 @@ let resourceView = 'roles'; // 'roles' | 'load'
         lines.push(noChange);
       } else {
         pushLimited(nextWeek, t => lines.push(`- ${t.name}${t.jira ? ` (${getTaskKey(t)})` : ''}${srcTag(t)}`));
-      }
-
-      // п.7 Прогресс по релизам (Fix Version) , доля выполненных задач по каждому релизу (бернап для отчета руководству).
-      lines.push('');
-      lines.push('Прогресс по релизам');
-      {
-        const relAgg = {};
-        pool.forEach(t => {
-          if (t.isMilestone) return;
-          const rel = (t.release || '').trim();
-          if (!rel) return;
-          (relAgg[rel] = relAgg[rel] || { done: 0, total: 0 }).total++;
-          if (t.status === 'completed') relAgg[rel].done++;
-        });
-        const rels = Object.keys(relAgg).sort((a, b) => a.localeCompare(b, 'ru'));
-        if (!rels.length) {
-          lines.push(noChange);
-        } else {
-          rels.forEach(rel => {
-            const a = relAgg[rel];
-            const pct = a.total ? Math.round(a.done / a.total * 100) : 0;
-            const filled = Math.max(0, Math.min(10, Math.round(pct / 10)));
-            const bar = '█'.repeat(filled) + '░'.repeat(10 - filled);
-            lines.push(`- ${rel}: ${String(pct).padStart(3)}% [${bar}] ${a.done} из ${a.total}`);
-          });
-        }
       }
 
       const _reportEmpty = !done.length;
@@ -20449,8 +20779,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
       var decide = [];
       tasks.forEach(function (t) { if (!isAttentionActiveTask(t)) return; if (t.blocked) decide.push('Разблокировать: ' + (t.name || '')); });
       var _overdue = tasks.filter(function (t) { return isAttentionActiveTask(t) && !t.blocked && t.end && t.end < today; }).map(function (t) { return t.name || ''; });
-      if (_overdue.length) decide.push('Просрочены, решить по срокам: ' + _overdue.slice(0, 6).join(', ') + (_overdue.length > 6 ? ' и еще ' + (_overdue.length - 6) : ''));
-      decide = decide.slice(0, 6);
+      // Статусная сводка нужна как полный перечень для решения: выводим весь хвост.
+      if (_overdue.length) decide.push('Просрочены, решить по срокам: ' + _overdue.join(', '));
       var titleEl = document.getElementById('roadmapTitle');
       var title = (titleEl && titleEl.textContent && titleEl.textContent.trim()) || 'Дорожная карта';
       return { title: title, today: today, total: total, done: done, working: working, queued: queued, pct: pct, finish: finish, risks: risks, doneRecent: doneRecent, decide: decide };
@@ -20462,7 +20792,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       L.push('Главные риски по срокам:');
       if (st.risks.length) st.risks.forEach(function (r) { L.push('- ' + r.label + ': ' + r.verdict + (r.reason ? ' (' + r.reason + ')' : '')); }); else L.push('- явных рисков по срокам нет');
       L.push(''); L.push('Что закрыли за две недели:');
-      if (st.doneRecent.length) st.doneRecent.slice(0, 8).forEach(function (n) { L.push('- ' + n); }); else L.push('- нет недавно закрытых задач');
+      if (st.doneRecent.length) st.doneRecent.forEach(function (n) { L.push('- ' + n); }); else L.push('- нет недавно закрытых задач');
       if (st.decide.length) { L.push(''); L.push('Что прошу решить:'); st.decide.forEach(function (n) { L.push('- ' + n); }); }
       return L.join('\n');
     }
@@ -20470,7 +20800,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       var st = _statusStory();
       function sec(title, inner) { return '<div class="mb-3"><div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">' + title + '</div>' + inner + '</div>'; }
       var risksH = st.risks.length ? st.risks.map(function (r) { return '<div class="text-xs text-slate-700 mb-1">• <b>' + escHtml(r.label) + '</b> , ' + escHtml(r.verdict) + (r.reason ? ' <span class="text-slate-500">(' + escHtml(r.reason) + ')</span>' : '') + '</div>'; }).join('') : '<div class="text-xs text-slate-500">Явных рисков по срокам нет.</div>';
-      var doneH = st.doneRecent.length ? '<div class="text-xs text-slate-700 leading-relaxed">' + st.doneRecent.slice(0, 8).map(function (n) { return escHtml(n); }).join(', ') + '</div>' : '<div class="text-xs text-slate-500">Нет недавно закрытых задач.</div>';
+      var doneH = st.doneRecent.length ? '<div class="text-xs text-slate-700 leading-relaxed">' + st.doneRecent.map(function (n) { return escHtml(n); }).join(', ') + '</div>' : '<div class="text-xs text-slate-500">Нет недавно закрытых задач.</div>';
       var decideH = st.decide.length ? st.decide.map(function (n) { return '<div class="text-xs text-slate-700 mb-1">• ' + escHtml(n) + '</div>'; }).join('') : '<div class="text-xs text-slate-500">Открытых решений от руководства нет.</div>';
       var statH = '<div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-700"><span>Готово <b>' + st.done + '</b> из ' + st.total + ' (' + st.pct + '%)</span><span>В работе <b>' + st.working + '</b></span><span>В очереди <b>' + st.queued + '</b></span>' + (st.finish ? '<span>Прогноз готовности <b>' + escHtml(formatDateString(st.finish)) + '</b></span>' : '') + '</div>';
       var html = '<div class="flex items-center gap-2 mb-3"><button type="button" onclick="_printStatusStory()" class="h-8 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg cursor-pointer">Печать / PDF</button><button type="button" onclick="_copyStatusStory()" class="h-8 px-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg cursor-pointer">Скопировать текстом</button></div>'
@@ -20491,7 +20821,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         + '</style></head><body><h1>' + esc(st.title) + '</h1><div class="date">Статус на ' + esc(formatDateString(st.today)) + '</div>'
         + '<h2>Где мы сейчас</h2><div class="stats"><span>Готово <b>' + st.done + '</b> из ' + st.total + ' (' + st.pct + '%)</span><span>В работе <b>' + st.working + '</b></span><span>В очереди <b>' + st.queued + '</b></span>' + (st.finish ? '<span>Прогноз готовности <b>' + esc(formatDateString(st.finish)) + '</b></span>' : '') + '</div>'
         + '<h2>Главные риски по срокам</h2>' + risks
-        + '<h2>Что закрыли за две недели</h2>' + li(st.doneRecent.slice(0, 10), 'Нет недавно закрытых задач.')
+        + '<h2>Что закрыли за две недели</h2>' + li(st.doneRecent, 'Нет недавно закрытых задач.')
         + '<h2>Что прошу решить</h2>' + li(st.decide, 'Открытых решений от руководства нет.')
         + '</body></html>';
       var w = window.open('', '_blank'); if (!w) { if (typeof showToast === 'function') showToast('Разрешите всплывающие окна для печати', 'warn'); return; }
@@ -21277,7 +21607,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function openInfoModal() {
       document.getElementById('infoModal').classList.remove('hidden');
       if (typeof updateUiThemeBtns === 'function') updateUiThemeBtns();
-      const _c = document.getElementById('infoCloseBtn'); if (_c) setTimeout(() => { try { _c.focus(); } catch (e) {} }, 30);
+      const _title = document.getElementById('infoModalTitle'); if (_title) setTimeout(() => { try { _title.focus({ preventScroll:true }); } catch (e) {} }, 30);
     }
     function closeInfoModal() {
       document.getElementById('infoModal').classList.add('hidden');
@@ -29673,8 +30003,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     const MODAL_CLOSERS = {
       planBuilderPanel: function(){ if (typeof closePlanBuilder === 'function') closePlanBuilder(); },
       planToolModal: closePlanTool,
-      ganttLegend: function(){ var m=document.getElementById('ganttLegend'); if(m)m.remove(); },
-      depsOverview: function(){ var m=document.getElementById('depsOverview'); if(m)m.remove(); },
+      ganttLegend: function(){ if (typeof closeGanttLegend === 'function') closeGanttLegend(); },
+      depsOverview: function(){ if (typeof closeDepsOverview === 'function') closeDepsOverview(); },
       sprintCfgModal: function(){ if (typeof closeSprintCfg === 'function') closeSprintCfg(); },
       sectionInitOverlay: function(){ if (typeof closeSectionInit === 'function') closeSectionInit(); },
       leaderChooserModal: function(){ var m=document.getElementById('leaderChooserModal'); if(m)m.classList.add('hidden'); },
@@ -30629,12 +30959,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           </div>
           <h3 class="text-lg font-semibold text-slate-800 leading-tight">Отчет за период</h3>
           <div class="relative group/leg">
-            <button type="button" tabindex="-1" class="w-6 h-6 rounded-full bg-slate-100 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 flex items-center justify-center transition-colors cursor-help" aria-label="Об этом окне и группировке отчета">
+            <button type="button" class="rm-info-button w-6 h-6 rounded-full bg-slate-100 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 flex items-center justify-center transition-colors cursor-help" aria-label="Об этом окне и группировке отчета" aria-describedby="reportHelpTooltip">
               <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </button>
-            <div class="absolute left-0 top-7 hidden group-hover/leg:block z-[1010] w-72 bg-slate-800 text-white text-[10px] leading-relaxed rounded-xl shadow-xl p-3">
-              <div class="text-slate-300 mb-2">Текстовый отчет по задачам за выбранный период (по умолчанию , прошедшая неделя). Готовый текст для копирования в чат, письмо или сводку руководству , кнопкой ниже он копируется целиком.</div>
-              <div class="font-semibold mb-1.5 text-slate-200">Как сгруппирован отчет</div>
+            <div id="reportHelpTooltip" role="tooltip" class="rm-inline-help absolute left-0 top-7 hidden group-hover/leg:block group-focus-within/leg:block z-[1010] w-72 text-[10px] leading-relaxed rounded-xl p-3">
+              <div class="text-slate-600 mb-2">Текстовый отчет по задачам за выбранный период (по умолчанию , прошедшая неделя). Готовый текст для копирования в чат, письмо или сводку руководству , кнопкой ниже он копируется целиком.</div>
+              <div class="font-semibold mb-1.5 text-slate-700">Как сгруппирован отчет</div>
               <div class="space-y-1">
                 <div><b>Сделали</b> , закрытые за период; эпики и стори , с ключами и списком закрытых задач.</div>
                 <div><b>В работе</b> , объединено по статусам (ревью, тестирование и т.д.).</div>
@@ -30755,10 +31085,9 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
  <div class="bg-white rounded-2xl shadow-2xl border border-slate-200/60 w-full max-w-4xl flex flex-col max-h-[88vh]">
   <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
    <div class="flex items-center gap-3">
-    <h3 class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
-    <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">
-     <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-     <span id="appVersionBadge">v14.7, 18.08.2026</span>
+    <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
+    <span class="info-version-meta inline-flex items-center">
+     <span id="appVersionBadge">v15.0 · 19.08.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -30823,15 +31152,21 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     </div>
    </div>
 
-   <div>
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v14.7 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+   <div class="info-release-latest">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v15.0 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
-     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Единый поиск без наложений</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">UI/UX</span></div><p class="text-xs text-slate-600">Поиск в презентации, релизах, архиве, проверках, журнале и карте зависимостей получил общую высоту, скругление и отдельные зоны для иконки, текста и очистки.</p></div>
-     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Согласованные шторки</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">НАВИГАЦИЯ</span></div><p class="text-xs text-slate-600">Заголовок, поиск, прокрутка и кнопка закрытия больше не перекрывают друг друга. На мобильном экране сохраняются скругления и безопасные поля.</p></div>
-     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Компактная шапка проекта</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">ПРОЕКТ</span></div><p class="text-xs text-slate-600">Версия расположена под логотипом, а имя владельца и дата выровнены по единой высоте. Длинные имена безопасно сокращаются.</p></div>
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Чистая визуальная иерархия</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">UI/UX</span></div><p class="text-xs text-slate-600">Убраны лишние линии, вложенные рамки и тяжёлые тени. Цвет остался только там, где он показывает состояние, риск или основное действие.</p></div>
+     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Единая геометрия окон</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">НАВИГАЦИЯ</span></div><p class="text-xs text-slate-600">Диалоги, шторки и поповеры получили одно скругление 20 пикселей, согласованные отступы, мягкую тень и предсказуемое управление фокусом.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Точные фильтры</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">ПЛАН</span></div><p class="text-xs text-slate-600">Метки с разным регистром больше не дублируются, выбранность читается без лишних обводок, а поиск и группы не перекрывают заголовок шторки.</p></div>
    </div>
   </div>
 
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
    <div>
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v14.6</h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
@@ -30964,12 +31299,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><h5 class="font-semibold text-slate-800 text-sm">Таймлайн сразу на сегодня</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">УДОБСТВО</span></div><p class="text-xs text-slate-600">При открытии план сразу показан на текущей дате , больше не нужно каждый раз нажимать «Сегодня».</p></div>
     </div>
    </div>
-   <button type="button" onclick="var e=document.getElementById('olderVersions');var h=e.classList.toggle('hidden');this.querySelector('.olv-t').textContent=h?'Показать историю версий':'Скрыть историю версий';var c=this.querySelector('.olv-c');if(c)c.style.transform=h?'':'rotate(90deg)';" class="w-full flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-indigo-600 mb-4 px-1 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer">
-    <svg aria-hidden="true" class="olv-c w-4 h-4 shrink-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
-    <span class="olv-t">Показать историю версий</span>
-    <span class="text-[10px] font-normal text-slate-400 normal-case ml-auto">v13.0 и старше</span>
-   </button>
-   <div id="olderVersions" class="hidden">
+   <div id="olderVersions">
    <div>
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v13.0 <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-100 px-1.5 py-0.5 rounded">06.07.2026</span></h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
@@ -33749,6 +34079,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
     </div>
    </div>
+   </div>
+   </div>
+   </div>
+   </div>
+  </details>
 
    <div>
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Основы</h4>
@@ -33847,11 +34182,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
     </div>
    </div>
-   </div>
-   </div>
-   </div>
 
-   <div class="bg-rose-50 rounded-xl p-4 border border-rose-200">
+   <div class="help-danger-zone no-print no-image-export bg-rose-50 rounded-xl p-4 border border-rose-200">
     <div class="flex items-start gap-3">
      <div class="flex items-center justify-center w-9 h-9 rounded-xl bg-rose-100 text-rose-600 shrink-0">
       <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -33878,7 +34210,6 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
    </a>
    <div class="flex items-center gap-3">
     <span class="text-[10px] text-slate-500 hidden sm:inline">Все данные хранятся локально , ничего не уходит в интернет.</span>
-    <button type="button" onclick="closeInfoModal()" class="inline-flex items-center justify-center h-9 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-all cursor-pointer">Понятно</button>
    </div>
   </div>
  </div>
@@ -34320,7 +34651,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 14.7</span>
+              <span id="appVersionStartup">версия 15.0</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
@@ -35036,8 +35367,25 @@ function _drawerPopupTitle(popup) {
 }
 function _closeDrawerPopover(popup) {
   if (!popup) return;
+  // Сначала безусловно закрываем именно ту шторку, крестик которой нажат.
+  // Общий closeAllPopovers дополнительно синхронизирует остальные меню, но
+  // отдельный поповер не должен зависеть от полноты глобального списка closers.
+  popup.classList.add('hidden');
+  popup.setAttribute('aria-hidden', 'true');
+  var triggerIds = {
+    zoomMenu:'zoomMenuBtn', releaseFilterMenu:'releaseFilterBtn', presetMenu:'presetMenuBtn',
+    dataMenu:'dataMenuBtn', reportsMenu:'reportsMenuBtn', moreMenu:'moreMenuBtn',
+    depLinesMenu:'depLinesToggle', sortMenu:'sortBtn', viewMenu:'viewMenuToggle',
+    statusCompactMenu:'statusCompactBtn'
+  };
+  var trigger = document.getElementById(triggerIds[popup.id] || '');
+  if (trigger) trigger.setAttribute('aria-expanded', 'false');
+  if (popup.id) {
+    document.querySelectorAll('[aria-controls="' + popup.id.replace(/"/g, '\\"') + '"]').forEach(function (button) {
+      button.setAttribute('aria-expanded', 'false');
+    });
+  }
   if (typeof closeAllPopovers === 'function') closeAllPopovers(true);
-  else popup.classList.add('hidden');
   _syncDrawerScrim();
 }
 var _drawerOpenGuardUntil = 0;
@@ -35053,6 +35401,7 @@ function _decorateDrawerPopover(popup) {
     var wasHidden = popup.classList.contains('hidden');
     new MutationObserver(function () {
       var hidden = popup.classList.contains('hidden');
+      popup.setAttribute('aria-hidden', hidden ? 'true' : 'false');
       if (wasHidden && !hidden) _drawerOpenGuardUntil = performance.now() + 280;
       wasHidden = hidden;
     }).observe(popup, { attributes:true, attributeFilter:['class'] });
@@ -35129,7 +35478,7 @@ function normalizeUiChrome(root) {
     // Явный type защищает динамически перемещённую кнопку от случайного submit.
     if (!button.hasAttribute('type') && (!button.closest('form') || button.hasAttribute('onclick'))) button.type = 'button';
     // Контекстная справка должна быть достижима клавиатурой.
-    if (button.getAttribute('aria-label') === 'Об этом окне' && button.getAttribute('tabindex') === '-1') button.removeAttribute('tabindex');
+    if (/^Об этом окне/.test(button.getAttribute('aria-label') || '') && button.getAttribute('tabindex') === '-1') button.removeAttribute('tabindex');
   });
   var overlaySelector = '.fixed.inset-0, [data-modal-backdrop]';
   var overlays = [];
@@ -35157,7 +35506,9 @@ function normalizeUiChrome(root) {
     if (surface.matches('.overflow-auto,.overflow-y-auto') || /(?:^|\s)overflow-(?:auto|y-auto)(?:\s|$)/.test(surface.className || '')) {
       surface.classList.add('rm-dialog-scroll-surface');
     }
-    var compactDialog = /^(inputModal|sectionColorModal|leaderChooserModal|startupModal)$/.test(overlay.id || '');
+    // Все рабочие окна используют одну правую шторку. Исключение — только
+    // стартовый экран до входа в проект.
+    var compactDialog = overlay.id === 'startupModal';
     if (!compactDialog) {
       overlay.classList.add('rm-right-drawer-overlay');
       surface.classList.add('rm-right-drawer-surface');
@@ -35193,6 +35544,27 @@ function normalizeUiChrome(root) {
         var dialogSubtitle = titleWrap && titleWrap.querySelector('p');
         if (dialogSubtitle) dialogSubtitle.classList.add('rm-dialog-subtitle');
       }
+    }
+    var headerHasClose = first && first.classList.contains('rm-dialog-header') && (
+      first.querySelector('.rm-dialog-close, button[aria-label^="Закрыть"], button[title^="Закрыть"], button[aria-label="Close"], button[title="Close"]')
+      || Array.prototype.some.call(first.querySelectorAll('button'), function (button) {
+        var action = button.getAttribute('onclick') || '';
+        return /(?:close|open\w*\(false\)|toggle\w*\(false\))/i.test(action)
+          && (!button.textContent.trim() || /^×$/.test(button.textContent.trim()));
+      })
+    );
+    if (first && first.classList.contains('rm-dialog-header') && !headerHasClose
+        && typeof MODAL_CLOSERS !== 'undefined' && typeof MODAL_CLOSERS[overlay.id] === 'function') {
+      var injectedClose = document.createElement('button');
+      injectedClose.type = 'button';
+      injectedClose.className = 'rm-action rm-btn rm-btn-ghost rm-btn-icon rm-dialog-close rm-dialog-close-injected';
+      injectedClose.setAttribute('aria-label', 'Закрыть');
+      injectedClose.setAttribute('title', 'Закрыть');
+      injectedClose.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+      injectedClose.addEventListener('click', function (event) {
+        event.preventDefault(); event.stopPropagation(); MODAL_CLOSERS[overlay.id]();
+      });
+      first.appendChild(injectedClose);
     }
     parts.forEach(function (part) {
       if (part === first && part.classList.contains('rm-dialog-header')) return;
@@ -35247,10 +35619,21 @@ function normalizeUiChrome(root) {
     });
     surface.querySelectorAll('form > .border-t, form .rm-section').forEach(function (section) { section.classList.add('rm-form-section'); });
     surface.querySelectorAll('[id$="Badge"]').forEach(function (badge) {
+      if (badge.id === 'appVersionBadge') return;
       badge.classList.add('rm-counter');
       badge.classList.add(/health|error|warn|risk/i.test(badge.id || '') ? 'rm-counter-danger' : 'rm-counter-neutral');
     });
     surface.querySelectorAll('.rm-dialog-footer button').forEach(function (button) { button.classList.add('rm-dialog-action'); });
+    var headerClose = surface.querySelector('.rm-dialog-header .rm-dialog-close');
+    if (headerClose) {
+      surface.querySelectorAll('.rm-dialog-footer button').forEach(function (button) {
+        if (button.textContent.trim().toLocaleLowerCase('ru') === 'закрыть') {
+          button.hidden = true;
+          button.setAttribute('aria-hidden', 'true');
+          button.tabIndex = -1;
+        }
+      });
+    }
 
     if (overlay.id === 'settingsModal') {
       surface.classList.add('rm-settings-dialog');

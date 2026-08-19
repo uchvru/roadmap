@@ -129,6 +129,26 @@ for (const htmlPath of ['index.html', 'app.html', 'catalog.html', 'private/index
   assert(/<title>[^<]+<\/title>/i.test(html), `${htmlPath}: есть непустой title`);
 }
 
+// Номер публичного релиза должен быть атомарным: приложение, лендинг, каталог,
+// README и оба медиа-манифеста нельзя публиковать в разных версиях.
+const appSource = text('app.html');
+const appVersion = appSource.match(/const APP_VERSION = '([^']+)'/)?.[1] || '';
+const appReleaseDate = appSource.match(/const APP_VERSION_DATE = '(\d{2})\.(\d{2})\.(\d{4})'/);
+const releaseIsoDate = appReleaseDate ? `${appReleaseDate[3]}-${appReleaseDate[2]}-${appReleaseDate[1]}` : '';
+assert(Boolean(appVersion), 'app.html: найден номер текущей версии');
+assert(Boolean(releaseIsoDate), 'app.html: найдена дата текущей версии');
+if (appVersion) {
+  for (const path of ['index.html', 'catalog.html', 'README.md']) {
+    assert(text(path).includes(`v${appVersion}`), `${path}: указана версия v${appVersion}`);
+  }
+  for (const path of ['media/media-manifest.json', 'catalog-img/media-manifest.json']) {
+    const manifest = parseJson(path);
+    if (!manifest) continue;
+    assert(manifest.version === appVersion, `${path}: версия совпадает с приложением`);
+    if (releaseIsoDate) assert(manifest.generatedAt === releaseIsoDate, `${path}: дата совпадает с релизом`);
+  }
+}
+
 // 2. Privacy gate: рабочий JSON нельзя публиковать, private-контейнеры должны
 // быть зашифрованы, а индекс закрытого раздела — закрыт от индексации.
 const forbiddenData = allFiles.filter((path) => {
