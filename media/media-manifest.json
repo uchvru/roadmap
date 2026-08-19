@@ -1,11 +1,11 @@
 {
-  "version": "14.7",
-  "generatedAt": "2026-08-18",
+  "version": "15.0",
+  "generatedAt": "2026-08-19",
   "source": "synthetic-demo-PAY-LK",
   "video": {
     "file": "roadmap-demo.mp4",
-    "sha256": "001876a1af4ba4c3257f8f6a19e5c00b16350f0738dd8ab1a589e67431b12000",
-    "bytes": 6433597,
+    "sha256": "ab5672ab9d28821a119a881ea604a69bb138c44bcb5badf24e3f33ca41e23ad6",
+    "bytes": 6484256,
     "durationSeconds": 76.8,
     "width": 1440,
     "height": 810,
@@ -16,8 +16,8 @@
   },
   "poster": {
     "file": "roadmap-demo-poster.jpg",
-    "sha256": "2a984b50c5c323c0cb0639eedc4bc278bd53bc1e2c9a50406fc8008698ef6420",
-    "bytes": 39390,
+    "sha256": "d819041b4001f12ed23670348e3cdb5f995db52f1bb6e22f6e879d10fc815946",
+    "bytes": 39870,
     "width": 1440,
     "height": 810
   }

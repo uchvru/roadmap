@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Roadmap — продуктовая дорожная карта в одном HTML-файле: иерархия, сроки, зависимости и прогноз без отдельного сервера.">
-  <title>Дорожная карта продукта, вся в одном файле</title>
+  <meta name="description" content="Roadmap v15.0 — локальный планировщик дорожных карт в одном HTML-файле: задачи, сроки, зависимости и прогноз.">
+  <title>Roadmap v15.0 — дорожная карта продукта в одном файле</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     :root{--ink:#0f172a;--mut:#64748b;--brand:#4f46e5;--line:#e6eaf1}
@@ -43,11 +43,11 @@
 </head>
 <body>
   <header class="hero"><div class="wrap">
-    <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">v14.7</span></div>
+    <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">v15.0 · 19.08.2026</span></div>
     <div class="herogrid">
       <div>
         <h1>Дорожная карта продукта, вся в одном файле</h1>
-        <p class="lead">Roadmap собирает <b>инициативы, эпики, стори, задачи и баги</b> в единый план. Сроки, зависимости и прогноз видны на одном экране, а рабочая версия запускается локально из одного HTML-файла — без отдельного сервера и подписки.</p>
+        <p class="lead">Roadmap — локальный планировщик дорожных карт. Он собирает <b>инициативы, эпики, стори, задачи и баги</b> в один план со сроками, связями и прогнозом. Рабочая версия запускается из одного HTML-файла — без отдельного сервера и подписки.</p>
         <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a><a class="btn ghost" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a></div>
       </div>
       <div class="heroright"><div class="vhero"><div class="hd">Автор проекта</div><div class="rw"><div class="vava">ВУ<img src="avatar.jpg" alt="Владимир Учинин" onerror="this.remove()"></div><div><div class="nm">Владимир Учинин</div><div class="rl">Владелец продукта / Product Owner</div></div></div><div class="lk"><a href="mailto:uchv@ya.ru">uchv@ya.ru</a></div></div></div>
@@ -69,7 +69,7 @@
     </section>
   </div></header>
 
-  <div class="shotwrap"><div class="wrap"><div class="video"><video controls playsinline preload="metadata" poster="media/roadmap-demo-poster.jpg?v=147-20260819-media3" aria-label="Демонстрация возможностей Roadmap" aria-describedby="demo-video-note"><source src="media/roadmap-demo.mp4?v=147-20260819-media3" type="video/mp4">Ваш браузер не воспроизводит MP4. <a href="media/roadmap-demo.mp4?v=147-20260819-media3" download style="color:#93c5fd">Скачать демо-ролик</a>.</video></div><div class="vidnote" id="demo-video-note">Плавный обзор Roadmap v14.7 на синтетическом PAY/LK-проекте · без звука и рабочих данных.</div></div></div>
+  <div class="shotwrap"><div class="wrap"><div class="video"><video controls playsinline preload="metadata" poster="media/roadmap-demo-poster.jpg?v=150-20260819-media2" aria-label="Демонстрация возможностей Roadmap" aria-describedby="demo-video-note"><source src="media/roadmap-demo.mp4?v=150-20260819-media2" type="video/mp4">Ваш браузер не воспроизводит MP4. <a href="media/roadmap-demo.mp4?v=150-20260819-media2" download style="color:#93c5fd">Скачать демо-ролик</a>.</video></div><div class="vidnote" id="demo-video-note">Плавный обзор Roadmap v15.0 на синтетическом PAY/LK-проекте · без звука и рабочих данных.</div></div></div>
 
   <main>
     <section class="alt"><div class="wrap"><div class="sechead"><h2>Что делает Roadmap</h2><p>Помогает вести общий план продукта и быстро отвечать на вопросы «что делаем», «от чего зависит» и «успеваем ли».</p></div><div class="grid">
@@ -87,12 +87,12 @@
       <article class="card"><h3>3. Сохраните рабочий файл</h3><p>Держите рабочую копию локально и не публикуйте реальные планы, токены и приватные снимки.</p></article>
     </div></div></section>
 
-    <section class="alt"><div class="wrap"><div class="sechead"><h2>Публичное демо без рабочих данных</h2><p>Интерфейс можно изучать без раскрытия реального плана команды.</p></div><div class="notice"><h3>В демо только вымышленные задачи</h3><p>Публичная сборка не содержит рабочий <code>roadmap-data.json</code>, приватные снимки, токены Jira, бюджеты, ставки или реальные ключи проектов.</p><p>Сетевой обмен начинается только по вашему действию — например, после настройки прямого подключения к Jira.</p></div></div></section>
+    <section class="alt"><div class="wrap"><div class="sechead"><h2>Публичное демо без рабочих данных</h2><p>Интерфейс можно изучать без раскрытия реального плана команды.</p></div><div class="notice"><h3>В демо только вымышленные задачи</h3><p>Публичная сборка не содержит рабочий <code>roadmap-data.json</code>, приватные снимки, токены Jira, бюджеты, ставки или реальные ключи проектов.</p><p>Сетевой обмен начинается только по вашему действию — например, после настройки прямого подключения к Jira.</p><p>Команда «Полностью очистить проект» находится только в разделе «Как работать с планом», чтобы её нельзя было случайно запустить в обычном рабочем режиме.</p></div></div></section>
 
     <section><div class="wrap"><div class="catcta"><h2>Нужен полный список возможностей?</h2><p>В каталоге функции сгруппированы по работе с планом, сроками, командой, Jira, аналитикой и презентацией.</p><div class="cta"><a class="btn primary" href="catalog.html">Открыть каталог функций</a><a class="btn ghost" href="app.html">Посмотреть демо</a></div></div></div></section>
   </main>
 
   <div class="finalcta"><div class="wrap"><div class="sechead"><h2>Посмотрите Roadmap на живом примере</h2><p>Демо запускается прямо в браузере, без регистрации и без рабочих данных.</p></div><div class="cta" style="justify-content:center"><a class="btn primary" href="app.html">Открыть демо Roadmap</a></div></div></div>
-  <footer class="foot"><div class="wrap">Roadmap v14.7 · Владимир Учинин · Публичная сборка содержит только вымышленные данные.</div></footer>
+  <footer class="foot"><div class="wrap">Roadmap v15.0 · 19.08.2026 · Владимир Учинин · Публичная сборка содержит только вымышленные данные.</div></footer>
 </body>
 </html>
