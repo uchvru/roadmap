@@ -7580,7 +7580,7 @@
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v15.1</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v15.2</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -8425,7 +8425,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v15.1">
+<script data-roadmap-modules="v15.2">
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
@@ -9802,7 +9802,7 @@ if (typeof globalThis !== 'undefined') {
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '15.1';
+    const APP_VERSION = '15.2';
     const APP_VERSION_DATE = '22.08.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
@@ -15156,6 +15156,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
           if (resourceRoles[from] !== undefined && resourceRoles[to] === undefined) resourceRoles[to] = resourceRoles[from];
           if (resourceRates[from] !== undefined && resourceRates[to] === undefined) resourceRates[to] = resourceRates[from];
           if (resourceAvailability[from] !== undefined && resourceAvailability[to] === undefined) resourceAvailability[to] = resourceAvailability[from];
+          if (resourceParallel[from] !== undefined && resourceParallel[to] === undefined) resourceParallel[to] = resourceParallel[from];
           if (Array.isArray(resourceLeave[from]) && resourceLeave[from].length) { const mine = Array.isArray(resourceLeave[to]) ? resourceLeave[to] : []; const seen = new Set(mine.map(x => x.from + '|' + x.to)); resourceLeave[from].forEach(x => { if (x && x.from && x.to && !seen.has(x.from + '|' + x.to)) { const e = { from: x.from, to: x.to }; if (x.type) e.type = x.type; mine.push(e); seen.add(x.from + '|' + x.to); } }); resourceLeave[to] = mine; }
           delete resourceRoles[from]; delete resourceRates[from]; delete resourceAvailability[from]; delete resourceLeave[from]; delete resourceParallel[from];
           projectResources = projectResources.filter(r => parseResourceToken(r).name !== from && r !== from);
@@ -15216,7 +15217,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         const _dropTok = (str) => { const toks = String(str || '').split(/[;,\/]+/).map(x => x.trim()).filter(Boolean); if (!toks.includes(res)) return str; return toks.filter(x => x !== res).join(', '); };
         roadmapData.forEach(t => { if (t.resource) t.resource = _dropTok(t.resource); });
         (archivedTasks || []).forEach(t => { if (t && t.resource) t.resource = _dropTok(t.resource); });
-        delete resourceRoles[res]; delete resourceAvailability[res]; delete resourceLeave[res]; delete resourceRates[res];
+        delete resourceRoles[res]; delete resourceAvailability[res]; delete resourceLeave[res]; delete resourceParallel[res]; delete resourceRates[res];
         try { storage.set('gantt_resource_roles', JSON.stringify(resourceRoles)); storage.set('gantt_resource_availability', JSON.stringify(resourceAvailability)); storage.set('gantt_resource_leave', JSON.stringify(resourceLeave)); storage.set('gantt_resource_parallel', JSON.stringify(resourceParallel)); storage.set('gantt_resource_rates', JSON.stringify(resourceRates)); } catch (e) {}
         storage.set('gantt_project_resources', JSON.stringify(projectResources));
         storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData));
@@ -27716,6 +27717,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         updateAutoSaveStatus('Файл защищен паролем , запись приостановлена', 'warn');
         return false;
       }
+      let writable = null;
       try {
         if (!force && _boundFileMtime != null) {
           const _curMt = await _currentFileMtime();
@@ -27730,9 +27732,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           updateAutoSaveStatus('Автосохранение: изменений нет', 'ok');
           return true;
         }
-        const writable = await autoSaveFileHandle.createWritable();
+        writable = await autoSaveFileHandle.createWritable();
         await writable.write(_jsonStorage.serializeSnapshot(snap, true));
         await writable.close();
+        writable = null;
         _lastFileContentSig = contentSig;
         _fileConflict = false;
         try { const _mt2 = await _currentFileMtime(); if (_mt2 != null) _boundFileMtime = _mt2; } catch (e) {}
@@ -27745,6 +27748,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         return true;
       } catch (e) {
         console.error(e);
+        // Не оставляем частично записанный временный файл после ошибки write/close.
+        if (writable && typeof writable.abort === 'function') {
+          try { await writable.abort(); } catch (abortError) { console.warn('Autosave abort failed:', abortError); }
+        }
         // Доступ к файлу отозван (например, после перезагрузки или ручного сброса прав) , не висим в ошибке,
         // сбрасываем привязку, чтобы пользователь мог подключить файл заново.
         if (e && (e.name === 'NotAllowedError' || e.name === 'SecurityError')) {
@@ -30066,8 +30073,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     // ===== Авто-синхронизация с Jira (поверх REST). Токен держим только в памяти сессии, в файл не пишем. =====
     let jiraSessionToken = '';
     let jiraSessionOrigin = '';
-    let _jiraAutoTimer = null;
-    const JIRA_FETCH_TIMEOUT_MS = 20000;
+	    let _jiraAutoTimer = null;
+	    const JIRA_FETCH_TIMEOUT_MS = 20000;
+	    const JIRA_FETCH_MAX_RESULTS = 2000;
+	    const JIRA_FETCH_MAX_RETRIES = 3;
+	    const JIRA_RETRY_BASE_MS = 500;
+	    const JIRA_RETRY_MAX_MS = 30000;
     const JIRA_REST_FIELDS = Object.freeze([
       'summary', 'description', 'issuetype', 'status', 'assignee', 'reporter', 'priority',
       'created', 'updated', 'resolution', 'resolutiondate', 'duedate', 'parent', 'subtasks',
@@ -30115,10 +30126,25 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       try { visit(jiraMapProfiles, 0); } catch (e) {}
       return [...fields].sort();
     }
-    function jiraRestFieldAllowlist() {
-      return [...new Set(JIRA_REST_FIELDS.concat(jiraConfiguredRestFieldIds()))];
-    }
-    window.addEventListener('pagehide', function () { clearJiraSession('pagehide'); });
+	    function jiraRestFieldAllowlist() {
+	      return [...new Set(JIRA_REST_FIELDS.concat(jiraConfiguredRestFieldIds()))];
+	    }
+	    function jiraRetryDelayMs(response, attempt) {
+	      let retryAfter = '';
+	      try { retryAfter = String(response && response.headers && response.headers.get('Retry-After') || '').trim(); } catch (e) {}
+	      let requestedMs = NaN;
+	      if (/^\d+(?:\.\d+)?$/.test(retryAfter)) requestedMs = Math.max(0, parseFloat(retryAfter) * 1000);
+	      else if (retryAfter) {
+	        const retryAt = Date.parse(retryAfter);
+	        if (Number.isFinite(retryAt)) requestedMs = Math.max(0, retryAt - Date.now());
+	      }
+	      const fallbackMs = JIRA_RETRY_BASE_MS * Math.pow(2, Math.max(0, Number(attempt) || 0));
+	      return Math.min(JIRA_RETRY_MAX_MS, Number.isFinite(requestedMs) ? requestedMs : fallbackMs);
+	    }
+	    function jiraRetryWait(milliseconds) {
+	      return new Promise(resolve => setTimeout(resolve, Math.max(0, Number(milliseconds) || 0)));
+	    }
+	    window.addEventListener('pagehide', function () { clearJiraSession('pagehide'); });
     async function _jiraFetchIssues(base, jql, token, onProgress) {
       const normalizedBase = jiraNormBase(base);
       const expectedOrigin = jiraOrigin(normalizedBase);
@@ -30131,43 +30157,59 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       }
       const auth = sessionToken.includes(':') ? ('Basic ' + btoa(sessionToken)) : ('Bearer ' + sessionToken);
       const all = []; let startAt = 0; const pageSize = 100; let total = Infinity;
-      while (startAt < total && startAt < 2000) {
-        const requestUrl = new URL(normalizedBase + '/rest/api/2/search');
+	      while (startAt < total && startAt < JIRA_FETCH_MAX_RESULTS) {
+	        const requestUrl = new URL(normalizedBase + '/rest/api/2/search');
         if (requestUrl.origin !== expectedOrigin) throw new Error('Адрес Jira изменил origin');
         requestUrl.searchParams.set('jql', String(jql || ''));
         requestUrl.searchParams.set('maxResults', String(pageSize));
         requestUrl.searchParams.set('startAt', String(startAt));
         requestUrl.searchParams.set('fields', jiraRestFieldAllowlist().join(','));
         requestUrl.searchParams.set('expand', 'names');
-        const controller = typeof AbortController === 'function' ? new AbortController() : null;
-        const timeoutId = controller ? setTimeout(() => controller.abort(), JIRA_FETCH_TIMEOUT_MS) : null;
-        let resp;
-        try {
-          resp = await fetch(requestUrl.toString(), {
-            method: 'GET',
-            headers: { 'Authorization': auth, 'Accept': 'application/json' },
-            credentials: 'omit',
-            redirect: 'error',
-            referrerPolicy: 'no-referrer',
-            cache: 'no-store',
-            signal: controller ? controller.signal : undefined
-          });
-        } catch (err) {
-          if (err && err.name === 'AbortError') throw new Error('Тайм-аут Jira: сервер не ответил за ' + Math.round(JIRA_FETCH_TIMEOUT_MS / 1000) + ' с');
-          throw err;
-        } finally {
-          if (timeoutId) clearTimeout(timeoutId);
-        }
-        if (!resp.ok) {
-          if (resp.status === 401 || resp.status === 403) clearJiraSession('auth-error');
-          throw new Error('HTTP ' + resp.status + (resp.status === 401 ? ' , неверный токен' : resp.status === 403 ? ' , нет доступа' : ''));
-        }
+	        let resp;
+	        let retryCount = 0;
+	        while (true) {
+	          const controller = typeof AbortController === 'function' ? new AbortController() : null;
+	          const timeoutId = controller ? setTimeout(() => controller.abort(), JIRA_FETCH_TIMEOUT_MS) : null;
+	          try {
+	            resp = await fetch(requestUrl.toString(), {
+	              method: 'GET',
+	              headers: { 'Authorization': auth, 'Accept': 'application/json' },
+	              credentials: 'omit',
+	              redirect: 'error',
+	              referrerPolicy: 'no-referrer',
+	              cache: 'no-store',
+	              signal: controller ? controller.signal : undefined
+	            });
+	          } catch (err) {
+	            if (err && err.name === 'AbortError') throw new Error('Тайм-аут Jira: сервер не ответил за ' + Math.round(JIRA_FETCH_TIMEOUT_MS / 1000) + ' с');
+	            throw err;
+	          } finally {
+	            if (timeoutId) clearTimeout(timeoutId);
+	          }
+	          if (resp.ok) break;
+	          if (resp.status === 401 || resp.status === 403) clearJiraSession('auth-error');
+	          const retryable = resp.status === 429 || (resp.status >= 500 && resp.status <= 599);
+	          if (retryable && retryCount < JIRA_FETCH_MAX_RETRIES) {
+	            const delayMs = jiraRetryDelayMs(resp, retryCount);
+	            retryCount += 1;
+	            await jiraRetryWait(delayMs);
+	            continue;
+	          }
+	          const attemptsText = retryable && retryCount ? (' после ' + (retryCount + 1) + ' попыток') : '';
+	          throw new Error('HTTP ' + resp.status + attemptsText + (resp.status === 401 ? ' , неверный токен' : resp.status === 403 ? ' , нет доступа' : resp.status === 429 ? ' , Jira временно ограничила частоту запросов' : ''));
+	        }
         const data = await resp.json();
-        total = data.total || 0;
-        (data.issues || []).forEach(it => all.push(jiraIssueToRow(it, data.names)));
-        startAt += pageSize;
-        if (!data.issues || !data.issues.length) break;
+        total = Number.isFinite(Number(data.total)) ? Number(data.total) : 0;
+        const issues = Array.isArray(data.issues) ? data.issues : [];
+        issues.forEach(it => all.push(jiraIssueToRow(it, data.names)));
+        const responseStart = Number.isFinite(Number(data.startAt)) ? Number(data.startAt) : startAt;
+        const nextStart = responseStart + issues.length;
+        if (!issues.length || nextStart <= startAt) break;
+        startAt = nextStart;
         if (onProgress) onProgress(all.length, total);
+      }
+      if (Number.isFinite(total) && total > JIRA_FETCH_MAX_RESULTS && all.length < total) {
+        throw new Error('Jira вернула ' + total + ' задач, безопасный лимит одного импорта , ' + JIRA_FETCH_MAX_RESULTS + '. Уточните JQL или загрузите задачи несколькими запросами. Данные не применены.');
       }
       return all;
     }
@@ -30564,21 +30606,24 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         storage.set('gantt_hint_png_shown', '1');
       }
       const btn = document.getElementById('pngExportBtn');
-      if (!btn) return;
-      const origClass = btn.className;
-      btn.disabled = true;
-      // Переключаем иконки , идл → loading
-      const idleIcon = btn.querySelector('.png-icon-idle');
-      const loadingIcon = btn.querySelector('.png-icon-loading');
-      if (idleIcon) idleIcon.classList.add('hidden');
-      if (loadingIcon) loadingIcon.classList.remove('hidden');
-      updateAutoSaveStatus('Готовлю PNG-снимок видимой области…', 'warn');
-
+      const origClass = btn ? btn.className : '';
+      const idleIcon = btn ? btn.querySelector('.png-icon-idle') : null;
+      const loadingIcon = btn ? btn.querySelector('.png-icon-loading') : null;
       const rootEl = document.getElementById('roadmap-root');
       const timelineEl = document.querySelector('.timeline-scroll');
       const headerEl = document.getElementById('timeline-header');
       const barsEl = document.getElementById('bars-container');
       const footerEl = document.getElementById('timeline-footer');
+      if (!rootEl || !timelineEl || !headerEl || !barsEl || !footerEl) {
+        showToast('Не удалось сохранить PNG: рабочая область ещё не готова', 'error', 4500);
+        updateAutoSaveStatus('Ошибка PNG', 'error');
+        return;
+      }
+      if (btn) btn.disabled = true;
+      // Переключаем иконки , идл → loading
+      if (idleIcon) idleIcon.classList.add('hidden');
+      if (loadingIcon) loadingIcon.classList.remove('hidden');
+      updateAutoSaveStatus('Готовлю PNG-снимок видимой области…', 'warn');
 
       // Сохраняем все что меняем
       const savedTimelineCss = timelineEl.style.cssText;
@@ -30635,7 +30680,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         await new Promise(r => setTimeout(r, 100));
 
         // 4) Реальные размеры после применения класса и сдвига
-        const captureWidth = rootEl.scrollWidth;
+        const captureWidth = Math.max(320, Math.ceil(rootEl.getBoundingClientRect().width || rootEl.clientWidth || window.innerWidth || 1440));
         // Снимок по высоте экрана, а не всей "простыней": берем видимую вертикальную часть (п.2).
         const fullHeight = rootEl.scrollHeight;
         const rootRect = rootEl.getBoundingClientRect();
@@ -30645,7 +30690,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         if (_slide16x9) { const h169 = Math.round(captureWidth * 9 / 16); captureHeight = Math.max(320, Math.min(captureHeight, h169, fullHeight - visTop)); }
 
         // 5) Снимок , рендерим точно те размеры что есть в DOM после image-export-mode
-        const canvas = await html2canvas(rootEl, {
+        const renderPromise = html2canvas(rootEl, {
           backgroundColor: '#ffffff',
           scale: window.devicePixelRatio > 1 ? 2 : 1.5,
           useCORS: true,
@@ -30653,12 +30698,17 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           width: captureWidth,
           height: captureHeight,
           windowWidth: captureWidth,
-          windowHeight: fullHeight,
+          windowHeight: captureHeight,
           x: 0,
           y: visTop,
           scrollX: 0,
           scrollY: 0
         });
+        const pngTimeoutMs = Number(window.__PNG_EXPORT_TIMEOUT_MS) > 0 ? Number(window.__PNG_EXPORT_TIMEOUT_MS) : 45000;
+        const canvas = await Promise.race([
+          renderPromise,
+          new Promise((_, reject) => setTimeout(() => reject(new Error('снимок не сформирован за 45 секунд')), pngTimeoutMs))
+        ]);
 
         // Скачиваем PNG
         canvas.toBlob((blob) => {
@@ -30690,8 +30740,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         footerEl.style.cssText = savedFCss;
         rootEl.style.cssText = savedRootCss;
         timelineEl.scrollLeft = savedScrollLeft;
-        btn.className = origClass;
-        btn.disabled = false;
+        if (btn) {
+          btn.className = origClass;
+          btn.disabled = false;
+        }
         if (idleIcon) idleIcon.classList.remove('hidden');
         if (loadingIcon) loadingIcon.classList.add('hidden');
         const headerNode = document.querySelector('header');
@@ -32078,7 +32130,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v15.1 · 22.08.2026</span>
+     <span id="appVersionBadge">v15.2 · 22.08.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -32152,12 +32204,12 @@ function syncBodyScrollLock() {
    </div>
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v15.1 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v15.2 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
-     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Надёжное хранение и отмена</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ДАННЫЕ</span></div><p class="text-xs text-slate-600">Запись снимка выполняется одной очередью, отмена восстанавливает целостное состояние, а очистка проекта доступна только из справки и требует подтверждения.</p></div>
-     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Защищённые Jira и публикация</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">ПРИВАТНОСТЬ</span></div><p class="text-xs text-slate-600">Прямой Jira-обмен проверяет адрес и таймауты, публичная сборка получает только разрешённые демо-поля, а локер формирует четыре контейнера с разными паролями.</p></div>
-     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Плавный Гант без лишних пересчётов</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">ПРОИЗВОДИТЕЛЬНОСТЬ</span></div><p class="text-xs text-slate-600">При перетаскивании полоски меняется только визуальный предпросмотр. Даты, связи, история, undo и сохранение применяются один раз после завершения жеста.</p></div>
-     <div class="bg-gradient-to-br from-violet-50 to-white p-4 rounded-xl border border-violet-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-violet-700"><h5 class="font-semibold text-slate-800 text-sm">Полное покрытие рабочих сценариев</h5><span class="ml-auto text-[10px] font-bold text-violet-700 bg-white border border-violet-200 rounded px-1.5 py-0.5">КАЧЕСТВО</span></div><p class="text-xs text-slate-600">Критические процессы проверяются воспроизводимыми runtime-тестами, матрицей окон, UI-smoke, схемой данных и отдельным privacy-gate публичной сборки.</p></div>
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Jira без пропущенных задач</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">JIRA</span></div><p class="text-xs text-slate-600">Импорт повторяет временно неудавшиеся запросы, продолжает загрузку по фактическому размеру страницы и предупреждает, если запрос нужно разделить.</p></div>
+     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Надёжнее сохранение и экспорт</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">ФАЙЛЫ</span></div><p class="text-xs text-slate-600">При ошибке автосохранения незавершённая запись отменяется, а PNG-экспорт проверяет готовность карты и не оставляет интерфейс в состоянии загрузки.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Чистые настройки команды</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">КОМАНДА</span></div><p class="text-xs text-slate-600">При удалении сотрудника удаляются и связанные ограничения параллельной работы: старые значения больше не возвращаются после перезагрузки.</p></div>
+     <div class="bg-gradient-to-br from-violet-50 to-white p-4 rounded-xl border border-violet-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-violet-700"><h5 class="font-semibold text-slate-800 text-sm">Больше автоматических проверок</h5><span class="ml-auto text-[10px] font-bold text-violet-700 bg-white border border-violet-200 rounded px-1.5 py-0.5">КАЧЕСТВО</span></div><p class="text-xs text-slate-600">Отдельные проверки проходят создание и удаление задач, секции, массовые операции, канбан, настройки, клавиатуру, производительность и рост стилей.</p></div>
    </div>
   </div>
 
@@ -32167,6 +32219,16 @@ function syncBodyScrollLock() {
     <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
    </summary>
    <div class="mt-4 space-y-5">
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v15.1</h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Надёжное хранение и отмена</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ДАННЫЕ</span></div><p class="text-xs text-slate-600">Запись снимка выполняется одной очередью, отмена восстанавливает целостное состояние, а очистка проекта доступна только из справки и требует подтверждения.</p></div>
+     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Защищённые Jira и публикация</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">ПРИВАТНОСТЬ</span></div><p class="text-xs text-slate-600">Прямой Jira-обмен проверяет адрес и таймауты, публичная сборка получает только разрешённые демо-поля, а локер формирует четыре контейнера с разными паролями.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Плавный Гант без лишних пересчётов</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">ПРОИЗВОДИТЕЛЬНОСТЬ</span></div><p class="text-xs text-slate-600">При перетаскивании полоски меняется только визуальный предпросмотр. Даты, связи, история, undo и сохранение применяются один раз после завершения жеста.</p></div>
+     <div class="bg-gradient-to-br from-violet-50 to-white p-4 rounded-xl border border-violet-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-violet-700"><h5 class="font-semibold text-slate-800 text-sm">Полное покрытие рабочих сценариев</h5><span class="ml-auto text-[10px] font-bold text-violet-700 bg-white border border-violet-200 rounded px-1.5 py-0.5">КАЧЕСТВО</span></div><p class="text-xs text-slate-600">Критические процессы проверяются воспроизводимыми runtime-тестами, матрицей окон, UI-smoke, схемой данных и отдельным privacy-gate публичной сборки.</p></div>
+    </div>
+   </div>
+
    <div>
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v15.0</h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
@@ -35668,7 +35730,7 @@ function syncBodyScrollLock() {
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 15.1</span>
+              <span id="appVersionStartup">версия 15.2</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
