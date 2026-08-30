@@ -5788,8 +5788,8 @@
   #epicAuditBody .crit ul{padding-left:16px;font-size:12px;color:#9f1239;}
   #epicAuditBody .crit li{margin-bottom:3px;}
   /* Обзорная таблица */
-  #epicAuditBody .ov{background:var(--s);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:28px;box-shadow:0 1px 3px rgba(15,23,42,.05);}
-  #epicAuditBody .ov table{width:100%;border-collapse:collapse;font-size:12px;}
+  #epicAuditBody .ov{background:var(--s);border:1px solid var(--bd);border-radius:var(--r);overflow-x:auto;overflow-y:hidden;margin-bottom:28px;box-shadow:0 1px 3px rgba(15,23,42,.05);}
+  #epicAuditBody .ov table{width:100%;min-width:44rem;border-collapse:collapse;font-size:12px;}
   #epicAuditBody .ov th{padding:10px 12px;background:#f8fafc;font-weight:600;color:var(--m);border-bottom:1px solid var(--bd);text-align:left;white-space:nowrap;user-select:none;font-size:11px;text-transform:uppercase;letter-spacing:.03em;}
   #epicAuditBody .ov td{padding:9px 12px;border-bottom:1px solid #eef2f6;vertical-align:middle;}
   #epicAuditBody .ov tr:last-child td{border-bottom:none;}
@@ -5892,7 +5892,7 @@
   #epicAuditBody .vmini-lead{color:#475569;font-weight:600;}
   #epicAuditBody .inact-note{font-size:12px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;margin:0 0 10px;line-height:1.45;}
   #epicAuditBody .vstat{font-size:12px;color:var(--m);display:inline-flex;align-items:center;gap:5px;align-self:center;font-weight:600;}
-  #epicAuditBody .ecards{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px;padding:14px 16px;background:#fcfdff;}
+  #epicAuditBody .ecards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:12px;padding:14px 16px;background:#fcfdff;}
   #epicAuditBody .ec{background:var(--s);border:1px solid var(--bd);border-left:3px solid var(--evc,#cbd5e1);border-radius:var(--rs);padding:12px 14px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(15,23,42,.04);transition:box-shadow .15s;}
   #epicAuditBody .ec:hover{box-shadow:0 4px 12px rgba(15,23,42,.09);}
   #epicAuditBody .ec-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
@@ -6688,7 +6688,7 @@
    @media (min-width:1101px) {
      #planFilterBar { flex-direction:row !important; align-items:center !important; }
    }
-   @media (max-width:1023px) {
+   @media (max-width:1279px) {
      #appHeader .app-header-grid { grid-template-columns:1fr; grid-template-rows:auto auto auto; }
      #appHeader .app-header-grid > :first-child { grid-column:1; grid-row:1; }
      #appHeader .app-header-toolbar { grid-column:1; grid-row:2; }
@@ -7134,7 +7134,11 @@
      white-space:normal; overflow-wrap:normal; word-break:normal; text-wrap:pretty;
    }
    .rm-drawer-popover .rm-menu-item-title { font-size:var(--rm-font-sm) !important; white-space:normal; overflow-wrap:normal; word-break:normal; }
-   .rm-drawer-popover .rm-menu-item-subtitle { white-space:normal; overflow-wrap:normal; word-break:normal; }
+   .rm-drawer-popover .rm-menu-item-title,
+   .rm-drawer-popover .rm-menu-item-subtitle,
+   .rm-drawer-popover .rm-drawer-title {
+     white-space:normal; overflow-wrap:anywhere; word-break:normal;
+   }
    .rm-drawer-popover .rm-menu-action > .grow,.rm-drawer-popover .rm-menu-action > .min-w-0 { min-width:0; max-width:100%; }
    .rm-drawer-popover button[aria-label="Удалить"],.rm-drawer-popover .rm-btn-icon:not(.rm-drawer-close) {
      width:2.5rem !important; min-width:2.5rem !important; padding:0 !important;
@@ -7159,6 +7163,48 @@
      height:auto; overflow-wrap:normal; word-break:normal;
    }
    .rm-dialog-surface .rm-btn > span,.rm-drawer-popover button > span { min-width:0; }
+   /* Материалы для руководства: общий нормализатор делает кнопки inline-flex,
+      поэтому карточке нужен собственный вертикальный layout. Отдельные
+      minmax(0,1fr) и min-width:0 не дают длинному русскому тексту раздвигать
+      колонку или накладываться на соседнюю карточку. */
+   #leaderChooserModal [data-materials-groups] {
+     display:grid; grid-template-columns:minmax(0,1fr); align-items:start;
+   }
+   #leaderChooserModal [data-materials-group],
+   #leaderChooserModal [data-materials-list],
+   #leaderChooserModal [data-materials-action],
+   #leaderChooserModal [data-materials-copy],
+   #leaderChooserModal [data-materials-group-title],
+   #leaderChooserModal [data-materials-group-hint],
+   #leaderChooserModal [data-materials-title],
+   #leaderChooserModal [data-materials-description] {
+     min-width:0; max-width:100%;
+   }
+   #leaderChooserModal [data-materials-list] {
+     display:grid; grid-template-columns:minmax(0,1fr); gap:.5rem;
+   }
+   #leaderChooserModal [data-materials-action].rm-btn {
+     display:grid; grid-template-columns:minmax(0,1fr); align-content:start;
+     align-items:start; justify-content:stretch; gap:.25rem;
+     width:100%; min-height:4.25rem; overflow:hidden; text-align:left;
+   }
+   #leaderChooserModal [data-materials-copy] { display:block; }
+   #leaderChooserModal [data-materials-group-title],
+   #leaderChooserModal [data-materials-group-hint],
+   #leaderChooserModal [data-materials-title],
+   #leaderChooserModal [data-materials-description] {
+     white-space:normal; overflow-wrap:anywhere; word-break:normal; hyphens:auto;
+   }
+   #leaderChooserModal [data-materials-group-title],
+   #leaderChooserModal [data-materials-title] { line-height:1.35; }
+   #leaderChooserModal [data-materials-group-hint],
+   #leaderChooserModal [data-materials-description] { line-height:1.45; }
+   @media (min-width:640px) {
+     #leaderChooserModal [data-materials-groups] { grid-template-columns:repeat(2,minmax(0,1fr)); }
+   }
+   @media (min-width:1024px) {
+     #leaderChooserModal [data-materials-groups] { grid-template-columns:repeat(3,minmax(0,1fr)); }
+   }
    #appHeader .rm-btn,#planViewNav .rm-btn,#planFilterBar .rm-btn {
      font-size:clamp(.6875rem,.72vw,.75rem); white-space:nowrap;
    }
@@ -7189,12 +7235,61 @@
      outline:2px solid var(--rm-focus) !important; outline-offset:-2px !important; box-shadow:none !important;
    }
 
-   /* Архив: поиск и закрытие больше не накладываются друг на друга. */
-   #archiveModal .rm-dialog-header { display:grid; grid-template-columns:minmax(0,1fr) minmax(15rem,24rem) auto; align-items:center; }
+   /* Архив: заголовок и поиск живут на собственных строках, а метаданные
+      задачи не сжимаются в нечитаемый набор узких колонок. */
+   #archiveModal .rm-dialog-header {
+     display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center;
+   }
+   #archiveModal .rm-dialog-header > div:nth-child(2) {
+     grid-column:1 / -1; grid-row:2; max-width:none; width:100%;
+   }
+   #archiveModal #archiveSubtitle {
+     white-space:normal; overflow:visible; text-overflow:clip;
+     line-height:1.35; text-wrap:pretty;
+   }
    #archiveSearch { padding-left:2.5rem !important; padding-right:2.5rem !important; }
    #archiveSearchClear.rm-btn {
      right:.375rem !important; width:var(--rm-hit-target) !important; height:var(--rm-hit-target) !important;
      min-width:var(--rm-hit-target) !important; min-height:var(--rm-hit-target) !important; padding:0 !important;
+   }
+   #archiveModal .archive-row {
+     display:grid; grid-template-columns:auto minmax(0,1fr) auto;
+     align-items:center; gap:.75rem;
+   }
+   #archiveModal .archive-task-button.rm-btn {
+     display:block; width:100%; min-width:0; min-height:3.5rem;
+     padding:.625rem .75rem; text-align:left;
+   }
+   #archiveModal .archive-task-copy { display:block; min-width:0; }
+   #archiveModal .archive-task-title {
+     display:flex; align-items:baseline; gap:.375rem; min-width:0;
+     color:var(--rm-text); font-size:var(--rm-font-sm); font-weight:650;
+   }
+   #archiveModal .archive-task-key { flex:none; color:var(--rm-muted); font-family:var(--rm-font-mono); font-size:var(--rm-font-xs); }
+   #archiveModal .archive-task-name { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+   #archiveModal .archive-task-meta {
+     display:grid; grid-template-columns:minmax(8rem,1.35fr) minmax(5.5rem,.8fr) minmax(7.75rem,auto) auto;
+     align-items:center; gap:.35rem .75rem; min-width:0; margin-top:.25rem;
+     color:var(--rm-muted); font-size:var(--rm-font-xs); line-height:1.25;
+   }
+   #archiveModal .archive-task-meta > span { min-width:0; }
+   #archiveModal .archive-task-section,#archiveModal .archive-task-resource {
+     overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+   }
+   #archiveModal .archive-task-dates { white-space:nowrap; font-variant-numeric:tabular-nums; }
+   #archiveModal .archive-task-status {
+     justify-self:start; white-space:nowrap; padding:.1875rem .5rem;
+     border-radius:.5rem; background:var(--rm-surface-soft); color:var(--rm-muted); font-weight:650;
+   }
+   #archiveModal .archive-footer { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:.75rem; }
+   #archiveModal .archive-footer-actions { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; min-width:0; }
+   #archiveModal .archive-footer-primary { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:.5rem; }
+
+   @media (max-width:900px) {
+     #archiveModal .archive-task-meta { grid-template-columns:minmax(0,1fr) minmax(7rem,auto); }
+     #archiveModal .archive-task-status { grid-column:2; }
+     #archiveModal .archive-footer { grid-template-columns:minmax(0,1fr); }
+     #archiveModal .archive-footer-primary { justify-content:flex-start; }
    }
 
    /* Предпросмотр Jira: сводка занимает собственную строку и никогда не
@@ -7236,8 +7331,13 @@
      #settingsModal .rm-settings-card { align-items:flex-start; }
      #settingsModal .rm-settings-card input,#settingsModal .rm-settings-card select { width:100% !important; }
      #settingsModal #settingsContent { border-radius:0 !important; }
-     #archiveModal .rm-dialog-header { grid-template-columns:minmax(0,1fr) auto; }
-     #archiveModal .rm-dialog-header > div:nth-child(2) { grid-column:1 / -1; grid-row:2; max-width:none; width:100%; }
+     #archiveModal .archive-row { grid-template-columns:auto minmax(0,1fr); gap:.5rem; padding-inline:.625rem; }
+     #archiveModal .archive-row > .rm-btn-icon { display:none; }
+     #archiveModal .archive-task-meta { grid-template-columns:minmax(0,1fr); }
+     #archiveModal .archive-task-section,#archiveModal .archive-task-resource { white-space:normal; overflow-wrap:anywhere; }
+     #archiveModal .archive-task-status { grid-column:auto; }
+     #archiveModal .archive-footer-actions,#archiveModal .archive-footer-primary { align-items:stretch; }
+     #archiveModal .archive-footer-actions > button,#archiveModal .archive-footer-primary > button { flex:1 1 12rem; }
      #jiraImportPreviewModal .jira-import-preview-summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
      #jiraImportPreviewModal .jira-import-preview-footer { align-items:stretch !important; }
      #jiraImportPreviewModal .jira-import-preview-footer > div { width:100%; }
@@ -7626,6 +7726,24 @@
    #mobileListPaneSwitch button[data-active="true"] { background:#fff; color:#4338ca; box-shadow:var(--rm-shadow-xs); }
    .pres-mobile-dates,.kanban-mobile-position { display:none; }
    @media (max-width:1023px) {
+     /* До desktop-breakpoint список и таймлайн — взаимоисключающие
+        полноширинные панели. Старый md:flex-row не должен превращать
+        мобильную подсказку и переключатель вида в отдельные левые колонки. */
+     #ganttMain { flex-direction:column; }
+     #ganttMain > #mobileKanbanHint,
+     #ganttMain > #zoomControlMobile {
+       width:100%;
+       flex:0 0 auto;
+     }
+     #ganttMain > .export-left-col {
+       width:100% !important;
+       min-width:0;
+       max-width:none;
+       flex:0 0 auto;
+       border-right:0;
+     }
+     #ganttMain > #zoomControl,
+     #ganttMain > #paneSplitter { display:none; }
      body[data-app-view="list"][data-mobile-list-pane="list"] #ganttMain .timeline-scroll,
      body[data-app-view="list"][data-mobile-list-pane="list"] #ganttMain #paneSplitter { display:none; }
      body[data-app-view="list"][data-mobile-list-pane="timeline"] #ganttMain .export-left-col,
@@ -7643,6 +7761,12 @@
      #presentDeck .pres-task-bar::after { content:""; position:absolute; inset:50% 0 auto; height:13px; transform:translateY(-50%); border-radius:4px; background:var(--pres-bar-color); }
      #presentDeck .pres-task-bar[data-pres-draggable="true"] { touch-action:none; }
    }
+   @media (min-width:1024px) {
+     /* Responsive-утилиты могут отсутствовать в автономной сборке, поэтому
+        desktop явно скрывает планшетные элементы списка. */
+     #mobileKanbanHint,
+     #zoomControlMobile { display:none; }
+   }
    @media (min-width:1280px) {
      #presentView .pres-pane-tabs { display:none; }
      #presentView [data-pres-pane] { display:block; }
@@ -7650,7 +7774,7 @@
      #presentView .pres-preview-pane { position:sticky; top:.75rem; }
    }
 
-   /* v15.6: единые рабочие поверхности, прогноз и доступность по Apple HIG. */
+   /* v15.6.1: адаптивная сетка списка и таймлайна без конфликтов breakpoint. */
    body .rm-adaptive-popover.rm-adaptive-popover {
      z-index:980 !important; max-height:min(26rem,calc(100dvh - 5rem));
      overflow:auto; padding:.5rem !important;
@@ -7661,7 +7785,68 @@
      scrollbar-gutter:stable;
    }
    body .rm-adaptive-popover.hidden { display:none !important; }
-   .rm-adaptive-popover .rm-menu-action { min-height:var(--rm-hit-target); }
+   .rm-adaptive-popover .rm-menu-action {
+     min-height:var(--rm-hit-target);
+     font-size:var(--rm-font-sm);
+     line-height:1.3;
+   }
+   body #zoomMenu.rm-adaptive-popover {
+     width:min(17rem,calc(100vw - 1rem));
+     max-width:min(17rem,calc(100vw - 1rem));
+   }
+   body #sortMenu.rm-adaptive-popover {
+     width:min(16rem,calc(100vw - 1rem));
+     max-width:min(16rem,calc(100vw - 1rem));
+   }
+   #zoomMenu .rm-menu-action,#sortMenu .rm-menu-action {
+     padding:.5rem .625rem;
+     white-space:normal;
+     overflow-wrap:normal;
+     word-break:normal;
+     text-wrap:pretty;
+   }
+   #sortMenu [data-sort-scores] > span:first-child {
+     min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+   }
+   #sortMenu [data-sort-scores] > span:last-child {
+     flex:none; white-space:nowrap;
+   }
+   #goalsModal input.grow { min-width:0; max-width:100%; flex:1 1 0%; }
+   #taskDetailsToggle > span:first-child,#taskAdvancedToggle > span:first-child,
+   #taskTalkToggle > span:first-child,#taskLinksToggle > span:first-child {
+     min-width:0; text-align:left;
+   }
+   #taskDetailsHint,#taskAdvancedHint,#taskTalkHint,#taskLinksHint {
+     min-width:0; text-align:right; overflow-wrap:anywhere; word-break:normal; line-height:1.35;
+   }
+   .task-wsjf-row > span {
+     min-width:0; flex:1 1 18rem; overflow-wrap:anywhere; word-break:normal; line-height:1.45;
+   }
+   .task-wsjf-row > input { min-width:0; max-width:100%; flex:0 0 6rem; }
+   .kanban-card-title,#kanbanView .kanban-card > :first-child > .grow {
+     min-width:0; max-width:100%; white-space:normal;
+     overflow-wrap:anywhere; word-break:normal; line-height:1.35;
+   }
+   :is(#taskModal,#epicCardModal,#goalsModal,#epicAuditModal)
+   :is(.rm-dialog-title,.rm-dialog-subtitle,.rm-field-help,[data-field-help]) {
+     min-width:0; max-width:100%; overflow-wrap:anywhere; word-break:normal;
+   }
+   #epicAuditBody .ec,#epicAuditBody .ec-top,#epicAuditBody .ec-meta,
+   #epicAuditBody .al,#epicAuditBody .al-h,#epicAuditBody .al-chips,#epicAuditBody .chk {
+     min-width:0;
+   }
+   #epicAuditBody .ec-ttl,#epicAuditBody .al-t,#epicAuditBody .al-d,#epicAuditBody .vmini,
+   #epicAuditBody .ec-meta > * {
+     min-width:0; max-width:100%; overflow-wrap:anywhere; word-break:normal;
+   }
+   #epicAuditBody .al-chip {
+     min-width:0; max-width:100%; white-space:normal;
+     overflow-wrap:anywhere; word-break:normal; line-height:1.35;
+   }
+   #epicAuditBody .jl {
+     min-width:0; max-width:100%; overflow:hidden; text-overflow:ellipsis;
+   }
+   #epicAuditBody .chk-v { min-width:0; }
    #appHeader .app-header-toolbar button,
    #planFilterBar button,#planFilterBar select,
    #zoomControl button,#zoomControlMobile button,#zoomControlMobile select,
@@ -7685,6 +7870,10 @@
    #forecastView button,#summaryView button,.rm-dialog-surface button,
    .rm-drawer-popover button,.rm-adaptive-popover button { font-size:var(--rm-font-sm); }
    @media (min-width:1024px) {
+     .rm-adaptive-popover .rm-menu-action {
+       min-height:2.25rem;
+       padding-block:.375rem;
+     }
      #taskModal.rm-side-sheet-overlay,#epicCardModal.rm-side-sheet-overlay {
        align-items:stretch !important; justify-content:flex-end !important;
        padding:.75rem !important; background:transparent !important;
@@ -7722,6 +7911,85 @@
        position:fixed !important; inset:auto .5rem max(.5rem,env(safe-area-inset-bottom)) .5rem !important;
        width:auto !important; max-width:none !important; max-height:min(62dvh,32rem) !important;
        border-radius:var(--rm-dialog-radius) !important;
+     }
+     #taskDetailsToggle,#taskAdvancedToggle,#taskTalkToggle,#taskLinksToggle { flex-wrap:wrap; }
+     #taskDetailsHint,#taskAdvancedHint,#taskTalkHint,#taskLinksHint {
+       width:100%; padding-left:1.5rem; text-align:left;
+     }
+     .task-wsjf-row { align-items:stretch; }
+     .task-wsjf-row > input { flex-basis:100%; width:100%; }
+   }
+
+   /* «Скачать для просмотра»: подпись, системный select и действия занимают
+      отдельные колонки. Нулевая минимальная ширина не дает длинным профилям
+      и секциям выталкивать кнопки или накладываться на соседний текст. */
+   #roExportModal .ro-profile-grid {
+     display:grid;
+     grid-template-columns:max-content minmax(0,1fr) auto;
+     align-items:center;
+     gap:.5rem;
+     min-width:0;
+   }
+   #roExportModal .ro-profile-label.rm-field-label {
+     min-width:0;
+     margin:0;
+     white-space:nowrap;
+   }
+   #roExportModal .ro-profile-control,
+   #roExportModal .ro-profile-actions { min-width:0; }
+   #roExportModal .ro-profile-actions {
+     display:flex;
+     align-items:center;
+     justify-content:flex-end;
+     gap:.5rem;
+   }
+   #roExportModal .ro-profile-actions > button { min-width:0; }
+   #roExportModal .ro-system-select.ro-system-select {
+     display:block;
+     width:100%;
+     max-width:100%;
+     min-width:0;
+     -webkit-appearance:menulist;
+     appearance:auto;
+     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+     line-height:normal;
+     white-space:nowrap;
+     overflow:hidden;
+     text-overflow:ellipsis;
+   }
+   #roExportModal .ro-system-select option { font:inherit; }
+   #roExportModal .ro-section-heading {
+     display:grid;
+     grid-template-columns:minmax(0,1fr) auto;
+     align-items:center;
+     gap:.5rem;
+     min-width:0;
+   }
+   #roExportModal #roExportSections { min-width:0; }
+   #roExportModal .ro-export-section-row {
+     display:grid;
+     grid-template-columns:auto minmax(0,1fr);
+     align-items:center;
+     gap:.5rem;
+     width:100%;
+     min-width:0;
+   }
+   #roExportModal .ro-export-section-row > input { margin:0; }
+   #roExportModal .ro-export-section-name {
+     display:block;
+     min-width:0;
+     max-width:100%;
+     white-space:nowrap;
+     overflow:hidden;
+     text-overflow:ellipsis;
+   }
+   @media (max-width:520px) {
+     #roExportModal .ro-profile-grid {
+       grid-template-columns:max-content minmax(0,1fr);
+     }
+     #roExportModal .ro-profile-actions {
+       grid-column:1 / -1;
+       flex-wrap:wrap;
      }
    }
    @media (prefers-contrast:more) {
@@ -7794,7 +8062,7 @@
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v15.6</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v15.6.1</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -8346,11 +8614,11 @@
         <!-- ===== Зона «Подробнее» (Q1): по умолчанию свернута, состояние запоминается ===== -->
         <div class="task-details-section border-t border-slate-100 pt-4">
           <button type="button" id="taskDetailsToggle" onclick="toggleTaskDetails()" aria-expanded="false" aria-controls="taskDetailsBody" class="w-full flex items-center justify-between gap-2 text-xs font-semibold text-slate-700 tracking-wide uppercase hover:text-indigo-600 transition-colors cursor-pointer">
-            <span class="flex items-center gap-2">
+            <span class="flex items-center gap-2 min-w-0">
               <svg aria-hidden="true" id="taskDetailsChevron" class="w-4 h-4 text-slate-500 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
               Описание и детали
             </span>
-            <span id="taskDetailsHint" class="text-[10px] font-medium text-indigo-500 normal-case tracking-normal">оценка, приоритет, цель, связи, метрики, метки, описание</span>
+            <span id="taskDetailsHint" class="min-w-0 text-[10px] font-medium text-indigo-500 normal-case tracking-normal">оценка, приоритет, цель, связи, метрики, метки, описание</span>
           </button>
           <div id="taskDetailsBody" class="hidden space-y-4 mt-4">
             <div>
@@ -8435,11 +8703,11 @@
 
         <div class="border-t border-slate-100 pt-4">
           <button type="button" id="taskAdvancedToggle" onclick="toggleTaskAdvanced()" aria-expanded="false" aria-controls="taskAdvancedBody" class="w-full flex items-center justify-between gap-2 text-xs font-semibold text-slate-700 tracking-wide uppercase hover:text-indigo-600 transition-colors cursor-pointer">
-            <span class="flex items-center gap-2">
+            <span class="flex items-center gap-2 min-w-0">
               <svg aria-hidden="true" id="taskAdvancedChevron" class="w-4 h-4 text-slate-500 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
               Дополнительные поля и метрики
             </span>
-            <span id="taskAdvancedHint" class="text-[10px] font-medium text-indigo-500 normal-case tracking-normal"></span>
+            <span id="taskAdvancedHint" class="min-w-0 text-[10px] font-medium text-indigo-500 normal-case tracking-normal"></span>
           </button>
           <div id="taskAdvancedBody" class="hidden space-y-3 mt-3">
             <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
@@ -8482,7 +8750,7 @@
                 <label class="block"><span class="text-[10px] text-slate-500">Уверенность % (Confidence)</span><input type="number" step="any" min="0" max="100" id="taskRice_c" oninput="updateRiceScore()" placeholder="уверенность" class="num-right tabular-nums mt-0.5 w-full h-8 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500"></label>
                 <label class="block"><span class="text-[10px] text-slate-500">Усилия (Effort)</span><input type="number" step="any" min="0" id="taskRice_e" oninput="updateRiceScore()" placeholder="усилия" class="num-right tabular-nums mt-0.5 w-full h-8 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500"></label>
               </div>
-              <label class="flex items-center gap-2 mt-2"><span class="text-[10px] text-slate-500 shrink-0">WSJF , балл срочности и ценности (если приоритизируете им вместо RICE)</span><input type="number" step="any" min="0" id="taskWsjf" oninput="updateRiceScore()" placeholder="Например, 24" class="num-right tabular-nums w-24 h-8 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500"></label>
+              <label class="task-wsjf-row flex flex-wrap items-center gap-2 mt-2"><span class="min-w-0 text-[10px] text-slate-500">WSJF , балл срочности и ценности (если приоритизируете им вместо RICE)</span><input type="number" step="any" min="0" id="taskWsjf" oninput="updateRiceScore()" placeholder="Например, 24" class="num-right tabular-nums w-24 shrink-0 h-8 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500"></label>
               <div id="taskRiceScore" class="text-[10px] text-slate-600 mt-1"></div>
             </div>
           </div>
@@ -8655,7 +8923,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v15.6">
+<script data-roadmap-modules="v15.6.1">
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
@@ -9480,18 +9748,19 @@ if (typeof globalThis !== 'undefined') {
       surface.innerHTML = '<div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-3">'
         + '<div><h3 class="text-lg font-semibold text-slate-800">Материалы для руководства</h3><p class="text-xs text-slate-500 mt-1">Начните со статуса, затем выберите подходящий формат.</p></div>'
         + '<button type="button" data-materials-close aria-label="Закрыть" title="Закрыть" class="w-8 h-8 rounded-lg text-slate-400 hover:bg-slate-100 flex items-center justify-center cursor-pointer shrink-0">×</button></div>'
-        + '<div data-materials-groups class="p-5 overflow-y-auto grid grid-cols-1 md:grid-cols-3 gap-4"></div>';
+        + '<div data-materials-groups class="p-5 overflow-y-auto grid gap-4"></div>';
       var host = surface.querySelector('[data-materials-groups]');
       groups.forEach(function(group){
         var section = document.createElement('section');
         section.className = 'min-w-0';
-        section.innerHTML = '<h4 class="text-xs font-semibold text-slate-800">' + group.title + '</h4><p class="text-[10px] text-slate-500 mt-0.5 mb-2">' + group.hint + '</p>';
-        var list = document.createElement('div'); list.className = 'space-y-2';
+        section.setAttribute('data-materials-group', '');
+        section.innerHTML = '<h4 data-materials-group-title class="text-xs font-semibold text-slate-800">' + group.title + '</h4><p data-materials-group-hint class="text-[10px] text-slate-500 mt-0.5 mb-2">' + group.hint + '</p>';
+        var list = document.createElement('div'); list.className = 'min-w-0'; list.setAttribute('data-materials-list', '');
         group.items.forEach(function(item){
           var button = document.createElement('button');
           button.type = 'button';
-          button.className = 'w-full min-h-[68px] p-3 rounded-xl border border-slate-200 hover:bg-slate-50 hover:border-indigo-300 text-left cursor-pointer transition-colors';
-          button.innerHTML = '<span class="block text-sm font-semibold text-slate-800">' + item[1] + '</span><span class="block text-[11px] leading-snug text-slate-500 mt-0.5">' + item[2] + '</span>';
+          button.className = 'w-full min-w-0 min-h-[68px] overflow-hidden p-3 rounded-xl border border-slate-200 hover:bg-slate-50 hover:border-indigo-300 text-left cursor-pointer transition-colors';
+          button.innerHTML = '<span data-materials-copy class="block min-w-0"><span data-materials-title class="block min-w-0 text-sm font-semibold text-slate-800">' + item[1] + '</span><span data-materials-description class="block min-w-0 text-[11px] text-slate-500 mt-1">' + item[2] + '</span></span>';
           button.setAttribute('data-materials-action', item[0]);
           if (item[3]) button.setAttribute('data-adv', '');
           button.addEventListener('click', function(){ closeLeaderChooser(); var handler = window[item[0]]; if (typeof handler === 'function') handler(); });
@@ -10270,7 +10539,7 @@ if (typeof globalThis !== 'undefined') {
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '15.6';
+    const APP_VERSION = '15.6.1';
     const APP_VERSION_DATE = '31.08.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
@@ -12230,7 +12499,11 @@ if (typeof globalThis !== 'undefined') {
 
     // === T4: раздвижной разделитель список / таймлайн ===
     const LIST_WIDTH_PREF_KEY = 'gantt_list_width';
-    const LIST_WIDTH_DEFAULT = 460; // совпадает с md:w-[460px]
+    const LIST_WIDTH_DEFAULT = 460; // desktop-ширина списка
+    const LIST_DESKTOP_QUERY = '(min-width: 1024px)';
+    function _isDesktopListLayout() {
+      return !window.matchMedia || window.matchMedia(LIST_DESKTOP_QUERY).matches;
+    }
     function _listPaneEl() { return document.querySelector('main .export-left-col'); }
     function _mainPaneEl() { return document.querySelector('main.flex'); }
     function _listWidthLimits() {
@@ -12266,6 +12539,9 @@ if (typeof globalThis !== 'undefined') {
       if (persist) { try { localStorage.setItem(LIST_WIDTH_PREF_KEY, String(w)); } catch (e) {} }
     }
     function restoreListWidth() {
+      // На планшете активная панель всегда полноширинная. Не зажимаем
+      // сохранённую desktop-ширину по узким лимитам и не портим её inline-стилем.
+      if (!_isDesktopListLayout()) return;
       let v = null;
       try { v = localStorage.getItem(LIST_WIDTH_PREF_KEY); } catch (e) {}
       if (v == null || v === '') { setTimeout(function () { _syncPaneSplitterAria(_currentListWidth()); }, 0); return; }
@@ -12278,6 +12554,15 @@ if (typeof globalThis !== 'undefined') {
       try { localStorage.removeItem(LIST_WIDTH_PREF_KEY); } catch (e) {}
       setTimeout(function () { _syncPaneSplitterAria(_currentListWidth()); }, 0);
       if (typeof showToast === 'function') showToast('Ширина списка сброшена', 'info');
+    }
+    const _listDesktopMedia = window.matchMedia ? window.matchMedia(LIST_DESKTOP_QUERY) : null;
+    function _handleListDesktopChange(event) {
+      if (!event || !event.matches) return;
+      requestAnimationFrame(function () { restoreListWidth(); });
+    }
+    if (_listDesktopMedia) {
+      if (typeof _listDesktopMedia.addEventListener === 'function') _listDesktopMedia.addEventListener('change', _handleListDesktopChange);
+      else if (typeof _listDesktopMedia.addListener === 'function') _listDesktopMedia.addListener(_handleListDesktopChange);
     }
     let _timelineA11yTimer = 0;
     function _announceTimelineChange(text) {
@@ -12306,7 +12591,7 @@ if (typeof globalThis !== 'undefined') {
     }
     let _paneResizeState = null;
     function startPaneResize(ev) {
-      if (window.matchMedia && !window.matchMedia('(min-width: 768px)').matches) return; // только на широком макете
+      if (!_isDesktopListLayout()) return; // разделитель доступен только в двухпанельном desktop-макете
       ev.preventDefault();
       const el = _listPaneEl(); if (!el) return;
       _paneResizeState = { startX: ev.clientX, startW: el.getBoundingClientRect().width, raf: 0, lastW: 0 };
@@ -12805,7 +13090,7 @@ if (typeof globalThis !== 'undefined') {
       const m = document.getElementById('roExportModal'); if (!m) return;
       const box = document.getElementById('roExportSections');
       box.innerHTML = planSections.filter(s => !hiddenSections.includes(s)).map(s =>
-        `<label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer"><input type="checkbox" class="ro-export-sec accent-indigo-600 rounded shrink-0" value="${escAttr(s)}" checked><span class="truncate">${escHtml(s)}</span></label>`).join('') || '<div class="text-[10px] text-slate-500">Нет секций</div>';
+        `<label class="ro-export-section-row text-xs text-slate-700 cursor-pointer" title="${escAttr(s)}"><input type="checkbox" class="ro-export-sec accent-indigo-600 rounded shrink-0" value="${escAttr(s)}" checked><span class="ro-export-section-name">${escHtml(s)}</span></label>`).join('') || '<div class="text-[10px] text-slate-500">Нет секций</div>';
       const an = document.getElementById('roExportAnon'); if (an) an.checked = false;
       const di = document.getElementById('roExportDropInternal'); if (di) di.checked = true;
       const st = document.getElementById('roExportStamp'); if (st) st.value = '';
@@ -13188,7 +13473,7 @@ if (typeof globalThis !== 'undefined') {
       var m = document.getElementById('zoomMenu'); if (!m) return;
       m.innerHTML = _ZOOM_OPTS.map(function (o) {
         var on = (timelineZoom === o[0]);
-        return '<button type="button" role="menuitem" onclick="applyTimelinePreset(\'' + o[0] + '\');closeZoomMenu();" class="w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg text-left text-xs ' + (on ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-700 hover:bg-slate-50') + ' cursor-pointer transition-colors">' + o[1] + (on ? '<svg aria-hidden="true" class="w-4 h-4 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>' : '') + '</button>';
+        return '<button type="button" data-zoom-option="' + o[0] + '" role="menuitem" onclick="applyTimelinePreset(\'' + o[0] + '\');closeZoomMenu();" class="w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg text-left text-xs ' + (on ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-700 hover:bg-slate-50') + ' cursor-pointer transition-colors">' + o[1] + (on ? '<svg aria-hidden="true" class="w-4 h-4 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>' : '') + '</button>';
       }).join('');
     }
     function toggleZoomMenu(e) { if (e) { e.stopPropagation(); } var m = document.getElementById('zoomMenu'), b = document.getElementById('zoomMenuBtn'); if (!m) return; if (m.classList.contains('hidden')) { _renderZoomMenu(); m.classList.remove('hidden'); if (b) b.setAttribute('aria-expanded', 'true'); } else { m.classList.add('hidden'); if (b) b.setAttribute('aria-expanded', 'false'); } }
@@ -17674,9 +17959,9 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (typeof featureOn !== 'function' || featureOn('metrics')) opts.push(['priority', 'По приоритету']);
       opts.push(['manual', 'Вручную']);
       const cur = (storage.get('gantt_task_sort_mode') || 'date');
-      m.innerHTML = opts.map(([v, l]) => `<button type="button" title="${({date:'По дате старта, сверху самые ранние',cascade:'Лесенкой по датам, полоски слева направо; даты задач не меняются',status:'Сначала в работе и просроченные',name:'По алфавиту',resource:'По исполнителю',priority:'По баллу важности',manual:'Свой порядок, кнопками вверх и вниз'})[v]||''}" onclick="setTaskSortMode('${v}'); closeSortMenu();" class="w-full text-left text-xs px-2 py-1.5 rounded-lg ${cur === v ? 'text-indigo-600 font-semibold bg-indigo-50/60' : 'text-slate-700 hover:bg-slate-50'} cursor-pointer">${l}</button>`).join('');
+      m.innerHTML = opts.map(([v, l]) => `<button type="button" data-sort-option="${v}" title="${({date:'По дате старта, сверху самые ранние',cascade:'Лесенкой по датам, полоски слева направо; даты задач не меняются',status:'Сначала в работе и просроченные',name:'По алфавиту',resource:'По исполнителю',priority:'По баллу важности',manual:'Свой порядок, кнопками вверх и вниз'})[v]||''}" onclick="setTaskSortMode('${v}'); closeSortMenu();" class="w-full text-left text-xs px-2 py-1.5 rounded-lg ${cur === v ? 'text-indigo-600 font-semibold bg-indigo-50/60' : 'text-slate-700 hover:bg-slate-50'} cursor-pointer">${l}</button>`).join('');
       if (typeof featureOn !== 'function' || featureOn('metrics')) {
-        m.innerHTML += `<div class="my-1 border-t border-slate-100"></div><button type="button" onclick="setShowPriorityScores(!_showPriorityScores); renderSortMenu();" class="w-full flex items-center justify-between gap-2 text-xs px-2 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 cursor-pointer" title="Показывать балл RICE/ICE/WSJF чипом в строке задачи"><span>Баллы в строке</span><span class="text-[10px] font-semibold ${_showPriorityScores ? 'text-indigo-600' : 'text-slate-400'}">${_showPriorityScores ? 'вкл' : 'выкл'}</span></button>`;
+        m.innerHTML += `<div class="my-1 border-t border-slate-100"></div><button type="button" data-sort-scores onclick="setShowPriorityScores(!_showPriorityScores); renderSortMenu();" class="w-full flex items-center justify-between gap-2 text-xs px-2 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 cursor-pointer" title="Показывать балл RICE/ICE/WSJF чипом в строке задачи"><span class="min-w-0 grow">Баллы в строке</span><span class="shrink-0 text-[10px] font-semibold ${_showPriorityScores ? 'text-indigo-600' : 'text-slate-400'}">${_showPriorityScores ? 'вкл' : 'выкл'}</span></button>`;
       }
     }
     function toggleSortMenu(e) { if (e) e.stopPropagation(); const m = document.getElementById('sortMenu'); if (!m) return; const willOpen = m.classList.contains('hidden'); closeAllPopovers(); if (willOpen) { renderSortMenu(); m.classList.remove('hidden'); } }
@@ -18463,20 +18748,20 @@ let resourceView = 'roles'; // 'roles' | 'load'
         const taskLabel = escAttr((t.jira ? t.jira + ', ' : '') + (t.name || 'задача'));
         const statusName = (projectStatuses.find(s => s.id === t.status) || {}).name || t.status || '';
         return `
-        <div class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 transition-colors group/arc">
+        <div class="archive-row px-4 py-2.5 hover:bg-slate-50 transition-colors group/arc">
           <input type="checkbox" class="archive-row-check w-3.5 h-3.5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500/20 cursor-pointer shrink-0" data-id="${t.id}" onchange="updateArchiveSelectionUI()" aria-label="Выбрать для восстановления: ${taskLabel}" title="Выбрать для восстановления">
-          <button type="button" class="grow min-w-0 min-h-[44px] cursor-pointer text-left rounded-lg focus:outline-none" onclick="viewArchivedTask(${t.id})" aria-label="Открыть архивную задачу: ${taskLabel}" title="Открыть карточку задачи">
-            <div class="text-xs font-medium text-slate-700 truncate group-hover/arc:text-indigo-700">
-              <span class="font-mono text-slate-500 mr-1">${key}</span>${escHtml(t.name || '')}
-            </div>
-            <div class="text-[10px] text-slate-500 flex items-center gap-2 mt-0.5">
-              <span>${escHtml(t.section || 'Без секции')}</span>
-              <span class="text-slate-300">·</span>
-              <span>${escHtml(formatResourceList(t.resource || ''))}</span>
-              <span class="text-slate-300">·</span>
-              <span>${t.start ? escHtml(formatDateString(t.start)) : '-'} → ${t.end ? escHtml(formatDateString(t.end)) : '-'}</span>
-              ${statusName ? `<span class="text-slate-300">·</span><span class="font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">${escHtml(statusName)}</span>` : ''}
-            </div>
+          <button type="button" class="archive-task-button grow min-w-0 cursor-pointer rounded-lg focus:outline-none" onclick="viewArchivedTask(${t.id})" aria-label="Открыть архивную задачу: ${taskLabel}" title="Открыть карточку задачи">
+            <span class="archive-task-copy">
+              <span class="archive-task-title group-hover/arc:text-indigo-700">
+                <span class="archive-task-key">${key}</span><span class="archive-task-name">${escHtml(t.name || '')}</span>
+              </span>
+              <span class="archive-task-meta">
+                <span class="archive-task-section" title="${escAttr(t.section || 'Без секции')}">${escHtml(t.section || 'Без секции')}</span>
+                <span class="archive-task-resource" title="${escAttr(formatResourceList(t.resource || '') || 'Без исполнителя')}">${escHtml(formatResourceList(t.resource || '') || 'Без исполнителя')}</span>
+                <span class="archive-task-dates">${t.start ? escHtml(formatDateString(t.start)) : '-'} → ${t.end ? escHtml(formatDateString(t.end)) : '-'}</span>
+                ${statusName ? `<span class="archive-task-status">${escHtml(statusName)}</span>` : ''}
+              </span>
+            </span>
           </button>
           <button type="button" onclick="viewArchivedTask(${t.id})" class="rm-btn rm-btn-ghost rm-btn-icon shrink-0 opacity-0 group-hover/arc:opacity-100 focus:opacity-100" aria-label="Открыть карточку: ${taskLabel}" title="Открыть карточку">
             <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
@@ -32541,8 +32826,8 @@ function syncBodyScrollLock() {
         </div>
         <div id="archiveList" class="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100"></div>
       </div>
-      <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-2xl flex items-center justify-between gap-2">
-        <div class="flex items-center gap-3 min-w-0">
+      <div class="archive-footer px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-2xl">
+        <div class="archive-footer-actions">
           <span class="text-[10px] text-slate-500 truncate" id="archiveStats"></span>
           <button type="button" onclick="clearArchive()" id="archiveClearBtn" class="hidden shrink-0 inline-flex items-center gap-1.5 h-9 px-3 bg-white border border-slate-200 rounded-xl text-[10px] font-semibold text-slate-600 hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50 transition-all cursor-pointer" title="Удалить все задачи из архива">
             <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
@@ -32557,7 +32842,7 @@ function syncBodyScrollLock() {
             Проверить и починить
           </button>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="archive-footer-primary">
           <button type="button" onclick="restoreSelectedArchive()" id="archiveRestoreBtn" class="hidden inline-flex items-center justify-center gap-1.5 h-9 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-all cursor-pointer">
             <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
             Восстановить
@@ -33179,7 +33464,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v15.6 · 31.08.2026</span>
+     <span id="appVersionBadge">v15.6.1 · 31.08.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -33253,13 +33538,9 @@ function syncBodyScrollLock() {
    </div>
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v15.6 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v15.6.1 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
-     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">«Успеваем?» считает именно то, что вы выбрали</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ПРОГНОЗ</span></div><p class="text-xs text-slate-600">Статусы, ресурсы, проекты и другие активные фильтры теперь задают область расчёта. В ответ попадают только относящиеся к ней задачи, даты, цели и связи — без скрытого влияния остального плана.</p></div>
-     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Одна Сводка на экране, в PDF и сообщении</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">СВОДКА</span></div><p class="text-xs text-slate-600">Готовность, просрочка, загрузка и качество данных собраны в четыре понятные карточки. Экспорт и копирование используют тот же набор и те же фильтры, поэтому цифры больше не расходятся.</p></div>
-     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Презентация показывает весь контекст и бережёт даты</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">ПОКАЗ</span></div><p class="text-xs text-slate-600">В живом предпросмотре видны завершённые задачи, спринты, связи и линия «Сегодня». Даты меняются только после явного включения режима редактирования, а длительность сохраняет оценку основной задачи.</p></div>
-     <div class="bg-gradient-to-br from-violet-50 to-white p-4 rounded-xl border border-violet-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-violet-700"><h5 class="font-semibold text-slate-800 text-sm">Рабочий мобильный режим</h5><span class="ml-auto text-[10px] font-bold text-violet-700 bg-white border border-violet-200 rounded px-1.5 py-0.5">МОБИЛЬНЫЙ</span></div><p class="text-xs text-slate-600">В Списке можно переключаться между задачами и таймлайном. На Доске срочные карточки идут выше, колонки удобно листаются, а компактная шапка и поиск не отнимают экран.</p></div>
-     <div class="bg-gradient-to-br from-amber-50 to-white p-4 rounded-xl border border-amber-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-amber-700"><h5 class="font-semibold text-slate-800 text-sm">Единые окна и управление без мыши</h5><span class="ml-auto text-[10px] font-bold text-amber-700 bg-white border border-amber-200 rounded px-1.5 py-0.5">UI/UX</span></div><p class="text-xs text-slate-600">Помощь стала светлой, кнопки получили удобную зону нажатия, окна закрываются одинаково и возвращают фокус. Клавиатура, контраст и системное уменьшение движения проверены во всех основных сценариях.</p></div>
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Список и таймлайн снова занимают своё место</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ИСПРАВЛЕНО</span></div><p class="text-xs text-slate-600">На планшете и в узком окне подсказка и переключатель больше не превращаются в пустые колонки: активная панель занимает всю ширину. На компьютере мобильные элементы скрыты, а шапка не выходит за экран на границе размеров.</p></div>
     </div>
    </div>
 
@@ -33269,6 +33550,12 @@ function syncBodyScrollLock() {
     <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
    </summary>
    <div class="mt-4 space-y-5">
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v15.6</h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Прогноз, Сводка и Презентация работают в одном контексте</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ОСНОВНОЙ РЕЛИЗ</span></div><p class="text-xs text-slate-600">Фильтры стали частью расчёта прогноза и Сводки, экспорт использует те же данные, а Презентация показывает завершённые задачи, спринты, связи и «Сегодня». Добавлены мобильные режимы и единые правила окон и доступности.</p></div>
+    </div>
+   </div>
    <div>
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v15.5</h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
@@ -36670,14 +36957,18 @@ function syncBodyScrollLock() {
         <button type="button" onclick="closeRoExport()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-all cursor-pointer shrink-0" aria-label="Закрыть" title="Закрыть"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
       <div class="p-6 overflow-y-auto grow flex flex-col gap-3">
-        <div class="flex items-center gap-2">
-          <label for="roProfileSel" class="text-[10px] font-semibold text-slate-600 shrink-0">Профиль</label>
-          <select id="roProfileSel" onchange="onRoProfileSelect()" aria-label="Профиль выгрузки" class="grow min-w-0 h-8 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500 cursor-pointer"></select>
-          <button type="button" onclick="saveRoProfile()" title="Запомнить текущие настройки выгрузки под именем (хранится в файле проекта)" class="h-8 px-2.5 shrink-0 bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 text-[10px] font-semibold rounded-lg cursor-pointer transition-colors">Сохранить как профиль</button>
-          <button type="button" id="roProfileDelBtn" onclick="deleteRoProfile()" class="hidden h-8 px-2.5 shrink-0 bg-white border border-slate-200 text-slate-500 hover:text-rose-600 hover:bg-rose-50 text-[10px] font-medium rounded-lg cursor-pointer transition-colors">Удалить</button>
+        <div class="ro-profile-grid">
+          <label for="roProfileSel" class="ro-profile-label text-[10px] font-semibold text-slate-600">Профиль</label>
+          <div class="ro-profile-control min-w-0">
+            <select id="roProfileSel" onchange="onRoProfileSelect()" aria-label="Профиль выгрузки" class="ro-system-select w-full min-w-0 h-8 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500 cursor-pointer"></select>
+          </div>
+          <div class="ro-profile-actions">
+            <button type="button" onclick="saveRoProfile()" title="Запомнить текущие настройки выгрузки под именем (хранится в файле проекта)" class="h-8 px-2.5 bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 text-[10px] font-semibold rounded-lg cursor-pointer transition-colors">Сохранить как профиль</button>
+            <button type="button" id="roProfileDelBtn" onclick="deleteRoProfile()" class="hidden h-8 px-2.5 bg-white border border-slate-200 text-slate-500 hover:text-rose-600 hover:bg-rose-50 text-[10px] font-medium rounded-lg cursor-pointer transition-colors">Удалить</button>
+          </div>
         </div>
         <div>
-          <div class="flex items-center justify-between mb-1">
+          <div class="ro-section-heading mb-1">
             <span class="text-[10px] font-semibold text-slate-600">Секции</span>
             <span class="flex items-center gap-2 text-[10px]">
               <button type="button" onclick="roExportSelectAll(true)" class="text-indigo-600 hover:underline cursor-pointer">все</button>
@@ -36697,7 +36988,7 @@ function syncBodyScrollLock() {
         </label>
         <div>
           <label for="roExportStamp" class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Штамп</label>
-          <select id="roExportStamp" class="w-full h-9 px-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all cursor-pointer">
+          <select id="roExportStamp" class="ro-system-select w-full h-9 px-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all cursor-pointer">
             <option value="">(без штампа)</option>
             <option value="Черновик">Черновик</option>
             <option value="На согласовании">На согласовании</option>
@@ -36832,7 +37123,7 @@ function syncBodyScrollLock() {
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 15.6</span>
+              <span id="appVersionStartup">версия 15.6.1</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
