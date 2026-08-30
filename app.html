@@ -7955,7 +7955,7 @@
             </button>
             <button type="button" onclick="closeDataMenu(); openVersionsModal();" title="Локальные снимки состояния карты с откатом к любому из них" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
               <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>
-              <span class="grow"><span class="block">Локальные JSON-снимки</span><span class="block text-[10px] text-slate-500 font-normal">до 20 версий, экспорт и безопасный откат</span></span>
+              <span class="grow"><span class="block">Сохранение и восстановление</span><span class="block text-[10px] text-slate-500 font-normal">файл, точки возврата и безопасный откат</span></span>
             </button>
             <button type="button" onclick="closeDataMenu(); openBaselineModal();" title="Версии плана: снимки сроков и статусов, сравнение с текущим и показ плана тенью на диаграмме" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
               <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg></span>
@@ -9399,8 +9399,58 @@ if (typeof globalThis !== 'undefined') {
       if (!opts.noInput) setTimeout(() => { field.focus(); field.select(); }, 30);
       else setTimeout(() => { const cancel = document.getElementById('inputModalCancel'); if (cancel) cancel.focus(); }, 30);
     }
-    // Кастомное подтверждение в стиле приложения (замена нативного confirm)
-    function openLeaderChooser(){ var m=document.getElementById('leaderChooserModal'); if(m){ m.classList.remove('hidden'); if(typeof syncBodyScrollLock==='function')syncBodyScrollLock(); } }
+    // Единый центр материалов: один вход ко всем уже существующим отчетам и экспортам.
+    function renderLeadershipMaterialsCenter(){
+      var m = document.getElementById('leaderChooserModal');
+      if (!m || m.getAttribute('data-materials-ready') === '1') return;
+      var surface = m.firstElementChild; if (!surface) return;
+      var groups = [
+        { title:'Понять статус', hint:'Сначала факты и прогноз', items:[
+          ['openStatusOnePager', 'Минута на статус', 'Короткий рассказ: прогресс, риски и решения'],
+          ['openReportModal', 'Отчет за период', 'Что изменилось за выбранное время'],
+          ['openReleaseProgressModal', 'Прогресс по релизам', 'Готовность релизов и прогноз дат']
+        ]},
+        { title:'Собрать материал', hint:'Готовые форматы для встречи', items:[
+          ['openReportBuilder', 'Одна страница (PDF)', 'Конструктор блоков, брендинг и печать', true],
+          ['buildLeadershipSlide', 'Одна картинка 16:9', 'Компактный слайд без технических полей'],
+          ['exportDeckPdf', 'Набор слайдов (PDF)', 'Обзор, релизы, цели и риски']
+        ]},
+        { title:'Поделиться или выгрузить', hint:'Чат, изображение и таблица', items:[
+          ['copyChatStatus', 'Статус для чата', 'Короткий текст для чата или письма'],
+          ['openExportSlice', 'Картинка и печать', 'PNG периода, печать и мини-постер'],
+          ['exportPlanToXlsx', 'План в XLSX', 'Задачи и сводные листы для расчетов']
+        ]}
+      ];
+      surface.classList.remove('max-w-md', 'p-5');
+      surface.classList.add('max-w-3xl', 'overflow-hidden', 'max-h-[90vh]', 'flex', 'flex-col');
+      surface.innerHTML = '<div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-3">'
+        + '<div><h3 class="text-lg font-semibold text-slate-800">Материалы для руководства</h3><p class="text-xs text-slate-500 mt-1">Начните со статуса, затем выберите подходящий формат.</p></div>'
+        + '<button type="button" data-materials-close aria-label="Закрыть" title="Закрыть" class="w-8 h-8 rounded-lg text-slate-400 hover:bg-slate-100 flex items-center justify-center cursor-pointer shrink-0">×</button></div>'
+        + '<div data-materials-groups class="p-5 overflow-y-auto grid grid-cols-1 md:grid-cols-3 gap-4"></div>';
+      var host = surface.querySelector('[data-materials-groups]');
+      groups.forEach(function(group){
+        var section = document.createElement('section');
+        section.className = 'min-w-0';
+        section.innerHTML = '<h4 class="text-xs font-semibold text-slate-800">' + group.title + '</h4><p class="text-[10px] text-slate-500 mt-0.5 mb-2">' + group.hint + '</p>';
+        var list = document.createElement('div'); list.className = 'space-y-2';
+        group.items.forEach(function(item){
+          var button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'w-full min-h-[68px] p-3 rounded-xl border border-slate-200 hover:bg-slate-50 hover:border-indigo-300 text-left cursor-pointer transition-colors';
+          button.innerHTML = '<span class="block text-sm font-semibold text-slate-800">' + item[1] + '</span><span class="block text-[11px] leading-snug text-slate-500 mt-0.5">' + item[2] + '</span>';
+          button.setAttribute('data-materials-action', item[0]);
+          if (item[3]) button.setAttribute('data-adv', '');
+          button.addEventListener('click', function(){ closeLeaderChooser(); var handler = window[item[0]]; if (typeof handler === 'function') handler(); });
+          list.appendChild(button);
+        });
+        section.appendChild(list); host.appendChild(section);
+      });
+      var close = surface.querySelector('[data-materials-close]'); if (close) close.addEventListener('click', closeLeaderChooser);
+      m.setAttribute('aria-label', 'Материалы для руководства');
+      m.setAttribute('data-materials-ready', '1');
+      if (typeof normalizeUiChrome === 'function') normalizeUiChrome(m);
+    }
+    function openLeaderChooser(){ var m=document.getElementById('leaderChooserModal'); if(m){ renderLeadershipMaterialsCenter(); m.classList.remove('hidden'); if(typeof syncBodyScrollLock==='function')syncBodyScrollLock(); } }
     function closeLeaderChooser(){ var m=document.getElementById('leaderChooserModal'); if(m)m.classList.add('hidden'); if(typeof syncBodyScrollLock==='function')syncBodyScrollLock(); }
     function openConfirm(opts) {
       opts = opts || {};
@@ -10167,7 +10217,7 @@ if (typeof globalThis !== 'undefined') {
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
     const APP_VERSION = '15.5';
-    const APP_VERSION_DATE = '29.08.2026';
+    const APP_VERSION_DATE = '30.08.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'версия ' + APP_VERSION; } catch (e) {}
@@ -11210,7 +11260,7 @@ if (typeof globalThis !== 'undefined') {
       if (undone) {
         panel.innerHTML = `<div class="flex items-start gap-3"><span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0" aria-hidden="true">✓</span><div class="min-w-0"><h4 class="text-sm font-semibold text-slate-800">Восстановление отменено</h4><p class="mt-1 text-xs leading-5 text-slate-600">Состояние до восстановления возвращено. Дополнительная версия «Перед отменой восстановления» оставлена в истории.</p></div><button type="button" onclick="closeVersionRestorePreview()" class="ml-auto h-8 px-3 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-white cursor-pointer">Скрыть</button></div>`;
       } else {
-        panel.innerHTML = `<div class="flex flex-col sm:flex-row sm:items-center gap-3"><span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0" aria-hidden="true">✓</span><div class="min-w-0 grow"><h4 class="text-sm font-semibold text-slate-800">Версия восстановлена</h4><p class="mt-1 text-xs leading-5 text-slate-600">Точка возврата «${escHtml(checkpoint.label || 'Страховка перед восстановлением')}» сохранена в истории. Если результат не подходит, верните прежнее состояние одной кнопкой.</p></div><div class="flex items-center gap-2 shrink-0"><button type="button" onclick="undoLastVersionRestore()" class="h-9 px-3 rounded-xl border border-indigo-200 bg-white text-xs font-semibold text-indigo-700 hover:bg-indigo-50 cursor-pointer">Вернуть как было</button><button type="button" onclick="closeVersionRestorePreview()" class="h-9 px-3 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer">Готово</button></div></div>`;
+        panel.innerHTML = `<div class="flex flex-col sm:flex-row sm:items-center gap-3"><span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0" aria-hidden="true">✓</span><div class="min-w-0 grow"><h4 class="text-sm font-semibold text-slate-800">Версия восстановлена</h4><p class="mt-1 text-xs leading-5 text-slate-600">Точка возврата «${escHtml(checkpoint.label || 'Страховка перед восстановлением')}» сохранена в истории. Если результат не подходит, отмените восстановление одной кнопкой.</p></div><div class="flex items-center gap-2 shrink-0"><button type="button" onclick="undoLastVersionRestore()" class="h-9 px-3 rounded-xl border border-indigo-200 bg-white text-xs font-semibold text-indigo-700 hover:bg-indigo-50 cursor-pointer">Отменить восстановление</button><button type="button" onclick="closeVersionRestorePreview()" class="h-9 px-3 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer">Готово</button></div></div>`;
       }
       panel.className = 'mx-6 mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 shrink-0';
     }
@@ -11245,7 +11295,7 @@ if (typeof globalThis !== 'undefined') {
         <div class="mt-3 max-h-48 overflow-y-auto rounded-xl border border-slate-200 bg-white p-3">${_versionDiffRowsHtml(diff, 50)}</div>
         <div class="mt-3 grid sm:grid-cols-2 gap-2">
           <div class="rounded-xl border border-indigo-200 bg-indigo-50 p-3"><div class="text-xs font-semibold text-indigo-800">Безопасная точка возврата</div><p class="mt-1 text-[11px] leading-4 text-indigo-700">Перед применением будет принудительно сохранена отдельная версия «Страховка перед восстановлением». Дедупликация её не пропустит.</p></div>
-          <div class="rounded-xl border border-slate-200 bg-white p-3"><div class="text-xs font-semibold text-slate-700">Что не удаляется</div><p class="mt-1 text-[11px] leading-4 text-slate-600">История версий и экспортированные файлы сохранятся. После восстановления появится кнопка «Вернуть как было».</p></div>
+          <div class="rounded-xl border border-slate-200 bg-white p-3"><div class="text-xs font-semibold text-slate-700">Что не удаляется</div><p class="mt-1 text-[11px] leading-4 text-slate-600">Точки возврата и экспортированные файлы сохранятся. После восстановления появится кнопка «Отменить восстановление».</p></div>
         </div>
         <div class="mt-4 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
           <button type="button" onclick="closeVersionRestorePreview()" class="h-10 px-4 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer">Отмена</button>
@@ -11268,11 +11318,12 @@ if (typeof globalThis !== 'undefined') {
         if (typeof showToast === 'function') showToast('Версия не применена. Страховочная копия сохранена', 'error', 5000);
         return;
       }
-      recordProjectAudit('restore', 'Восстановлен локальный JSON-снимок от ' + _fmtVersionDate(pending.rec.savedAt), { snapshotId: pending.rec.id, checkpointId: checkpoint.id });
+      recordProjectAudit('restore', 'Восстановлена точка возврата от ' + _fmtVersionDate(pending.rec.savedAt), { snapshotId: pending.rec.id, checkpointId: checkpoint.id });
       _lastVersionRestoreCheckpoint = { id: checkpoint.id, targetId: pending.rec.id };
       _pendingVersionRestore = null;
       await _refreshFileVersions();
       renderVersionsList();
+      await renderSaveRecoveryStatus();
       _renderVersionRestoreSuccess(checkpoint, false);
       if (typeof showToast === 'function') showToast('Версия восстановлена. Страховочная точка сохранена', 'ok', 4500);
     }
@@ -11287,6 +11338,7 @@ if (typeof globalThis !== 'undefined') {
       _lastVersionRestoreCheckpoint = null;
       await _refreshFileVersions();
       renderVersionsList();
+      await renderSaveRecoveryStatus();
       _renderVersionRestoreSuccess(checkpoint, true);
       if (typeof showToast === 'function') showToast('Состояние до восстановления возвращено', 'ok', 4500);
     }
@@ -11395,9 +11447,39 @@ if (typeof globalThis !== 'undefined') {
       if (!rec || !rec.data) { if (typeof showToast === 'function') showToast('Нет сохраненных версий для сравнения', 'warn'); return; }
       _renderVersionsDiff(diffSnapshots(rec.data, buildRoadmapSnapshot(false)), _fmtVersionDate(rec.savedAt), 'текущее состояние');
     }
-    function openVersionsModal() { const m = document.getElementById('versionsModal'); if (m) { m.classList.remove('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); } renderVersionsList(); }
+    async function renderSaveRecoveryStatus() {
+      const host = document.getElementById('saveRecoveryStatus');
+      if (!host) return;
+      let versions = [];
+      try { versions = await listVersionSnapshots(); } catch (e) {}
+      const latest = versions[0] || null;
+      let currentSig = '', latestSig = '';
+      try { currentSig = _versionSig(buildRoadmapSnapshot(false)); } catch (e) {}
+      try { latestSig = latest && latest.data ? _versionSig(latest.data) : ''; } catch (e) {}
+      const hasChanges = !latest || !latestSig || currentSig !== latestSig;
+      const fileName = autoSaveFileHandle && autoSaveFileHandle.name ? autoSaveFileHandle.name : '';
+      const pendingName = !fileName && window.__pendingAutoSaveName ? String(window.__pendingAutoSaveName) : '';
+      const fileText = fileName ? `Подключён: ${fileName}` : (pendingName ? `Нужно переподключить: ${pendingName}` : 'Файл не подключён');
+      const fileTone = fileName ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : (pendingName ? 'text-amber-700 bg-amber-50 border-amber-200' : 'text-slate-600 bg-slate-50 border-slate-200');
+      const pointText = latest ? _fmtVersionDate(latest.savedAt) + (latest.label ? ` · ${latest.label}` : '') : 'Пока нет';
+      host.innerHTML = `
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-2">
+          <div class="rounded-xl border p-3 ${fileTone}"><div class="text-[10px] font-semibold uppercase tracking-wide opacity-75">Файл проекта</div><div class="mt-1 text-xs font-semibold break-all">${escHtml(fileText)}</div></div>
+          <div class="rounded-xl border p-3 ${hasChanges ? 'text-amber-700 bg-amber-50 border-amber-200' : 'text-emerald-700 bg-emerald-50 border-emerald-200'}"><div class="text-[10px] font-semibold uppercase tracking-wide opacity-75">Текущее состояние</div><div class="mt-1 text-xs font-semibold">${hasChanges ? 'Есть изменения после точки возврата' : 'Совпадает с последней точкой'}</div></div>
+          <div class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-600"><div class="text-[10px] font-semibold uppercase tracking-wide">Последняя точка</div><div class="mt-1 text-xs font-semibold text-slate-800">${escHtml(pointText)}</div></div>
+          <div class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-600"><div class="text-[10px] font-semibold uppercase tracking-wide">Автокопии</div><div class="mt-1 text-xs font-semibold text-slate-800">${autoBackupDirHandle ? 'Папка подключена' : 'Папка не выбрана'}</div></div>
+        </div>`;
+    }
+    function focusRecoveryPoints() {
+      const body = document.getElementById('versionsBody');
+      if (body) body.scrollIntoView({ block: 'nearest', behavior: rmScrollBehavior() });
+      const restore = body && body.querySelector('button[onclick*="restoreVersionSnapshot"]');
+      if (restore) restore.focus();
+      else if (typeof showToast === 'function') showToast('Сначала создайте точку возврата', 'info', 3000);
+    }
+    function openVersionsModal() { const m = document.getElementById('versionsModal'); if (m) { m.classList.remove('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); } renderVersionsList(); renderSaveRecoveryStatus(); }
     function closeVersionsModal() { const m = document.getElementById('versionsModal'); if (m) m.classList.add('hidden'); closeVersionRestorePreview(); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
-    async function saveVersionNow() { const _btn = document.getElementById('saveVersionNowBtn'); const _txt = _btn ? _btn.innerHTML : ''; if (_btn) { _btn.disabled = true; _btn.innerHTML = 'Сохраняю…'; } try { window.__lastVersionSig = null; const ok = await saveVersionSnapshot('Вручную', false); if (ok) recordProjectAudit('snapshot', 'Создан ручной JSON-снимок проекта', { tasks: (roadmapData || []).length }); if (typeof showToast === 'function') showToast(ok ? 'Версия сохранена' : 'Не удалось сохранить', ok ? 'ok' : 'error'); renderVersionsList(); } finally { if (_btn) { _btn.disabled = false; _btn.innerHTML = _txt; } } }
+    async function saveVersionNow() { const _btn = document.getElementById('saveVersionNowBtn'); const _txt = _btn ? _btn.innerHTML : ''; if (_btn) { _btn.disabled = true; _btn.innerHTML = 'Сохраняю…'; } try { window.__lastVersionSig = null; const ok = await saveVersionSnapshot('Вручную', false); if (ok) recordProjectAudit('snapshot', 'Создана ручная точка возврата проекта', { tasks: (roadmapData || []).length }); if (typeof showToast === 'function') showToast(ok ? 'Точка возврата создана' : 'Не удалось создать точку возврата', ok ? 'ok' : 'error'); renderVersionsList(); await renderSaveRecoveryStatus(); } finally { if (_btn) { _btn.disabled = false; _btn.innerHTML = _txt; } } }
     async function exportVersionSnapshot(id) {
       const rec = await _getVersionSnapshot(id);
       if (!rec || !rec.data) { if (typeof showToast === 'function') showToast('Снимок не найден', 'error'); return; }
@@ -11578,6 +11660,22 @@ if (typeof globalThis !== 'undefined') {
       _dqIssues = issues;
       return issues;
     }
+    // Один источник готовности для мастера, центра проверок и прогноза.
+    // Функция ничего не исправляет и не сохраняет: только читает текущий план.
+    function _forecastReadinessModel(issueList) {
+      const base = _planReadinessSnapshot();
+      const issues = Array.isArray(issueList) ? issueList : analyzeProjectDataQuality();
+      const errors = issues.filter(x => x.severity === 'error').length;
+      const warnings = issues.filter(x => x.severity === 'warning').length;
+      const model = Object.assign({}, base, {
+        errors,
+        warnings,
+        canForecast: base.score >= 80 && errors === 0,
+        issues
+      });
+      _dqReadiness = model;
+      return model;
+    }
     function _dqCategoryName(c) { return ({ all:'Вся очередь', schedule:'Расписание и сроки', capacity:'Загрузка команды', readiness:'Готовность к прогнозу', data:'Качество данных', required:'Обязательные поля', structure:'Структура', dates:'Даты', overdue:'Просрочка', status:'Статусы', dependencies:'Связи', duplicates:'Дубли' })[c] || c; }
     function _dqMatchesCategory(issue, category) {
       if (category === 'all') return true;
@@ -11599,12 +11697,13 @@ if (typeof globalThis !== 'undefined') {
     let _dqGroupedView = [];
     function renderDataQualityCenter() {
       const list = document.getElementById('dataQualityList'), sum = document.getElementById('dataQualitySummary'); if (!list || !sum) return;
+      const readiness = _forecastReadinessModel(_dqIssues);
       const catSelect = document.getElementById('dataQualityCategory');
       if (catSelect) Array.from(catSelect.options).forEach(o => { const base = o.dataset.base || o.textContent.replace(/\s+\(\d+\)$/, ''); o.dataset.base = base; const n = _dqIssues.filter(x => _dqMatchesCategory(x, o.value)).length; o.textContent = base + ' (' + n + ')'; });
       const cat = ((catSelect || {}).value || 'all');
       const q = String(((document.getElementById('dataQualitySearch') || {}).value || '')).trim().toLowerCase();
       const sevCount = s => _dqIssues.filter(x => x.severity === s).length;
-      sum.innerHTML = `<div class="rm-panel p-3"><div class="text-2xl font-bold ${_dqReadiness.score >= 80 ? 'text-emerald-600' : (_dqReadiness.score >= 60 ? 'text-amber-600' : 'text-rose-600')}">${_dqReadiness.score}%</div><div class="text-[10px] text-slate-500">полнота входных данных</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-rose-600">${sevCount('error')}</div><div class="text-[10px] text-slate-500">ошибки</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-amber-600">${sevCount('warning')}</div><div class="text-[10px] text-slate-500">предупреждения</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-sky-600">${sevCount('info')}</div><div class="text-[10px] text-slate-500">нужно заполнить</div></div>`;
+      sum.innerHTML = `<div class="rm-panel p-3"><div class="text-2xl font-bold ${readiness.score >= 80 ? 'text-emerald-600' : (readiness.score >= 60 ? 'text-amber-600' : 'text-rose-600')}">${readiness.score}%</div><div class="text-[10px] text-slate-500">полнота входных данных</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-rose-600">${sevCount('error')}</div><div class="text-[10px] text-slate-500">ошибки</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-amber-600">${sevCount('warning')}</div><div class="text-[10px] text-slate-500">предупреждения</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-sky-600">${sevCount('info')}</div><div class="text-[10px] text-slate-500">нужно заполнить</div></div><div data-readiness-decision class="rm-panel p-3 col-span-full ${readiness.canForecast ? 'border-emerald-200 bg-emerald-50/60' : 'border-amber-200 bg-amber-50/60'}"><div class="text-sm font-semibold ${readiness.canForecast ? 'text-emerald-800' : 'text-amber-900'}">${readiness.canForecast ? 'Данных достаточно для прогноза' : 'Сначала заполните ' + readiness.missing + ' ' + pluralRu(readiness.missing, ['поле', 'поля', 'полей'])}</div><div class="mt-1 text-[10px] text-slate-500">Порог готовности — 80% и отсутствие критичных ошибок.</div></div>`;
       const severityRank = { error: 0, warning: 1, info: 2 };
       const filtered = _dqIssues
         .filter(x => _dqMatchesCategory(x, cat) && (!q || (x.title + ' ' + x.detail + ' ' + ((x.entity || {}).label || '') + ' ' + _dqCategoryName(x.category)).toLowerCase().includes(q)))
@@ -11672,8 +11771,7 @@ if (typeof globalThis !== 'undefined') {
       const estimated = active.filter(t => (typeof _taskEstDays === 'function' ? _taskEstDays(t) : parseFloat(t.estimate)) > 0).length;
       const assigned = active.filter(t => String(t.resource || '').trim()).length;
       const deps = active.reduce((n, t) => n + getPredecessorIds(t).length, 0);
-      const readiness = _planReadinessSnapshot();
-      const issues = analyzeProjectDataQuality();
+      const readiness = _forecastReadinessModel();
       return {
         title: String(roadmapTitleText || '').trim(),
         goals: (projectGoals || []).length,
@@ -11687,8 +11785,8 @@ if (typeof globalThis !== 'undefined') {
         assigned,
         deps,
         readiness,
-        errors: issues.filter(x => x.severity === 'error').length,
-        warnings: issues.filter(x => x.severity === 'warning').length,
+        errors: readiness.errors,
+        warnings: readiness.warnings,
         baselines: (typeof getBaselines === 'function' ? getBaselines() : []).length
       };
     }
@@ -11708,6 +11806,7 @@ if (typeof globalThis !== 'undefined') {
       _planBuilderReturnFocus = document.activeElement && document.activeElement !== document.body ? document.activeElement : null;
       const n = parseInt(step, 10);
       if (Number.isFinite(n)) _planBuilderStep = Math.max(0, Math.min(6, n));
+      else _planBuilderStep = (Array.isArray(roadmapData) && roadmapData.some(t => t && !t.hidden)) ? 5 : 0;
       panel.classList.remove('hidden'); backdrop.classList.remove('hidden');
       renderPlanBuilder();
       if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
@@ -11732,10 +11831,10 @@ if (typeof globalThis !== 'undefined') {
         s.sections > 0 && s.tasks > 0,
         s.active === 0 || (s.estimated === s.active && s.assigned === s.active),
         s.active <= 1 || s.deps > 0,
-        s.errors === 0,
+        s.errors === 0 && s.readiness.score >= 80,
         s.baselines > 0
       ];
-      progress.innerHTML = _PLAN_BUILDER_STEPS.map((name, i) => `<button type="button" onclick="_planBuilderStep=${i}; renderPlanBuilder()" aria-label="Шаг ${i + 1}: ${escAttr(name)}${complete[i] ? ', готово' : ''}" aria-current="${i === _planBuilderStep ? 'step' : 'false'}" class="plan-builder-step shrink-0 w-8 h-8 rounded-full border text-[11px] font-bold cursor-pointer transition-colors ${i === _planBuilderStep ? 'bg-indigo-600 border-indigo-600 text-white' : (complete[i] ? 'bg-emerald-50 border-emerald-300 text-emerald-700' : 'bg-white border-slate-200 text-slate-500 hover:border-indigo-300')}">${complete[i] ? '✓' : (i + 1)}</button>`).join('');
+      progress.innerHTML = _PLAN_BUILDER_STEPS.map((name, i) => `<button type="button" onclick="_planBuilderStep=${i}; renderPlanBuilder()" aria-label="Шаг ${i + 1}: ${escAttr(name)}${complete[i] ? ', готово' : ''}" aria-current="${i === _planBuilderStep ? 'step' : 'false'}" class="plan-builder-step shrink-0 min-w-11 min-h-11 w-11 h-11 rounded-full border text-[11px] font-bold cursor-pointer transition-colors ${i === _planBuilderStep ? 'bg-indigo-600 border-indigo-600 text-white' : (complete[i] ? 'bg-emerald-50 border-emerald-300 text-emerald-700' : 'bg-white border-slate-200 text-slate-500 hover:border-indigo-300')}">${complete[i] ? '✓' : (i + 1)}</button>`).join('');
       const grids = {
         0: _pbMetric(s.goals, 'целей', s.goals ? 'text-emerald-600' : 'text-amber-600') + _pbMetric(s.initiatives, 'инициатив', s.initiatives ? 'text-emerald-600' : 'text-amber-600'),
         1: _pbMetric(s.releases, 'релизов', s.releases ? 'text-emerald-600' : 'text-amber-600') + _pbMetric(s.dates, 'ключевых дат', s.dates ? 'text-emerald-600' : 'text-amber-600'),
@@ -11763,7 +11862,8 @@ if (typeof globalThis !== 'undefined') {
         `<div class="flex flex-wrap gap-2">${_pbAction('Проверки плана', 'health', true, false)}${_pbAction('Уложиться в дату', 'fit', false, false)}${_pbAction('Открыть прогноз', 'forecast', false, false)}</div>`,
         `<div class="flex flex-wrap gap-2">${_pbAction('Версии плана', 'baseline', true, false)}${_pbAction('Полные JSON-снимки', 'versions', false, false)}${_pbAction('Копия для показа', 'share', false, false)}</div>`
       ];
-      body.innerHTML = intros[_planBuilderStep] + `<div class="grid grid-cols-2 gap-2 mb-4">${grids[_planBuilderStep]}</div>` + actions[_planBuilderStep]
+      const readinessDecision = _planBuilderStep === 5 ? `<div data-readiness-decision class="mb-4 rounded-xl border p-3 ${s.readiness.canForecast ? 'border-emerald-200 bg-emerald-50/70' : 'border-amber-200 bg-amber-50/70'}"><div class="text-sm font-semibold ${s.readiness.canForecast ? 'text-emerald-800' : 'text-amber-900'}">${s.readiness.canForecast ? 'Данных достаточно для прогноза' : 'Сначала заполните ' + s.readiness.missing + ' ' + pluralRu(s.readiness.missing, ['поле', 'поля', 'полей'])}</div><div class="mt-1 text-xs text-slate-600">Нужно не меньше 80% заполненности и ни одной критичной ошибки.</div>${s.readiness.canForecast ? '' : `<button type="button" onclick="openPlanHealthCenter(&quot;readiness&quot;)" class="mt-3 min-h-11 px-4 rounded-xl bg-white border border-amber-300 text-sm font-semibold text-amber-900">Показать, что заполнить</button>`}</div>` : '';
+      body.innerHTML = intros[_planBuilderStep] + readinessDecision + `<div class="grid grid-cols-2 gap-2 mb-4">${grids[_planBuilderStep]}</div>` + actions[_planBuilderStep]
         + `<div class="mt-5 p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] leading-relaxed text-slate-500">${complete[_planBuilderStep] ? 'Этот шаг выглядит готовым. Можно перейти дальше или открыть данные для проверки.' : 'Шаг требует внимания. Мастер только направляет к нужной форме — решение и сохранение остаются за вами.'}</div>`;
       if (prev) prev.disabled = _planBuilderStep === 0;
       if (prev) prev.classList.toggle('opacity-40', _planBuilderStep === 0);
@@ -16225,6 +16325,11 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function _taskMatchesForecastReason(t, reason) {
       if (!reason) return true;
       if (!t || t.hidden || t.isMilestone || !isAttentionActiveTask(t)) return false;
+      if (String(reason).indexOf('tasks:') === 0) {
+        let ids = [];
+        try { ids = String(reason).slice(6).split(',').filter(Boolean).map(decodeURIComponent); } catch (e) {}
+        return ids.includes(String(t.id));
+      }
       if (reason === 'overdue') return !!t.end && parseLocalDate(t.end) < CURRENT_DATE;
       if (reason === 'estimate') return !((typeof _taskEstDays === 'function' ? _taskEstDays(t) : parseFloat(t.estimate)) > 0);
       if (reason === 'resource') return !String(t.resource || '').trim();
@@ -21398,6 +21503,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
         if(typeof showToast==='function') showToast('Excel выгружен: задач '+rows.length+', плюс сводные листы', 'ok', 3000);
       } catch(e){ if(typeof showToast==='function') showToast('Не удалось создать Excel', 'error', 3000); }
     }
+    // Канонический маршрут из центра материалов; старое имя оставлено для совместимости.
+    function exportPlanToXlsx(){ return exportTasksXlsx(); }
     function _deckBar(p, color){ color=color||'#4f46e5'; var w=Math.max(0,Math.min(100,p||0)); return '<span class="track"><span class="fill" style="width:'+w+'%;background:'+color+'"></span></span>'; }
     function _buildDeckHtml(){
       var esc=(typeof escHtml==='function')?escHtml:(function(v){return String(v==null?'':v).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];});});
@@ -23951,7 +24058,14 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (typeof renderStatusOverview === 'function') renderStatusOverview();
       if (typeof renderRoadmap === 'function') renderRoadmap(true);
       var labels = { overdue:'Просроченные задачи', estimate:'Задачи без оценки', resource:'Задачи без исполнителя', dates:'Задачи без дат' };
-      if (typeof showToast === 'function') showToast('Открыт срез: ' + (labels[reason] || 'Причина прогноза'), 'info', 2500);
+      var label = String(reason || '').indexOf('tasks:') === 0 ? 'Задачи, которые сильнее всего сдвигают срок' : (labels[reason] || 'Причина прогноза');
+      if (typeof showToast === 'function') showToast('Открыт срез: ' + label, 'info', 2500);
+    }
+    function _fcReturnToForecast() {
+      _forecastReasonFilter = '';
+      if (typeof updateFilterToolsSummary === 'function') updateFilterToolsSummary();
+      if (typeof setAppView === 'function') setAppView('forecast');
+      else if (typeof renderRoadmap === 'function') renderRoadmap(true);
     }
     function _fcDecisionModel(rows, goals) {
       var tasks = (roadmapData || []).filter(function (t) { return t && !t.hidden && !t.isMilestone && t.status !== 'completed' && t.status !== 'on_hold' && (typeof taskPassesFilters !== 'function' || taskPassesFilters(t)); });
@@ -23959,36 +24073,69 @@ let resourceView = 'roles'; // 'roles' | 'load'
       var noResource = tasks.filter(function (t) { return !String(t.resource || '').trim(); }).length;
       var noDates = tasks.filter(function (t) { return !t.start || !t.end; }).length;
       var overdue = tasks.filter(function (t) { return t.end && parseLocalDate(t.end) < CURRENT_DATE; }).length;
-      var signals = (rows || []).concat(goals || []), red = signals.filter(function (r) { return r.status === 'red'; }).length, amber = signals.filter(function (r) { return r.status === 'amber'; }).length, green = signals.filter(function (r) { return r.status === 'green'; }).length, gray = signals.filter(function (r) { return r.status === 'gray'; }).length;
-      var denom = Math.max(1, tasks.length * 3), missing = noEstimate + noResource + noDates;
-      var confidence = Math.max(0, Math.round((denom - missing) / denom * 100));
-      var status = red ? 'red' : (amber ? 'amber' : (gray && !green ? 'gray' : 'green'));
-      var answer = red ? ('Не успеваем по ' + red + ' ' + pluralRu(red, ['дате', 'датам', 'датам'])) : (amber ? ('Есть ' + amber + ' ' + pluralRu(amber, ['сомнительная дата', 'сомнительные даты', 'сомнительных дат'])) : (gray && !green ? 'Сначала заполните данные' : 'План укладывается в даты'));
-      var reasons = [];
-      if (overdue) reasons.push(overdue + ' просроченных задач');
-      if (noEstimate) reasons.push(noEstimate + ' без оценки');
-      if (noResource) reasons.push(noResource + ' без исполнителя');
-      if (noDates) reasons.push(noDates + ' без дат');
-      if (!reasons.length) reasons.push('Критичных пробелов в плане не найдено');
+      var readiness = _forecastReadinessModel();
+      var signals = (rows || []).concat(goals || []);
+      var red = signals.filter(function (r) { return r.status === 'red'; }).length;
+      var amber = signals.filter(function (r) { return r.status === 'amber'; }).length;
+      var green = signals.filter(function (r) { return r.status === 'green'; }).length;
+      var gray = signals.filter(function (r) { return r.status === 'gray'; }).length;
+      var status = red ? 'red' : (amber ? 'amber' : (!readiness.canForecast || (gray && !green) ? 'gray' : 'green'));
+      var answer = red
+        ? ('Не успеваем по ' + red + ' ' + pluralRu(red, ['дате', 'датам', 'датам']))
+        : (amber
+          ? ('Есть ' + amber + ' ' + pluralRu(amber, ['сомнительная дата', 'сомнительные даты', 'сомнительных дат']))
+          : (!readiness.canForecast
+            ? ('Сначала заполните ' + readiness.missing + ' ' + pluralRu(readiness.missing, ['поле', 'поля', 'полей']))
+            : (gray && !green ? 'Сначала заполните данные' : 'План укладывается в даты')));
+
       var slices = [];
-      if (overdue) slices.push({ kind:'overdue', count:overdue, label:'Просрочено' });
-      if (noEstimate) slices.push({ kind:'estimate', count:noEstimate, label:'Без оценки' });
-      if (noResource) slices.push({ kind:'resource', count:noResource, label:'Без исполнителя' });
-      if (noDates) slices.push({ kind:'dates', count:noDates, label:'Без дат' });
-      var actions = [];
-      if (overdue) actions.push('Разобрать ' + overdue + ' просроченных задач');
-      if (noEstimate) actions.push('Оценить ' + noEstimate + ' задач в днях');
-      if (noResource) actions.push('Назначить исполнителей для ' + noResource + ' задач');
-      if (noDates) actions.push('Указать сроки для ' + noDates + ' задач');
-      if (!actions.length) actions.push('Зафиксировать текущий план и следить за изменениями');
-      return { status: status, answer: answer, red: red, amber: amber, green: green, gray: gray, confidence: confidence, tasks: tasks.length, overdue: overdue, noEstimate:noEstimate, noResource:noResource, noDates:noDates, reasons: reasons, slices:slices, actions: actions };
+      (rows || []).filter(function (r) { return r && (r.status === 'red' || r.status === 'amber'); }).forEach(function (r) {
+        var ids = (r.drivers || []).map(function (d) { return d && d.id != null ? String(d.id) : ''; }).filter(Boolean);
+        if (!ids.length) return;
+        var impactDays = Math.max(1, _fcDayDiff(r.promised, r.realEnd));
+        slices.push({
+          kind: 'tasks:' + ids.map(encodeURIComponent).join(','),
+          count: ids.length,
+          label: (r.label || 'Контрольная дата') + ' · задержка ' + impactDays + ' дн',
+          impactDays: impactDays,
+          weight: 100000 + impactDays * 100 + ids.length,
+          action: 'Открыть задачи, которые сдвигают «' + (r.label || 'дату') + '»'
+        });
+      });
+      if (overdue) slices.push({ kind:'overdue', count:overdue, label:'Просроченные задачи', impactDays:0, weight:50000 + overdue, action:'Разобрать просроченные задачи' });
+      if (noEstimate) slices.push({ kind:'estimate', count:noEstimate, label:'Нет оценки в днях', impactDays:0, weight:1000 + noEstimate, action:'Добавить оценку задачам' });
+      if (noResource) slices.push({ kind:'resource', count:noResource, label:'Не назначен исполнитель', impactDays:0, weight:900 + noResource, action:'Назначить исполнителей' });
+      if (noDates) slices.push({ kind:'dates', count:noDates, label:'Не заданы даты', impactDays:0, weight:800 + noDates, action:'Указать начало и окончание' });
+      slices.sort(function (a, b) { return (b.weight || 0) - (a.weight || 0) || (b.count || 0) - (a.count || 0); });
+
+      var reasons = slices.length ? slices.map(function (x) { return x.label; }) : ['Критичных пробелов в плане не найдено'];
+      var actions = slices.length ? slices.map(function (x) { return x.action; }) : ['Зафиксировать текущий план и следить за изменениями'];
+      return {
+        status: status,
+        answer: answer,
+        red: red,
+        amber: amber,
+        green: green,
+        gray: gray,
+        confidence: readiness.score,
+        readiness: readiness,
+        tasks: tasks.length,
+        overdue: overdue,
+        noEstimate:noEstimate,
+        noResource:noResource,
+        noDates:noDates,
+        reasons: reasons,
+        slices:slices,
+        actions: actions
+      };
     }
     function _fcReasonItemHtml(item) {
-      return '<li><button type="button" onclick="_fcOpenReason(\'' + item.kind + '\')" class="w-full min-h-9 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-indigo-50 hover:border-indigo-200 text-left flex items-center gap-2 text-sm text-slate-700"><span class="grow">' + escHtml(item.label) + '</span><span class="font-bold tabular-nums">' + item.count + '</span><span aria-hidden="true" class="text-indigo-500">→</span></button></li>';
+      var reason = (typeof escAttr === 'function') ? escAttr(item.kind || '') : String(item.kind || '');
+      return '<li><button type="button" data-reason="' + reason + '" onclick="_fcOpenReason(this.dataset.reason)" class="w-full min-h-11 px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-indigo-50 hover:border-indigo-200 text-left flex items-center gap-2 text-sm text-slate-700"><span class="grow">' + escHtml(item.label) + '</span><span class="font-bold tabular-nums">' + item.count + '</span><span aria-hidden="true" class="text-indigo-500">→</span></button></li>';
     }
     function _fcWireReasonActions(model) {
       var list = document.querySelector('#forecastView [data-forecast-reasons] ul');
-      if (list && model && model.slices && model.slices.length) list.innerHTML = model.slices.map(_fcReasonItemHtml).join('');
+      if (list && model && model.slices && model.slices.length) list.innerHTML = model.slices.slice(0, 3).map(_fcReasonItemHtml).join('');
     }
     function _fcDatesHtml(rows) {
       var esc = (typeof escHtml === 'function') ? escHtml : function (x) { return String(x == null ? '' : x); };
@@ -24024,6 +24171,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
 
       var model = _fcDecisionModel(rows, goalRows);
       var filtered = typeof anyTaskFilterActive === 'function' && anyTaskFilterActive();
+      var scope = '<section data-forecast-scope class="mb-3 rounded-xl border border-slate-200 bg-white px-4 py-3 flex flex-wrap items-center justify-between gap-2"><div><div class="text-xs font-semibold text-slate-800">' + (filtered ? 'Расчёт с учётом активных фильтров' : 'Расчёт по всему плану') + '</div><div class="text-[11px] text-slate-500 mt-0.5">' + (filtered ? 'Ответ и причины относятся только к видимому срезу.' : 'Учитываются все активные задачи проекта.') + '</div></div>' + (filtered ? '<button type="button" onclick="resetAllFilters()" class="min-h-11 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">Сбросить фильтры</button>' : '') + '</section>';
       if (!rows.length && !goalRows.length) {
         model.status = 'gray';
         model.answer = filtered ? 'В текущем срезе нет контрольных дат' : 'Нет контрольных дат для проверки';
@@ -24042,9 +24190,10 @@ let resourceView = 'roles'; // 'roles' | 'load'
         + '<div><div class="text-xl font-extrabold ' + tone.text + '">' + esc(model.answer) + '</div><div class="mt-1 text-sm text-slate-600">' + esc(tone.label) + '. Плановые даты не меняются.</div></div></div></section>';
 
       var confidence = '<section data-forecast-confidence data-forecast-summary class="mt-3 rounded-2xl border border-slate-200 bg-slate-50/70 p-4">'
-        + '<div class="flex flex-wrap items-start justify-between gap-3"><div><div class="text-sm font-bold text-slate-800">Можно ли доверять прогнозу</div><div class="mt-1 text-sm text-slate-600">Заполненность данных <strong class="text-slate-900">' + model.confidence + '%</strong></div></div>'
+        + '<div class="flex flex-wrap items-start justify-between gap-3"><div><div class="text-sm font-bold text-slate-800">Можно ли доверять прогнозу</div><div class="mt-1 text-sm text-slate-600">Готовность данных <strong class="text-slate-900">' + model.confidence + '%</strong></div><div class="mt-1 text-xs font-semibold ' + (model.readiness.canForecast ? 'text-emerald-700' : 'text-amber-700') + '">' + (model.readiness.canForecast ? 'Данных достаточно для прогноза' : 'Сначала заполните ' + model.readiness.missing + ' ' + pluralRu(model.readiness.missing, ['поле', 'поля', 'полей'])) + '</div></div>'
         + '<div class="flex flex-wrap gap-2 text-xs"><span class="rounded-full bg-white border border-slate-200 px-3 py-1.5">Дат: <strong>' + rows.length + '</strong></span><span class="rounded-full bg-white border border-slate-200 px-3 py-1.5">В срок: <strong>' + model.green + '</strong></span><span class="rounded-full bg-white border border-slate-200 px-3 py-1.5">Под риском: <strong>' + (model.red + model.amber) + '</strong></span></div></div>'
-        + '<div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-slate-600"><div>Без оценки <strong class="' + (model.noEstimate ? 'text-amber-700' : 'text-emerald-700') + '">' + model.noEstimate + '</strong></div><div>Без исполнителя <strong class="' + (model.noResource ? 'text-amber-700' : 'text-emerald-700') + '">' + model.noResource + '</strong></div><div>Без дат <strong class="' + (model.noDates ? 'text-amber-700' : 'text-emerald-700') + '">' + model.noDates + '</strong></div></div></section>';
+        + '<div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-slate-600"><div>Без оценки <strong class="' + (model.noEstimate ? 'text-amber-700' : 'text-emerald-700') + '">' + model.noEstimate + '</strong></div><div>Без исполнителя <strong class="' + (model.noResource ? 'text-amber-700' : 'text-emerald-700') + '">' + model.noResource + '</strong></div><div>Без дат <strong class="' + (model.noDates ? 'text-amber-700' : 'text-emerald-700') + '">' + model.noDates + '</strong></div></div>'
+        + (model.readiness.canForecast ? '' : '<button type="button" onclick="openPlanHealthCenter(&quot;readiness&quot;)" class="mt-3 min-h-11 px-4 rounded-xl bg-white border border-amber-300 text-xs font-semibold text-amber-900">Показать, что заполнить</button>') + '</section>';
 
       var topCauses = (model.slices || []).slice(0, 3);
       var causesHtml = topCauses.length
@@ -24052,17 +24201,10 @@ let resourceView = 'roles'; // 'roles' | 'load'
         : '<div class="mt-3 rounded-xl bg-emerald-50 px-3 py-3 text-sm text-emerald-800">Критичных пробелов в плане не найдено.</div>';
       var causes = '<section data-forecast-causes data-forecast-reasons class="mt-4"><div class="text-sm font-bold text-slate-800">Три главные причины</div><div class="text-xs text-slate-500 mt-1">Нажмите причину, чтобы открыть точный список задач.</div>' + causesHtml + '</section>';
 
-      var actionByKind = {
-        overdue: function (x) { return 'Разобрать ' + x.count + ' просроченных задач'; },
-        estimate: function (x) { return 'Добавить оценку ' + x.count + ' задачам'; },
-        resource: function (x) { return 'Назначить исполнителя ' + x.count + ' задачам'; },
-        dates: function (x) { return 'Указать даты для ' + x.count + ' задач'; }
-      };
-      var actionItems = topCauses.map(function (item) { return actionByKind[item.kind] ? actionByKind[item.kind](item) : item.label; });
-      if (!actionItems.length) actionItems = ['Зафиксировать текущий план и следить за изменениями'];
+      var actionItems = topCauses.map(function (item) { return { item:item, text:item.action || item.label }; });
       var actions = '<section data-forecast-actions class="mt-4 rounded-2xl border border-indigo-200 bg-indigo-50/70 p-4"><div class="text-sm font-bold text-indigo-900">Что сделать сейчас</div>'
-        + '<ol class="mt-2 space-y-2 text-sm text-indigo-950">' + actionItems.map(function (x, i) { return '<li class="flex gap-2"><span class="font-bold">' + (i + 1) + '.</span><span>' + esc(x) + '</span></li>'; }).join('') + '</ol>'
-        + '<div class="mt-4 flex flex-wrap gap-2"><button type="button" onclick="openPlanHealthCenter()" class="px-3 rounded-xl bg-white border border-indigo-200 font-semibold text-indigo-700">Открыть проверки</button><button type="button" onclick="_wiSetOn(true)" class="px-3 rounded-xl bg-indigo-600 text-white font-semibold">Показать варианты</button></div></section>';
+        + (actionItems.length ? '<ol class="mt-2 space-y-2 text-sm text-indigo-950">' + actionItems.map(function (entry, i) { var reason = (typeof escAttr === 'function') ? escAttr(entry.item.kind || '') : String(entry.item.kind || ''); return '<li><button type="button" data-reason="' + reason + '" onclick="_fcOpenReason(this.dataset.reason)" class="w-full min-h-11 rounded-xl border border-indigo-100 bg-white px-3 py-2 text-left flex items-center gap-2 hover:border-indigo-300"><span class="font-bold">' + (i + 1) + '.</span><span class="grow">' + esc(entry.text) + '</span><span aria-hidden="true">→</span></button></li>'; }).join('') + '</ol>' : '<div class="mt-2 text-sm text-indigo-950">Зафиксируйте текущий план и следите за изменениями.</div>')
+        + '<div class="mt-4 flex flex-wrap gap-2"><button type="button" onclick="openPlanHealthCenter()" class="min-h-11 px-3 rounded-xl bg-white border border-indigo-200 font-semibold text-indigo-700">Открыть проверки</button><button type="button" onclick="_wiSetOn(true)" class="min-h-11 px-3 rounded-xl bg-indigo-600 text-white font-semibold">Показать варианты</button></div></section>';
 
       var dates = '<div class="mt-3 rounded-2xl bg-white border border-slate-200 overflow-hidden"><div class="px-4 py-3 flex items-center justify-between gap-3 border-b border-slate-100"><div><div class="text-sm font-bold text-slate-800">Контрольные даты</div><div class="text-xs text-slate-500">Обещание, расчетный срок и причина риска</div></div><span class="text-xs text-slate-500">' + rows.length + '</span></div><div id="forecastDatesList">' + _fcDatesHtml(rows) + '</div>'
         + (rows.length > 6 ? '<div class="p-3 border-t border-slate-100"><button type="button" onclick="_fcShowMoreDates(this)" class="px-3 rounded-xl bg-slate-50 border border-slate-200 font-semibold text-slate-700">Показать ещё ' + Math.min(20, rows.length - 6) + ' · осталось ' + (rows.length - 6) + '</button></div>' : '') + '</div>';
@@ -24071,7 +24213,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       var note = '<div class="text-xs text-slate-500 mt-3 leading-relaxed">Расчет учитывает рабочие дни, занятость, отпуска и зависимости. Задачи на холде помечаются как пауза. «Что если» не меняет реальный план.</div>';
       var scenarioHtml = _wiOn ? (_wiPanelHtml() + _wiSummaryHtml()) : '';
 
-      v.innerHTML = head + '<div class="p-4 grow overflow-auto">' + hero + confidence + causes + actions + scenarioHtml + fullList + note + '</div>';
+      v.innerHTML = head + '<div class="p-4 grow overflow-auto">' + scope + hero + confidence + causes + actions + scenarioHtml + fullList + note + '</div>';
     }
 
     // Выбор представления:
@@ -26655,6 +26797,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         else if (_forecastReasonFilter === 'estimate') items.push('Причина прогноза: без оценки');
         else if (_forecastReasonFilter === 'resource') items.push('Причина прогноза: без исполнителя');
         else if (_forecastReasonFilter === 'dates') items.push('Причина прогноза: без дат');
+        else if (String(_forecastReasonFilter || '').indexOf('tasks:') === 0) items.push('Причина прогноза: задачи с наибольшим влиянием');
       } catch (e) {}
       return items;
     }
@@ -26663,13 +26806,17 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const deck = document.getElementById('planControlDeck');
       if (!bar) return;
       const items = activeFilterSummaries();
-      bar.hidden = items.length === 0;
-      if (deck) deck.classList.toggle('has-active-filters', items.length > 0);
-      bar.innerHTML = items.length ? [
-        '<span class="shrink-0 px-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">Активно</span>',
-        ...items.map(text => `<button type="button" class="active-filter-chip" onclick="toggleFilterTools(true)" title="Изменить фильтры">${escHtml(text)}</button>`),
-        '<button type="button" class="active-filter-chip !border-slate-200 !bg-white !text-slate-600 hover:!text-rose-600" onclick="resetAllFilters()" title="Сбросить все фильтры">Сбросить всё</button>'
-      ].join('') : '';
+      const hasForecastReturn = !!_forecastReasonFilter;
+      const regularItems = items.filter(text => !/^Причина прогноза:/.test(text));
+      const visible = hasForecastReturn || regularItems.length > 0;
+      bar.hidden = !visible;
+      if (deck) deck.classList.toggle('has-active-filters', visible);
+      if (!visible) { bar.innerHTML = ''; return; }
+      const parts = ['<span class="shrink-0 px-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">Активно</span>'];
+      if (hasForecastReturn) parts.push('<button type="button" data-forecast-return class="active-filter-chip !border-indigo-200 !bg-indigo-50 !text-indigo-700" onclick="_fcReturnToForecast()" title="Снять срез причины и вернуться к прогнозу">← Вернуться в «Успеваем?»</button>');
+      regularItems.forEach(function (label) { parts.push('<button type="button" class="active-filter-chip" onclick="toggleFilterTools(true)" title="Изменить фильтры">' + escHtml(label) + '</button>'); });
+      parts.push('<button type="button" class="active-filter-chip !border-slate-200 !bg-white !text-slate-600 hover:!text-rose-600" onclick="resetAllFilters()" title="Сбросить все фильтры">Сбросить всё</button>');
+      bar.innerHTML = parts.join('');
     }
     function updateFilterToolsSummary() {
       const btn = document.getElementById('filterToolsBtn'), badge = document.getElementById('filterToolsCount');
@@ -30382,6 +30529,29 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         el.textContent = 'Обновлено: ' + info.full + ' (' + info.ago + ')';
       }
     }
+    // Status-first сводка окна Jira: только производные значения, без новых полей хранения.
+    function renderJiraSyncSummary() {
+      const host = document.getElementById('jiraSyncSummary'); if (!host) return;
+      const cfg = (typeof getJiraCfg === 'function') ? getJiraCfg() : {};
+      const info = (typeof _jiraLastImportInfo === 'function') ? _jiraLastImportInfo() : null;
+      const activeChanges = (Array.isArray(roadmapData) ? roadmapData : []).filter(t => t && t._jiraChange).length;
+      const archivedChanges = (Array.isArray(archivedTasks) ? archivedTasks : []).filter(t => t && t._jiraChange).length;
+      let outgoing = 0;
+      try { outgoing = (typeof _collectJiraChanges === 'function' ? _collectJiraChanges() : []).length; } catch (e) {}
+      const every = Math.max(0, parseInt(cfg.syncEvery, 10) || 0);
+      let sessionActive = false;
+      try { sessionActive = !!(cfg.base && typeof jiraSessionTokenFor === 'function' && jiraSessionTokenFor(cfg.base)); } catch (e) {}
+      let timerActive = false; try { timerActive = !!_jiraAutoTimer; } catch (e) {}
+      const put = function(id, value){ const el = document.getElementById(id); if (el) el.textContent = value; };
+      put('jiraSummaryFreshness', info ? (info.stale ? 'Устарело · ' + info.ago : 'Обновлено ' + info.ago) : 'Еще не загружалось');
+      put('jiraSummarySession', !cfg.base ? 'Не настроено' : (sessionActive ? 'Токен активен' : 'Без активного токена'));
+      put('jiraSummaryIncoming', String(activeChanges + archivedChanges));
+      put('jiraSummaryIncomingHint', activeChanges + ' в плане · ' + archivedChanges + ' в архиве');
+      put('jiraSummaryOutgoing', String(outgoing));
+      put('jiraSummarySchedule', every > 0 ? (every + ' мин · ' + (timerActive ? 'работает' : 'ждет токен')) : 'Выключено');
+      host.setAttribute('data-jira-freshness', !info ? 'empty' : (info.stale ? 'stale' : 'fresh'));
+      host.setAttribute('data-jira-session', sessionActive ? 'active' : 'inactive');
+    }
     // ===== Изменения из Jira: новые и обновленные задачи последнего импорта =====
     function renderJiraChangesChip() {
       const chip = document.getElementById('jiraChangesChip'); if (!chip) return;
@@ -30389,11 +30559,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const hideBoth = function(){ chip.classList.add('hidden'); if(menuChip){menuChip.classList.add('hidden');menuChip.classList.remove('flex');} };
       if (typeof featureFlags !== 'undefined' && featureFlags.jira === false) { hideBoth(); return; }
       if (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE) { hideBoth(); return; }
-      const hasJira = Array.isArray(roadmapData) && roadmapData.some(t => t && t.jira);
+      const hasJira = (Array.isArray(roadmapData) && roadmapData.some(t => t && t.jira)) || (Array.isArray(archivedTasks) && archivedTasks.some(t => t && t.jira));
       const info = (typeof _jiraLastImportInfo === 'function') ? _jiraLastImportInfo() : null;
       if (!hasJira || !info) { hideBoth(); return; }
       const dateEl = document.getElementById('jiraFreshDate'); if (dateEl) dateEl.textContent = info.short;
-      const n = roadmapData.filter(t => t && t._jiraChange).length;
+      const n = (Array.isArray(roadmapData) ? roadmapData : []).filter(t => t && t._jiraChange).length
+        + (Array.isArray(archivedTasks) ? archivedTasks : []).filter(t => t && t._jiraChange).length;
       const cntEl = document.getElementById('jiraFreshCount');
       if (cntEl) { if (n > 0) { cntEl.textContent = ', ' + n + ' измен.'; cntEl.classList.remove('hidden'); } else { cntEl.textContent = ''; cntEl.classList.add('hidden'); } }
       const amber = ['bg-amber-50', 'hover:bg-amber-100', 'border-amber-300', 'text-amber-800'];
@@ -30403,6 +30574,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       chip.title = 'Данные Jira: импорт ' + info.full + ' (' + info.ago + ')' + (n > 0 ? ' , ' + n + ' изменений из последнего импорта' : '');
       chip.classList.remove('hidden');
       if (menuChip) { menuChip.classList.remove('hidden'); menuChip.classList.add('flex'); menuChip.title = chip.title; const d=document.getElementById('planningJiraFreshDate'); if(d)d.textContent=info.short+(n?' · '+n:''); }
+      if (typeof renderJiraSyncSummary === 'function') renderJiraSyncSummary();
     }
     function closeJiraChangesModal() {
       const m = document.getElementById('jiraChangesModal'); if (m) m.classList.add('hidden');
@@ -30410,18 +30582,22 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     }
     function openJiraChangesModal() {
       const cont = document.getElementById('jiraChangesList'); if (!cont) return;
-      const all = (Array.isArray(roadmapData) ? roadmapData : []).filter(t => t && t._jiraChange);
-      const news = all.filter(t => t._jiraChange.kind === 'new');
-      const upds = all.filter(t => t._jiraChange.kind === 'upd');
-      let n = 0;
-      const row = (t, badge) => {
+      const active = (Array.isArray(roadmapData) ? roadmapData : []).filter(t => t && t._jiraChange).map(t => ({ task:t, archived:false }));
+      const archived = (Array.isArray(archivedTasks) ? archivedTasks : []).filter(t => t && t._jiraChange).map(t => ({ task:t, archived:true }));
+      const all = active.concat(archived);
+      const news = all.filter(item => item.task._jiraChange.kind === 'new');
+      const upds = all.filter(item => item.task._jiraChange.kind === 'upd');
+      const row = (item, badge) => {
+        const t = item.task;
         const key = (typeof getTaskKey === 'function') ? (getTaskKey(t) || '') : (t.jira || '');
         const fields = (t._jiraChange.fields || []).filter(Boolean);
         const det = (t._jiraChange.kind === 'upd' && fields.length) ? '<span class="text-[10px] text-slate-500"> , ' + escHtml(fields.join(', ')) + '</span>' : '';
-        return '<button type="button" onclick="closeJiraChangesModal(); openTaskById(' + t.id + ')" class="w-full text-left flex items-start gap-2 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer">'
+        const archiveTag = item.archived ? '<span class="text-[10px] text-slate-400"> · в архиве</span>' : '';
+        const action = item.archived ? 'closeJiraChangesModal(); openArchiveModal()' : ('closeJiraChangesModal(); openTaskById(' + t.id + ')');
+        return '<button type="button" onclick="' + action + '" class="w-full text-left flex items-start gap-2 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer">'
           + badge
           + '<span class="min-w-0 grow"><span class="text-sm font-medium text-slate-800">' + escHtml(t.name || '(без названия)') + '</span> '
-          + (key ? '<span class="font-mono text-[10px] text-slate-400">' + escHtml(key) + '</span>' : '') + det + '</span>'
+          + (key ? '<span class="font-mono text-[10px] text-slate-400">' + escHtml(key) + '</span>' : '') + archiveTag + det + '</span>'
           + '</button>';
       };
       const NB = '<span class="shrink-0 mt-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-300">новое</span>';
@@ -30430,8 +30606,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         cont.innerHTML = '<div class="text-sm text-slate-500 text-center py-8">Нет новых или обновленных задач из последнего импорта Jira.</div>';
       } else {
         let html = '';
-        if (news.length) html += '<div class="text-[10px] font-semibold uppercase tracking-wider text-slate-500 px-3 pt-1.5 pb-1">Новые , ' + news.length + '</div>' + news.map(t => row(t, NB)).join('');
-        if (upds.length) html += '<div class="text-[10px] font-semibold uppercase tracking-wider text-slate-500 px-3 pt-2.5 pb-1">Обновленные , ' + upds.length + '</div>' + upds.map(t => row(t, UB)).join('');
+        if (news.length) html += '<div class="text-[10px] font-semibold uppercase tracking-wider text-slate-500 px-3 pt-1.5 pb-1">Новые , ' + news.length + '</div>' + news.map(item => row(item, NB)).join('');
+        if (upds.length) html += '<div class="text-[10px] font-semibold uppercase tracking-wider text-slate-500 px-3 pt-2.5 pb-1">Обновленные , ' + upds.length + '</div>' + upds.map(item => row(item, UB)).join('');
         cont.innerHTML = html;
       }
       const m = document.getElementById('jiraChangesModal');
@@ -30616,12 +30792,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       jiraSyncTab('import');
       loadJiraColMapInputs();
       try { renderJiraMapProfileSel(storage.get('gantt_jira_last_map_profile') || ''); } catch (e) {}
+      renderJiraSyncSummary();
       m.classList.remove('hidden');
       if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
     }
     function closeJiraSync() {
       const m = jiraGetEl('jiraSyncModal'); if (m) m.classList.add('hidden');
-      clearJiraSession('modal-close');
       if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
     }
     function jiraSyncTab(which) {
@@ -30705,6 +30881,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (tokenEl) tokenEl.value = '';
       if (_jiraAutoTimer) { clearInterval(_jiraAutoTimer); _jiraAutoTimer = null; }
       if (typeof renderJiraSyncChip === 'function') renderJiraSyncChip();
+      if (typeof renderJiraSyncSummary === 'function') renderJiraSyncSummary();
     }
     function jiraRememberSessionToken(token, base) {
       const origin = jiraOrigin(base);
@@ -30852,6 +31029,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         _jiraAutoTimer = setInterval(() => { jiraAutoSyncNow(true); }, every * 60000);
       }
       if (typeof renderJiraSyncChip === 'function') renderJiraSyncChip();
+      if (typeof renderJiraSyncSummary === 'function') renderJiraSyncSummary();
     }
     function jiraSetSyncEvery(v) {
       const n = Math.max(0, Math.min(1440, parseInt(v, 10) || 0));
@@ -32306,16 +32484,22 @@ function syncBodyScrollLock() {
     </div>
   </div>
 
-  <div id="versionsModal" role="dialog" aria-modal="true" aria-label="История версий файла" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1000] flex items-center justify-center hidden p-4" data-modal-backdrop>
+  <div id="versionsModal" role="dialog" aria-modal="true" aria-label="Сохранение и восстановление" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1000] flex items-center justify-center hidden p-4" data-modal-backdrop>
    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200/60 w-full max-w-4xl flex flex-col max-h-[90vh]">
     <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
      <div class="flex items-center gap-3 min-w-0">
       <span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>
-      <div class="min-w-0"><h3 class="text-lg font-semibold text-slate-800 leading-tight">Локальные JSON-снимки</h3><p class="text-[10px] text-slate-500 leading-tight">До 20 версий в этом браузере · метаданные, экспорт и откат с резервной копией текущего состояния</p></div>
+      <div class="min-w-0"><h3 class="text-lg font-semibold text-slate-800 leading-tight">Сохранение и восстановление</h3><p class="text-[10px] text-slate-500 leading-tight">Файл проекта и до 20 точек возврата в этом браузере</p></div>
      </div>
      <button type="button" onclick="closeVersionsModal()" aria-label="Закрыть" title="Закрыть" class="text-slate-500 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
     </div>
-    <div class="px-6 pt-3 flex items-center gap-2 flex-wrap"><button type="button" onclick="closeVersionsModal(); openMergeFile();" title="Слить план с файлом коллеги: правки коллеги подтянутся, конфликты решите вручную. Общий предок берется из этой истории" class="inline-flex items-center gap-1.5 h-9 px-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-xl cursor-pointer">Объединить с файлом коллеги</button><button type="button" id="saveVersionNowBtn" onclick="saveVersionNow()" class="inline-flex items-center gap-1.5 h-9 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Сохранить версию сейчас</button><button type="button" onclick="compareVersionWithCurrent()" class="inline-flex items-center gap-1.5 h-9 px-3 bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 text-xs font-semibold rounded-xl cursor-pointer transition-colors" title="Что изменилось: выбранная (или последняя) версия против текущего состояния карты">Сравнить с текущим</button><button type="button" onclick="exportVersionsToFile()" title="Скачать все локальные версии одним JSON-файлом , для переноса в другой браузер или на другую машину" class="inline-flex items-center gap-1.5 h-9 px-3 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold rounded-xl cursor-pointer transition-colors">Экспорт в файл</button><button type="button" onclick="importVersionsFromFile()" title="Добавить версии из ранее выгруженного файла, дубли пропускаются" class="inline-flex items-center gap-1.5 h-9 px-3 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold rounded-xl cursor-pointer transition-colors">Импорт из файла</button><input type="file" id="versionsImportFile" accept=".json,application/json" class="hidden" onchange="onVersionsImportChosen(event)"><span id="versionsCmpHint" class="text-[10px] text-slate-500"></span></div>
+    <div class="px-6 pt-3"><div id="saveRecoveryStatus" aria-live="polite"></div></div>
+    <div class="px-6 pt-3 grid sm:grid-cols-3 gap-2" aria-label="Маршрут сохранения и восстановления">
+      <button type="button" onclick="saveNowToFile(); setTimeout(renderSaveRecoveryStatus, 500)" class="min-h-14 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-sky-50 text-left cursor-pointer"><span class="block text-[10px] font-bold text-sky-600 uppercase tracking-wide">1 · Файл</span><span class="block mt-0.5 text-xs font-semibold text-slate-800">Сохранить сейчас</span></button>
+      <button type="button" id="saveVersionNowBtn" onclick="saveVersionNow()" class="min-h-14 px-3 py-2 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-left cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"><span class="block text-[10px] font-bold text-indigo-600 uppercase tracking-wide">2 · Страховка</span><span class="block mt-0.5 text-xs font-semibold text-slate-800">Создать точку возврата</span></button>
+      <button type="button" onclick="focusRecoveryPoints()" class="min-h-14 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left cursor-pointer"><span class="block text-[10px] font-bold text-slate-500 uppercase tracking-wide">3 · Восстановление</span><span class="block mt-0.5 text-xs font-semibold text-slate-800">Выбрать точку ниже</span></button>
+    </div>
+    <details class="mx-6 mt-3 rounded-xl border border-slate-200 bg-slate-50/60"><summary class="px-3 py-2.5 cursor-pointer text-xs font-semibold text-slate-700">Дополнительные действия</summary><div class="px-3 pb-3 flex items-center gap-2 flex-wrap"><button type="button" onclick="closeVersionsModal(); openMergeFile();" title="Слить план с файлом коллеги: правки коллеги подтянутся, конфликты решите вручную. Общий предок берется из этой истории" class="inline-flex items-center gap-1.5 h-9 px-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-xl cursor-pointer">Объединить с файлом коллеги</button><button type="button" onclick="compareVersionWithCurrent()" class="inline-flex items-center gap-1.5 h-9 px-3 bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 text-xs font-semibold rounded-xl cursor-pointer transition-colors" title="Что изменилось: выбранная (или последняя) точка против текущего состояния карты">Сравнить с текущим</button><button type="button" onclick="exportVersionsToFile()" title="Скачать все локальные точки возврата одним JSON-файлом" class="inline-flex items-center gap-1.5 h-9 px-3 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold rounded-xl cursor-pointer transition-colors">Экспорт точек</button><button type="button" onclick="importVersionsFromFile()" title="Добавить точки возврата из ранее выгруженного файла, дубли пропускаются" class="inline-flex items-center gap-1.5 h-9 px-3 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold rounded-xl cursor-pointer transition-colors">Импорт точек</button><input type="file" id="versionsImportFile" accept=".json,application/json" class="hidden" onchange="onVersionsImportChosen(event)"><span id="versionsCmpHint" class="text-[10px] text-slate-500"></span></div></details>
     <div id="versionsRestorePanel" class="hidden" aria-live="polite"></div>
     <div id="versionsDiffPanel" class="hidden mx-6 mt-3 bg-slate-50 border border-slate-200 rounded-xl p-3 max-h-60 overflow-y-auto shrink-0"></div>
     <div id="versionsBody" class="p-6 pt-3 overflow-y-auto flex-1"></div>
@@ -32743,7 +32927,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v15.5 · 29.08.2026</span>
+     <span id="appVersionBadge">v15.5 · 30.08.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -35980,7 +36164,21 @@ function syncBodyScrollLock() {
      </div>
      <button type="button" onclick="closeJiraSync()" aria-label="Закрыть" title="Закрыть" class="text-slate-500 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
     </div>
-    <div class="px-6 pt-4">
+    <section id="jiraSyncSummary" aria-label="Состояние обмена с Jira" class="px-6 pt-4">
+     <div class="rounded-xl border border-slate-200 bg-slate-50/70 p-3">
+      <div class="flex items-center justify-between gap-3 mb-2">
+       <h4 class="text-xs font-semibold text-slate-800">Состояние обмена</h4>
+       <span id="jiraSummaryFreshness" class="text-[10px] font-medium text-slate-500">Еще не загружалось</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+       <div class="rounded-lg bg-white border border-slate-100 px-2.5 py-2"><div class="text-[10px] text-slate-500">Подключение</div><div id="jiraSummarySession" class="text-xs font-semibold text-slate-800 mt-0.5">Не настроено</div></div>
+       <div class="rounded-lg bg-white border border-slate-100 px-2.5 py-2"><div class="text-[10px] text-slate-500">Изменения из Jira</div><div id="jiraSummaryIncoming" class="text-base font-semibold text-slate-800 leading-tight mt-0.5">0</div><div id="jiraSummaryIncomingHint" class="text-[9px] text-slate-400">0 в плане · 0 в архиве</div></div>
+       <div class="rounded-lg bg-white border border-slate-100 px-2.5 py-2"><div class="text-[10px] text-slate-500">К отправке</div><div id="jiraSummaryOutgoing" class="text-base font-semibold text-slate-800 leading-tight mt-0.5">0</div><div class="text-[9px] text-slate-400">локальных изменений</div></div>
+       <div class="rounded-lg bg-white border border-slate-100 px-2.5 py-2"><div class="text-[10px] text-slate-500">Автообновление</div><div id="jiraSummarySchedule" class="text-xs font-semibold text-slate-800 mt-0.5">Выключено</div></div>
+      </div>
+     </div>
+    </section>
+    <div class="px-6 pt-3">
      <div class="inline-flex items-center bg-slate-100 rounded-lg p-0.5">
       <button type="button" id="jiraTabBtn-import" onclick="jiraSyncTab('import')" class="px-2.5 py-1 rounded-md text-[11px] transition-colors cursor-pointer bg-white shadow-sm text-indigo-700 font-semibold">Импорт из Jira</button>
       <button type="button" id="jiraTabBtn-export" onclick="jiraSyncTab('export')" class="px-2.5 py-1 rounded-md text-[11px] transition-colors cursor-pointer text-slate-500 font-medium hover:text-slate-900">Экспорт в Jira</button>
@@ -37220,15 +37418,23 @@ function simplifyDataMenuInformationArchitecture() {
   }
 
   var jiraDate = document.getElementById('dataMenuJiraDate');
+  var saveCenterButton = actionButton('saveNowToFile');
+  if (saveCenterButton) {
+    saveCenterButton.setAttribute('onclick', 'closeDataMenu(); openVersionsModal();');
+    saveCenterButton.setAttribute('aria-label', 'Сохранение и восстановление');
+    saveCenterButton.setAttribute('title', 'Сохранить файл, создать точку возврата или безопасно восстановить проект');
+    var saveCenterLabel = saveCenterButton.querySelector('.grow');
+    if (saveCenterLabel) saveCenterLabel.textContent = 'Сохранение и восстановление';
+  }
   var frequent = document.createElement('div');
   frequent.setAttribute('data-data-menu-frequent', '');
   frequent.className = 'space-y-1.5';
   [
-    ['openJiraSync', 'jira'],
-    ['saveNowToFile', 'save'],
-    ['openRoadmapLocker', 'locker']
+    [actionButton('openJiraSync'), 'jira'],
+    [saveCenterButton, 'save'],
+    [actionButton('openRoadmapLocker'), 'locker']
   ].forEach(function (entry) {
-    var button = prepareButton(actionButton(entry[0]), 'primary');
+    var button = prepareButton(entry[0], 'primary');
     if (!button) return;
     button.setAttribute('data-data-primary', entry[1]);
     frequent.appendChild(button);
@@ -37252,8 +37458,7 @@ function simplifyDataMenuInformationArchitecture() {
     actionButton('exportEncryptedJSON'),
     actionButton('toggleProjectLock')
   ]));
-  groups.appendChild(makeGroup('versions', 'История проекта', 'Снимки, план/факт и журнал изменений', [
-    actionButton('openVersionsModal'),
+  groups.appendChild(makeGroup('versions', 'История проекта', 'План/факт и журнал изменений', [
     actionButton('openBaselineModal'),
     actionButton('openProjectJournal')
   ]));
@@ -37276,6 +37481,29 @@ function simplifyDataMenuInformationArchitecture() {
   menu.appendChild(extra);
   menu.appendChild(groups);
   menu.setAttribute('data-data-menu-ready', '1');
+}
+
+// Верхнее меню оставляет два ясных маршрута; все специализированные форматы живут в центре материалов.
+function simplifyReportsMenuInformationArchitecture() {
+  var menu = document.getElementById('reportsMenu');
+  if (!menu || menu.getAttribute('data-reports-menu-ready') === '1') return;
+  var materials = menu.querySelector('button[onclick*="openLeaderChooser"]');
+  var xlsx = menu.querySelector('button[onclick*="exportTasksXlsx"]');
+  if (!materials || !xlsx) return;
+  var materialsCopy = materials.querySelector('.grow');
+  if (materialsCopy) materialsCopy.innerHTML = '<span class="block">Материалы для руководства</span><span class="block text-[10px] text-slate-500 font-normal">статус, отчеты, слайды и отправка</span>';
+  materials.setAttribute('title', 'Единый центр статуса, отчетов, слайдов и экспорта');
+  xlsx.setAttribute('onclick', 'closeReportsMenu(); exportPlanToXlsx();');
+  var xlsxCopy = xlsx.querySelector('.grow');
+  if (xlsxCopy) xlsxCopy.innerHTML = '<span class="block">Выгрузить план в XLSX</span><span class="block text-[10px] text-slate-500 font-normal">задачи и сводные листы</span>';
+  menu.innerHTML = '';
+  var intro = document.createElement('p');
+  intro.className = 'px-2 pt-1 pb-2 text-[11px] leading-snug text-slate-500';
+  intro.textContent = 'Подготовьте материал для решения или выгрузите план для расчетов.';
+  menu.appendChild(intro);
+  menu.appendChild(materials);
+  menu.appendChild(xlsx);
+  menu.setAttribute('data-reports-menu-ready', '1');
 }
 
 function _setSettingsTabLabel(button, label) {
@@ -37647,6 +37875,7 @@ function _normalizeAddedUiChrome(node) {
 }
 
 try { simplifyDataMenuInformationArchitecture(); } catch (e) { console.warn('Data menu simplification unavailable:', e); }
+try { simplifyReportsMenuInformationArchitecture(); } catch (e) { console.warn('Reports menu simplification unavailable:', e); }
 try { simplifySettingsInformationArchitecture(); } catch (e) { console.warn('Settings simplification unavailable:', e); }
 try {
   mountDeclaredUiContracts(document.body);

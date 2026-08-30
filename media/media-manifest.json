@@ -1,23 +1,40 @@
 {
   "version": "15.5",
-  "generatedAt": "2026-08-29",
+  "generatedAt": "2026-08-30",
   "source": "synthetic-demo-PAY-LK",
   "video": {
     "file": "roadmap-demo.mp4",
-    "sha256": "34c129172af29dadde7e11b4a4887cf83f6cf4273391e2fae97554d28fe2226d",
-    "bytes": 9664044,
-    "durationSeconds": 44,
+    "sha256": "e3ea734746f19bcc7d7e864bcae749a45ab2026016ac13a4aa494e75e0ac62ad",
+    "bytes": 8967766,
+    "durationSeconds": 42.6,
     "width": 1440,
     "height": 810,
     "fps": 30,
     "codec": "h264",
     "pixelFormat": "yuv420p",
-    "audio": false
+    "audio": false,
+    "motionProfile": "eased-stable-v3-4x",
+    "sceneCount": 11,
+    "transitionDurationSeconds": 0.9,
+    "transitions": [
+      "fade"
+    ],
+    "renderScale": 4,
+    "maxZoom": 1.035,
+    "crf": 20,
+    "tune": "stillimage",
+    "gopSize": 60,
+    "keyintMin": 60,
+    "sceneCutThreshold": 0,
+    "colorPrimaries": "bt709",
+    "colorTransfer": "bt709",
+    "colorSpace": "bt709",
+    "colorRange": "tv"
   },
   "poster": {
     "file": "roadmap-demo-poster.jpg",
-    "sha256": "1f729209c296d18f0d280cc0d0e3bf5b7984f682fef0660afbe3267a79183391",
-    "bytes": 127710,
+    "sha256": "b86468fee8f7387792fbc4c009d66e198bb886a85576ee07c055f20a0dc52bf7",
+    "bytes": 145572,
     "width": 1440,
     "height": 810
   }
