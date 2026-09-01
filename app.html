@@ -5251,7 +5251,9 @@
   }
 }
 
+
 </style>
+
   <style>
     button:focus-visible, a:focus-visible, [tabindex]:focus-visible, [role="button"]:focus-visible, [role="menuitem"]:focus-visible { outline: 2px solid #4f46e5 !important; outline-offset: 2px; }
     .view-active { background:#4f46e5 !important; color:#fff !important; border-color:#4f46e5 !important; }
@@ -7193,7 +7195,7 @@
    #leaderChooserModal [data-materials-group-hint],
    #leaderChooserModal [data-materials-title],
    #leaderChooserModal [data-materials-description] {
-     white-space:normal; overflow-wrap:anywhere; word-break:normal; hyphens:auto;
+     white-space:normal; overflow-wrap:normal; word-break:normal; hyphens:none;
    }
    #leaderChooserModal [data-materials-group-title],
    #leaderChooserModal [data-materials-title] { line-height:1.35; }
@@ -7774,7 +7776,7 @@
      #presentView .pres-preview-pane { position:sticky; top:.75rem; }
    }
 
-   /* v15.6.1: адаптивная сетка списка и таймлайна без конфликтов breakpoint. */
+   /* v15.7: адаптивная сетка списка и таймлайна без конфликтов breakpoint. */
    body .rm-adaptive-popover.rm-adaptive-popover {
      z-index:980 !important; max-height:min(26rem,calc(100dvh - 5rem));
      overflow:auto; padding:.5rem !important;
@@ -8014,6 +8016,176 @@
        animation:none !important; transition:none !important;
      }
    }
+   /* v15.6 adaptive dialog and overflow hardening. */
+   #statusModal .rm-dialog-header > div:first-child,
+   #taskKindsModal .rm-dialog-header > div:first-child,
+   #customFieldsModal .rm-dialog-header > div:first-child,
+   #goalsModal .rm-dialog-header > div:first-child,
+   #raidModal .rm-dialog-header > div:first-child,
+   #insightsModal .rm-dialog-header > div:first-child,
+   #resourceModal .rm-dialog-header > div:first-child,
+   #epicAuditModal .rm-dialog-header > div:first-child { flex:1 1 auto; min-width:0; }
+   #statusModal .rm-dialog-title,#taskKindsModal .rm-dialog-title,
+   #customFieldsModal .rm-dialog-title,#goalsModal .rm-dialog-title,
+   #raidModal .rm-dialog-title,#insightsModal .rm-dialog-title,
+   #resourceModal .rm-dialog-title,#epicAuditModal .rm-dialog-title {
+     min-width:0; max-width:100%; white-space:normal; overflow-wrap:normal; word-break:normal;
+   }
+   #customFieldsModal .rm-dialog-header > div:first-child > div:last-child,
+   #goalsModal .rm-dialog-header > div:first-child > div:last-child,
+   #raidModal .rm-dialog-header > div:first-child > div:last-child { min-width:0; }
+   #customFieldsModal .rm-dialog-header p,#goalsModal .rm-dialog-header p,
+   #raidModal .rm-dialog-header p,#insightsModal .rm-dialog-header p,
+   #resourceModal .rm-dialog-header p,#epicAuditModal .rm-dialog-header p {
+     min-width:0; max-width:100%; white-space:normal; overflow-wrap:normal; word-break:normal; text-wrap:pretty;
+   }
+   #resourceModal .rm-dialog-header > div:first-child { overflow:hidden; }
+   #resourceModalTitle { overflow:hidden; text-overflow:ellipsis; }
+   #resourceAddWrap { min-width:0; }
+   #resourceAddWrap > input { min-width:0; }
+   .version-card { min-width:0; }
+   .version-card-copy { overflow:hidden; }
+   .version-card-actions { max-width:100%; }
+   #rbSecPickerMenu,#reportSecPickerMenu { width:min(18rem,calc(100vw - 4rem)); max-width:calc(100vw - 4rem); }
+   #ganttLegend [role="dialog"] > div:first-child {
+     position:sticky; top:-1.25rem; z-index:2; margin:-1.25rem -1.25rem .5rem; padding:1rem 1.25rem .75rem;
+     background:rgba(255,255,255,.96); border-bottom:1px solid #e2e8f0; backdrop-filter:blur(8px);
+   }
+   #sectionInitOverlay [role="dialog"] h3,#sectionInitOverlay [role="dialog"] p,
+   #sectionInitOverlay [role="dialog"] button span {
+     min-width:0; max-width:100%; white-space:normal; overflow-wrap:break-word; word-break:normal;
+   }
+   #sectionInitOverlay [role="dialog"] button span.truncate { white-space:normal; overflow:visible; text-overflow:clip; }
+   @media (max-width:767px) {
+     .rm-dialog-overlay[data-rm-surface="dialog"] { padding:.5rem; }
+     .rm-dialog-overlay[data-rm-surface="dialog"] > .rm-dialog-surface {
+       width:calc(100vw - 1rem); max-width:calc(100vw - 1rem);
+       max-height:calc(100dvh - 1rem); border-radius:1rem;
+     }
+     #statusModal .rm-dialog-header,#taskKindsModal .rm-dialog-header,
+     #customFieldsModal .rm-dialog-header,#goalsModal .rm-dialog-header,
+     #raidModal .rm-dialog-header,#insightsModal .rm-dialog-header,
+     #resourceModal .rm-dialog-header,#epicAuditModal .rm-dialog-header {
+       align-items:flex-start; padding:.75rem; gap:.5rem;
+     }
+     #statusModal .rm-dialog-header > div:first-child,
+     #taskKindsModal .rm-dialog-header > div:first-child {
+       display:grid; grid-template-columns:auto minmax(0,1fr); gap:.5rem .625rem; width:100%;
+     }
+     #statusModal .rm-dialog-header > div:first-child > span:first-child,
+     #taskKindsModal .rm-dialog-header > div:first-child > span:first-child { grid-column:1; grid-row:1; }
+     #statusModal .rm-dialog-header > div:first-child > span:nth-child(2),
+     #taskKindsModal .rm-dialog-header > div:first-child > span:nth-child(2) {
+       grid-column:1 / -1; grid-row:2; display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+       width:100%; margin:0;
+     }
+     #statusModal .rm-dialog-header > div:first-child > span:nth-child(2) button,
+     #taskKindsModal .rm-dialog-header > div:first-child > span:nth-child(2) button { min-width:0; padding-inline:.375rem; }
+     #statusModal .rm-dialog-header > div:first-child > h3,
+     #taskKindsModal .rm-dialog-header > div:first-child > h3 { grid-column:2; grid-row:1; align-self:center; font-size:1rem; }
+     #customFieldsModal .rm-dialog-header > div:first-child > div:last-child,
+     #goalsModal .rm-dialog-header > div:first-child > div:last-child,
+     #raidModal .rm-dialog-header > div:first-child > div:last-child {
+       display:grid; grid-template-columns:minmax(0,1fr); align-items:start; gap:.375rem;
+     }
+     #customFieldsModal .rm-dialog-header > div:first-child > div:last-child > span:first-child,
+     #goalsModal .rm-dialog-header > div:first-child > div:last-child > span:first-child,
+     #raidModal .rm-dialog-header > div:first-child > div:last-child > span:first-child {
+       grid-row:2; display:grid; width:100%; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr);
+     }
+     #customFieldsModal .rm-dialog-header > div:first-child > div:last-child > span:first-child button,
+     #goalsModal .rm-dialog-header > div:first-child > div:last-child > span:first-child button,
+     #raidModal .rm-dialog-header > div:first-child > div:last-child > span:first-child button { min-width:0; padding-inline:.375rem; }
+     #customFieldsModal .rm-dialog-header h3,#goalsModal .rm-dialog-header h3,#raidModal .rm-dialog-header h3 { grid-row:1; font-size:1rem; }
+     #customFieldsModal .rm-dialog-header p,#goalsModal .rm-dialog-header p,#raidModal .rm-dialog-header p { grid-row:3; margin:0; line-height:1.35; }
+     #insightsModal .rm-dialog-header > div:first-child,#resourceModal .rm-dialog-header > div:first-child { gap:.625rem; }
+     #insightsModal .rm-dialog-header + .px-6.pt-3 { padding-inline:.75rem; overflow-x:auto; scrollbar-width:thin; }
+     #insightsModal .rm-dialog-header + .px-6.pt-3 button { flex:0 0 auto; white-space:nowrap; }
+     #statusModal .rm-dialog-content,#taskKindsModal .rm-dialog-content,
+     #customFieldsModal .rm-dialog-content,#goalsModal .rm-dialog-content,
+     #raidModal .rm-dialog-content,#insightsModal .rm-dialog-content,
+     #resourceModal .rm-dialog-content { padding:.75rem; }
+     #statusModal .rm-dialog-footer,#taskKindsModal .rm-dialog-footer,
+     #goalsModal .rm-dialog-footer,#raidModal .rm-dialog-footer,
+     #resourceModal .rm-dialog-footer { padding:.75rem; }
+     #taskKindsModal .rm-dialog-content > .flex:first-child { flex-wrap:wrap; }
+     #taskKindsModal .rm-dialog-content > .flex:first-child input[type="text"] { flex:1 1 10rem; }
+     #goalsFooter { flex-wrap:wrap; padding:.75rem; }
+     #goalsFooter > input { flex:1 1 12rem; min-width:0; }
+     #goalsFooter > button { flex:1 1 auto; }
+     #epicAuditModal .rm-dialog-header > div:last-child { gap:.25rem; }
+     #epicAuditModal .rm-dialog-header > div:last-child > button:not(.rm-dialog-close) {
+       width:2.75rem; min-width:2.75rem; padding:0; font-size:0; gap:0;
+     }
+     #epicAuditModal .rm-dialog-header > div:last-child > button:not(.rm-dialog-close) svg { width:1rem; height:1rem; }
+     #resourceAddWrap { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.5rem; }
+     #resourceAddWrap > input { grid-column:1 / -1; width:100%; }
+     #resourceAddWrap > button { width:100%; min-width:0; padding-inline:.5rem; }
+     #resourceAddWrap > button:last-child { grid-column:1 / -1; }
+     #resourceManagerList .overflow-x-auto { overflow-x:visible; }
+     #resourceManagerList .rgrid { min-width:0; grid-template-columns:minmax(0,1fr) auto; gap:.375rem .75rem; padding:.75rem; }
+     #resourceManagerList .rgrid > :first-child { grid-column:1; }
+     #resourceManagerList .rgrid > :nth-child(2) { grid-column:1; }
+     #resourceManagerList .rgrid > :nth-child(3),#resourceManagerList .rgrid > :nth-child(4),
+     #resourceManagerList .rgrid > :nth-child(5) { grid-column:1; }
+     #resourceManagerList .rgrid > :nth-child(6) { grid-column:2; grid-row:1 / span 3; align-self:start; }
+     #resourceManagerList .rgrid.bg-slate-50:not([data-rowhead]) { display:none; }
+     .sp-sprint-row { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto; gap:.5rem; }
+     .sp-sprint-row > input[type="text"] { grid-column:1 / -1; width:100%; }
+     .sp-sprint-row > .sp-sprint-date { min-width:0; width:100%; }
+     .sp-sprint-row > button { grid-column:3; grid-row:2; }
+     #reportModal .rm-dialog-footer { padding:.75rem; }
+     #reportModal .rm-dialog-footer > div { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); width:100%; gap:.5rem; }
+     #reportModal .rm-dialog-footer > div > button { width:100%; min-width:0; padding-inline:.5rem; }
+     .version-card { display:grid; grid-template-columns:minmax(0,1fr); align-items:start; }
+     .version-card-copy { width:100%; }
+     .version-card-copy .truncate { white-space:normal; overflow:visible; text-overflow:clip; }
+     .version-card-actions { width:100%; flex-wrap:wrap; justify-content:flex-start; flex-shrink:1; }
+     #versionsBody { padding:.75rem; }
+     .kanban-cols-footer { display:grid; grid-template-columns:minmax(0,1fr); padding:.75rem; }
+     .kanban-cols-footer > button { width:100%; }
+     .kanban-cols-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); width:100%; }
+     .kanban-cols-actions > span { grid-column:1 / -1; }
+     .kanban-cols-actions > button { width:100%; min-width:0; padding-inline:.5rem; }
+     #rbSecPickerMenu,#reportSecPickerMenu { width:calc(100vw - 4rem); max-width:calc(100vw - 4rem); }
+     #bulkBar { left:.5rem; right:.5rem; bottom:.5rem; transform:none; max-width:none; flex-wrap:wrap; overflow-x:hidden; overflow-y:auto; max-height:45dvh; }
+     #bulkBar > select { flex:1 1 8rem; min-width:0; max-width:none; }
+     #bulkBar > button { flex:1 1 7rem; min-width:0; white-space:normal; }
+     #bulkBar > span:first-child { flex:1 1 100%; }
+     #bulkBar > span.w-px { display:none; }
+     #bulkPopover { width:min(18rem,calc(100vw - 2rem)); max-width:calc(100vw - 2rem); }
+   }
+
+   /* Final adaptive overrides. */
+  #statusModal .rm-dialog-header > div:first-child,#taskKindsModal .rm-dialog-header > div:first-child{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.5rem .625rem;width:100%;}
+  #statusModal .rm-dialog-header > div:first-child > span:first-child,#taskKindsModal .rm-dialog-header > div:first-child > span:first-child{grid-column:1;grid-row:1;}
+  #statusModal .rm-dialog-header > div:first-child > span:nth-child(2),#taskKindsModal .rm-dialog-header > div:first-child > span:nth-child(2){grid-column:1/-1;grid-row:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;margin:0;}
+  #statusModal .rm-dialog-header > div:first-child > span:nth-child(2) button,#taskKindsModal .rm-dialog-header > div:first-child > span:nth-child(2) button{min-width:0;padding-inline:.375rem;}
+  #statusModal .rm-dialog-header > div:first-child > h3,#taskKindsModal .rm-dialog-header > div:first-child > h3{grid-column:2;grid-row:1;align-self:center;}
+  #customFieldsModal .rm-dialog-header > div:first-child > div:last-child,#goalsModal .rm-dialog-header > div:first-child > div:last-child,#raidModal .rm-dialog-header > div:first-child > div:last-child{display:grid;grid-template-columns:minmax(0,1fr);align-items:start;gap:.375rem;}
+  #customFieldsModal .rm-dialog-header > div:first-child > div:last-child > span:first-child,#goalsModal .rm-dialog-header > div:first-child > div:last-child > span:first-child,#raidModal .rm-dialog-header > div:first-child > div:last-child > span:first-child{grid-row:2;display:grid;width:100%;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);}
+  #customFieldsModal .rm-dialog-header > div:first-child > div:last-child > span:first-child button,#goalsModal .rm-dialog-header > div:first-child > div:last-child > span:first-child button,#raidModal .rm-dialog-header > div:first-child > div:last-child > span:first-child button{min-width:0;padding-inline:.375rem;}
+  #customFieldsModal .rm-dialog-header h3,#goalsModal .rm-dialog-header h3,#raidModal .rm-dialog-header h3{grid-row:1;}
+  #customFieldsModal .rm-dialog-header p,#goalsModal .rm-dialog-header p,#raidModal .rm-dialog-header p{grid-row:3;margin:0;line-height:1.35;overflow-wrap:anywhere;}
+  #epicAuditModal .rm-dialog-header > div:first-child,#resourceModal .rm-dialog-header > div:first-child{overflow:hidden;}
+  #epicAuditSubtitle,#resourceModalTitle{white-space:normal;overflow-wrap:anywhere;word-break:normal;}
+  #saveRecoveryStatus,#saveRecoveryStatus *,#versionsModal .version-card-copy,#versionsModal .version-card-copy *{min-width:0;max-width:100%;}
+  #saveRecoveryStatus [class*="text-xs"],#versionsModal .version-card-copy > div:last-child{white-space:normal;overflow-wrap:anywhere;word-break:normal;}
+  @media (max-width:767px){
+    #versionsModal .rm-right-drawer-surface{overflow-x:hidden;}
+    #versionsModal .rm-dialog-content{padding-inline:.75rem;}
+    #versionsModal details.mx-6,#versionsDiffPanel.mx-6{margin-inline:.75rem;}
+    #versionsModal details > div{min-width:0;flex-wrap:wrap;}
+    #versionsModal details > div > button{flex:1 1 9rem;min-width:0;}
+    #versionsBody{min-height:0;}
+  }
+  #epicAuditSubtitle,#resourceModalTitle{overflow-wrap:break-word;word-break:break-word;}
+  #versionsBody{min-height:0;}
+@media (max-width:767px){
+    #versionsModal .version-card-copy > div:last-child{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;}
+    #versionsModal .version-card-actions{flex-wrap:nowrap;gap:.25rem;}
+    #versionsModal .version-card-actions > button{min-width:0;padding-inline:.375rem;}
+  }
 </style>
 </head>
 <body class="bg-[#f8fafc] text-slate-900 antialiased selection:bg-indigo-100 overflow-x-clip">
@@ -8062,7 +8234,7 @@
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v15.6.1</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v15.7</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -8923,7 +9095,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v15.6.1">
+<script data-roadmap-modules="v15.7">
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
@@ -9943,6 +10115,7 @@ if (typeof globalThis !== 'undefined') {
         document.body.appendChild(host);
       }
       const toast = document.createElement('div');
+      toast.dataset.undoToast = '1';
       toast.className = 'rm-toast pointer-events-auto bg-slate-800 text-white text-xs font-medium pl-4 pr-2 py-2 rounded-xl shadow-lg flex items-center gap-3 transition-all duration-200';
       toast.style.opacity = '0'; toast.style.transform = 'translateY(8px)';
       const span = document.createElement('span'); span.textContent = text;
@@ -10080,6 +10253,26 @@ if (typeof globalThis !== 'undefined') {
         }).slice(0, 30);
     }
 
+    // Поиск и фильтр исполнителя используют одно правило: задача может содержать
+    // несколько ресурсов (в т.ч. с ролью), поэтому простого t.resource === name недостаточно.
+    function _taskHasSearchResource(task, resource) {
+      const needle = String(resource || '').trim().toLowerCase();
+      if (!needle) return false;
+      const raw = String((task && task.resource) || '');
+      if (needle === '__unassigned__') return !raw.trim();
+      const tokens = (typeof splitResourceTokens === 'function')
+        ? splitResourceTokens(raw)
+        : raw.split(/[;,\/]+/).map(function (x) { return x.trim(); }).filter(Boolean);
+      return tokens.some(function (token) {
+        const tokenLc = String(token || '').trim().toLowerCase();
+        let nameLc = tokenLc;
+        if (typeof parseResourceToken === 'function') {
+          try { nameLc = String((parseResourceToken(token) || {}).name || '').trim().toLowerCase(); } catch (e) {}
+        }
+        return tokenLc === needle || nameLc === needle;
+      });
+    }
+
     document.addEventListener('pointerdown', function (event) {
       const host = document.getElementById('globalSearchHost');
       if (host && host.classList.contains('is-open') && !host.contains(event.target)) closeGlobalSearch();
@@ -10135,7 +10328,7 @@ if (typeof globalThis !== 'undefined') {
       });
       // Ресурсы
       projectResources.forEach(r => {
-        const count = roadmapData.filter(t => t.resource === r).length;
+        const count = roadmapData.filter(t => _taskHasSearchResource(t, r)).length;
         items.push({
           kind: 'resource',
           id: r,
@@ -10300,6 +10493,107 @@ if (typeof globalThis !== 'undefined') {
       }
     }
 
+    function _globalSearchUsePlanningList() {
+      if (typeof setWorkspaceMode === 'function' && typeof workspaceMode !== 'undefined' && workspaceMode !== 'planning') {
+        setWorkspaceMode('planning', { skipView: true, skipRender: true, silent: true });
+      }
+      if (typeof setAppView === 'function') setAppView('list');
+      else if (typeof renderRoadmap === 'function') renderRoadmap(true);
+    }
+
+    function _globalSearchHiddenSectionRoot(sectionName) {
+      let cur = sectionName; const seen = new Set();
+      while (cur && !seen.has(cur)) {
+        seen.add(cur);
+        if (Array.isArray(hiddenSections) && hiddenSections.includes(cur)) return cur;
+        cur = (sectionParents && sectionParents[cur]) || '';
+      }
+      return '';
+    }
+
+    function _globalSearchExpandSectionPath(sectionName) {
+      let cur = sectionName; const seen = new Set(); let changed = false;
+      while (cur && !seen.has(cur)) {
+        seen.add(cur);
+        if (collapsedSections.includes(cur)) {
+          collapsedSections = collapsedSections.filter(function (s) { return s !== cur; });
+          changed = true;
+        }
+        cur = (sectionParents && sectionParents[cur]) || '';
+      }
+      if (changed) storage.set('gantt_collapsed_sections', JSON.stringify(collapsedSections));
+    }
+
+    function _globalSearchTasksInSectionTree(sectionName) {
+      return (roadmapData || []).filter(function (task) {
+        let cur = task && task.section; const seen = new Set();
+        while (cur && !seen.has(cur)) {
+          if (cur === sectionName) return true;
+          seen.add(cur); cur = (sectionParents && sectionParents[cur]) || '';
+        }
+        return false;
+      });
+    }
+
+    function _globalSearchRevealSection(sectionName) {
+      _globalSearchUsePlanningList();
+      _globalSearchExpandSectionPath(sectionName);
+      const hiddenRoot = _globalSearchHiddenSectionRoot(sectionName);
+      const tasks = _globalSearchTasksInSectionTree(sectionName).filter(function (task) { return task && !task.hidden; });
+      const hasMatchingTask = tasks.some(function (task) { return typeof taskPassesFilters !== 'function' || taskPassesFilters(task); });
+      let filtersReset = false;
+      if ((tasks.length && !hasMatchingTask) || (!tasks.length && typeof anyTaskFilterActive === 'function' && anyTaskFilterActive())) {
+        if (typeof resetAllFilters === 'function') { resetAllFilters(); filtersReset = true; }
+      }
+      if (hiddenRoot) {
+        try { storage.set('gantt_hidden_zone_collapsed', '0'); } catch (e) {}
+        _globalSearchExpandSectionPath(hiddenRoot);
+      }
+      if (typeof renderRoadmap === 'function') renderRoadmap(true);
+      setTimeout(function () {
+        const target = hiddenRoot || sectionName;
+        const idx = planSections.indexOf(target);
+        const list = document.getElementById('tasks-list-container');
+        const header = idx >= 0 && list ? list.querySelector('#header-left-' + idx) : null;
+        if (header) scrollToSection(target);
+        else if (typeof openEpicCard === 'function') openEpicCard(sectionName);
+      }, 100);
+      if (typeof showToast === 'function' && (filtersReset || hiddenRoot)) {
+        showToast(hiddenRoot ? 'Секция находится в «Скрытых» — открыт её заголовок' : 'Секция показана, мешавшие фильтры сброшены', 'info', 3200);
+      }
+    }
+
+    function _globalSearchRevealResource(resource) {
+      _globalSearchUsePlanningList();
+      resourceFilterSel.clear(); resourceFilterSel.add(resource);
+      const candidates = (roadmapData || []).filter(function (task) {
+        return task && !task.hidden && _taskHasSearchResource(task, resource);
+      });
+      const passesCurrentFilters = function (task) { return typeof taskPassesFilters !== 'function' || taskPassesFilters(task); };
+      // Сначала предпочитаем обычную секцию, но не теряем задачу, если все совпадения находятся в «Скрытых».
+      let first = candidates.find(function (task) { return !_globalSearchHiddenSectionRoot(task.section) && passesCurrentFilters(task); })
+        || candidates.find(passesCurrentFilters);
+      let filtersReset = false;
+      if (!first && candidates.length && typeof resetAllFilters === 'function') {
+        resetAllFilters(); resourceFilterSel.add(resource); filtersReset = true;
+        first = candidates.find(function (task) { return !_globalSearchHiddenSectionRoot(task.section); }) || candidates[0];
+      }
+      const hiddenRoot = first ? _globalSearchHiddenSectionRoot(first.section) : '';
+      if (hiddenRoot) {
+        try { storage.set('gantt_hidden_zone_collapsed', '0'); } catch (e) {}
+        _globalSearchExpandSectionPath(hiddenRoot);
+      }
+      if (first) _globalSearchExpandSectionPath(first.section);
+      if (typeof afterFilterChange === 'function') afterFilterChange();
+      else if (typeof renderRoadmap === 'function') renderRoadmap(true);
+      if (first) setTimeout(function () { scrollToTask(first.id); }, 120);
+      if (typeof showToast === 'function') {
+        const resetSuffix = filtersReset ? '. Остальные фильтры сброшены, потому что скрывали все задачи.' : '';
+        const hiddenSuffix = hiddenRoot ? '. Скрытая секция раскрыта.' : '';
+        showToast(candidates.length ? ('Фильтр по ресурсу: ' + resource + resetSuffix + hiddenSuffix) : ('У исполнителя «' + resource + '» нет задач'), candidates.length ? 'info' : 'warn', 3800);
+      }
+    }
+
     function activateGlobalSearchResult(idx, scrollOnly) {
       const r = globalSearchResultsCache[idx];
       if (!r) return;
@@ -10322,36 +10616,26 @@ if (typeof globalThis !== 'undefined') {
         _rememberGlobalSearchTask(task.id);
         openTaskById(task.id);
       } else if (r.kind === 'section') {
-        // Скроллим к заголовку секции
-        setTimeout(() => scrollToSection(r.id), 50);
+        _globalSearchRevealSection(r.id);
       } else if (r.kind === 'resource') {
-        // Применяем фильтр по ресурсу (единственный выбранный)
-        resourceFilterSel.clear();
-        resourceFilterSel.add(r.id);
-        updateFilterLabels();
-        renderStatusOverview();
-        renderRoadmap(true);
-        showToast(`Фильтр по ресурсу: ${r.id}`, 'info');
+        _globalSearchRevealResource(r.id);
       } else if (r.kind === 'cutoff') {
-        // Скроллим к отсечке и открываем редактор
+        // Отсечки живут на таймлайне: сначала открываем полный список, затем позиционируем шкалу.
+        _globalSearchUsePlanningList();
         setTimeout(() => {
           scrollToCutoff(r.id);
           if (!scrollOnly && typeof openCutoffModal === 'function') {
             setTimeout(() => openCutoffModal(r.id), 350);
           }
-        }, 50);
+        }, 80);
       }
     }
 
     function _showGlobalSearchTaskOnPlan(task) {
       if (!task) return;
       _rememberGlobalSearchTask(task.id);
-      if (collapsedSections.includes(task.section)) {
-        collapsedSections = collapsedSections.filter(function (s) { return s !== task.section; });
-        storage.set('gantt_collapsed_sections', JSON.stringify(collapsedSections));
-      }
-      if (typeof setAppView === 'function') setAppView('list');
-      else if (typeof renderRoadmap === 'function') renderRoadmap(true);
+      _globalSearchExpandSectionPath(task.section);
+      _globalSearchUsePlanningList();
       setTimeout(function () { scrollToTask(task.id); }, 100);
     }
 
@@ -10539,8 +10823,8 @@ if (typeof globalThis !== 'undefined') {
     const CLEAN_BUILD = true; /* __CLEAN_BUILD__ */
     const DEMO_ON_LOAD = true; /* __DEMO_ON_LOAD__ */
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '15.6.1';
-    const APP_VERSION_DATE = '31.08.2026';
+    const APP_VERSION = '15.7';
+    const APP_VERSION_DATE = '01.09.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'версия ' + APP_VERSION; } catch (e) {}
@@ -11248,12 +11532,14 @@ if (typeof globalThis !== 'undefined') {
     async function saveHandle(handle) {
       try {
         const db = await dbPromise;
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
           const tx = db.transaction('handles', 'readwrite');
           tx.objectStore('handles').put(handle, 'autoSaveFileHandle');
-          tx.oncomplete = resolve;
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => reject(tx.error || new Error('Не удалось запомнить привязку к файлу'));
+          tx.onabort = () => reject(tx.error || new Error('Сохранение привязки к файлу прервано'));
         });
-      } catch (e) { console.warn('IDB save error', e); }
+      } catch (e) { console.warn('IDB save error', e); throw e; }
     }
 
     async function clearHandle() {
@@ -11321,8 +11607,18 @@ if (typeof globalThis !== 'undefined') {
       } catch (e) { return null; }
     }
     async function saveBackupDirHandle(handle) {
-      try { const db = await dbPromise; return new Promise((resolve) => { const tx = db.transaction('handles', 'readwrite'); tx.objectStore('handles').put(handle, 'autoBackupDirHandle'); tx.oncomplete = resolve; }); } catch (e) { console.warn('IDB save error', e); }
+      try {
+        const db = await dbPromise;
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction('handles', 'readwrite');
+          tx.objectStore('handles').put(handle, 'autoBackupDirHandle');
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => reject(tx.error || new Error('Не удалось запомнить папку автокопий'));
+          tx.onabort = () => reject(tx.error || new Error('Сохранение папки автокопий прервано'));
+        });
+      } catch (e) { console.warn('IDB save error', e); throw e; }
     }
+
     async function getBackupDirHandle() {
       try { const db = await dbPromise; return new Promise((resolve) => { const tx = db.transaction('handles', 'readonly'); const req = tx.objectStore('handles').get('autoBackupDirHandle'); req.onsuccess = () => resolve(req.result); req.onerror = () => resolve(null); }); } catch (e) { return null; }
     }
@@ -11412,10 +11708,17 @@ if (typeof globalThis !== 'undefined') {
     let _fileVersions = [];
     let _storageWriteQueue = Promise.resolve();
     let _storageWriteJobId = 0;
+    let _storageWipeInProgress = false;
+    let _storageWriteEpoch = 0;
     function _enqueueStorageWrite(kind, operation) {
-      if (typeof operation !== 'function') return Promise.resolve(false);
+      if (typeof operation !== 'function' || (typeof _storageWipeInProgress !== 'undefined' && _storageWipeInProgress)) return Promise.resolve(false);
       const jobId = ++_storageWriteJobId;
-      const run = () => Promise.resolve().then(operation);
+      const epoch = (typeof _storageWriteEpoch !== 'undefined') ? _storageWriteEpoch : 0;
+      const run = () => {
+        if ((typeof _storageWipeInProgress !== 'undefined' && _storageWipeInProgress)
+            || ((typeof _storageWriteEpoch !== 'undefined' ? _storageWriteEpoch : 0) !== epoch)) return false;
+        return Promise.resolve().then(operation);
+      };
       const result = _storageWriteQueue.then(run, run);
       _storageWriteQueue = result.catch((error) => {
         try { console.warn('Ошибка локальной записи', kind, jobId, error && error.message ? error.message : error); } catch (e) {}
@@ -11423,27 +11726,56 @@ if (typeof globalThis !== 'undefined') {
       return result;
     }
     async function _refreshFileVersions() { try { _fileVersions = await listVersionSnapshots(); } catch (e) { _fileVersions = Array.isArray(_fileVersions) ? _fileVersions : []; } }
-    async function _restoreVersionsFromFile(arr) {
-      try {
-        const list = _jsonStorage.scopeVersionRecords(Array.isArray(arr) ? arr : [], projectStorageId, true).selected.slice(0, VERSIONS_MAX);
-        const db = await dbPromise;
-        if (db && db.objectStoreNames.contains('versions')) {
-          await new Promise((resolve) => {
-            const tx = db.transaction('versions', 'readwrite');
-            const st = tx.objectStore('versions');
-            const get = st.getAll();
-            get.onsuccess = () => {
-              const current = _jsonStorage.scopeVersionRecords(get.result || [], projectStorageId, false).selected;
-              current.forEach(r => { try { st.delete(r.id); } catch (e) {} });
-              list.forEach(r => { try { st.put(r); } catch (e) {} });
-            };
-            tx.oncomplete = resolve; tx.onerror = resolve;
-          });
-        }
+    async function _restoreVersionsFromFile(arr, options) {
+      const opts = options && typeof options === 'object' ? options : {};
+      const targetProjectId = projectStorageId;
+      const source = Array.isArray(arr) ? arr : [];
+      const scopedSource = opts.rebindProjectId ? source.map(record => {
+        if (!record || typeof record !== 'object') return record;
+        const data = record.data && typeof record.data === 'object'
+          ? Object.assign({}, record.data, { projectId: targetProjectId }) : record.data;
+        const rebound = Object.assign({}, record, { projectId: targetProjectId, data: data });
+        if (data) rebound.checksum = _snapshotFingerprint(data);
+        return rebound;
+      }) : source;
+      let list = _jsonStorage.scopeVersionRecords(scopedSource, targetProjectId, true).selected.slice(0, VERSIONS_MAX);
+      const db = await dbPromise;
+      if (!db || !db.objectStoreNames.contains('versions')) throw new Error('Хранилище версий недоступно');
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction('versions', 'readwrite');
+        const st = tx.objectStore('versions');
+        const get = st.getAll();
+        get.onsuccess = () => {
+          try {
+            const all = Array.isArray(get.result) ? get.result : [];
+            const current = _jsonStorage.scopeVersionRecords(all, targetProjectId, false).selected;
+            const currentIds = new Set(current.map(record => record && record.id));
+            const usedIds = new Set(all.filter(record => !currentIds.has(record && record.id)).map(record => record && record.id).filter(Boolean));
+            list = list.map((record, index) => {
+              let id = record && typeof record.id === 'string' ? record.id : '';
+              while (!id || usedIds.has(id)) id = 'v' + Date.now() + '_restore_' + index + '_' + Math.floor(Math.random() * 1e6);
+              usedIds.add(id);
+              return id === record.id ? record : Object.assign({}, record, { id: id });
+            });
+            current.forEach(record => st.delete(record.id));
+            list.forEach(record => st.put(record));
+          } catch (error) {
+            try { tx.abort(); } catch (abortError) {}
+            reject(error);
+          }
+        };
+        get.onerror = () => reject(get.error || new Error('Не удалось прочитать историю версий'));
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => reject(tx.error || new Error('Не удалось восстановить историю версий'));
+        tx.onabort = () => reject(tx.error || new Error('Восстановление истории версий прервано'));
+      });
+      if (projectStorageId === targetProjectId) {
         _fileVersions = list;
         if (typeof renderVersionsList === 'function') { try { renderVersionsList(); } catch (e) {} }
-      } catch (e) {}
+      }
+      return list;
     }
+
     try { dbPromise.then(() => _refreshFileVersions()).catch(() => {}); } catch (e) {}
     async function listVersionSnapshots() {
       try {
@@ -11452,7 +11784,14 @@ if (typeof globalThis !== 'undefined') {
         const claimLegacy = storage.get(VERSION_SCOPE_MIGRATION_KEY, '') !== '1';
         const scoped = _jsonStorage.scopeVersionRecords(all, projectStorageId, claimLegacy);
         if (scoped.migrated.length) {
-          await new Promise((resolve) => { const tx = db.transaction('versions', 'readwrite'); const st = tx.objectStore('versions'); scoped.migrated.forEach(record => st.put(record)); tx.oncomplete = resolve; tx.onerror = resolve; });
+          await new Promise((resolve, reject) => {
+            const tx = db.transaction('versions', 'readwrite');
+            const st = tx.objectStore('versions');
+            scoped.migrated.forEach(record => st.put(record));
+            tx.oncomplete = () => resolve(true);
+            tx.onerror = () => reject(tx.error || new Error('Не удалось перенести прежнюю историю версий'));
+            tx.onabort = () => reject(tx.error || new Error('Перенос прежней истории версий прерван'));
+          });
         }
         if (claimLegacy) { try { storage.set(VERSION_SCOPE_MIGRATION_KEY, '1'); } catch (e) {} }
         return scoped.selected.sort((a, b) => String(b.savedAt).localeCompare(String(a.savedAt)));
@@ -11499,25 +11838,28 @@ if (typeof globalThis !== 'undefined') {
       return _enqueueStorageWrite('version-snapshot', () => _saveVersionSnapshotNow(label, auto, options));
     }
     async function _deleteVersionSnapshotNow(id) {
-      try {
-        const db = await dbPromise;
-        await new Promise((resolve) => {
-          const tx = db.transaction('versions', 'readwrite');
-          tx.objectStore('versions').delete(id);
-          tx.oncomplete = resolve;
-          tx.onerror = resolve;
-        });
-      } catch (e) {}
+      const db = await dbPromise;
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction('versions', 'readwrite');
+        tx.objectStore('versions').delete(id);
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => reject(tx.error || new Error('Не удалось удалить версию'));
+        tx.onabort = () => reject(tx.error || new Error('Удаление версии прервано'));
+      });
       await _refreshFileVersions();
       renderVersionsList();
+      return true;
     }
     function _doDeleteVersionSnapshot(id) {
       return _enqueueStorageWrite('version-delete', () => _deleteVersionSnapshotNow(id));
     }
+
     function deleteVersionSnapshot(id, dateLabel) {
       if (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE) { if (typeof showToast === 'function') showToast('Только просмотр', 'info', 2000); return; }
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
-      openConfirm({ title: 'Удалить версию', danger: true, okText: 'Удалить', desc: 'Удалить сохраненную версию' + (dateLabel ? ' от ' + dateLabel : '') + '? Откатиться к ней после удаления будет нельзя.', onOk: () => { _doDeleteVersionSnapshot(id); } });
+      openConfirm({ title: 'Удалить версию', danger: true, okText: 'Удалить', desc: 'Удалить сохраненную версию' + (dateLabel ? ' от ' + dateLabel : '') + '? Откатиться к ней после удаления будет нельзя.', onOk: () => {
+        _doDeleteVersionSnapshot(id).catch(() => { if (typeof showToast === 'function') showToast('Не удалось удалить версию', 'error', 4000); });
+      } });
     }
     // Метка или комментарий к снимку версии: одно текстовое поле, меняется карандашом в списке, хранится в записи IndexedDB
     async function renameVersionSnapshot(id) {
@@ -11818,9 +12160,9 @@ if (typeof globalThis !== 'undefined') {
       box.innerHTML = '<div class="text-xs text-slate-400 px-2 py-4 text-center">Загрузка...</div>';
       const all = await listVersionSnapshots();
       if (!all.length) { box.innerHTML = '<div class="px-4 py-12 text-center text-sm text-slate-500">Версий пока нет. Они создаются автоматически каждые 5 минут при изменениях и по кнопке «Сохранить версию сейчас».</div>'; return; }
-      box.innerHTML = all.map(v => `<div class="mb-2 flex items-center justify-between gap-2 bg-white border border-slate-200 rounded-xl p-3 shadow-xs">
-        <div class="min-w-0"><div class="text-sm font-medium text-slate-800 truncate">${escHtml(_fmtVersionDate(v.savedAt))} <span class="text-[10px] font-normal ${v.auto ? 'text-slate-400' : 'text-indigo-500'}">${v.auto ? 'авто' : 'вручную'}</span></div><div class="text-[10px] text-slate-500">${escHtml(v.label || '')} · ${v.tasks != null ? v.tasks + ' ' + pluralRu(v.tasks, ['задача', 'задачи', 'задач']) : '? задач'}${v.bytes ? ' · ' + Math.max(1, Math.round(v.bytes / 1024)) + ' КБ' : ''}${v.checksum ? ' · ' + escHtml(v.checksum) : ''}</div></div>
-        <div class="flex items-center gap-1 shrink-0">
+      box.innerHTML = all.map(v => `<div class="version-card mb-2 flex items-center justify-between gap-2 bg-white border border-slate-200 rounded-xl p-3 shadow-xs">
+        <div class="version-card-copy min-w-0"><div class="text-sm font-medium text-slate-800 truncate">${escHtml(_fmtVersionDate(v.savedAt))} <span class="text-[10px] font-normal ${v.auto ? 'text-slate-400' : 'text-indigo-500'}">${v.auto ? 'авто' : 'вручную'}</span></div><div class="text-[10px] text-slate-500">${escHtml(v.label || '')} · ${v.tasks != null ? v.tasks + ' ' + pluralRu(v.tasks, ['задача', 'задачи', 'задач']) : '? задач'}${v.bytes ? ' · ' + Math.max(1, Math.round(v.bytes / 1024)) + ' КБ' : ''}${v.checksum ? ' · ' + escHtml(v.checksum) : ''}</div></div>
+        <div class="version-card-actions flex items-center gap-1 shrink-0">
           <button type="button" onclick="renameVersionSnapshot('${escAttr(v.id)}')" title="Метка или комментарий" aria-label="Метка или комментарий" class="h-7 w-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg></button>
           <button type="button" onclick="markVersionCompare('${escAttr(v.id)}')" aria-pressed="${_verCmpA === v.id}" class="h-7 px-2.5 text-[10px] font-semibold rounded-lg border cursor-pointer transition-colors ${_verCmpA === v.id ? 'border-indigo-500 bg-indigo-600 text-white' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}" title="Сравнить эту версию с другой версией или с текущим состоянием">Сравнить</button>
           <button type="button" onclick="exportVersionSnapshot('${escAttr(v.id)}')" aria-label="Экспортировать этот JSON-снимок" title="Экспортировать этот JSON-снимок" class="h-7 w-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"></path></svg></button>
@@ -11860,36 +12202,64 @@ if (typeof globalThis !== 'undefined') {
       if (READ_ONLY_MODE) return;
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
       if (!parsed || parsed.app !== 'roadmap-versions' || !Array.isArray(parsed.items)) { if (typeof showToast === 'function') showToast('Файл не распознан как экспорт истории версий', 'error', 4500); return; }
-      try {
-        const db = await dbPromise; if (!db.objectStoreNames.contains('versions')) return;
-        const existing = await listVersionSnapshots();
-        const seenSig = new Set(existing.map(v => _versionSig(v.data)));
-        const seenId = new Set(existing.map(v => v.id));
-        let added = 0, skipped = 0;
-        const toPut = [];
-        parsed.items.forEach(it => {
-          if (!it || !it.data || !Array.isArray(it.data.roadmapData)) { skipped++; return; }
-          const sig = _versionSig(it.data);
-          if (seenSig.has(sig)) { skipped++; return; }
-          seenSig.add(sig);
-          let id = (typeof it.id === 'string' && it.id && !seenId.has(it.id)) ? it.id : ('v' + Date.now() + '_imp' + Math.floor(Math.random() * 1e6) + '_' + added);
-          seenId.add(id);
-          const importedData = Object.assign({}, it.data, {
-            formatVersion: _jsonStorage.STORAGE_FORMAT_VERSION,
-            projectId: projectStorageId
+      const targetProjectId = projectStorageId;
+      return _enqueueStorageWrite('version-import', async () => {
+        try {
+          const db = await dbPromise;
+          if (!db.objectStoreNames.contains('versions')) throw new Error('Хранилище версий недоступно');
+          const allStored = await new Promise((resolve, reject) => {
+            const tx = db.transaction('versions', 'readonly');
+            const req = tx.objectStore('versions').getAll();
+            req.onsuccess = () => resolve(Array.isArray(req.result) ? req.result : []);
+            req.onerror = () => reject(req.error || new Error('Не удалось прочитать локальные версии'));
           });
-          const _ij = _jsonStorage.serializeSnapshot(importedData, false);
-          toPut.push({ id: id, projectId: projectStorageId, savedAt: it.savedAt || importedData.savedAt || new Date().toISOString(), label: it.label || 'Импорт', auto: !!it.auto, tasks: (importedData.roadmapData || []).length, bytes: new Blob([_ij]).size, checksum: _snapshotFingerprint(importedData), format: 2, data: importedData });
-          added++;
-        });
-        if (toPut.length) await new Promise((resolve) => { const tx = db.transaction('versions', 'readwrite'); const st = tx.objectStore('versions'); toPut.forEach(r => st.put(r)); tx.oncomplete = resolve; tx.onerror = resolve; });
-        // Лимит хранения: оставляем самые свежие по дате, остальные удаляем (как в saveVersionSnapshot)
-        let trimmed = 0;
-        const all = await listVersionSnapshots();
-        if (all.length > VERSIONS_MAX) { const extra = all.slice(VERSIONS_MAX); trimmed = extra.length; await new Promise((resolve) => { const tx = db.transaction('versions', 'readwrite'); const st = tx.objectStore('versions'); extra.forEach(x => st.delete(x.id)); tx.oncomplete = resolve; tx.onerror = resolve; }); }
-        renderVersionsList();
-        if (typeof showToast === 'function') showToast('Добавлено ' + added + ', пропущено ' + skipped + ' (дубли)' + (trimmed ? '. Лимит ' + VERSIONS_MAX + ' , старые удалены: ' + trimmed : ''), 'ok', 6000);
-      } catch (e) { if (typeof showToast === 'function') showToast('Не удалось импортировать версии', 'error', 4000); }
+          const existing = _jsonStorage.scopeVersionRecords(allStored, targetProjectId, false).selected
+            .sort((a, b) => String(b && b.savedAt || '').localeCompare(String(a && a.savedAt || '')));
+          const seenSig = new Set(existing.map(v => _versionSig(v.data)));
+          const seenId = new Set(allStored.map(v => v && v.id).filter(Boolean));
+          const available = Math.max(0, VERSIONS_MAX - existing.length);
+          let skipped = 0, invalid = 0, limited = 0;
+          const toPut = [];
+          parsed.items.forEach(it => {
+            if (!it || !it.data || typeof it.data !== 'object') { invalid++; return; }
+            if (it.checksum && String(it.checksum).toLowerCase() !== _snapshotFingerprint(it.data)) { invalid++; return; }
+            const normalized = normalizeRoadmapSnapshot(it.data);
+            if (!normalized) { invalid++; return; }
+            const savedMs = Date.parse(it.savedAt || normalized.savedAt || '');
+            if (!Number.isFinite(savedMs) || savedMs > Date.now() + 5 * 60 * 1000) { invalid++; return; }
+            const importedData = Object.assign({}, normalized, {
+              formatVersion: _jsonStorage.STORAGE_FORMAT_VERSION,
+              projectId: targetProjectId
+            });
+            const sig = _versionSig(importedData);
+            if (seenSig.has(sig)) { skipped++; return; }
+            seenSig.add(sig);
+            if (toPut.length >= available) { limited++; return; }
+            let id = (typeof it.id === 'string' && it.id && !seenId.has(it.id)) ? it.id : ('v' + Date.now() + '_imp' + Math.floor(Math.random() * 1e6) + '_' + toPut.length);
+            while (seenId.has(id)) id = 'v' + Date.now() + '_imp' + Math.floor(Math.random() * 1e6) + '_' + toPut.length;
+            seenId.add(id);
+            const json = _jsonStorage.serializeSnapshot(importedData, false);
+            toPut.push({ id: id, projectId: targetProjectId, savedAt: new Date(savedMs).toISOString(), label: it.label || 'Импорт', auto: !!it.auto, tasks: (importedData.roadmapData || []).length, bytes: new Blob([json]).size, checksum: _snapshotFingerprint(importedData), format: 2, data: importedData });
+          });
+          if (toPut.length) await new Promise((resolve, reject) => {
+            const tx = db.transaction('versions', 'readwrite');
+            const st = tx.objectStore('versions');
+            toPut.forEach(record => st.put(record));
+            tx.oncomplete = () => resolve(true);
+            tx.onerror = () => reject(tx.error || new Error('Не удалось импортировать историю версий'));
+            tx.onabort = () => reject(tx.error || new Error('Импорт истории версий прерван'));
+          });
+          if (projectStorageId === targetProjectId) {
+            await _refreshFileVersions();
+            renderVersionsList();
+          }
+          if (typeof showToast === 'function') showToast('Добавлено ' + toPut.length + ' · дубли: ' + skipped + ' · повреждено: ' + invalid + (limited ? ' · не добавлено из-за лимита ' + VERSIONS_MAX + ': ' + limited : ''), toPut.length ? 'ok' : 'info', 6000);
+          return { added: toPut.length, skipped: skipped, invalid: invalid, limited: limited, projectId: targetProjectId };
+        } catch (e) {
+          if (typeof showToast === 'function') showToast('Не удалось импортировать версии', 'error', 4000);
+          return false;
+        }
+      });
     }
 
     // ===== v13.9: единый центр здоровья плана (только диагностика) =====
@@ -12426,11 +12796,16 @@ if (typeof globalThis !== 'undefined') {
       }
     }
 
+    let _projectTransitionToken = 0;
     async function loadFromHandle(handle) {
+      const transitionToken = ++_projectTransitionToken;
       const file = await handle.getFile();
+      if (transitionToken !== _projectTransitionToken) return false;
       const text = await file.text();
+      if (transitionToken !== _projectTransitionToken) return false;
       const parsed = safeJsonParse(text);
-      return await _applyLoadedFile(handle, parsed);
+      if (transitionToken !== _projectTransitionToken) return false;
+      return await _applyLoadedFile(handle, parsed, file.lastModified, transitionToken);
     }
     function _commitParsedProjectSnapshot(parsed, options) {
       const opts = options && typeof options === 'object' ? options : {};
@@ -12466,7 +12841,10 @@ if (typeof globalThis !== 'undefined') {
         return { ok: false, reason: 'write', error: err };
       }
     }
-    async function _applyLoadedFile(handle, parsed) {
+    async function _applyLoadedFile(handle, parsed, loadedMtime) {
+      const suppliedToken = arguments[3];
+      const transitionToken = suppliedToken == null ? ++_projectTransitionToken : suppliedToken;
+      if (transitionToken !== _projectTransitionToken) return false;
       const result = _commitParsedProjectSnapshot(parsed, {
         projectIdMode: 'adopt',
         auditAction: 'import',
@@ -12481,16 +12859,34 @@ if (typeof globalThis !== 'undefined') {
         }
         return false;
       }
+      const targetProjectId = projectStorageId;
+      autoSaveFileHandle = null;
+      _mtimeHandle = null;
+      _boundFileMtime = null;
+      _fileConflict = false;
       if (result.snapshot.versions.length) {
         try { await _restoreVersionsFromFile(result.snapshot.versions); } catch (e) {
           if (typeof showToast === 'function') showToast('Проект открыт, но историю версий восстановить не удалось', 'warn', 4500);
         }
       }
+      if (transitionToken !== _projectTransitionToken || projectStorageId !== targetProjectId) return false;
+      let boundMtime = Number(loadedMtime);
+      if (!Number.isFinite(boundMtime)) {
+        try {
+          const currentFile = handle && typeof handle.getFile === 'function' ? await handle.getFile() : null;
+          boundMtime = Number(currentFile && currentFile.lastModified);
+        } catch (e) {}
+      }
+      if (transitionToken !== _projectTransitionToken || projectStorageId !== targetProjectId) return false;
       autoSaveFileHandle = handle;
+      _mtimeHandle = handle;
+      _boundFileMtime = Number.isFinite(boundMtime) ? boundMtime : null;
       try { await saveHandle(handle); } catch (e) {
         if (typeof showToast === 'function') showToast('Проект открыт, но браузер не запомнил привязку к файлу', 'warn', 4500);
       }
+      if (transitionToken !== _projectTransitionToken || projectStorageId !== targetProjectId) return false;
       try { await rememberRecentFile(handle); } catch (e) {}
+      if (transitionToken !== _projectTransitionToken || projectStorageId !== targetProjectId) return false;
       updateAutoSaveStatus('Автосохранение: привязано к ' + handle.name, 'ok');
       initApp();
       return true;
@@ -12664,7 +13060,19 @@ if (typeof globalThis !== 'undefined') {
       scheduleAutoSaveFile();
       try { maybeShowNoAutosaveBanner(); } catch (e) {}
       try { _burningBannerDismissed = false; maybeShowBurningBanner(); } catch (e) {}
-      try { if (!('showDirectoryPicker' in window)) { const _bb = document.getElementById('autoBackupDirBtn'); if (_bb) _bb.classList.add('hidden'); } else { getBackupDirHandle().then(h => { if (h) autoBackupDirHandle = h; }).catch(() => {}); } } catch (e) {}
+      try {
+        if (!('showDirectoryPicker' in window)) {
+          const _bb = document.getElementById('autoBackupDirBtn');
+          if (_bb) _bb.classList.add('hidden');
+        } else {
+          const _backupBindToken = _projectTransitionToken;
+          const _backupBindProjectId = projectStorageId;
+          getBackupDirHandle().then(h => {
+            if (_backupBindToken !== _projectTransitionToken || _backupBindProjectId !== projectStorageId) return;
+            if (h) autoBackupDirHandle = h;
+          }).catch(() => {});
+        }
+      } catch (e) {}
       appInitialized = true;
       // При входе показываем таймлайн сразу на «Сегодня», чтобы не жать кнопку каждый раз (мгновенно, без анимации от края).
       try { setTimeout(function () { if (typeof scrollToToday === 'function') scrollToToday(true); }, 60); } catch (e) {}
@@ -12927,36 +13335,128 @@ if (typeof globalThis !== 'undefined') {
     // Полная очистка всех артефактов хранилища: все ключи gantt_* (localStorage, память, sessionStorage)
     // и привязка к файлу автосохранения. Чтобы после «чистого листа» не оставалось Jira-конфига,
     // пресетов фильтров, пароля, подсказок и прочего.
-    function wipeAllStorageArtifacts() {
-      if (typeof DEMO_MODE !== 'undefined' && DEMO_MODE) { if (typeof showToast === 'function') showToast('В демо-режиме данные не меняются. Выйдите из демо, чтобы начать с чистого листа.', 'warn', 5000); return; }
-      try {
+    async function wipeAllStorageArtifacts() {
+      if (typeof DEMO_MODE !== 'undefined' && DEMO_MODE) {
+        if (typeof showToast === 'function') showToast('В демо-режиме данные не меняются. Выйдите из демо, чтобы начать с чистого листа.', 'warn', 5000);
+        return false;
+      }
+      if (typeof _storageWipeInProgress !== 'undefined' && _storageWipeInProgress) return false;
+      const storageKeys = (area) => {
         const keys = [];
-        for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith('gantt_')) keys.push(k); }
-        keys.forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
-      } catch (e) {}
-      try { Object.keys(memoryStore).forEach(k => { if (k.startsWith('gantt_')) delete memoryStore[k]; }); } catch (e) {}
-      try { for (let i = sessionStorage.length - 1; i >= 0; i--) { const k = sessionStorage.key(i); if (k && k.startsWith('gantt_')) sessionStorage.removeItem(k); } } catch (e) {}
-      try { if (typeof autoSaveFileHandle !== 'undefined') autoSaveFileHandle = null; if (typeof clearHandle === 'function') clearHandle(); } catch (e) {}
+        for (let i = 0; i < area.length; i++) {
+          const key = area.key(i);
+          if (key && key.startsWith('gantt_')) keys.push(key);
+        }
+        return keys;
+      };
+      let restartBackupTimer = false;
+      let wipeSucceeded = false;
+      try {
+        if (typeof _storageWipeInProgress !== 'undefined') _storageWipeInProgress = true;
+        if (typeof _storageWriteEpoch !== 'undefined') _storageWriteEpoch += 1;
+        if (typeof _projectTransitionToken !== 'undefined') _projectTransitionToken += 1;
+        if (typeof clearJiraSession === 'function') clearJiraSession('full-storage-wipe');
+
+        if (typeof autoSavePending !== 'undefined' && autoSavePending != null) {
+          if (typeof clearTimeout === 'function') clearTimeout(autoSavePending);
+          autoSavePending = null;
+        }
+        if (typeof _ppsTimer !== 'undefined' && _ppsTimer != null) {
+          if (typeof clearTimeout === 'function') clearTimeout(_ppsTimer);
+          _ppsTimer = null;
+        }
+        if (typeof _ppsLast !== 'undefined') _ppsLast = 0;
+        if (typeof _autoBackupTimer !== 'undefined' && _autoBackupTimer != null) {
+          if (typeof clearInterval === 'function') clearInterval(_autoBackupTimer);
+          _autoBackupTimer = null;
+          restartBackupTimer = true;
+        }
+
+        if (typeof _storageWriteQueue !== 'undefined' && _storageWriteQueue) {
+          try { await _storageWriteQueue; } catch (e) {}
+        }
+        await _clearRoadmapIndexedDbStoresVerified();
+
+        storageKeys(localStorage).forEach(key => localStorage.removeItem(key));
+        const localRemaining = storageKeys(localStorage);
+        if (localRemaining.length) throw new Error('Не очищен localStorage: ' + localRemaining.join(', '));
+
+        Object.keys(memoryStore).filter(key => key.startsWith('gantt_')).forEach(key => { delete memoryStore[key]; });
+        const memoryRemaining = Object.keys(memoryStore).filter(key => key.startsWith('gantt_'));
+        if (memoryRemaining.length) throw new Error('Не очищена память: ' + memoryRemaining.join(', '));
+
+        storageKeys(sessionStorage).forEach(key => sessionStorage.removeItem(key));
+        const sessionRemaining = storageKeys(sessionStorage);
+        if (sessionRemaining.length) throw new Error('Не очищен sessionStorage: ' + sessionRemaining.join(', '));
+
+        if (typeof autoSaveFileHandle !== 'undefined') autoSaveFileHandle = null;
+        if (typeof autoBackupDirHandle !== 'undefined') autoBackupDirHandle = null;
+        if (typeof _mtimeHandle !== 'undefined') _mtimeHandle = null;
+        if (typeof _boundFileMtime !== 'undefined') _boundFileMtime = null;
+        if (typeof _fileConflict !== 'undefined') _fileConflict = false;
+        if (typeof _lastFileContentSig !== 'undefined') _lastFileContentSig = '';
+        if (typeof _fileVersions !== 'undefined') _fileVersions = [];
+        if (typeof _verCmpA !== 'undefined') _verCmpA = null;
+        if (typeof _lastBackupAt !== 'undefined') _lastBackupAt = null;
+        if (typeof _backupFailWarned !== 'undefined') _backupFailWarned = false;
+        if (typeof _backupNameSequence !== 'undefined') _backupNameSequence = 0;
+        if (typeof _storageWriteJobId !== 'undefined') _storageWriteJobId = 0;
+        if (typeof projectLockHash !== 'undefined') projectLockHash = '';
+        if (typeof projectUnlocked !== 'undefined') projectUnlocked = true;
+        if (typeof _lastSavedAt !== 'undefined') _lastSavedAt = '';
+        if (typeof _lastSavedBy !== 'undefined') _lastSavedBy = '';
+        if (typeof _undoStack !== 'undefined') _undoStack = [];
+        if (typeof _undoBytes !== 'undefined') _undoBytes = 0;
+        if (typeof _redoStack !== 'undefined') _redoStack = [];
+        if (typeof _redoBytes !== 'undefined') _redoBytes = 0;
+        try {
+          if (typeof document !== 'undefined') document.querySelectorAll('[data-undo-toast="1"]').forEach(el => el.remove());
+        } catch (e) {}
+        if (typeof window !== 'undefined') {
+          window.__lastVersionSig = null;
+          window.__lastSavedVersionId = null;
+          window.__pendingAutoSaveName = null;
+        }
+        wipeSucceeded = true;
+        return true;
+      } catch (e) {
+        if (typeof console !== 'undefined' && console.error) console.error('Full storage wipe failed', e);
+        if (typeof showToast === 'function') showToast('Не удалось полностью очистить данные браузера. Текущий проект не сброшен; повторите попытку.', 'error', 6500);
+        return false;
+      } finally {
+        if (typeof _storageWipeInProgress !== 'undefined') _storageWipeInProgress = false;
+        if ((restartBackupTimer || wipeSucceeded) && typeof startAutoBackupTimer === 'function') {
+          try { startAutoBackupTimer(); } catch (e) {}
+        }
+      }
     }
     function startFresh() {
       if (typeof DEMO_MODE !== 'undefined' && DEMO_MODE) { if (typeof showToast === 'function') showToast('В демо-режиме данные не меняются. Выйдите из демо, чтобы начать с чистого листа.', 'warn', 5000); return; }
-      const _doFresh = () => {
-        wipeAllStorageArtifacts();
-        resetProjectState();
-        storage.set('gantt_po_name', 'Фамилия Имя');
-        recordProjectAudit('project_reset', 'Создан новый пустой проект', {});
-        persistProjectState();
-        try { if (typeof updateAutoSaveStatus === 'function') updateAutoSaveStatus('', ''); if (typeof updateAutoSaveBtn === 'function') updateAutoSaveBtn(); } catch (e) {}
-        initApp();
+      const _doFresh = async () => {
+        const wiped = await wipeAllStorageArtifacts();
+        if (!wiped) return false;
+        try {
+          resetProjectState();
+          storage.set('gantt_po_name', 'Фамилия Имя');
+          recordProjectAudit('project_reset', 'Создан новый пустой проект', {});
+          const persisted = persistProjectState();
+          if (persisted === false) throw new Error('Не удалось сохранить новый пустой проект');
+          try { if (typeof updateAutoSaveStatus === 'function') updateAutoSaveStatus('', ''); if (typeof updateAutoSaveBtn === 'function') updateAutoSaveBtn(); } catch (e) {}
+          initApp();
+          return true;
+        } catch (e) {
+          if (typeof console !== 'undefined' && console.error) console.error('Fresh project init failed', e);
+          if (typeof showToast === 'function') showToast('Данные очищены, но новый пустой проект не удалось создать. Перезагрузите приложение.', 'error', 6500);
+          return false;
+        }
       };
-      // Спрашиваем подтверждение, только если есть что терять (данные в браузере или привязанный файл)
-      let hasData = false;
-      try { hasData = !!storage.get('gantt_roadmap_v10_data') || (typeof autoSaveFileHandle !== 'undefined' && !!autoSaveFileHandle); } catch (e) {}
-      if (hasData && typeof openConfirm === 'function') {
+      // Подтверждение показываем всегда: даже у визуально пустого проекта могут оставаться
+      // локальные версии, недавние файлы и файловые привязки в IndexedDB.
+      if (typeof openConfirm === 'function') {
         openConfirm({
           title: 'Начать с чистого листа?',
-          desc: 'Это сотрет текущий проект из браузера , задачи, секции, статусы, ресурсы, отсечки и настройки , и отвяжет файл автосохранения. Действие необратимо. Если работаете через файл, сам файл на диске не меняется, пока вы в него не сохраните.',
-          okText: 'Стереть и начать заново',
+          desc: 'Это необратимо удалит из браузера текущий проект и настройки, локальную историю версий, список недавних файлов, а также привязки к файлу автосохранения и папке автокопий. Уже созданные файлы и автокопии на диске не удаляются.',
+          okText: 'Удалить всё и начать заново',
           danger: true,
           onOk: _doFresh
         });
@@ -17124,30 +17624,61 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const _plural = (n) => (typeof _presNZad === 'function' ? _presNZad(n) : 'задач');
       const _doMerge = function () {
       const snap = (typeof captureUndoState === 'function') ? captureUndoState() : null;
-      const FILL = ['resource','start','end','status','release','estimate','storyPoints','metrics','dor','dod','issueType','jira','pred'];
+      const FILL = [
+        'resource','start','end','status','release','estimate','storyPoints','metrics','dor','dod',
+        'issueType','jira','priority','initiativeId','conf','figma','sprint','epic','epicName',
+        'epicLink','_jiraParentKey','metricType','metricTarget','metricActual','metricUnit',
+        'riceReach','riceImpact','riceConfidence','riceEffort','wsjf','deadline','actualStart',
+        'created','updated','testStatus'
+      ];
+      const ARRAY_FIELDS = ['labels','workLog','comments','history','statusLog','components','links'];
+      const OBJECT_FIELDS = ['custom','roleEst','depMeta','_jiraSync','links'];
+      const _isBlank = function (v) {
+        if (v == null || v === '') return true;
+        if (Array.isArray(v)) return v.length === 0;
+        if (typeof v === 'object') return Object.keys(v).length === 0;
+        return false;
+      };
+      const _mergeArray = function (a, b) {
+        const out = Array.isArray(a) ? a.slice() : [];
+        const seen = new Set(out.map(function (x) { try { return JSON.stringify(x); } catch (e) { return String(x); } }));
+        (Array.isArray(b) ? b : []).forEach(function (x) {
+          let key; try { key = JSON.stringify(x); } catch (e) { key = String(x); }
+          if (!seen.has(key)) { seen.add(key); out.push(x); }
+        });
+        return out;
+      };
+      const _mergeObject = function (a, b) {
+        const out = (a && typeof a === 'object' && !Array.isArray(a)) ? Object.assign({}, a) : {};
+        if (b && typeof b === 'object' && !Array.isArray(b)) Object.keys(b).forEach(function (k) { if (_isBlank(out[k])) out[k] = b[k]; });
+        return out;
+      };
+      const _allPred = new Set((typeof getPredecessorIds === 'function' ? getPredecessorIds(base) : []).map(String));
       let mergedNotes = String(base.notes || '').trim();
       others.forEach(o => {
-        FILL.forEach(f => { if (!String(base[f] || '').trim() && String(o[f] || '').trim()) base[f] = o[f]; });
+        FILL.forEach(f => { if (_isBlank(base[f]) && !_isBlank(o[f])) base[f] = o[f]; });
+        ARRAY_FIELDS.forEach(function (f) {
+          if (Array.isArray(o[f]) && o[f].length) base[f] = _mergeArray(base[f], o[f]);
+        });
+        OBJECT_FIELDS.forEach(function (f) {
+          if (o[f] && typeof o[f] === 'object' && !Array.isArray(o[f])) base[f] = _mergeObject(base[f], o[f]);
+        });
+        (typeof getPredecessorIds === 'function' ? getPredecessorIds(o) : []).forEach(function (id) { _allPred.add(String(id)); });
         const on = String(o.notes || '').trim();
         if (on && on !== mergedNotes) mergedNotes = mergedNotes ? (mergedNotes + '\n' + on) : on;
-        if (Array.isArray(o.labels) && o.labels.length) base.labels = Array.from(new Set([...(Array.isArray(base.labels) ? base.labels : []), ...o.labels]));
-        if (Array.isArray(o.workLog) && o.workLog.length) base.workLog = [...(Array.isArray(base.workLog) ? base.workLog : []), ...o.workLog];
         if (o.blocked) base.blocked = true;
+        if (o.internal) base.internal = true;
+        if (o.external) base.external = true;
       });
       base.notes = mergedNotes;
+      base.pred = Array.from(_allPred).filter(function (id) { return id && id !== String(base.id); }).join(',');
       if (Array.isArray(base.workLog)) base.workLog.sort((a, b) => String(a.ymd).localeCompare(String(b.ymd)));
       const delIds = new Set(others.map(o => o.id));
       roadmapData = roadmapData.filter(t => !delIds.has(t.id));
-      // Перецепляем зависимости с поглощенных на базу + чистим depMeta-сироты
-      roadmapData.forEach(t => {
-        if (t.pred) {
-          const ps = String(t.pred).split(',').map(x => x.trim()).filter(Boolean).map(x => delIds.has(Number(x)) ? String(base.id) : x);
-          t.pred = Array.from(new Set(ps)).filter(x => x !== String(t.id)).join(',');
-        }
-        if (t.depMeta && typeof t.depMeta === 'object') {
-          Object.keys(t.depMeta).forEach(k => { if (delIds.has(Number(k))) { if (!t.depMeta[String(base.id)]) t.depMeta[String(base.id)] = t.depMeta[k]; delete t.depMeta[k]; } });
-        }
-      });
+      // Перецепляем все известные ссылки: зависимости, отсечки и состав презентаций.
+      const _mergeIdMap = new Map(); others.forEach(function (o) { _mergeIdMap.set(o.id, base.id); });
+      if (typeof _remapTaskReferences === 'function') _remapTaskReferences(_mergeIdMap);
+      if (typeof dedupeCutoffs === 'function') dedupeCutoffs();
       selectedTaskIds.clear();
       if (typeof persistProjectState === 'function') persistProjectState(); else storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData));
       updateBulkBar(); renderRoadmap(true);
@@ -17903,7 +18434,15 @@ let resourceView = 'roles'; // 'roles' | 'load'
       openInputModal({ title: 'Сохранить набор фильтров', placeholder: 'Название набора', okText: 'Сохранить', onOk: (name) => {
         name = (name || '').trim(); if (!name) return;
         const presets = getFilterPresets().filter(p => p.name !== name);
-        presets.push({ name, status: [...statusFilterSel], resource: [...resourceFilterSel], project: [...projectFilterSel], release: [...releaseFilterSel], label: [...labelFilterSel], component: [...componentFilterSel] });
+        presets.push({
+          name, status: [...statusFilterSel], resource: [...resourceFilterSel], project: [...projectFilterSel],
+          release: [...releaseFilterSel], label: [...labelFilterSel], component: [...componentFilterSel],
+          customFields: Object.keys(customFieldFilterSel || {}).reduce((out, key) => {
+            const values = customFieldFilterSel[key];
+            if (values && values.size) out[key] = [...values].map(String);
+            return out;
+          }, {})
+        });
         storage.set('gantt_filter_presets', JSON.stringify(presets));
         renderPresetMenu();
         if (typeof showToast === 'function') showToast(`Набор «${name}» сохранен`, 'ok');
@@ -17913,6 +18452,13 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const p = getFilterPresets()[idx]; if (!p) return;
       statusFilterSel = new Set(p.status || []); resourceFilterSel = new Set(p.resource || []); projectFilterSel = new Set(p.project || []);
       releaseFilterSel = new Set(p.release || []); labelFilterSel = new Set(p.label || []); componentFilterSel = new Set(p.component || []);
+      customFieldFilterSel = {};
+      if (p.customFields && typeof p.customFields === 'object' && !Array.isArray(p.customFields)) {
+        Object.keys(p.customFields).forEach(key => {
+          const values = p.customFields[key];
+          if (Array.isArray(values) && values.length) customFieldFilterSel[key] = new Set(values.map(String));
+        });
+      }
       if (typeof updateReleaseFilterBtn === 'function') updateReleaseFilterBtn();
       closePresetMenu(); afterFilterChange();
     }
@@ -17926,6 +18472,10 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const add = (arr, label) => { const n = (arr || []).length; if (n) parts.push(label + ': ' + n); };
       add(p.status, 'статус'); add(p.project, 'проект'); add(p.resource, 'ресурс');
       add(p.release, 'релиз'); add(p.label, 'метки'); add(p.component, 'компоненты');
+      const customCount = (p.customFields && typeof p.customFields === 'object' && !Array.isArray(p.customFields))
+        ? Object.keys(p.customFields).reduce((sum, key) => sum + (Array.isArray(p.customFields[key]) ? p.customFields[key].length : 0), 0)
+        : 0;
+      if (customCount) parts.push('свои поля: ' + customCount);
       return parts.join(', ');
     }
     function renderPresetMenu() {
@@ -18712,6 +19262,22 @@ let resourceView = 'roles'; // 'roles' | 'load'
       renderArchiveList();
     }
     var _debArchiveList = _debounce(function () { renderArchiveList(); }, 180);
+    function _archiveDateYmd(task) {
+      if (!task) return '';
+      const candidates = [
+        task._archivedAt,
+        task.archivedAt,
+        (typeof _taskCloseDateYmd === 'function' ? _taskCloseDateYmd(task) : ''),
+        task._jiraResolved,
+        task.end,
+        task.updated
+      ];
+      for (let i = 0; i < candidates.length; i++) {
+        const value = String(candidates[i] || '').slice(0, 10);
+        if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+      }
+      return '';
+    }
     function renderArchiveList() {
       const listEl = document.getElementById('archiveList');
       const statsEl = document.getElementById('archiveStats');
@@ -18724,16 +19290,19 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const clearBtn = document.getElementById('archiveSearchClear');
       if (clearBtn) clearBtn.classList.toggle('hidden', !qRaw);
       const filtered = archivedTasks.filter(t => {
-        if (fromVal && t.end && t.end < fromVal) return false;
-        if (toVal && t.end && t.end > toVal) return false;
+        const archiveDate = _archiveDateYmd(t);
+        // При включённом периоде задачи без подтверждённой даты не должны попадать в любой диапазон.
+        if ((fromVal || toVal) && !archiveDate) return false;
+        if (fromVal && archiveDate < fromVal) return false;
+        if (toVal && archiveDate > toVal) return false;
         if (qRaw) {
-          const hay = [t.name, t.jira, t.resource, t.section, t.notes, (Array.isArray(t.components) ? t.components.join(' ') : '')].filter(Boolean).join(' ').toLowerCase();
+          const hay = [t.name, t.jira, t.resource, t.section, t.notes, archiveDate, (Array.isArray(t.components) ? t.components.join(' ') : '')].filter(Boolean).join(' ').toLowerCase();
           if (!hay.includes(qRaw)) return false;
         }
         return true;
       });
-      // Сортируем по дате окончания, новые сверху
-      filtered.sort((a, b) => (b.end || '').localeCompare(a.end || ''));
+      // Сортируем по дате попадания в архив/закрытия, новые сверху.
+      filtered.sort((a, b) => _archiveDateYmd(b).localeCompare(_archiveDateYmd(a)));
 
       if (statsEl) statsEl.textContent = `Показано: ${filtered.length} из ${archivedTasks.length}`;
       const clearAllBtn = document.getElementById('archiveClearBtn');
@@ -18747,6 +19316,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         const key = t.jira ? escHtml(t.jira) : '#' + String(t.id).slice(-4);
         const taskLabel = escAttr((t.jira ? t.jira + ', ' : '') + (t.name || 'задача'));
         const statusName = (projectStatuses.find(s => s.id === t.status) || {}).name || t.status || '';
+        const archiveDate = _archiveDateYmd(t);
         return `
         <div class="archive-row px-4 py-2.5 hover:bg-slate-50 transition-colors group/arc">
           <input type="checkbox" class="archive-row-check w-3.5 h-3.5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500/20 cursor-pointer shrink-0" data-id="${t.id}" onchange="updateArchiveSelectionUI()" aria-label="Выбрать для восстановления: ${taskLabel}" title="Выбрать для восстановления">
@@ -18759,6 +19329,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
                 <span class="archive-task-section" title="${escAttr(t.section || 'Без секции')}">${escHtml(t.section || 'Без секции')}</span>
                 <span class="archive-task-resource" title="${escAttr(formatResourceList(t.resource || '') || 'Без исполнителя')}">${escHtml(formatResourceList(t.resource || '') || 'Без исполнителя')}</span>
                 <span class="archive-task-dates">${t.start ? escHtml(formatDateString(t.start)) : '-'} → ${t.end ? escHtml(formatDateString(t.end)) : '-'}</span>
+                ${archiveDate ? `<span class="archive-task-status" title="Дата архивирования или закрытия">архив ${escHtml(formatDateString(archiveDate))}</span>` : ''}
                 ${statusName ? `<span class="archive-task-status">${escHtml(statusName)}</span>` : ''}
               </span>
             </span>
@@ -18820,8 +19391,15 @@ let resourceView = 'roles'; // 'roles' | 'load'
         const _selected = archivedTasks.filter(t => ids.includes(t.id));
         const _keyOf = t => t.jira ? String(t.jira).trim().toLowerCase() : '';
         const _existing = new Set(roadmapData.map(_keyOf).filter(Boolean));
+        const _existingIds = new Set(roadmapData.filter(Boolean).map(function (t) { return String(t.id); }));
         const restored = [], _conflicts = [];
-        _selected.forEach(t => { const k = _keyOf(t); if (k && _existing.has(k)) { _conflicts.push(t); } else { if (k) _existing.add(k); restored.push(t); } });
+        _selected.forEach(function (t) {
+          const key = _keyOf(t), idKey = String(t && t.id);
+          if ((key && _existing.has(key)) || _existingIds.has(idKey)) { _conflicts.push(t); return; }
+          if (key) _existing.add(key);
+          _existingIds.add(idKey);
+          restored.push(t);
+        });
         const _restoredIds = new Set(restored.map(t => t.id));
         archivedTasks = archivedTasks.filter(t => !_restoredIds.has(t.id));
         restored.forEach(t => {
@@ -18838,6 +19416,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
           });
           if (t.section && !planSections.includes(t.section)) planSections.push(t.section);
           delete t._archivedSectionPath;
+          delete t._archivedAt;
+          delete t.archivedAt;
           roadmapData.push(t);
         });
         storage.set('gantt_archived_tasks', JSON.stringify(archivedTasks));
@@ -18851,7 +19431,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         updateArchiveBadge();
         renderArchiveList();
         renderRoadmap();
-        if (_conflicts.length && typeof showToast === 'function') showToast(`Пропущено (ключ уже в проекте): ${_conflicts.length}`, 'warn', 5000);
+        if (_conflicts.length && typeof showToast === 'function') showToast(`Пропущено (ключ или номер уже в проекте): ${_conflicts.length}`, 'warn', 5000);
         if (_snap && restored.length && typeof offerUndo === 'function') offerUndo(`Восстановлено: ${restored.length}`, _snap);
         else if (typeof showToast === 'function') showToast(`Восстановлено: ${restored.length}`, 'ok');
       }});
@@ -18867,8 +19447,79 @@ let resourceView = 'roles'; // 'roles' | 'load'
         storage.set('gantt_archived_tasks', JSON.stringify(archivedTasks));
         updateArchiveBadge();
         renderArchiveList();
+        if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile();
+        if (typeof renderRoadmap === 'function') renderRoadmap();
         if (typeof showToast === 'function') showToast('Архив очищен', 'ok');
       }});
+    }
+
+    // Единое переназначение ссылок при объединении или удалении дублей.
+    // Карта содержит oldTaskId -> survivorTaskId. Обновляем не только pred, но и
+    // метаданные связей, дедлайны/отсечки и составы презентаций.
+    function _remapTaskReferences(idMap) {
+      if (!idMap || typeof idMap.has !== 'function' || !idMap.size) return { dependencies: 0, cutoffs: 0, presentationItems: 0 };
+      const targetOf = function (value) {
+        const candidates = [value, String(value)];
+        const n = parseInt(String(value), 10);
+        if (Number.isFinite(n)) candidates.push(n);
+        for (let i = 0; i < candidates.length; i++) if (idMap.has(candidates[i])) return idMap.get(candidates[i]);
+        return value;
+      };
+      const stats = { dependencies: 0, cutoffs: 0, presentationItems: 0 };
+      (roadmapData || []).concat(archivedTasks || []).forEach(function (task) {
+        if (!task) return;
+        if (task.pred) {
+          const before = String(task.pred);
+          const mapped = before.split(',').map(function (x) { return String(targetOf(x.trim())); }).filter(function (x) { return x && x !== String(task.id); });
+          task.pred = Array.from(new Set(mapped)).join(',');
+          if (task.pred !== before) stats.dependencies++;
+        }
+        if (task.depMeta && typeof task.depMeta === 'object' && !Array.isArray(task.depMeta)) {
+          const nextMeta = {};
+          Object.keys(task.depMeta).forEach(function (key) {
+            const mappedKey = String(targetOf(key));
+            if (!mappedKey || mappedKey === String(task.id)) return;
+            if (nextMeta[mappedKey] == null) nextMeta[mappedKey] = task.depMeta[key];
+          });
+          if (task.pred) {
+            const allowed = new Set(String(task.pred).split(',').filter(Boolean));
+            Object.keys(nextMeta).forEach(function (key) { if (!allowed.has(String(key))) delete nextMeta[key]; });
+          }
+          if (Object.keys(nextMeta).length) task.depMeta = nextMeta; else delete task.depMeta;
+        }
+      });
+      (customCutoffs || []).forEach(function (cutoff) {
+        if (!cutoff) return;
+        const oldLinked = cutoff.linkedTaskId;
+        const nextLinked = oldLinked == null ? oldLinked : targetOf(oldLinked);
+        if (oldLinked != null && String(nextLinked) !== String(oldLinked)) {
+          cutoff.linkedTaskId = nextLinked;
+          stats.cutoffs++;
+        }
+        idMap.forEach(function (toId, fromId) {
+          if (String(cutoff.id || '') === 'task-deadline-' + String(fromId)) cutoff.id = 'task-deadline-' + String(toId);
+        });
+      });
+      const sets = presentations && Array.isArray(presentations.sets) ? presentations.sets : [];
+      sets.forEach(function (set) {
+        (set && Array.isArray(set.groups) ? set.groups : []).forEach(function (group) {
+          const unique = new Map();
+          (group && Array.isArray(group.items) ? group.items : []).forEach(function (item) {
+            if (!item || item.taskId == null) return;
+            const mappedId = targetOf(item.taskId);
+            if (String(mappedId) !== String(item.taskId)) stats.presentationItems++;
+            const key = String(mappedId);
+            if (!unique.has(key)) unique.set(key, Object.assign({}, item, { taskId: mappedId }));
+            else {
+              const survivor = unique.get(key);
+              if (!survivor.alias && item.alias) survivor.alias = item.alias;
+              if ((!survivor.showAs || survivor.showAs === 'hide') && item.showAs && item.showAs !== 'hide') survivor.showAs = item.showAs;
+            }
+          });
+          if (group) group.items = Array.from(unique.values());
+        });
+      });
+      return stats;
     }
 
     // Удаляет дубли задач с одинаковым Jira-ключом: внутри активных, внутри архива и между ними.
@@ -18878,6 +19529,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
       const keyOf = t => (t && t.jira) ? String(t.jira).trim().toLowerCase() : '';
       let removedActive = 0, removedArch = 0;
+      const survivorByKey = new Map(), referenceMap = new Map();
       // 1) Активные: оставляем по одной записи на ключ (первую)
       const seenActive = new Set();
       const activeKeys = new Set();
@@ -18885,8 +19537,14 @@ let resourceView = 'roles'; // 'roles' | 'load'
       (roadmapData || []).forEach(t => {
         const k = keyOf(t);
         if (!k) { newRoadmap.push(t); return; }
-        if (seenActive.has(k)) { removedActive++; return; }
-        seenActive.add(k); activeKeys.add(k); newRoadmap.push(t);
+        if (seenActive.has(k)) {
+          removedActive++;
+          if (t && t.id != null && survivorByKey.has(k)) referenceMap.set(t.id, survivorByKey.get(k));
+          return;
+        }
+        seenActive.add(k); activeKeys.add(k);
+        if (t && t.id != null) survivorByKey.set(k, t.id);
+        newRoadmap.push(t);
       });
       // 2) Архив: убираем запись, если такой ключ уже есть среди активных или повторяется в архиве
       const seenArch = new Set();
@@ -18894,8 +19552,14 @@ let resourceView = 'roles'; // 'roles' | 'load'
       (archivedTasks || []).forEach(t => {
         const k = keyOf(t);
         if (!k) { newArch.push(t); return; }
-        if (activeKeys.has(k) || seenArch.has(k)) { removedArch++; return; }
-        seenArch.add(k); newArch.push(t);
+        if (activeKeys.has(k) || seenArch.has(k)) {
+          removedArch++;
+          if (t && t.id != null && survivorByKey.has(k)) referenceMap.set(t.id, survivorByKey.get(k));
+          return;
+        }
+        seenArch.add(k);
+        if (t && t.id != null && !survivorByKey.has(k)) survivorByKey.set(k, t.id);
+        newArch.push(t);
       });
       const total = removedActive + removedArch;
       if (total === 0) { if (typeof showToast === 'function') showToast('Дублей по ключу не найдено', 'info'); return; }
@@ -18903,8 +19567,11 @@ let resourceView = 'roles'; // 'roles' | 'load'
         const snap = (typeof captureUndoState === 'function') ? captureUndoState() : null;
         roadmapData = newRoadmap;
         archivedTasks = newArch;
+        if (referenceMap.size && typeof _remapTaskReferences === 'function') _remapTaskReferences(referenceMap);
         storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData));
         storage.set('gantt_archived_tasks', JSON.stringify(archivedTasks));
+        storage.set('gantt_custom_cutoffs', JSON.stringify(customCutoffs));
+        storage.set('gantt_presentations', JSON.stringify(presentations));
         updateArchiveBadge();
         renderArchiveList();
         renderRoadmap();
@@ -19101,29 +19768,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
         seenArch.add(k); if (t.id != null && !keySurvivor.has(k)) keySurvivor.set(k, t.id); newArch.push(t);
       });
       roadmapData = newRoadmap; archivedTasks = newArch;
-      // Перецепляем зависимости с удаленных дублей на выжившую задачу того же ключа (а не просто срезаем стрелку).
-      if (_delIds.size) {
-        newRoadmap.concat(newArch).forEach(t => {
-          if (t.pred) {
-            const ps = String(t.pred).split(',').map(x => x.trim()).filter(Boolean).map(x => {
-              const n = parseInt(x, 10);
-              if (!_delIds.has(n)) return x;
-              const sv = _remap.get(n); return (sv != null) ? String(sv) : '';
-            }).filter(Boolean);
-            t.pred = Array.from(new Set(ps)).filter(x => x !== String(t.id)).join(',');
-          }
-          if (t.depMeta && typeof t.depMeta === 'object') {
-            _delIds.forEach(id => {
-              if (t.depMeta[id] != null) {
-                const sv = _remap.get(id);
-                if (sv != null && String(sv) !== String(t.id) && t.depMeta[String(sv)] == null) t.depMeta[String(sv)] = t.depMeta[id];
-              }
-              delete t.depMeta[id];
-            });
-            if (!t.pred || !Object.keys(t.depMeta).length) delete t.depMeta;
-          }
-        });
-      }
+      // Все виды ссылок переназначаются одним механизмом: зависимости, отсечки и презентации.
+      if (_remap.size && typeof _remapTaskReferences === 'function') _remapTaskReferences(_remap);
       return { removedActive, removedArch, total: removedActive + removedArch };
     }
     // Один клик «Проверить и починить проект»: self-rows, пустые секции, скрытые секции,
@@ -19146,6 +19792,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       storage.set('gantt_section_colors', JSON.stringify(sectionColors));
       storage.set('gantt_epic_statuses', JSON.stringify(epicStatusByKey));
       storage.set('gantt_custom_cutoffs', JSON.stringify(customCutoffs));
+      storage.set('gantt_presentations', JSON.stringify(presentations));
       if (typeof updateArchiveBadge === 'function') updateArchiveBadge();
       if (typeof updateSectionSelects === 'function') updateSectionSelects();
       if (typeof renderHeaderCutoffChips === 'function') renderHeaderCutoffChips();
@@ -22462,6 +23109,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       bls.push(bl);
       while (bls.length > 12) bls.shift();
       storage.set('gantt_baselines', JSON.stringify(bls));
+      if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile();
       renderBaselineList();
       if (typeof showToast === 'function') showToast(`Версия «${label}» сохранена`, 'ok');
       return bl;
@@ -22488,7 +23136,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       _slipExpanded = bl.id;
       renderBaselineList();
     }
-    function deleteBaseline(id) { if (READ_ONLY_MODE) return; if (typeof requireUnlocked === 'function' && !requireUnlocked()) return; storage.set('gantt_baselines', JSON.stringify(getBaselines().filter(b => b.id !== id))); if (chartBaselineId === id) { chartBaselineId = ''; try { storage.set('gantt_chart_baseline', ''); } catch (e) {} renderRoadmap(true); } renderBaselineList(); }
+    function deleteBaseline(id) { if (READ_ONLY_MODE) return; if (typeof requireUnlocked === 'function' && !requireUnlocked()) return; storage.set('gantt_baselines', JSON.stringify(getBaselines().filter(b => b.id !== id))); if (chartBaselineId === id) { chartBaselineId = ''; try { storage.set('gantt_chart_baseline', ''); } catch (e) {} renderRoadmap(true); } if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile(); renderBaselineList(); }
     function restoreBaseline(id) {
       if (READ_ONLY_MODE) return;
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
@@ -22741,7 +23389,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
       openInputModal({
         title: 'Полное удаление проекта',
-        desc: 'Будут стерты все задачи, секции, статусы, ресурсы и отсечки, привязка к файлу автосохранения и все данные в браузере (localStorage и IndexedDB). Сам файл на диске останется. Действие необратимо.\n\nЧтобы подтвердить, введите слово УДАЛИТЬ заглавными буквами.',
+        desc: 'Будут необратимо удалены из браузера текущий проект и настройки, локальные версии, недавние файлы, а также привязки к автосохранению и папке автокопий. Уже созданные файлы и автокопии на диске останутся.\n\nЧтобы подтвердить, введите слово УДАЛИТЬ заглавными буквами.',
         placeholder: 'УДАЛИТЬ',
         okText: 'Удалить все',
         danger: true,
@@ -22749,77 +23397,26 @@ let resourceView = 'roles'; // 'roles' | 'load'
         onOk: () => _doPurgeAllProjectData()
       });
     }
-    async function _clearRoadmapIdbVerified() {
-      const db = await dbPromise;
-      if (!db || !db.objectStoreNames) return true;
-      const stores = Array.from(db.objectStoreNames);
-      if (!stores.length) return true;
-      await new Promise((resolve, reject) => {
-        const tx = db.transaction(stores, 'readwrite');
-        stores.forEach(name => tx.objectStore(name).clear());
-        tx.oncomplete = resolve;
-        tx.onerror = () => reject(tx.error || new Error('Не удалось очистить локальную базу'));
-        tx.onabort = () => reject(tx.error || new Error('Очистка локальной базы прервана'));
-      });
-      const counts = await new Promise((resolve, reject) => {
-        const result = {};
-        const tx = db.transaction(stores, 'readonly');
-        stores.forEach(name => {
-          const request = tx.objectStore(name).count();
-          request.onsuccess = () => { result[name] = request.result; };
-        });
-        tx.oncomplete = () => resolve(result);
-        tx.onerror = () => reject(tx.error || new Error('Не удалось проверить локальную базу'));
-        tx.onabort = () => reject(tx.error || new Error('Проверка локальной базы прервана'));
-      });
-      const remaining = stores.filter(name => Number(counts[name] || 0) !== 0);
-      if (remaining.length) throw new Error('Не очищены хранилища: ' + remaining.join(', '));
-      return true;
-    }
     async function _doPurgeAllProjectData() {
-      let purgeVerified = false;
+      const wiped = await wipeAllStorageArtifacts();
+      if (!wiped) return false;
       try {
-        // Очищаем все ключи gantt_*
-        const keys = [];
-        for (let i = 0; i < localStorage.length; i++) {
-          const k = localStorage.key(i);
-          if (k && k.startsWith('gantt_')) keys.push(k);
-        }
-        keys.forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
-
-        // Сбрасываем sessionStorage на всякий случай
-        try {
-          for (let i = sessionStorage.length - 1; i >= 0; i--) {
-            const k = sessionStorage.key(i);
-            if (k && k.startsWith('gantt_')) sessionStorage.removeItem(k);
-          }
-        } catch (e) {}
-
-        // Очищаем открытые IndexedDB-хранилища одной транзакцией и проверяем результат.
-        await _clearRoadmapIdbVerified();
-
-        // Сбрасываем привязку к автосохранению-файлу
-        try { autoSaveFileHandle = null; await clearHandle(); } catch (e) {}
-        purgeVerified = true;
+        resetProjectState();
+        storage.set('gantt_po_name', 'Фамилия Имя');
+        recordProjectAudit('project_reset', 'Проект полностью очищен', {});
+        if (persistProjectState() === false) throw new Error('Не удалось сохранить пустой проект');
+        updateAutoSaveStatus('', '');
+        updateAutoSaveBtn();
+        initApp();
+        if (typeof showToast === 'function') showToast('Проект полностью очищен', 'ok');
+        return true;
       } catch (e) {
-        console.warn('purge error:', e && e.message);
-      }
-      if (!purgeVerified) {
-        if (typeof showToast === 'function') showToast('Не удалось полностью очистить локальные данные. Проект не сброшен.', 'error', 7000);
+        if (typeof console !== 'undefined' && console.error) console.error('Purge init failed', e);
+        if (typeof showToast === 'function') showToast('Данные очищены, но пустой проект не удалось создать. Перезагрузите приложение.', 'error', 6500);
         return false;
       }
-      // Сбрасываем ВСЕ сущности в пустое состояние и записываем пустые значения,
-      // чтобы демо-данные из дефолтов не «воскресали» при следующей загрузке.
-      resetProjectState();
-      persistProjectState();
-      updateAutoSaveStatus('', '');
-      updateAutoSaveBtn();
-      initApp();
-      if (typeof showToast === 'function') showToast('Проект полностью очищен', 'ok');
-      return true;
     }
 
-    
     // Указать продакт-оунера (РО) , чей это роадмап
     function editPoName() {
       if (READ_ONLY_MODE) return;
@@ -23090,10 +23687,10 @@ let resourceView = 'roles'; // 'roles' | 'load'
       var nameSel = names.map(function (n) { var on = _spName() === n; return '<button type="button" onclick="_spCfgSetName(\'' + n + '\')" class="px-2.5 py-1 rounded-lg text-xs font-semibold border cursor-pointer transition-colors ' + (on ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50') + '">' + esc(n) + '</button>'; }).join('');
       var delIcon = '<svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
       var rows = sprints.map(function (sp, i) {
-        return '<div class="flex items-center gap-2 py-1.5 border-b border-slate-100">' +
+        return '<div class="sp-sprint-row flex items-center gap-2 py-1.5 border-b border-slate-100">' +
           '<input type="text" value="' + escA(sp.name) + '" onchange="_spCfgEditSprint(' + i + ',\'name\',this.value)" class="h-8 px-2 text-xs border border-slate-200 rounded-lg grow min-w-0" aria-label="Название спринта">' +
-          '<input type="date" value="' + esc(sp.from) + '" onchange="_spCfgEditSprint(' + i + ',\'from\',this.value)" class="h-8 px-2 text-xs border border-slate-200 rounded-lg shrink-0" aria-label="Начало">' +
-          '<input type="date" value="' + esc(sp.to) + '" onchange="_spCfgEditSprint(' + i + ',\'to\',this.value)" class="h-8 px-2 text-xs border border-slate-200 rounded-lg shrink-0" aria-label="Конец">' +
+          '<input type="date" value="' + esc(sp.from) + '" onchange="_spCfgEditSprint(' + i + ',\'from\',this.value)" class="sp-sprint-date h-8 px-2 text-xs border border-slate-200 rounded-lg shrink-0" aria-label="Начало">' +
+          '<input type="date" value="' + esc(sp.to) + '" onchange="_spCfgEditSprint(' + i + ',\'to\',this.value)" class="sp-sprint-date h-8 px-2 text-xs border border-slate-200 rounded-lg shrink-0" aria-label="Конец">' +
           '<button type="button" onclick="_spCfgDelSprint(' + i + ')" class="shrink-0 w-7 h-7 inline-flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 cursor-pointer" aria-label="Удалить спринт">' + delIcon + '</button>' +
           '</div>';
       }).join('');
@@ -25191,7 +25788,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       m.innerHTML = '<div class="bg-white rounded-2xl shadow-2xl border border-slate-200/60 w-full max-w-md flex flex-col max-h-[85vh]">'
         + '<div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h4v14H4zM10 5h4v14h-4zM16 5h4v14h-4z"></path></svg></span><div class="min-w-0"><h3 class="text-lg font-semibold text-slate-800 leading-tight">Столбцы доски</h3><p class="text-[10px] text-slate-500">Отметьте статусы-столбцы и задайте порядок (стрелками)</p></div></div><button type="button" onclick="closeKanbanColsModal()" aria-label="Закрыть" title="Закрыть" class="text-slate-500 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button></div>'
         + '<div class="p-6 space-y-2 overflow-y-auto">' + (rows || '<div class="text-xs text-slate-400 text-center py-6">Нет статусов</div>') + '</div>'
-        + '<div class="px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-2xl flex items-center justify-between gap-2"><button type="button" onclick="_kbResetCols()" class="h-9 px-3 text-slate-600 hover:bg-slate-200 text-xs font-medium rounded-xl transition-all cursor-pointer">Сбросить (все)</button><div class="flex items-center gap-2"><span class="text-[10px] text-slate-400 self-center">Столбцов: ' + onCount + '</span><button type="button" onclick="closeKanbanColsModal()" class="h-9 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-all cursor-pointer">Отмена</button><button type="button" onclick="_kbSaveCols()" class="h-9 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-all cursor-pointer">Применить</button></div></div>'
+        + '<div class="kanban-cols-footer px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-2xl flex items-center justify-between gap-2"><button type="button" onclick="_kbResetCols()" class="h-9 px-3 text-slate-600 hover:bg-slate-200 text-xs font-medium rounded-xl transition-all cursor-pointer">Сбросить (все)</button><div class="kanban-cols-actions flex items-center gap-2"><span class="text-[10px] text-slate-400 self-center">Столбцов: ' + onCount + '</span><button type="button" onclick="closeKanbanColsModal()" class="h-9 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-all cursor-pointer">Отмена</button><button type="button" onclick="_kbSaveCols()" class="h-9 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-all cursor-pointer">Применить</button></div></div>'
         + '</div>';
     }
     function _kbToggle(i) { if (_kbDraft[i]) { _kbDraft[i].on = !_kbDraft[i].on; _renderKanbanColsModal(); } }
@@ -27198,10 +27795,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const _undoSnap = captureUndoState();
       const ids = new Set(list.map(t => t.id));
       const affectedSections = new Set([...list.map(t => t.section).filter(Boolean), ...force]);
+      const archivedAt = (typeof toYmdLocal === 'function') ? toYmdLocal((typeof CURRENT_DATE !== 'undefined' && CURRENT_DATE) ? CURRENT_DATE : new Date()) : '';
       roadmapData = roadmapData.filter(t => !ids.has(t.id));
       list.forEach(t => {
         delete t.hidden;
         if (t.section) t._archivedSectionPath = _captureArchivedSectionPath(t.section);
+        if (archivedAt) t._archivedAt = archivedAt;
         archivedTasks.push(t);
       });
       // Убираем секции: принудительные , всегда; остальные , если опустели
@@ -27589,16 +28188,24 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         name = name.replace(new RegExp('[\\s:\\-]*[\\[\\(]?\\s*' + _esc + '\\s*[\\]\\)]?[\\s:\\-]*'), ' ').replace(/\s{2,}/g, ' ').trim();
         if (!name) name = qaJira;
       }
-      const days = parseInt(parts[1], 10);
+      const parsedDays = parseInt(parts[1], 10);
+      const duration = (Number.isFinite(parsedDays) && parsedDays > 0) ? parsedDays : 1;
       const resource = parts[2] || '';
       let section = parts[3] || '';
       if (!section) section = (planSections.find(s => !hiddenSections.includes(s))) || planSections[0] || 'Задачи без эпика';
-      const start = toYmdLocal(CURRENT_DATE);
-      const end = (Number.isFinite(days) && days > 0)
-        ? toYmdLocal(new Date(CURRENT_DATE.getFullYear(), CURRENT_DATE.getMonth(), CURRENT_DATE.getDate() + days - 1))
-        : start;
+      const baseStart = toYmdLocal(CURRENT_DATE);
+      let span = null;
+      if (typeof _spSpan === 'function') {
+        try { span = _spSpan(baseStart, duration, resource); } catch (e) { span = null; }
+      }
+      if (!span || !span.start || !span.end) {
+        let startDate = parseLocalDate(baseStart); let guard = 0;
+        while (typeof isWeekendOrHoliday === 'function' && isWeekendOrHoliday(startDate) && guard++ < 800) startDate.setDate(startDate.getDate() + 1);
+        const fallbackStart = toYmdLocal(startDate);
+        span = { start: fallbackStart, end: (typeof shiftYmdByWorkdays === 'function') ? shiftYmdByWorkdays(fallbackStart, duration - 1) : fallbackStart };
+      }
       const defStatus = (projectStatuses[0] && projectStatuses[0].id) || 'planned';
-      return { id: nextTaskId(), name, jira: qaJira, section, resource, start, end, status: defStatus, isMilestone: false, pred: '' };
+      return { id: nextTaskId(), name, jira: qaJira, section, resource, start: span.start, end: span.end, estimate: String(duration), status: defStatus, isMilestone: false, pred: '' };
     }
     var _debQuickAddPreview = _debounce(function () { renderQuickAddPreview(); }, 180);
     function renderQuickAddPreview() {
@@ -27615,9 +28222,9 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         const _daysRaw = _qparts[1] || '';
         const _daysNum = parseInt(_daysRaw, 10);
         const _dayBad = _daysRaw !== '' && (!Number.isFinite(_daysNum) || _daysNum <= 0);
-        let dur = '1 дн';
-        try { const d = Math.round((parseLocalDate(t.end) - parseLocalDate(t.start)) / 86400000) + 1; if (d > 0) dur = d + ' дн'; } catch (e) {}
-        if (_dayBad) dur = '1 дн (по умолч.)';
+        const estimateDays = Math.max(1, parseInt(t.estimate, 10) || 1);
+        let dur = estimateDays + ' ' + pluralRu(estimateDays, ['раб. день', 'раб. дня', 'раб. дней']);
+        if (_dayBad) dur = '1 раб. день (по умолч.)';
         const res = t.resource ? (typeof formatResourceList === 'function' ? formatResourceList(t.resource) : t.resource) : '';
         const _durHtml = _dayBad ? `<span class="text-amber-600">${escHtml(dur)}</span>` : escHtml(dur);
         const meta = [_durHtml].concat([res, t.section].filter(Boolean).map(escHtml)).join(' , ');
@@ -28218,6 +28825,9 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         storage.set('gantt_archived_tasks', JSON.stringify(archivedTasks));
         if (taskObj.section && !planSections.includes(taskObj.section)) planSections.push(taskObj.section);
         const merged = prevArch ? Object.assign({}, prevArch, taskObj) : taskObj;
+        delete merged._archivedAt;
+        delete merged.archivedAt;
+        delete merged._archivedSectionPath;
         if (prevArch && (prevArch.status || '') !== (merged.status || '')) {
           merged.statusLog = (prevArch.statusLog || []).concat([{ from: prevArch.status || '', to: merged.status || '', at: toYmdLocal(CURRENT_DATE), time: _auditClock(), by: _authorName() }]);
         }
@@ -28420,11 +29030,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             v = (v || '').trim();
             if (v.length < 8) { if (typeof showToast === 'function') showToast('Пароль слишком короткий (мин. 8)', 'warn'); return; }
             projectLockHash = await makeLockHash(v);
-            projectUnlocked = true; // только что задал , не блокируем текущую сессию сразу
+            projectUnlocked = false;
             storage.set('gantt_lock_hash', projectLockHash);
             if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile();
             updateLockBtn();
-            if (typeof showToast === 'function') showToast('Замок установлен. Правки требуют пароль.', 'ok', 4000);
+            if (typeof showToast === 'function') showToast('Замок установлен. Проект заблокирован, для правок потребуется пароль.', 'ok', 4500);
           }
         });
         return;
@@ -28491,9 +29101,15 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     }
     function settingsSetJiraBase(v) {
       if (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE) return;
-      v = String(v || '').trim().replace(/\/+$/, '');
-      if (v && !/^https?:\/\//i.test(v)) v = 'https://' + v;
-      if (typeof saveJiraCfg === 'function') saveJiraCfg({ base: v });
+      if (typeof requireUnlocked === 'function' && !requireUnlocked()) { if (typeof renderSettingsModal === 'function') renderSettingsModal(); return; }
+      const raw = String(v || '').trim();
+      const normalized = (typeof jiraNormBase === 'function') ? jiraNormBase(raw) : raw.replace(/\/+$/, '');
+      if (raw && !normalized) {
+        if (typeof showToast === 'function') showToast('Некорректный адрес Jira. Разрешён HTTPS, а HTTP — только для localhost.', 'warn', 4500);
+        if (typeof renderSettingsModal === 'function') renderSettingsModal();
+        return;
+      }
+      if (typeof saveJiraCfg === 'function') saveJiraCfg({ base: normalized });
       if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile();
     }
     // Выбор валюты в селекте: «свой» , показать поле символа, иначе сразу применить.
@@ -28776,6 +29392,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (opts.projectIdMode === 'adopt') {
         projectStorageId = _jsonStorage.normalizeProjectId(snap.projectId)
           || _jsonStorage.deriveLegacyProjectId(snap) || _jsonStorage.createProjectId();
+      } else if (opts.projectIdMode === 'clone') {
+        projectStorageId = _jsonStorage.createProjectId();
       } else if (opts.projectIdMode === 'snapshot') {
         projectStorageId = _jsonStorage.normalizeProjectId(snap.projectId) || projectStorageId;
       }
@@ -29187,20 +29805,35 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     }
     // Тихая запись датированного сайдкара в выбранную папку + ротация. Сбой НЕ должен ронять основной автосейв.
     async function _writeBackupSidecarNow() {
-      if (!autoBackupDirHandle) return;
+      if (!autoBackupDirHandle) return false;
+      let fileName = '';
+      let writable = null;
+      let committed = false;
       try {
         if (typeof autoBackupDirHandle.queryPermission === 'function') {
           const perm = await autoBackupDirHandle.queryPermission({ mode: 'readwrite' });
-          if (perm !== 'granted') return; // без жеста права в фоне не запрашиваем
+          if (perm !== 'granted') return false;
         }
         const snap = buildRoadmapSnapshot();
-        const fh = await autoBackupDirHandle.getFileHandle(_backupSidecarFileName(new Date()), { create: true });
-        const w = await fh.createWritable(); await w.write(JSON.stringify(snap, null, 2)); await w.close();
+        fileName = _backupSidecarFileName(new Date());
+        const fh = await autoBackupDirHandle.getFileHandle(fileName, { create: true });
+        writable = await fh.createWritable();
+        await writable.write(JSON.stringify(snap, null, 2));
+        await writable.close();
+        writable = null;
+        committed = true;
         const names = [];
         for await (const entry of autoBackupDirHandle.values()) { if (entry.kind === 'file' && /^roadmap-backup-.*\.json$/.test(entry.name)) names.push(entry.name); }
         names.sort();
         while (names.length > AUTO_BACKUP_KEEP) { const rm = names.shift(); try { await autoBackupDirHandle.removeEntry(rm); } catch (e) {} }
-      } catch (e) {}
+        return true;
+      } catch (e) {
+        if (!committed) {
+          if (writable && typeof writable.abort === 'function') { try { await writable.abort(); } catch (abortError) {} }
+          if (fileName) { try { await autoBackupDirHandle.removeEntry(fileName); } catch (removeError) {} }
+        }
+        throw e;
+      }
     }
     function writeBackupSidecar() {
       return _enqueueStorageWrite('backup-sidecar', () => _writeBackupSidecarNow());
@@ -30021,6 +30654,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     // метрики, связи и история архивной задачи должны переживать повторный импорт.
     function applyJiraFieldsToArchived(existing, mapped) {
       if (!existing || !mapped) return existing;
+      if (!existing._archivedAt) existing._archivedAt = mapped._jiraResolved || mapped.end || existing.end || '';
       if (mapped.name) existing.name = mapped.name;
       if (mapped.status && existing.status !== mapped.status) {
         if (typeof logJiraStatusChange === 'function') logJiraStatusChange(existing, mapped);
@@ -30256,7 +30890,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             // Также убираем из основной коллекции если там была
             const idxInMain = roadmapData.findIndex(t => _jiraKey(t && t.jira) === _jiraKey(mapped.jira));
             if (idxInMain >= 0) roadmapData.splice(idxInMain, 1);
-            archivedTasks.push({ id: nextTaskId(), ...mapped });
+            archivedTasks.push({ id: nextTaskId(), ...mapped, _archivedAt: mapped._jiraResolved || mapped.end || toYmdLocal(CURRENT_DATE || new Date()) });
             archived++;
           }
           return; // в основной список не добавляем, секции для архивных не создаем
@@ -30834,7 +31468,15 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const _collectWl = (r) => { if (!_importWl) return []; const out = []; _wlCols.forEach(ci => { const e = _csvParseJiraWorklog(r[ci]); if (e) out.push(e); }); return out; };
       const statusByLc = {}; (projectStatuses || []).forEach(st => { if (st && st.name) statusByLc[String(st.name).toLowerCase()] = st.id; if (st && st.id) statusByLc[String(st.id).toLowerCase()] = st.id; });
       const _undo = (typeof captureUndoState === 'function') ? captureUndoState() : null;
-      const knownSec = new Set(planSections); const knownRes = new Set(projectResources); let added = 0, updated = 0, badDates = 0; const _depPairs = []; let _linked = 0;
+      const knownSec = new Set(planSections); const knownRes = new Set(projectResources); let added = 0, updated = 0, badDates = 0; const _depPairs = []; let _linked = 0, _depCycles = 0, _depUnresolved = 0;
+      const _registerCsvResources = function (raw) {
+        const tokens = (typeof splitResourceTokens === 'function') ? splitResourceTokens(raw) : String(raw || '').split(/[;,\/]+/).map(function (x) { return x.trim(); }).filter(Boolean);
+        tokens.forEach(function (token) {
+          const parsed = (typeof parseResourceToken === 'function') ? parseResourceToken(token) : null;
+          const name = String((parsed && parsed.name) || token || '').trim();
+          if (name && !knownRes.has(name)) { projectResources.push(name); knownRes.add(name); }
+        });
+      };
       rows.forEach(r => {
         const val = (f) => { const h = map[f]; if (!h) return ''; const idx = headers.indexOf(h); return idx >= 0 ? String(r[idx] == null ? '' : r[idx]).trim() : ''; };
         const name = val('name'); if (!name) return; const _predRaw = map.pred ? val('pred') : '';
@@ -30855,7 +31497,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             if (map.name) ex.name = name;
             if (map.section) { if (!knownSec.has(section)) { planSections.push(section); knownSec.add(section); } ex.section = section; }
             if (map.status && hasStatus) ex.status = status;
-            if (map.resource) { if (resource && !knownRes.has(resource)) { projectResources.push(resource); knownRes.add(resource); } ex.resource = resource; }
+            if (map.resource) { _registerCsvResources(resource); ex.resource = resource; }
             if (map.start && _ns) ex.start = _ns;
             if (map.end) ex.end = _ne || ex.end || _ns;
             if (map.release) ex.release = val('release');
@@ -30865,15 +31507,15 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             if (map.jira && val('jira')) ex.jira = val('jira');
             const _wlU = _collectWl(r);
             if (_wlU.length) { if (!Array.isArray(ex.workLog)) ex.workLog = []; const _seen = new Set(ex.workLog.map(e => (e.ymd || '') + '|' + (e.by || '') + '|' + (e.hours || ''))); _wlU.forEach(e => { const k = (e.ymd || '') + '|' + (e.by || '') + '|' + (e.hours || ''); if (!_seen.has(k)) { ex.workLog.push(e); _seen.add(k); wlAdded++; } }); ex.workLog.sort((a, b) => String(a.ymd).localeCompare(String(b.ymd))); }
-            if (map.pred && _predRaw) _depPairs.push({ task: ex, raw: _predRaw }); updated++; return;
+            if (map.pred) _depPairs.push({ task: ex, raw: _predRaw }); updated++; return;
           }
         }
         if (!knownSec.has(section)) { planSections.push(section); knownSec.add(section); }
-        if (resource && !knownRes.has(resource)) { projectResources.push(resource); knownRes.add(resource); }
+        _registerCsvResources(resource);
         const t = { id: (typeof nextTaskId === 'function' ? nextTaskId() : Date.now() + added), name: name, section: section, status: status, resource: resource, start: _ns, end: _ne, release: val('release'), storyPoints: val('storyPoints'), estimate: val('estimate'), notes: val('notes'), jira: val('jira') };
         if (!t.end && t.start) t.end = t.start;
         const _wlN = _collectWl(r); if (_wlN.length) { _wlN.sort((a, b) => String(a.ymd).localeCompare(String(b.ymd))); t.workLog = _wlN; wlAdded += _wlN.length; }
-        roadmapData.push(t); added++; if (_predRaw) _depPairs.push({ task: t, raw: _predRaw });
+        roadmapData.push(t); added++; if (map.pred) _depPairs.push({ task: t, raw: _predRaw });
       });
       if (!added && !updated) { if (typeof showToast === 'function') showToast('Не удалось импортировать ни одной задачи', 'warn', 4000); return; }
       let _dropped = 0;
@@ -30883,7 +31525,42 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         const _idset = new Set(roadmapData.map(t => t && t.id));
         const _refMap = {};
         roadmapData.forEach(t => { if (!t || t.isMilestone) return; const _a = (k) => { if (k == null) return; const lk = String(k).trim().toLowerCase(); if (lk && !(lk in _refMap)) _refMap[lk] = t.id; }; if (t.jira) _a(t.jira); if (typeof getTaskKey === 'function') { try { _a(getTaskKey(t)); } catch (e) {} } _a(t.name); });
-        _depPairs.forEach(pair => { const task = pair.task; if (!task || !_idset.has(task.id)) return; const refs = String(pair.raw).split(/[;,\n]+/).map(x => x.trim()).filter(Boolean); const cur = (typeof getPredecessorIds === 'function') ? getPredecessorIds(task) : []; const seen = new Set(cur.map(String)); refs.forEach(ref => { const pid = _refMap[ref.toLowerCase()]; if (pid != null && String(pid) !== String(task.id) && !seen.has(String(pid))) { cur.push(pid); seen.add(String(pid)); _linked++; } }); if (cur.length) task.pred = cur.join(','); });
+        // При обновлении колонка зависимостей является источником истины: сначала очищаем
+        // старые связи у всех затронутых задач, затем собираем их заново.
+        _depPairs.forEach(pair => {
+          const task = pair.task;
+          if (!task || !_idset.has(task.id)) return;
+          pair.oldMeta = (task.depMeta && typeof task.depMeta === 'object') ? Object.assign({}, task.depMeta) : {};
+          task.pred = '';
+          delete task.depMeta;
+        });
+        _depPairs.forEach(pair => {
+          const task = pair.task;
+          if (!task || !_idset.has(task.id)) return;
+          const refs = String(pair.raw).split(/[;,\n]+/).map(x => x.trim()).filter(Boolean);
+          const desired = [];
+          const seen = new Set();
+          refs.forEach(ref => {
+            const pid = _refMap[ref.toLowerCase()];
+            if (pid == null) { _depUnresolved++; return; }
+            const pidKey = String(pid);
+            if (seen.has(pidKey)) return;
+            if (pidKey === String(task.id)) { _depCycles++; return; }
+            if (typeof wouldCreateCycle === 'function' && wouldCreateCycle(task.id, pid)) { _depCycles++; return; }
+            seen.add(pidKey);
+            desired.push(pid);
+            // Обновляем сразу, чтобы проверка следующей строки увидела уже созданные связи.
+            task.pred = desired.join(',');
+            _linked++;
+          });
+          task.pred = desired.join(',');
+          const nextMeta = {};
+          desired.forEach(id => {
+            const key = String(id);
+            if (pair.oldMeta && pair.oldMeta[key] != null) nextMeta[key] = pair.oldMeta[key];
+          });
+          if (Object.keys(nextMeta).length) task.depMeta = nextMeta;
+        });
       }
       if (typeof reconcileSections === 'function') reconcileSections(false);
       if (typeof persistProjectState === 'function') persistProjectState();
@@ -30893,7 +31570,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       closeCsvMapModal();
       let _hidCsv = 0;
       try { const _depsOn = (typeof showDependencyLines !== 'undefined' && showDependencyLines) && !(typeof featureFlags !== 'undefined' && featureFlags.deps === false); _hidCsv = _depsOn ? countDeplessDepLinks() : 0; } catch (e) {}
-      const _csvMsg = 'Импорт CSV: +' + _realAdded + (updated ? ', обновлено ' + updated : '') + (wlAdded ? ', факт-часов ' + wlAdded : '') + (_linked ? ', связей ' + _linked : '') + (_dropped > 0 ? ', пропущено дублей ' + _dropped : '') + (badDates > 0 ? '. Дат не распознано: ' + badDates : '') + (_hidCsv > 0 ? '. Связей без дат (стрелок пока нет): ' + _hidCsv : '');
+      const _csvMsg = 'Импорт CSV: +' + _realAdded + (updated ? ', обновлено ' + updated : '') + (wlAdded ? ', факт-часов ' + wlAdded : '') + (_linked ? ', связей ' + _linked : '') + (_dropped > 0 ? ', пропущено дублей ' + _dropped : '') + (badDates > 0 ? '. Дат не распознано: ' + badDates : '') + (_depCycles ? '. Циклических связей пропущено: ' + _depCycles : '') + (_depUnresolved ? '. Ссылок на задачи не найдено: ' + _depUnresolved : '') + (_hidCsv > 0 ? '. Связей без дат (стрелок пока нет): ' + _hidCsv : '');
       if (_undo && typeof offerUndo === 'function') offerUndo(_csvMsg, _undo); else if (typeof showToast === 'function') showToast(_csvMsg, 'ok', 6000);
     }
     let _jiraPreviewRows = [];
@@ -31596,8 +32273,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const form = { base: cfg.base, proj: cfg.proj || '', jql: cfg.jql || '', scope: cfg.scope === 'keys' ? 'keys' : 'projects' };
       const queries = jiraQueryBatches(form);
       if (!queries.length) { if (!silent && typeof showToast === 'function') showToast(form.scope === 'keys' ? 'В Ганте нет Jira-ключей' : 'Укажите проект или JQL', 'warn', 4000); return; }
+      const transitionToken = _projectTransitionToken;
+      const transitionProjectId = projectStorageId;
       try {
         const all = await _jiraFetchIssueBatches(cfg.base, queries, token);
+        if (transitionToken !== _projectTransitionToken || transitionProjectId !== projectStorageId) return false;
         jiraRememberSessionToken(token, cfg.base);
         if (all.length) {
           const pv = (typeof previewJiraMerge === 'function') ? previewJiraMerge(all) : null;
@@ -31610,6 +32290,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         } else if (!silent && typeof showToast === 'function') showToast('По текущему JQL задач нет', 'info', 3000);
         jiraScheduleAutoSync();
       } catch (err) {
+        if (transitionToken !== _projectTransitionToken || transitionProjectId !== projectStorageId) return false;
         const msg = (err && err.message) || 'ошибка сети';
         if (/\b(?:401|403)\b/.test(String(msg))) { clearJiraSession('auth-error'); if (typeof showToast === 'function') showToast('Токен Jira недействителен или у него нет доступа , введите заново', 'warn', 5000); }
         else if (!silent && typeof showToast === 'function') showToast('Не удалось синхронизироваться: ' + msg + '. Возможно, Jira не разрешает запросы из браузера (CORS).', 'error', 6000);
@@ -31625,9 +32306,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (!queries.length) { showToast(f.scope === 'keys' ? 'В Ганте нет Jira-ключей' : 'Укажите проект или JQL', 'warn', 4000); return; }
       const statusEl = jiraGetEl('jiraApiStatus');
       const setS = (t, tone) => { if (statusEl) { statusEl.textContent = t; statusEl.className = 'text-[10px] mt-2 ' + (tone === 'err' ? 'text-rose-600' : tone === 'ok' ? 'text-emerald-600' : 'text-slate-500'); } };
+      const transitionToken = _projectTransitionToken;
+      const transitionProjectId = projectStorageId;
       setS('Подключаюсь к Jira…', 'muted');
       try {
         const all = await _jiraFetchIssueBatches(f.base, queries, token, (n, t, batch, totalBatches) => setS((totalBatches > 1 ? 'Запрос ' + batch + ' из ' + totalBatches + ': ' : '') + 'получено ' + n + ' из ' + t + '…', 'muted'));
+        if (transitionToken !== _projectTransitionToken || transitionProjectId !== projectStorageId) return false;
         if (!all.length) { setS('Задач по этому JQL не найдено', 'err'); return; }
         mergeJiraTasks(all);
         setS('Импортировано задач: ' + all.length, 'ok');
@@ -31635,6 +32319,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         jiraRememberSessionToken(token, f.base); jiraScheduleAutoSync();
         setTimeout(closeJiraSync, 1200);
       } catch (err) {
+        if (transitionToken !== _projectTransitionToken || transitionProjectId !== projectStorageId) return false;
         const msg = (err && err.message) || 'ошибка сети';
         if (/\b(?:401|403)\b/.test(String(msg))) clearJiraSession('auth-error');
         setS('Не удалось: ' + msg + '. Скорее всего Jira не разрешает запросы из браузера (CORS). Используйте кнопку «Открыть выгрузку CSV».', 'err');
@@ -31804,25 +32489,44 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     function importData(event) {
       if (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE) { if (typeof showToast === 'function') showToast('Только просмотр: импорт недоступен', 'info', 2500); if (event && event.target) event.target.value = ''; return; }
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) { if (event && event.target) event.target.value = ''; return; }
-      const file = event.target.files[0]; if (!file) return;
+      const input = event && event.target;
+      const file = input && input.files && input.files[0]; if (!file) return;
+      input.value = '';
+      const transitionToken = ++_projectTransitionToken;
       const reader = new FileReader();
       reader.onload = function(e) {
+        if (transitionToken !== _projectTransitionToken) return;
         try {
           const _importUndo = (typeof captureUndoState === 'function') ? captureUndoState() : null;
           const parsed = safeJsonParse(e.target.result);
           // п.2 Зашифрованный файл (AES-GCM): спрашиваем пароль, расшифровываем, затем применяем.
           if (parsed && parsed.enc === 'AES-GCM' && parsed.ct) {
-            _decryptEnvelope(parsed).then(dec => { if (dec) { try { _importParsedSnapshot(dec, _importUndo); } catch (err) { showToast('Ошибка применения данных', 'error', 4000); } } });
+            _decryptEnvelope(parsed).then(dec => {
+              if (transitionToken !== _projectTransitionToken || !dec) return;
+              try { _importParsedSnapshot(dec, _importUndo, transitionToken); } catch (err) { showToast('Ошибка применения данных', 'error', 4000); }
+            });
             return;
           }
-          _importParsedSnapshot(parsed, _importUndo);
-        } catch (err) { window.__startupJsonImport = false; showToast('Ошибка чтения JSON.', 'error', 4000); }
+          _importParsedSnapshot(parsed, _importUndo, transitionToken);
+        } catch (err) {
+          if (transitionToken !== _projectTransitionToken) return;
+          window.__startupJsonImport = false;
+          showToast('Ошибка чтения JSON.', 'error', 4000);
+        }
+      };
+      reader.onerror = function() {
+        if (transitionToken !== _projectTransitionToken) return;
+        window.__startupJsonImport = false;
+        if (typeof showToast === 'function') showToast('Ошибка чтения JSON.', 'error', 4000);
       };
       reader.readAsText(file);
     }
     function _importParsedSnapshot(parsed, _importUndo) {
+      const suppliedToken = arguments[2];
+      const transitionToken = suppliedToken == null ? ++_projectTransitionToken : suppliedToken;
+      if (transitionToken !== _projectTransitionToken) return false;
       const result = _commitParsedProjectSnapshot(parsed, {
-        projectIdMode: 'adopt',
+        projectIdMode: 'clone',
         auditAction: 'import',
         auditMessage: 'Импортирован JSON-файл проекта'
       });
@@ -31836,9 +32540,14 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         }
         return false;
       }
+      const targetProjectId = projectStorageId;
+      if (transitionToken !== _projectTransitionToken || !targetProjectId) return false;
       // Импорт создаёт самостоятельную рабочую копию. Не оставляем привязку к файлу
       // предыдущего проекта, иначе первое автосохранение могло бы его перезаписать.
       autoSaveFileHandle = null;
+      _mtimeHandle = null;
+      _boundFileMtime = null;
+      _fileConflict = false;
       try {
         const clearing = clearHandle();
         if (clearing && typeof clearing.catch === 'function') clearing.catch(() => {});
@@ -31847,7 +32556,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (typeof updateAutoSaveBtn === 'function') updateAutoSaveBtn();
       if (result.snapshot.versions.length) {
         try {
-          const restoring = _restoreVersionsFromFile(result.snapshot.versions);
+          const restoring = _restoreVersionsFromFile(result.snapshot.versions, { rebindProjectId: true });
           if (restoring && typeof restoring.catch === 'function') restoring.catch(() => {
             if (typeof showToast === 'function') showToast('Проект импортирован, но историю версий восстановить не удалось', 'warn', 4500);
           });
@@ -33464,7 +34173,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v15.6.1 · 31.08.2026</span>
+     <span id="appVersionBadge">v15.7 · 01.09.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -33538,9 +34247,11 @@ function syncBodyScrollLock() {
    </div>
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v15.6.1 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что нового в v15.7 <span class="text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600 px-1.5 py-0.5 rounded">НОВОЕ</span></h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
-     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Список и таймлайн снова занимают своё место</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ИСПРАВЛЕНО</span></div><p class="text-xs text-slate-600">На планшете и в узком окне подсказка и переключатель больше не превращаются в пустые колонки: активная панель занимает всю ширину. На компьютере мобильные элементы скрыты, а шапка не выходит за экран на границе размеров.</p></div>
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Локальные данные очищаются и сохраняются предсказуемо</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ДАННЫЕ</span></div><p class="text-xs text-slate-600">«Начать с чистого листа» очищает план, историю версий браузера, недавние файлы и привязки автосохранения, но не удаляет файлы на диске. Ошибки записи больше не считаются успешным сохранением.</p></div>
+     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Файлы, версии и импорт не смешивают проекты</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">НАДЁЖНОСТЬ</span></div><p class="text-xs text-slate-600">Загрузка, восстановление и импорт применяются только к своему проекту. Если уже открыт другой план, запоздавшая операция не заменит его данные и не перепривяжет файл.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Окна, поиск, копирование и Презентация снова работают цельно</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">ИНТЕРФЕЙС</span></div><p class="text-xs text-slate-600">Исправлены шрифты, переносы, адаптив, Архив, меню и вкладки. Поиск остаётся в проекте, копирование учитывает фильтры и вложенность, а Презентация сохраняет завершённые задачи, спринты, связи и «Сегодня».</p></div>
     </div>
    </div>
 
@@ -33550,6 +34261,12 @@ function syncBodyScrollLock() {
     <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
    </summary>
    <div class="mt-4 space-y-5">
+   <div>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v15.6.1</h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Список и таймлайн снова занимают своё место</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ИСПРАВЛЕНО</span></div><p class="text-xs text-slate-600">На планшете и в узком окне подсказка и переключатель больше не превращаются в пустые колонки: активная панель занимает всю ширину. На компьютере мобильные элементы скрыты, а шапка не выходит за экран на границе размеров.</p></div>
+    </div>
+   </div>
    <div>
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v15.6</h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
@@ -37123,7 +37840,7 @@ function syncBodyScrollLock() {
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 15.6.1</span>
+              <span id="appVersionStartup">версия 15.7</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
@@ -38223,13 +38940,25 @@ function normalizeUiChrome(root) {
     // Сложные рабочие окна используют правую шторку; короткие меню
     // остаются привязанными popover без затемнения и блокировки страницы.
     var declaredSurface = overlay.getAttribute('data-rm-surface');
-    var compactDialog = overlay.id === 'startupModal' || declaredSurface === 'dialog';
-    if (!compactDialog) {
+    var drawerWhitelist = new Set([
+      'taskModal','epicCardModal','settingsModal','archiveModal','dataQualityModal',
+      'jiraSyncModal','versionsModal','projectJournalModal','epicAuditModal',
+      'reportBuilderModal','reportModal','moneyModal','resourceModal','goalsModal',
+      'raidModal','insightsModal','planToolModal'
+    ]);
+    var isDrawer = declaredSurface === 'right-drawer' || drawerWhitelist.has(overlay.id || '');
+    if (isDrawer) {
       overlay.setAttribute('data-rm-surface', 'right-drawer');
       overlay.setAttribute('data-rm-component', 'right-drawer-v1');
       surface.setAttribute('data-rm-component', 'drawer-surface-v1');
       overlay.classList.add('rm-right-drawer-overlay');
       surface.classList.add('rm-right-drawer-surface');
+    } else {
+      overlay.setAttribute('data-rm-surface', 'dialog');
+      overlay.removeAttribute('data-rm-component');
+      surface.removeAttribute('data-rm-component');
+      overlay.classList.remove('rm-right-drawer-overlay');
+      surface.classList.remove('rm-right-drawer-surface');
     }
     if (overlay.id === 'taskModal' || overlay.id === 'epicCardModal') {
       overlay.classList.add('rm-side-sheet-overlay');
