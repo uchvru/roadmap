@@ -1,0 +1,278 @@
+<!doctype html><html lang=ru><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
+<title>Локер роадмапов , пароль на HTML</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#0f172a;background:linear-gradient(160deg,#eef2ff 0%,#eaf2fe 42%,#f6f8fc 100%);min-height:100vh;padding:40px 20px;-webkit-font-smoothing:antialiased;line-height:1.5}
+.wrap{max-width:640px;margin:0 auto;background:#fff;border:1px solid #e6eaf1;border-radius:22px;padding:34px 34px 30px;box-shadow:0 24px 60px rgba(15,23,42,.12)}
+.logo{width:52px;height:52px;border-radius:15px;background:linear-gradient(135deg,#3b82f6,#4f46e5);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(79,70,229,.32);margin-bottom:18px}
+.logo svg{width:27px;height:27px;color:#fff}
+h1{font-size:24px;font-weight:800;letter-spacing:-.4px}
+.sub{color:#64748b;font-size:14.5px;margin:8px 0 6px}
+label{display:block;font-size:13px;font-weight:700;color:#334155;margin:16px 0 6px}
+label.chk{display:flex;align-items:center;gap:9px;font-weight:600;margin-top:14px;cursor:pointer;color:#334155}
+label.chk input{width:auto;margin:0}
+input[type=file],input[type=text],input[type=password]{width:100%;min-height:48px;font-size:15px;padding:11px 13px;border:1px solid #d6ddec;border-radius:11px;background:#fbfcfe;font-family:inherit}
+input:focus{outline:none;border-color:#a5b4fc;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+button.go{margin-top:24px;width:100%;height:52px;border:none;border-radius:13px;background:#4f46e5;color:#fff;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 12px 26px rgba(79,70,229,.32);transition:all .15s}
+button.go:hover{background:#4338ca}
+button.go:disabled{opacity:.6;cursor:default}
+.msg{margin-top:16px;font-size:14px;padding:12px 14px;border-radius:11px;display:none}
+.msg.ok{display:block;background:#dcfce7;color:#166534;border:1px solid #bbf7d0}
+.msg.err{display:block;background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+.hint{margin-top:22px;font-size:12.5px;color:#94a3b8;border-top:1px solid #eef1f7;padding-top:16px}
+.hint b{color:#475569}
+.batch-passwords{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.pw-card{border:1px solid #dbe3f0;border-radius:13px;background:#f8fafc;padding:12px}
+.pw-card strong{display:block;font-size:13px;color:#334155;margin-bottom:2px}
+.pw-card span{display:block;font-size:11px;color:#64748b;margin-bottom:8px}
+.pw-card label{font-size:11.5px;margin:8px 0 4px}
+.pw-policy{margin-top:16px;padding:11px 13px;border-radius:11px;background:#f8fafc;color:#475569;font-size:12.5px;border:1px solid #e2e8f0}
+@media(max-width:620px){.batch-passwords{grid-template-columns:1fr}}
+.hide{display:none}
+</style></head><body>
+<div class=wrap>
+ <div class=logo><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2.2 stroke-linecap=round><path d="M4 7h9M4 12h14M4 17h6"/></svg></div>
+ <h1>Заблокировать паролем</h1>
+ <p class=sub>Все происходит в вашем браузере, файлы и пароль никуда не отправляются.</p>
+
+ <label for=app>1. Приложение roadmap.html</label>
+ <input type=file id=app accept=".html,.htm">
+ <label for=data>2. Данные roadmap-data.json</label>
+ <input type=file id=data accept=".json,application/json">
+ <label for=single>3. HTML из кнопки «Сохранить в HTML»</label>
+ <input type=file id=single accept=".html,.htm">
+
+ <div class=hint style="margin-top:16px;border-top:0;padding:12px 14px;background:#eef2ff;border-radius:11px;color:#475569">
+  Будут созданы и заменены сразу четыре файла: <b>roadmap-mpv0.html</b>, <b>roadmap-online.html</b>, <b>roadmap-online-r.html</b> и <b>roadmap-online-n.html</b>. Для первого нужен HTML из кнопки «Сохранить в HTML»; для остальных — приложение и JSON. Рядом появится <b>roadmap-package-manifest.json</b> с контрольными SHA-256 всего готового набора.
+ </div>
+
+ <p class=pw-policy><b>Пароли не сохраняются.</b> Для каждого файла нужен свой пароль: не короче 14 символов. Надёжнее использовать фразу из четырёх или более слов.</p>
+
+ <div class=batch-passwords>
+  <div class=pw-card><strong>roadmap-mpv0.html</strong><span>Показ из «Сохранить в HTML»</span><label for=pwMpv0>Пароль</label><input type=password id=pwMpv0 autocomplete=new-password><label for=pwMpv02>Повторите пароль</label><input type=password id=pwMpv02 autocomplete=new-password></div>
+  <div class=pw-card><strong>roadmap-online.html</strong><span>Основная ссылка, только просмотр</span><label for=pwOnline>Пароль</label><input type=password id=pwOnline autocomplete=new-password><label for=pwOnline2>Повторите пароль</label><input type=password id=pwOnline2 autocomplete=new-password></div>
+  <div class=pw-card><strong>roadmap-online-r.html</strong><span>Редактируемая версия</span><label for=pwOnlineR>Пароль</label><input type=password id=pwOnlineR autocomplete=new-password><label for=pwOnlineR2>Повторите пароль</label><input type=password id=pwOnlineR2 autocomplete=new-password></div>
+  <div class=pw-card><strong>roadmap-online-n.html</strong><span>Версия без редактирования</span><label for=pwOnlineN>Пароль</label><input type=password id=pwOnlineN autocomplete=new-password><label for=pwOnlineN2>Повторите пароль</label><input type=password id=pwOnlineN2 autocomplete=new-password></div>
+ </div>
+
+ <button class=go id=go>Собрать и сохранить 4 файла</button>
+ <div class=msg id=msg></div>
+
+ <div class=hint><b>Как обновить:</b> выберите существующий файл в папке <b>roadmap/private</b> и подтвердите замену. Так новая версия точно сохранится под прежним именем, без копий «(1)». После загрузки на GitHub откройте ссылку с новым параметром <b>?v=...</b>, который появится в сообщении ниже: GitHub Pages может держать старую копию до 10 минут. Пароль передавайте отдельно. <b>Режим правки:</b> изменения сохраняются в браузере того, кто правит; для общей ссылки выгрузите свежий JSON и пересоберите файл.</div>
+</div>
+
+<script>
+function b64(buf){var b=new Uint8Array(buf),s='';for(var i=0;i<b.length;i+=0x8000)s+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(s);}
+async function deriveKey(pw,salt,iter){var enc=new TextEncoder();var base=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt:salt,iterations:iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);}
+async function lock(html,pw){var enc=new TextEncoder();var salt=crypto.getRandomValues(new Uint8Array(16));var iv=crypto.getRandomValues(new Uint8Array(12));var iter=200000;var key=await deriveKey(pw,salt,iter);var ct=await crypto.subtle.encrypt({name:'AES-GCM',iv:iv},key,enc.encode(html));return {salt:b64(salt),iv:b64(iv),iterations:iter,ct:b64(ct)};}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function fmtDate(v){try{if(!v)return '';var d=(typeof v==='number')?new Date(v):new Date(String(v));if(isNaN(d.getTime()))return '';var m=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];return d.getDate()+' '+m[d.getMonth()]+' '+d.getFullYear();}catch(e){return '';}}
+function fmtDateTime(v){try{var d=(v instanceof Date)?v:new Date(v);if(isNaN(d.getTime()))return '';return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}catch(e){return '';}}
+function publishToken(d){return d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+String(d.getHours()).padStart(2,'0')+String(d.getMinutes()).padStart(2,'0')+String(d.getSeconds()).padStart(2,'0');}
+function isStrongPassphrase(pw){var words=String(pw||'').trim().split(/\s+/).filter(Boolean);return words.length>=4&&words.every(function(word){return word.length>=3;});}
+function isStrongPassword(pw){pw=String(pw||'');return pw.length>=14||isStrongPassphrase(pw);}
+function normalizedPassword(pw){pw=String(pw||'').trim();try{return pw.normalize('NFKC');}catch(e){return pw;}}
+function newGenerationId(){if(crypto.randomUUID)return crypto.randomUUID();var u=crypto.getRandomValues(new Uint8Array(16));return Array.from(u,function(v){return v.toString(16).padStart(2,'0');}).join('');}
+async function sha256Hex(value){var bytes;if(value instanceof Blob)bytes=await value.arrayBuffer();else if(value instanceof ArrayBuffer)bytes=value;else bytes=new TextEncoder().encode(String(value));var digest=await crypto.subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(digest),function(v){return v.toString(16).padStart(2,'0');}).join('');}
+async function projectNamespace(data){var seed='roadmap';try{var parsed=(typeof data==='string')?JSON.parse(data):data||{};seed=String(parsed.projectId||(parsed.pageMeta&&parsed.pageMeta.projectId)||(parsed.pageMeta&&parsed.pageMeta.title)||parsed.title||parsed.roadmapTitle||seed);}catch(e){}return (await sha256Hex(seed)).slice(0,20);}
+function namespaceBundleStorage(html,namespace){return String(html)
+ .replace(/(["'])gantt_/g,function(_,quote){return quote+namespace+'gantt_';})
+ .replace(/(["'])RoadmapDB\1/g,function(_,quote){return quote+namespace+'RoadmapDB'+quote;});}
+async function writeDirectoryBlob(directory,name,blob){var handle=await directory.getFileHandle(name,{create:true});var writable=await handle.createWritable();try{await writable.write(blob);await writable.close();}catch(error){try{await writable.abort();}catch(ignore){}throw error;}return handle;}
+async function verifyDirectoryBlob(handle,expectedHash){var written=await handle.getFile();var actual=await sha256Hex(written);if(actual!==expectedHash)throw new Error('Проверка файла '+written.name+' не пройдена.');}
+
+var RO_BOOT='(function(){function boot(){try{'
++'var el=document.getElementById("__embedded_project__");var EMB=JSON.parse(el.textContent);'
++'try{if(typeof getJiraCfg==="function"&&typeof saveJiraCfg==="function"&&!(getJiraCfg().base||"")){var s=JSON.stringify(EMB),p=s.indexOf("/browse/");if(p>0){var st=s.lastIndexOf("http",p);if(st>=0){var bs=s.slice(st,p);if(bs)saveJiraCfg({base:bs});}}}}catch(e){}'
++'if(typeof _applySnapshotForRestore==="function")_applySnapshotForRestore(EMB);'
++'if(typeof initApp==="function")initApp();'
++'try{if(typeof applyPageMeta==="function"&&EMB.pageMeta)applyPageMeta(EMB.pageMeta);}catch(e){}'
++'var m=document.getElementById("startupModal");if(m)m.classList.add("hidden");'
++'if(typeof syncBodyScrollLock==="function"){try{syncBodyScrollLock();}catch(e){}}'
++'}catch(e){var b=document.body;if(b)b.innerHTML="<div style=\\"padding:40px;font-family:sans-serif;color:#b91c1c\\">Не удалось загрузить данные проекта. "+String(e)+"<\\/div>";}}'
++'if(document.readyState==="complete"){setTimeout(boot,80);}else{window.addEventListener("load",function(){setTimeout(boot,80);});}})();';
+
+var ED_BOOT='(function(){'
++'function nk(k){return String(window.__EMBEDDED_STORAGE_NS__||"")+String(k||"");}'
++'function gv(k){try{k=nk(k);return (typeof storage!=="undefined"&&storage.get)?storage.get(k):localStorage.getItem(k);}catch(e){return null;}}'
++'function sv(k,v){try{k=nk(k);if(typeof storage!=="undefined"&&storage.set){storage.set(k,v);}else{localStorage.setItem(k,v);}}catch(e){}}'
++'function bar(){try{if(document.getElementById("__online_bar__"))return;var b=document.createElement("div");b.id="__online_bar__";'
++'b.style.cssText="position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:99999;display:flex;align-items:center;gap:12px;background:#0f172a;color:#fff;border-radius:14px;padding:10px 12px 10px 16px;box-shadow:0 12px 30px rgba(15,23,42,.35);font:13px -apple-system,Segoe UI,Arial;max-width:calc(100vw - 24px)";'
++'var sp=document.createElement("span");sp.textContent="Онлайн-копия для правок. Изменения сохраняются в этом браузере.";'
++'var btn=document.createElement("button");btn.textContent="Выгрузить данные";btn.style.cssText="border:none;border-radius:9px;background:#4f46e5;color:#fff;font-weight:700;font-size:13px;padding:7px 12px;cursor:pointer;white-space:nowrap";'
++'btn.onclick=function(){try{if(typeof downloadDatedBackup==="function"){downloadDatedBackup();}else if(typeof buildRoadmapSnapshot==="function"){var t=JSON.stringify(buildRoadmapSnapshot(),null,2);var a=document.createElement("a");a.href="data:application/json;charset=utf-8,"+encodeURIComponent(t);a.download="roadmap-data.json";document.body.appendChild(a);a.click();a.remove();}else{alert("Функция выгрузки не найдена");}}catch(e){alert("Не удалось выгрузить: "+e);}};'
++'var x=document.createElement("button");x.textContent="\\u00d7";x.title="Скрыть";x.style.cssText="border:none;background:transparent;color:#94a3b8;font-size:20px;line-height:1;cursor:pointer;padding:0 4px";x.onclick=function(){b.remove();};'
++'b.appendChild(sp);b.appendChild(btn);b.appendChild(x);document.body.appendChild(b);}catch(e){}}'
++'function boot(){try{'
++'var el=document.getElementById("__embedded_project__");var EMB=JSON.parse(el.textContent);'
++'var embAt=(EMB&&EMB.savedAt)?String(EMB.savedAt):"";var localAt=gv("gantt_online_embedded_savedAt")||"";var packageId=String(window.__EMBEDDED_PACKAGE_ID__||embAt||"");var localPackage=gv("gantt_online_embedded_package_id")||"";var hasLocal=!!gv("gantt_roadmap_v10_data");var seeding=(!hasLocal||(packageId&&packageId!==localPackage)||(!packageId&&embAt&&embAt>localAt));'
++'try{if(typeof getJiraCfg==="function"&&typeof saveJiraCfg==="function"&&!(getJiraCfg().base||"")){var s=JSON.stringify(EMB),p=s.indexOf("/browse/");if(p>0){var st=s.lastIndexOf("http",p);if(st>=0){var bs=s.slice(st,p);if(bs)saveJiraCfg({base:bs});}}}}catch(e){}'
++'if(seeding){if(typeof _applySnapshotForRestore==="function")_applySnapshotForRestore(EMB);sv("gantt_online_embedded_savedAt",embAt);if(packageId)sv("gantt_online_embedded_package_id",packageId);}'
++'if(typeof initApp==="function")initApp();'
++'try{if(typeof applyPageMeta==="function"){if(seeding&&EMB.pageMeta){applyPageMeta(EMB.pageMeta);}else{var nm=gv("gantt_po_name")||(EMB.pageMeta&&EMB.pageMeta.poName);if(nm)applyPageMeta({poName:nm});}}}catch(e){}'
++'var m=document.getElementById("startupModal");if(m)m.classList.add("hidden");'
++'if(typeof syncBodyScrollLock==="function"){try{syncBodyScrollLock();}catch(e){}}'
++'setTimeout(bar,400);'
++'}catch(e){var b=document.body;if(b)b.innerHTML="<div style=\\"padding:40px;font-family:sans-serif;color:#b91c1c\\">Не удалось загрузить данные проекта. "+String(e)+"<\\/div>";}}'
++'if(document.readyState==="complete"){setTimeout(boot,80);}else{window.addEventListener("load",function(){setTimeout(boot,80);});}})();';
+
+function buildBundle(appHtml,dataStr,editable,context){
+ var packageId=context.generationId;
+ var storageNamespace='roadmap-online:'+context.projectNamespace+':'+context.generationId+':';
+ appHtml=namespaceBundleStorage(appHtml,storageNamespace);
+ var runtime='window.__EMBEDDED_VIEW__=true;window.__EMBEDDED_PACKAGE_ID__='+JSON.stringify(packageId)+';window.__EMBEDDED_PROJECT_ID__='+JSON.stringify(context.projectNamespace)+';window.__EMBEDDED_STORAGE_NS__='+JSON.stringify(storageNamespace)+';';
+ var head=editable?'<head>\n<script>'+runtime+'<\/script>'
+                  :'<head>\n<script>window.__READ_ONLY__=true;'+runtime+'<\/script>';
+ appHtml=appHtml.replace('<head>',head);
+ var dataSafe=dataStr.replace(/<\//g,'<\\/');
+ var bootBody=editable?ED_BOOT:RO_BOOT;
+ var boot='<script type="application/json" id="__embedded_project__">'+dataSafe+'<\/script>\n<script>'+bootBody+'<\/script>\n';
+ var i=appHtml.lastIndexOf('</body>');
+ return (i<0)?(appHtml+boot):(appHtml.slice(0,i)+boot+appHtml.slice(i));
+}
+
+function buildLocked(DATA){
+return '<!doctype html><html lang=ru><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noindex,nofollow,noarchive"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><meta http-equiv="Content-Security-Policy" content="default-src \'self\' data: blob: https:; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\' blob:; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data: blob: https:; font-src \'self\' data:; connect-src \'self\' https:; worker-src blob:; object-src \'none\'; base-uri \'none\'; form-action \'none\'">'
++'<title>Защищено паролем</title><style>'
++'*{margin:0;padding:0;box-sizing:border-box}'
++'body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#0f172a;background:linear-gradient(160deg,#eef2ff 0%,#eaf2fe 42%,#f6f8fc 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;-webkit-font-smoothing:antialiased}'
++'.card{position:relative;width:100%;max-width:400px;background:#fff;border:1px solid #e6eaf1;border-radius:20px;padding:34px 32px;box-shadow:0 24px 60px rgba(15,23,42,.14);text-align:center}'
++'.lg{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#3b82f6,#4f46e5);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(79,70,229,.32);margin:0 auto 18px}'
++'.lg svg{width:28px;height:28px;color:#fff}'
++'h1{font-size:20px;font-weight:800;letter-spacing:-.3px}'
++'p{color:#64748b;font-size:14px;margin:8px 0 20px}'
++'input{width:100%;font-size:16px;padding:12px 14px;border:1px solid #d6ddec;border-radius:12px;background:#fbfcfe;text-align:center;font-family:inherit}'
++'input:focus{outline:none;border-color:#a5b4fc;box-shadow:0 0 0 3px rgba(79,70,229,.12)}'
++'button{margin-top:14px;width:100%;height:50px;border:none;border-radius:12px;background:#4f46e5;color:#fff;font-size:16px;font-weight:700;cursor:pointer}'
++'button:hover{background:#4338ca}button:disabled{opacity:.6}'
++'.err{color:#dc2626;font-size:13.5px;font-weight:600;margin-top:12px;min-height:18px}'
++'</style></head><body><div class=card>'
++'<div class=lg><svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round><path d="M6 10V8a6 6 0 1112 0v2M5 10h14a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2v-7a2 2 0 012-2z"/></svg></div>'
++'<h1>Защищённый файл</h1><p>Введите пароль, чтобы открыть.</p>'
++'<form id=f><input id=pw type=password placeholder="Пароль" autofocus autocomplete=current-password>'
++'<button type=submit id=b>Открыть</button></form><div class=err id=e></div>'
++'</div><scr'+'ipt>'
++'var DATA='+JSON.stringify(DATA)+';'
++'function unb64(s){var bin=atob(s),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u;}'
++'async function dk(pw,salt,iter){var enc=new TextEncoder();var base=await crypto.subtle.importKey("raw",enc.encode(pw),"PBKDF2",false,["deriveKey"]);return crypto.subtle.deriveKey({name:"PBKDF2",salt:salt,iterations:iter,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["decrypt"]);}'
++'document.getElementById("f").addEventListener("submit",async function(ev){ev.preventDefault();'
++'var e=document.getElementById("e"),b=document.getElementById("b");e.textContent="";'
++'if(!crypto.subtle){e.textContent="Откройте по адресу https или как локальный файл";return;}'
++'b.disabled=true;b.textContent="Открываем...";'
++'try{var pw=document.getElementById("pw").value;'
++'var key=await dk(pw,unb64(DATA.salt),DATA.iterations);'
++'var pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(DATA.iv)},key,unb64(DATA.ct));'
++'var html=new TextDecoder().decode(pt);'
++'document.open();document.write(html);document.close();'
++'}catch(x){e.textContent="Неверный пароль";b.disabled=false;b.textContent="Открыть";}});'
++'<\/scr'+'ipt></body></html>';
+}
+
+var appHtml=null, dataText=null, singleHtml=null;
+
+function readInto(inputId,setter){
+ document.getElementById(inputId).addEventListener('change',function(){
+  var f=this.files[0]; if(!f){setter(null);return;}
+  var r=new FileReader();r.onload=function(){setter(r.result);};r.readAsText(f);
+ });
+}
+readInto('app',function(v){appHtml=v;});
+readInto('data',function(v){dataText=v;});
+readInto('single',function(v){singleHtml=v;});
+
+document.getElementById('go').onclick=async function(){
+ var msg=document.getElementById('msg'); msg.className='msg'; msg.textContent='';
+ function fail(t){msg.className='msg err';msg.textContent=t;}
+ var batchPw={
+  'roadmap-mpv0.html':[document.getElementById('pwMpv0').value,document.getElementById('pwMpv02').value],
+  'roadmap-online.html':[document.getElementById('pwOnline').value,document.getElementById('pwOnline2').value],
+  'roadmap-online-r.html':[document.getElementById('pwOnlineR').value,document.getElementById('pwOnlineR2').value],
+  'roadmap-online-n.html':[document.getElementById('pwOnlineN').value,document.getElementById('pwOnlineN2').value]
+ };
+ if(!crypto.subtle){fail('Откройте этот инструмент как локальный файл (двойным кликом), тогда шифрование доступно.');return;}
+ if(!appHtml){fail('Выберите файл приложения roadmap.html.');return;}
+ if(!dataText){fail('Выберите файл данных roadmap-data.json.');return;}
+ if(!singleHtml){fail('Выберите HTML из кнопки «Сохранить в HTML».');return;}
+ var batchNames=Object.keys(batchPw),plainPasswords=[];
+ for(var bp=0;bp<batchNames.length;bp++){
+  var bn=batchNames[bp],pair=batchPw[bn];
+  if(!isStrongPassword(pair[0])){fail('Пароль для '+bn+' слишком слабый: нужно хотя бы 14 символов или фраза из четырёх слов.');return;}
+  if(pair[0]!==pair[1]){fail('Пароли для '+bn+' не совпадают.');return;}
+  plainPasswords.push(normalizedPassword(pair[0]));
+ }
+ if(new Set(plainPasswords).size!==plainPasswords.length){fail('Для каждой из четырёх версий задайте отдельный пароль.');return;}
+ var parsedData;
+ try{parsedData=JSON.parse(dataText);if(!parsedData||typeof parsedData!=='object'||Array.isArray(parsedData))throw new Error('ожидался объект');}
+ catch(jsonError){fail('Файл roadmap-data.json не удалось прочитать: '+jsonError.message);return;}
+ var btn=this; btn.disabled=true; var old=btn.textContent; btn.textContent='Собираем 4 файла...';
+ var saveDirectory=null;
+ if(typeof window.showDirectoryPicker==='function'){
+  try{
+   saveDirectory=await window.showDirectoryPicker({mode:'readwrite'});
+  }catch(dirError){
+   btn.disabled=false;btn.textContent=old;
+   if(dirError&&dirError.name==='AbortError'){fail('Выбор папки отменён. Файлы не изменены.');return;}
+   fail('Не удалось выбрать папку: '+dirError);return;
+  }
+ }
+ try{
+  var createdAt=new Date();
+  var token=publishToken(createdAt);
+  var generationId=newGenerationId();
+  var context={generationId:generationId,projectNamespace:await projectNamespace(parsedData)};
+  var editableBundle=buildBundle(appHtml,dataText,true,context);
+  var readonlyBundle=buildBundle(appHtml,dataText,false,context);
+  var sources=[
+    {name:'roadmap-mpv0.html',html:singleHtml,password:batchPw['roadmap-mpv0.html'][0]},
+    {name:'roadmap-online.html',html:readonlyBundle,password:batchPw['roadmap-online.html'][0]},
+    {name:'roadmap-online-r.html',html:editableBundle,password:batchPw['roadmap-online-r.html'][0]},
+    {name:'roadmap-online-n.html',html:readonlyBundle,password:batchPw['roadmap-online-n.html'][0]}
+  ];
+  var files=[];
+  for(var i=0;i<sources.length;i++){
+   btn.textContent='Шифруем '+(i+1)+' из '+sources.length+'...';
+   var locked=await lock(sources[i].html,sources[i].password);
+   var output=buildLocked(locked);
+   var outputBlob=new Blob([output],{type:'text/html'});
+   files.push({name:sources[i].name,text:output,blob:outputBlob,sha256:await sha256Hex(outputBlob),bytes:outputBlob.size});
+  }
+  var manifestObject={schema:'roadmap-private-package/v1',ready:true,generationId:generationId,createdAt:createdAt.toISOString(),files:files.map(function(file){return {name:file.name,bytes:file.bytes,sha256:file.sha256};})};
+  var manifestText=JSON.stringify(manifestObject,null,2)+'\n';
+  var manifestBlob=new Blob([manifestText],{type:'application/json'});
+  var manifest={name:'roadmap-package-manifest.json',blob:manifestBlob,sha256:await sha256Hex(manifestBlob)};
+  if(saveDirectory){
+    var tempFiles=[];
+    for(var ti=0;ti<files.length;ti++){
+     btn.textContent='Проверяем пакет '+(ti+1)+' из '+files.length+'...';
+     var tempName='.roadmap-'+generationId+'-'+ti+'.part';
+     var tempHandle=await writeDirectoryBlob(saveDirectory,tempName,files[ti].blob);
+     await verifyDirectoryBlob(tempHandle,files[ti].sha256);
+     tempFiles.push(tempName);
+    }
+    for(var j=0;j<files.length;j++){
+     btn.textContent='Сохраняем '+(j+1)+' из '+files.length+'...';
+     var fh=await saveDirectory.getFileHandle(files[j].name,{create:true});
+     var wr=await fh.createWritable();
+     try{await wr.write(files[j].blob);await wr.close();}catch(writeError){try{await wr.abort();}catch(ignore){}throw writeError;}
+     await verifyDirectoryBlob(fh,files[j].sha256);
+    }
+    if(typeof saveDirectory.removeEntry==='function'){
+     for(var tc=0;tc<tempFiles.length;tc++){try{await saveDirectory.removeEntry(tempFiles[tc]);}catch(ignore){}}
+    }
+    var manifestHandle=await writeDirectoryBlob(saveDirectory,manifest.name,manifest.blob);
+    await verifyDirectoryBlob(manifestHandle,manifest.sha256);
+  }else{
+    var downloads=files.concat([manifest]);
+    var prepared=downloads.map(function(file){return {file:file,url:URL.createObjectURL(file.blob)};});
+    for(var k=0;k<prepared.length;k++){
+     var dl=document.createElement('a');dl.href=prepared[k].url;dl.download=prepared[k].file.name;document.body.appendChild(dl);dl.click();dl.remove();
+    }
+    prepared.forEach(function(item){setTimeout(function(){URL.revokeObjectURL(item.url);},1500);});
+  }
+  msg.className='msg ok';
+  msg.textContent='Готово. '+(saveDirectory?'Все 4 файла проверены и обновлены; manifest записан последним.':'Подготовлены 4 файла и manifest с SHA-256; браузер может попросить разрешить несколько загрузок.')+' После коммита откройте ссылку с суффиксом ?v='+token+' — он обойдёт старую копию GitHub Pages.';
+ }catch(x){fail('Ошибка: '+x);}
+ btn.disabled=false; btn.textContent=old;
+};
+</script>
+</body></html>

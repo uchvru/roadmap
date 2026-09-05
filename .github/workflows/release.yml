@@ -46,7 +46,7 @@ jobs:
         run: >-
           git archive --format=zip --output=roadmap-site-public.zip HEAD
           README.md LICENSE app.html avatar.jpg catalog-img catalog.html index.html
-          media robots.txt schemas Инструкция_Roadmap.md
+          media robots.txt schemas Инструкция_Roadmap.md Локер-роадмапов.html
       - name: Verify the release ZIP excludes private material
         run: |
           if unzip -Z1 roadmap-site-public.zip | grep -Eq '(^|/)private/|(^|/)roadmap-data\.json$'; then
