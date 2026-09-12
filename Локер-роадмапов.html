@@ -56,7 +56,7 @@ button.go:disabled{opacity:.6;cursor:default}
  </div>
 
  <button class=go id=go>Собрать и сохранить 4 файла</button>
- <div class=msg id=msg></div>
+ <div class=msg id=msg role=status aria-live=polite></div>
 
  <div class=hint><b>Как обновить:</b> выберите существующий файл в папке <b>roadmap/private</b> и подтвердите замену. Так новая версия точно сохранится под прежним именем, без копий «(1)». После загрузки на GitHub откройте ссылку с новым параметром <b>?v=...</b>, который появится в сообщении ниже: GitHub Pages может держать старую копию до 10 минут. Пароль передавайте отдельно. <b>Режим правки:</b> изменения сохраняются в браузере того, кто правит; для общей ссылки выгрузите свежий JSON и пересоберите файл.</div>
 </div>
@@ -169,11 +169,35 @@ return '<!doctype html><html lang=ru><head><meta charset=utf-8><meta name=viewpo
 }
 
 var appHtml=null, dataText=null, singleHtml=null;
+var lockerFileReads=Object.create(null),lockerBuildBusy=false;
+
+function hasPendingLockerReads(){return Object.keys(lockerFileReads).some(function(id){return lockerFileReads[id].pending;});}
+function syncLockerReadState(){
+ var btn=document.getElementById('go'),pending=hasPendingLockerReads();
+ btn.disabled=lockerBuildBusy||pending;
+ if(!lockerBuildBusy)btn.textContent=pending?'Читаем файлы...':'Собрать и сохранить 4 файла';
+}
 
 function readInto(inputId,setter){
+ var state={generation:0,reader:null,pending:false,error:''};lockerFileReads[inputId]=state;
  document.getElementById(inputId).addEventListener('change',function(){
-  var f=this.files[0]; if(!f){setter(null);return;}
-  var r=new FileReader();r.onload=function(){setter(r.result);};r.readAsText(f);
+  var generation=++state.generation,previous=state.reader,previousError=state.error;
+  state.reader=null;state.pending=false;state.error='';setter(null);
+  var msg=document.getElementById('msg');if(previousError&&msg.textContent===previousError){msg.className='msg';msg.textContent='';}
+  if(previous&&previous.readyState===1){try{previous.abort();}catch(ignore){}}
+  var f=this.files[0];if(!f){syncLockerReadState();return;}
+  var r=new FileReader();state.reader=r;state.pending=true;syncLockerReadState();
+  function finish(error){
+   if(generation!==state.generation||state.reader!==r)return;
+   state.reader=null;state.pending=false;
+   if(error){
+    state.error='Не удалось прочитать файл «'+f.name+'». Выберите его заново.';
+    var msg=document.getElementById('msg');msg.className='msg err';msg.textContent=state.error;
+   }else{setter(r.result);}
+   syncLockerReadState();
+  }
+  r.onload=function(){finish(false);};r.onerror=function(){finish(true);};r.onabort=function(){finish(true);};
+  try{r.readAsText(f);}catch(readError){finish(true);}
  });
 }
 readInto('app',function(v){appHtml=v;});
@@ -183,6 +207,9 @@ readInto('single',function(v){singleHtml=v;});
 document.getElementById('go').onclick=async function(){
  var msg=document.getElementById('msg'); msg.className='msg'; msg.textContent='';
  function fail(t){msg.className='msg err';msg.textContent=t;}
+ if(hasPendingLockerReads()){fail('Дождитесь завершения чтения выбранных файлов.');return;}
+ var failedInput=Object.keys(lockerFileReads).find(function(id){return lockerFileReads[id].error;});
+ if(failedInput){fail(lockerFileReads[failedInput].error);return;}
  var batchPw={
   'roadmap-mpv0.html':[document.getElementById('pwMpv0').value,document.getElementById('pwMpv02').value],
   'roadmap-online.html':[document.getElementById('pwOnline').value,document.getElementById('pwOnline2').value],
@@ -204,13 +231,14 @@ document.getElementById('go').onclick=async function(){
  var parsedData;
  try{parsedData=JSON.parse(dataText);if(!parsedData||typeof parsedData!=='object'||Array.isArray(parsedData))throw new Error('ожидался объект');}
  catch(jsonError){fail('Файл roadmap-data.json не удалось прочитать: '+jsonError.message);return;}
- var btn=this; btn.disabled=true; var old=btn.textContent; btn.textContent='Собираем 4 файла...';
+ var btn=this;lockerBuildBusy=true;btn.disabled=true;btn.textContent='Собираем 4 файла...';
+ var selectedAppHtml=appHtml,selectedDataText=dataText,selectedSingleHtml=singleHtml;
  var saveDirectory=null;
  if(typeof window.showDirectoryPicker==='function'){
   try{
    saveDirectory=await window.showDirectoryPicker({mode:'readwrite'});
   }catch(dirError){
-   btn.disabled=false;btn.textContent=old;
+   lockerBuildBusy=false;syncLockerReadState();
    if(dirError&&dirError.name==='AbortError'){fail('Выбор папки отменён. Файлы не изменены.');return;}
    fail('Не удалось выбрать папку: '+dirError);return;
   }
@@ -220,10 +248,10 @@ document.getElementById('go').onclick=async function(){
   var token=publishToken(createdAt);
   var generationId=newGenerationId();
   var context={generationId:generationId,projectNamespace:await projectNamespace(parsedData)};
-  var editableBundle=buildBundle(appHtml,dataText,true,context);
-  var readonlyBundle=buildBundle(appHtml,dataText,false,context);
+  var editableBundle=buildBundle(selectedAppHtml,selectedDataText,true,context);
+  var readonlyBundle=buildBundle(selectedAppHtml,selectedDataText,false,context);
   var sources=[
-    {name:'roadmap-mpv0.html',html:singleHtml,password:batchPw['roadmap-mpv0.html'][0]},
+    {name:'roadmap-mpv0.html',html:selectedSingleHtml,password:batchPw['roadmap-mpv0.html'][0]},
     {name:'roadmap-online.html',html:readonlyBundle,password:batchPw['roadmap-online.html'][0]},
     {name:'roadmap-online-r.html',html:editableBundle,password:batchPw['roadmap-online-r.html'][0]},
     {name:'roadmap-online-n.html',html:readonlyBundle,password:batchPw['roadmap-online-n.html'][0]}
@@ -272,7 +300,7 @@ document.getElementById('go').onclick=async function(){
   msg.className='msg ok';
   msg.textContent='Готово. '+(saveDirectory?'Все 4 файла проверены и обновлены; manifest записан последним.':'Подготовлены 4 файла и manifest с SHA-256; браузер может попросить разрешить несколько загрузок.')+' После коммита откройте ссылку с суффиксом ?v='+token+' — он обойдёт старую копию GitHub Pages.';
  }catch(x){fail('Ошибка: '+x);}
- btn.disabled=false; btn.textContent=old;
+ lockerBuildBusy=false;syncLockerReadState();
 };
 </script>
 </body></html>

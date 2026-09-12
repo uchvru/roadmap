@@ -1,0 +1,28 @@
+{
+  "schema": "roadmap-private-package/v1",
+  "ready": true,
+  "generationId": "VGjK1tKngcnXpZqAYgu0aA",
+  "createdAt": "2026-09-12T10:20:05.955Z",
+  "files": [
+    {
+      "name": "roadmap-mpv0.html",
+      "bytes": 86097,
+      "sha256": "dbce9987303c29c2123899b201d65f9d614744cf3087c04848711210552c573e"
+    },
+    {
+      "name": "roadmap-online.html",
+      "bytes": 7853705,
+      "sha256": "653eceabe4367dff24e66431a0e624eb0cd74dd2d1ff8cd93a168d5ebecac95a"
+    },
+    {
+      "name": "roadmap-online-r.html",
+      "bytes": 7853669,
+      "sha256": "ee2109949c7f4f9c5bce17b7a391f0fd66020a5b9e93e874334b1ebe477daa92"
+    },
+    {
+      "name": "roadmap-online-n.html",
+      "bytes": 7853705,
+      "sha256": "ec45943586c4e71f8a533a9e7b5b5513c22d19d31ffa21bb5c70e3a0329ab1e8"
+    }
+  ]
+}

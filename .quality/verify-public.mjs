@@ -7,7 +7,7 @@
  */
 
 import { createHash } from 'node:crypto';
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, lstatSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, extname, join, relative, resolve } from 'node:path';
 
 const root = resolve(process.argv[2] || process.cwd());
@@ -105,6 +105,30 @@ function parseJson(path) {
 
 const allFiles = walk();
 
+// Pages publishes tracked files recursively. Keep its inventory closed so that
+// renamed exports and access notes cannot bypass filename or content heuristics.
+const privateNames = ['roadmap-mpv0.html', 'roadmap-online.html', 'roadmap-online-r.html', 'roadmap-online-n.html'];
+const allowedFiles = new Set([
+  '.gitignore', '.quality/README.md', '.quality/verify-public.mjs',
+  '.github/workflows/README.md', '.github/workflows/quality.yml', '.github/workflows/release.yml',
+  'index.html', 'app.html', 'catalog.html', 'README.md', 'LICENSE', 'avatar.jpg', 'robots.txt',
+  'Инструкция_Roadmap.md', 'Локер-роадмапов.html', 'schemas/roadmap-data.schema.json',
+  'media/media-manifest.json', 'media/roadmap-demo.mp4', 'media/roadmap-demo-poster.jpg',
+  'catalog-img/media-manifest.json', 'private/index.html', 'private/roadmap-package-manifest.json',
+  ...privateNames.map(name => `private/${name}`),
+]);
+for (let feature = 1; feature <= 43; feature += 1) {
+  for (const theme of ['light', 'dark']) allowedFiles.add(`catalog-img/f${String(feature).padStart(2, '0')}_${theme}.webp`);
+}
+const unexpectedFiles = allFiles.filter(path => !allowedFiles.has(path));
+assert(unexpectedFiles.length === 0, unexpectedFiles.length
+  ? `Файлы вне разрешенного состава публичного сайта: ${unexpectedFiles.join(', ')}`
+  : 'Все файлы входят в разрешенный состав публичного сайта');
+const nonRegularFiles = allFiles.filter(path => !lstatSync(file(path)).isFile());
+assert(nonRegularFiles.length === 0, nonRegularFiles.length
+  ? `Публичный сайт не допускает ссылки или специальные файлы: ${nonRegularFiles.join(', ')}`
+  : 'Публичный сайт содержит только обычные файлы');
+
 // 1. Минимальная целостность сайта.
 for (const required of [
   'index.html',
@@ -159,6 +183,11 @@ assert(forbiddenData.length === 0, forbiddenData.length
   ? `Найдены запрещённые рабочие JSON: ${forbiddenData.join(', ')}`
   : 'Рабочий roadmap-data*.json отсутствует в публичной сборке');
 
+const accessNotes = allFiles.filter(path => /^roadmap-access-.*\.txt$/i.test(basename(path)));
+assert(accessNotes.length === 0, accessNotes.length
+  ? `TXT со ссылками и паролями нельзя публиковать: ${accessNotes.join(', ')}`
+  : 'Локальные TXT с паролями отсутствуют в публичной сборке');
+
 const openTextExtensions = new Set(['.html', '.md', '.json', '.txt', '.js', '.mjs', '.yml', '.yaml', '.xml', '.css', '.csv']);
 const openTextFiles = allFiles.filter((path) =>
   !path.startsWith('private/')
@@ -184,17 +213,66 @@ assert(legacyFeatureLinks.length === 0, legacyFeatureLinks.length
 
 const privateHtml = allFiles.filter((path) => path.startsWith('private/') && extname(path).toLowerCase() === '.html');
 assert(privateHtml.includes('private/index.html'), 'В закрытом разделе есть индекс');
+assert(JSON.stringify(privateHtml.filter(path => path !== 'private/index.html').map(path => path.slice('private/'.length)).sort()) === JSON.stringify([...privateNames].sort()), 'В папке private находятся ровно четыре контейнера с разрешенными именами');
 for (const path of privateHtml) {
   const html = text(path);
   assert(/noindex[^"'>]*(?:nofollow|noarchive)|noindex,nofollow,noarchive/i.test(html), `${path}: запрещена индексация`);
   if (path === 'private/index.html') continue;
-  const encrypted = /var\s+DATA\s*=\s*\{[\s\S]*?"salt"\s*:/.test(html)
-    && /"iv"\s*:/.test(html)
-    && /"iterations"\s*:\s*\d+/.test(html)
-    && /"ct"\s*:/.test(html)
+  const encodedPayload = html.match(/<script type="application\/json" id="locker-payload">([^<]+)<\/script>/)
+    || html.match(/var\s+DATA\s*=\s*(\{"salt"\s*:[^;]+\});/);
+  let payload;
+  try { payload = JSON.parse(encodedPayload?.[1] || 'null'); } catch { payload = null; }
+  const base64Bytes = value => typeof value === 'string' && /^[A-Za-z0-9+/]+={0,2}$/.test(value)
+    && Buffer.from(value, 'base64').toString('base64') === value ? Buffer.from(value, 'base64').length : -1;
+  const encrypted = payload && base64Bytes(payload.salt) === 16 && base64Bytes(payload.iv) === 12
+    && Number.isSafeInteger(payload.iterations) && payload.iterations >= 200000
+    && base64Bytes(payload.ct) >= 16
     && /crypto\.subtle\.decrypt/.test(html)
     && /AES-GCM/.test(html);
   assert(encrypted, `${path}: содержимое упаковано в AES-GCM-контейнер`);
+}
+
+// A manifest is optional for legacy encrypted sets, but authoritative once present.
+// A partially replaced set must not inherit a previous generation's ready marker.
+const privateManifestPath = 'private/roadmap-package-manifest.json';
+if (existsSync(file(privateManifestPath))) {
+  const manifest = parseJson(privateManifestPath);
+  const manifestObject = Boolean(manifest && typeof manifest === 'object' && !Array.isArray(manifest));
+  assert(manifestObject, `${privateManifestPath}: манифест является JSON-объектом`);
+  if (manifestObject) {
+    const expectedNames = [...privateNames].sort();
+    assert(JSON.stringify(Object.keys(manifest).sort()) === JSON.stringify(['createdAt', 'files', 'generationId', 'ready', 'schema']), `${privateManifestPath}: только служебные поля манифеста, без дополнительных данных`);
+    assert(manifest.schema === 'roadmap-private-package/v1', `${privateManifestPath}: поддерживаемая схема пакета`);
+    assert(manifest.ready === true, `${privateManifestPath}: пакет полностью записан, ready=true`);
+    const generation = typeof manifest.generationId === 'string' ? manifest.generationId : '';
+    assert(/^(?:[A-Za-z0-9_-]{22}|[a-f0-9]{32}|[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12})$/i.test(generation), `${privateManifestPath}: корректный идентификатор поколения`);
+    let validDate = false;
+    try { validDate = typeof manifest.createdAt === 'string' && new Date(manifest.createdAt).toISOString() === manifest.createdAt; } catch {}
+    assert(validDate, `${privateManifestPath}: корректная дата создания`);
+    const entries = Array.isArray(manifest.files) ? manifest.files : [];
+    const declaredNames = entries.map(entry => entry && typeof entry.name === 'string' ? entry.name : '').sort();
+    assert(JSON.stringify(declaredNames) === JSON.stringify(expectedNames), `${privateManifestPath}: объявлены ровно четыре файла без дублей и чужих путей`);
+    for (const name of expectedNames) {
+      const entry = entries.find(item => item && item.name === name);
+      if (!entry) continue;
+      const path = `private/${name}`;
+      assert(JSON.stringify(Object.keys(entry).sort()) === JSON.stringify(['bytes', 'name', 'sha256']), `${path}: запись манифеста содержит только имя, размер и SHA-256`);
+      const validBytes = Number.isSafeInteger(entry.bytes) && entry.bytes > 0;
+      const validHash = typeof entry.sha256 === 'string' && /^[a-f0-9]{64}$/.test(entry.sha256);
+      assert(validBytes, `${path}: в манифесте задан целый размер файла`);
+      assert(validHash, `${path}: в манифесте задан SHA-256`);
+      const exists = existsSync(file(path)) && statSync(file(path)).isFile();
+      assert(exists, `${path}: файл из приватного манифеста существует`);
+      if (!exists) continue;
+      try {
+        const buffer = read(path);
+        assert(validBytes && buffer.length === entry.bytes, `${path}: размер совпадает с приватным манифестом`);
+        assert(validHash && sha256(buffer) === entry.sha256, `${path}: SHA-256 совпадает с приватным манифестом`);
+      } catch (error) { fail(`${path}: не удалось прочитать контейнер (${error.message})`); }
+    }
+  }
+} else {
+  pass('Приватный манифест отсутствует: допускается старый набор зашифрованных контейнеров');
 }
 
 // 3. Демо-видео и постер должны совпадать с манифестом и использоваться лендингом.
