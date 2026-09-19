@@ -1,0 +1,32 @@
+#!/bin/sh
+export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.nvm/versions/node/$(ls $HOME/.nvm/versions/node 2>/dev/null | tail -n 1)/bin:$PATH"
+if command -v node >/dev/null 2>&1; then
+  node .quality/verify-sync.mjs
+else
+  # Если node не в PATH песочницы, запускаем через python3 проверку блоков
+  python3 -c "
+import os, sys
+repo = os.path.dirname(os.path.dirname(os.path.abspath('$0')))
+app = os.path.join(repo, 'app.html')
+main = os.environ.get('ROADMAP_MAIN_FILE') or os.path.abspath(os.path.join(repo, '..', 'roadmap.html'))
+if not os.path.exists(main):
+    sys.exit(0)
+def read(p): return open(p, encoding='utf-8').read()
+def blk(s, a, b):
+    i = s.find(a)
+    j = s.find(b, i) if i >= 0 else -1
+    return s[i:j] if i >= 0 and j >= 0 else ''
+sa, sm = read(app), read(main)
+checks = [
+  ('_jiraComputeRowDiff', '    function _jiraComputeRowDiff(', '    function _jiraBuildImportPreviewRows('),
+  ('diffHtml', '        const diffHtml = (r.diffs && r.diffs.length)', \"      }).join('');\\n      modal.innerHTML=\")
+]
+for name, a, b in checks:
+  ba, bm = blk(sa, a, b), blk(sm, a, b)
+  if not ba or not bm or ba != bm:
+    print(f'✗ Несинхронизирован блок {name} между app.html и roadmap.html', file=sys.stderr)
+    sys.exit(1)
+print('✓ Проверка синхронизации пройдена')
+"
+fi
+
