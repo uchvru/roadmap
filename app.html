@@ -24792,6 +24792,33 @@ let resourceView = 'roles'; // 'roles' | 'load'
       }
       // 3) NOW / NEXT / LATER (если есть инициативы)
       var inits=(typeof projectInitiatives!=='undefined'?projectInitiatives:[]).filter(Boolean);
+      // 3.5) ЗАГРУЗКА КОМАНДЫ (емкость и перегрузки)
+      try {
+        if (typeof computeCapacityBuckets === 'function') {
+          var capData = computeCapacityBuckets('week', 'days');
+          if (capData && capData.rows && capData.rows.length) {
+            var bks = capData.buckets.slice(0, 8);
+            var crowRows = capData.rows.slice(0, 8).map(function(r) {
+              var cellsHtml = bks.map(function(bk, bi) {
+                var c = r.cells[bi] || { days: 0, cap: 0 };
+                var ratio = c.cap > 0 ? (c.days / c.cap) : 0;
+                var bg = c.days <= 0 ? '#f8fafc' : (ratio <= 1 ? '#dcfce7' : (ratio <= 1.5 ? '#fef3c7' : '#fee2e2'));
+                var col = c.days <= 0 ? '#94a3b8' : (ratio <= 1 ? '#15803d' : (ratio <= 1.5 ? '#b45309' : '#b91c1c'));
+                var val = c.days ? (Math.round(c.days * 10) / 10) : '-';
+                return '<td style="padding:2mm 1.5mm;text-align:center;font-size:8.5pt;background:'+bg+';color:'+col+';border:1px solid #e2e8f0;">'+val+'</td>';
+              }).join('');
+              var ovBadge = r.over ? ' <span style="font-size:7.5pt;font-weight:700;color:#e11d48;background:#ffe4e6;border-radius:4px;padding:1px 4px;">⚠ '+r.over+' нед.</span>' : '';
+              return '<tr><td style="padding:2mm 2.5mm;font-size:9pt;font-weight:600;color:#1e293b;border:1px solid #e2e8f0;white-space:nowrap;">'+esc(r.resource)+ovBadge+'</td>'+cellsHtml+'<td style="padding:2mm 2mm;text-align:right;font-size:9pt;font-weight:700;color:#0f172a;border:1px solid #e2e8f0;">'+(Math.round(r.total * 10) / 10)+'д</td></tr>';
+            }).join('');
+            var ths = bks.map(function(bk) { return '<th style="padding:2mm 1.5mm;font-size:8pt;color:#64748b;font-weight:600;border:1px solid #e2e8f0;white-space:nowrap;text-align:center;">'+esc(bk.label)+'</th>'; }).join('');
+            var totOver = capData.rows.reduce(function(s, r) { return s + r.over; }, 0);
+            var capKpi = '<div class="signals" style="margin-top:0;margin-bottom:4mm;"><span>Исполнителей: <b>'+capData.rows.length+'</b></span><span>Перегруженных периодов: <b style="color:'+(totOver?'#e11d48':'#10b981')+'">'+totOver+'</b></span><span>Горизонт: <b>8 недель</b> (в раб. днях)</span></div>';
+            var tbl = '<div style="overflow:hidden;border:1px solid #e2e8f0;border-radius:10px;"><table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#f1f5f9;"><th style="padding:2mm 2.5mm;font-size:8.5pt;color:#475569;font-weight:700;border:1px solid #e2e8f0;text-align:left;">Исполнитель</th>'+ths+'<th style="padding:2mm 2mm;font-size:8.5pt;color:#475569;font-weight:700;border:1px solid #e2e8f0;text-align:right;">Всего</th></tr></thead><tbody>'+crowRows+'</tbody></table></div>';
+            var legend = '<div class="signals" style="margin-top:3mm;font-size:8pt;"><span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#dcfce7;border-radius:2px;display:inline-block;"></span>до 100% (норма)</span><span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#fef3c7;border-radius:2px;display:inline-block;"></span>100-150% (высокая)</span><span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#fee2e2;border-radius:2px;display:inline-block;"></span>>150% (перегруз)</span></div>';
+            parts.push({ badge: 'Загрузка команды', body: '<h2>Загрузка команды и емкость</h2>' + capKpi + tbl + legend });
+          }
+        }
+      } catch (e) { console.warn('Ошибка формирования слайда загрузки в PDF', e); }
       // 4) РИСКИ И СИГНАЛЫ (если есть открытые записи RAID)
       var raid=(typeof projectRaid!=='undefined'?projectRaid:[]).filter(Boolean);
       var openRaid=raid.filter(function(x){return x.status!=='closed';});
