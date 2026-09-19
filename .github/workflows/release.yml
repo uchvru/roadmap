@@ -45,7 +45,7 @@ jobs:
       - name: Build reproducible public ZIP from an explicit allowlist
         run: >-
           git archive --format=zip --output=roadmap-site-public.zip HEAD
-          README.md LICENSE app.html avatar.jpg catalog-img catalog.html index.html
+          README.md RELEASE_NOTES.md LICENSE app.html avatar.jpg catalog-img catalog.html index.html
           media robots.txt schemas Инструкция_Roadmap.md Локер-роадмапов.html
       - name: Verify the release ZIP excludes private material
         run: |
@@ -96,11 +96,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.tag.outputs.tag }}
         run: |
+          NOTES_ARG="--generate-notes"
+          if [ -f "RELEASE_NOTES.md" ]; then
+            NOTES_ARG="--notes-file RELEASE_NOTES.md"
+          fi
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" roadmap-site-public.zip --clobber
-            gh release edit "$TAG" --target "$GITHUB_SHA" --title "Roadmap $TAG"
+            gh release edit "$TAG" --target "$GITHUB_SHA" --title "Roadmap $TAG" $NOTES_ARG
           else
-            gh release create "$TAG" roadmap-site-public.zip --target "$GITHUB_SHA" --generate-notes --title "Roadmap $TAG"
+            gh release create "$TAG" roadmap-site-public.zip --target "$GITHUB_SHA" --title "Roadmap $TAG" $NOTES_ARG
           fi
 
   pages:

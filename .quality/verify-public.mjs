@@ -111,7 +111,7 @@ const privateNames = ['roadmap-mpv0.html', 'roadmap-online.html', 'roadmap-onlin
 const allowedFiles = new Set([
   '.gitignore', '.quality/README.md', '.quality/verify-public.mjs',
   '.github/workflows/README.md', '.github/workflows/quality.yml', '.github/workflows/release.yml',
-  'index.html', 'app.html', 'catalog.html', 'README.md', 'LICENSE', 'avatar.jpg', 'robots.txt',
+  'index.html', 'app.html', 'catalog.html', 'README.md', 'RELEASE_NOTES.md', 'LICENSE', 'avatar.jpg', 'robots.txt',
   'Инструкция_Roadmap.md', 'Локер-роадмапов.html', 'schemas/roadmap-data.schema.json',
   'media/media-manifest.json', 'media/roadmap-demo.mp4', 'media/roadmap-demo-poster.jpg',
   'catalog-img/media-manifest.json', 'private/index.html', 'private/roadmap-package-manifest.json',
