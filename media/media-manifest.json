@@ -4,8 +4,8 @@
   "source": "synthetic-demo-PAY-LK",
   "video": {
     "file": "roadmap-demo.mp4",
-    "sha256": "8523b9f0d977a2bc3282079d563dada6c3fff239e882010946dca4ce5e229e72",
-    "bytes": 9533203,
+    "sha256": "db32981a2fba2ccd607824299c498fbfe39b76a2e621b7addc85edb978ab66d2",
+    "bytes": 9397313,
     "durationSeconds": 42.6,
     "width": 1440,
     "height": 810,
@@ -33,8 +33,8 @@
   },
   "poster": {
     "file": "roadmap-demo-poster.jpg",
-    "sha256": "ccfa92fdd53c6a6275e423dffaab72115d3812ddab248335003a5c637b4ffcbd",
-    "bytes": 178246,
+    "sha256": "74146be30b7e49a5dee01494a98bbc470194b215d21d51ddd21ee710f32f04ee",
+    "bytes": 170886,
     "width": 1440,
     "height": 810
   }
