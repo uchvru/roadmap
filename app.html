@@ -8448,7 +8448,7 @@
     --rm-control-bg:#fff;
     --rm-control-disabled:#edf0ee;
     --rm-text:#24332f;
-    --rm-muted:#596b63;
+    --rm-muted:#566860;
     --rm-border:#d5ddd8;
     --rm-chrome-border:#d5ddd8;
     --rm-card-border:#d5ddd8;
@@ -8792,6 +8792,29 @@
     .onboarding-footer > .onboarding-actions { justify-content:space-between; }
     .onboarding-scenarios { grid-template-columns:minmax(0,1fr); }
   }
+/* RM_SOFT_SHEEN_START */
+/* Мягкое статическое переливание: только экран и общие поверхности интерфейса.
+   Базовые цвета, смысловые маркеры и геометрия остаются в своих правилах. */
+@media screen {
+  body[class] {
+    --rm-page-sheen:linear-gradient(135deg,color-mix(in srgb,var(--rm-primary) 4%,transparent),transparent 58%,color-mix(in srgb,var(--rm-primary) 1.5%,transparent));
+    --rm-surface-sheen:linear-gradient(135deg,color-mix(in srgb,var(--rm-primary) 2%,transparent),transparent 65%);
+    --rm-button-sheen:linear-gradient(135deg,rgb(255 255 255 / .035),transparent 52%,rgb(0 0 0 / .004));
+    background-image:var(--rm-page-sheen) !important;
+  }
+  body.theme-dark {
+    --rm-page-sheen:linear-gradient(135deg,rgb(0 0 0 / .045),transparent 58%,rgb(0 0 0 / .015));
+    --rm-surface-sheen:linear-gradient(135deg,rgb(0 0 0 / .025),transparent 65%);
+    --rm-button-sheen:linear-gradient(135deg,rgb(0 0 0 / .04),transparent 52%,rgb(0 0 0 / .015));
+  }
+  body :is(#appHeader,#planViewNav,#planFilterBar,#ganttMain,#summaryView,#forecastView,#presentView,.rm-dialog-surface,.rm-right-drawer-surface,.rm-side-sheet,.rm-drawer-popover,.rm-popover,#planBuilderPanel) {
+    background-image:var(--rm-surface-sheen) !important;
+  }
+  body :is(.rm-btn,.rm-menu-action,.rm-segmented button,[role="tab"],.startup-choice):not(:disabled):not([aria-disabled="true"]):not(.rm-btn-danger):not(.status-badge):not([class*="rm-type-"]):not(#statusOverview button):not(#statusCompactMenu button) {
+    background-image:var(--rm-button-sheen) !important;
+  }
+}
+/* RM_SOFT_SHEEN_END */
 </style>
 </head>
 <body class="bg-[#f8fafc] text-slate-900 antialiased selection:bg-indigo-100 overflow-x-clip">
@@ -8853,7 +8876,7 @@
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v16.0.1</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v16.1.0</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9089,7 +9112,7 @@
         <!-- 8) Архив (Ресурсы перенесены в меню «Еще», п.2) -->
         <button id="archiveBtn" onclick="openArchiveModal()" aria-label="Архив задач" class="group relative flex items-center justify-center w-9 h-9 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-700 border border-slate-200 rounded-xl transition-all cursor-pointer" title="Архив задач">
           <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
-          <span id="archiveCountBadge" class="absolute -top-1.5 -right-1.5 min-w-6 h-6 px-1 bg-slate-400 text-white text-[10px] font-semibold leading-none rounded-full ring-2 ring-white shadow-sm items-center justify-center tabular-nums pointer-events-none" style="display:none"></span>
+          <span id="archiveCountBadge" class="absolute -top-1.5 -right-1.5 min-w-6 h-6 px-1 bg-slate-600 text-white text-[10px] font-semibold leading-none rounded-full ring-2 ring-white shadow-sm items-center justify-center tabular-nums pointer-events-none" style="display:none"></span>
         </button>
 
         </div>
@@ -9725,7 +9748,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v16.0.1">
+<script data-roadmap-modules="v16.1.0">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -11091,6 +11114,102 @@ if (typeof globalThis !== 'undefined') {
   namespace.getLockerCleanAppHtml = getLockerCleanAppHtml;
   namespace.createLockerDialog = createLockerDialog;
 }
+
+/* module:forecast-decision sha256:88266e08a394ae302fb0458da1fd2341fbe69cf747016114769f6aaa66a24d09 */
+function forecastDecisionPluralRu(n, forms) {
+  const n10 = n % 10, n100 = n % 100;
+  if (n10 === 1 && n100 !== 11) return forms[0];
+  if (n10 >= 2 && n10 <= 4 && (n100 < 10 || n100 >= 20)) return forms[1];
+  return forms[2];
+}
+
+/**
+ * Чистая модель итогового ответа прогноза. Не читает DOM, хранилище или часы.
+ *
+ * Входные факты готовит адаптер приложения по прежним правилам:
+ * - taskSummary: tasks, overdue, noEstimate, noResource, noDates для уже
+ *   отфильтрованных активных задач без вех, скрытых и приостановленных задач;
+ * - readiness: результат существующей проверки готовности того же среза;
+ * - rows: контрольные точки; deltaDays содержит результат прежней _fcDayDiff
+ *   или null, если одна из дат отсутствует. Остальные поля строки сохраняются;
+ * - goals: отдельные сигналы целей, не добавляемые в счетчик контрольных точек.
+ *
+ * Входы не меняются. Поле readiness возвращается по той же ссылке, как раньше.
+ * Подписи, порядок причин и трактовка сигналов сохранены из _fcDecisionModel.
+ */
+function createForecastDecisionModel({ rows, goals, readiness, taskSummary }) {
+  const { tasks, overdue, noEstimate, noResource, noDates } = taskSummary;
+  const signals = rows || [];
+  const red = signals.filter(r => r.status === 'red').length;
+  const amber = signals.filter(r => r.status === 'amber').length;
+  const green = signals.filter(r => r.status === 'green').length;
+  const gray = signals.filter(r => r.status === 'gray' || r.status === 'info').length;
+  const goalRed = (goals || []).filter(g => g.status === 'red').length;
+  const goalAmber = (goals || []).filter(g => g.status === 'amber').length;
+  const goalUnknown = (goals || []).filter(g => g.status === 'gray' || g.status === 'info').length;
+  const goalGreen = (goals || []).filter(g => g.status === 'green').length;
+  let status = !readiness.canForecast || !signals.length || (gray && !green && !red && !amber) ? 'gray' : (red ? 'red' : (amber || gray ? 'amber' : 'green'));
+  let answer = !readiness.canForecast ? 'Сначала проверьте данные плана' : red
+    ? ('Прогноз позже срока: ' + red + ' из ' + signals.length)
+    : (amber
+      ? ('Есть ' + amber + ' ' + forecastDecisionPluralRu(amber, ['сомнительная дата', 'сомнительные даты', 'сомнительных дат']))
+      : (!signals.length ? 'Нет контрольных дат для проверки' : (gray ? 'Не все сроки можно проверить' : 'Расчет укладывается в контрольные даты')));
+  if (readiness.canForecast) {
+    if (goalRed) { status = 'red'; if (!red) answer = 'Есть риск по срокам целей: ' + goalRed; }
+    else if (goalAmber) { if (status !== 'red') status = 'amber'; if (!red && !amber) answer = 'Сроки целей требуют проверки: ' + goalAmber; }
+    else if (goalUnknown && !red && !amber) { status = green || goalGreen ? 'amber' : 'gray'; answer = 'Не все сроки можно проверить'; }
+    else if (!signals.length && goalGreen) { status = 'green'; answer = 'Работа по целям укладывается в сроки'; }
+  }
+
+  const slices = [];
+  (rows || []).filter(r => r && (r.status === 'red' || r.status === 'amber')).forEach(r => {
+    const ids = (r.drivers || []).map(d => d && d.id != null ? String(d.id) : '').filter(Boolean);
+    if (!ids.length) return;
+    const deltaDays = r.deltaDays == null ? null : r.deltaDays;
+    const impactDays = Math.max(0, Number(deltaDays) || 0);
+    slices.push({
+      kind: 'tasks:' + ids.map(encodeURIComponent).join(','),
+      count: ids.length,
+      label: (r.label || 'Контрольная дата') + (impactDays > 0 ? ' · позже срока на ' + impactDays + ' кал. дн.' : (deltaDays === null ? ' · срок не рассчитан' : ' · запас ' + Math.abs(deltaDays) + ' кал. дн.')),
+      impactDays: impactDays,
+      weight: 100000 + impactDays * 100 + ids.length,
+      action: 'Проверить задачи, определяющие срок «' + (r.label || 'контрольной точки') + '»'
+    });
+  });
+  if (overdue) slices.push({ kind:'overdue', count:overdue, label:'Просроченные задачи', impactDays:0, weight:50000 + overdue, action:'Разобрать просроченные задачи' });
+  if (noEstimate) slices.push({ kind:'estimate', count:noEstimate, label:'Нет оценки в днях', impactDays:0, weight:1000 + noEstimate, action:'Добавить оценку задачам' });
+  if (noResource) slices.push({ kind:'resource', count:noResource, label:'Не назначен исполнитель', impactDays:0, weight:900 + noResource, action:'Назначить исполнителей' });
+  if (noDates) slices.push({ kind:'dates', count:noDates, label:'Не заданы даты', impactDays:0, weight:800 + noDates, action:'Указать начало и окончание' });
+  slices.sort((a, b) => (b.weight || 0) - (a.weight || 0) || (b.count || 0) - (a.count || 0));
+
+  const reasons = slices.length ? slices.map(x => x.label) : ['Критичных пробелов в плане не найдено'];
+  const actions = slices.length ? slices.map(x => x.action) : ['Зафиксировать текущий план и следить за изменениями'];
+  return {
+    status: status,
+    answer: answer,
+    red: red,
+    amber: amber,
+    green: green,
+    gray: gray,
+    goalRisks: goalRed + goalAmber,
+    goalUnknown: goalUnknown,
+    confidence: readiness.score,
+    readiness: readiness,
+    tasks: tasks,
+    overdue: overdue,
+    noEstimate:noEstimate,
+    noResource:noResource,
+    noDates:noDates,
+    reasons: reasons,
+    slices:slices,
+    actions: actions
+  };
+}
+
+if (typeof globalThis !== 'undefined') {
+  const namespace = globalThis.RoadmapModules || (globalThis.RoadmapModules = {});
+  namespace.createForecastDecisionModel = createForecastDecisionModel;
+}
 })();
 //# sourceURL=roadmap-inline-modules.mjs
 </script>
@@ -12226,8 +12345,8 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '16.0.1';
-    const APP_VERSION_DATE = '12.09.2026';
+    const APP_VERSION = '16.1.0';
+    const APP_VERSION_DATE = '19.09.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'версия ' + APP_VERSION; } catch (e) {}
@@ -25373,8 +25492,26 @@ let resourceView = 'roles'; // 'roles' | 'load'
       } else { fallbackCopy(md, done); }
     }
 
+    function shuffleInfoReleaseCards() {
+      const grid = document.querySelector('#infoModal .info-release-latest > .info-release-grid');
+      if (!grid) return;
+      const cards = Array.from(grid.children).filter(card => card.classList.contains('info-release-card'));
+      if (cards.length < 2) return;
+      const previous = cards.slice();
+      for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+      }
+      // Если случайно получился прежний порядок, сдвигаем его на одну позицию.
+      if (cards.every((card, index) => card === previous[index])) cards.push(cards.shift());
+      const fragment = document.createDocumentFragment();
+      cards.forEach(card => fragment.appendChild(card));
+      grid.appendChild(fragment);
+    }
     function openInfoModal() {
-      document.getElementById('infoModal').classList.remove('hidden');
+      const modal = document.getElementById('infoModal');
+      if (modal.classList.contains('hidden')) shuffleInfoReleaseCards();
+      modal.classList.remove('hidden');
       if (typeof updateUiThemeBtns === 'function') updateUiThemeBtns();
       if (typeof renderStorageDiagnostics === 'function') renderStorageDiagnostics();
       const _title = document.getElementById('infoModalTitle'); if (_title) setTimeout(() => { try { _title.focus({ preventScroll:true }); } catch (e) {} }, 30);
@@ -27371,72 +27508,25 @@ let resourceView = 'roles'; // 'roles' | 'load'
       var overdue = tasks.filter(function (t) { return t.end && parseLocalDate(t.end) < CURRENT_DATE; }).length;
       var filtered = typeof anyTaskFilterActive === 'function' && anyTaskFilterActive();
       var readiness = _forecastReadinessModel(undefined, filtered ? tasks : undefined);
-      // Контрольные точки и цели считаются отдельно: одна работа может входить в обе группы.
-      var signals = rows || [];
-      var red = signals.filter(function (r) { return r.status === 'red'; }).length;
-      var amber = signals.filter(function (r) { return r.status === 'amber'; }).length;
-      var green = signals.filter(function (r) { return r.status === 'green'; }).length;
-      var gray = signals.filter(function (r) { return r.status === 'gray' || r.status === 'info'; }).length;
-      var goalRed = (goals || []).filter(function (g) { return g.status === 'red'; }).length;
-      var goalAmber = (goals || []).filter(function (g) { return g.status === 'amber'; }).length;
-      var goalUnknown = (goals || []).filter(function (g) { return g.status === 'gray' || g.status === 'info'; }).length;
-      var goalGreen = (goals || []).filter(function (g) { return g.status === 'green'; }).length;
-      var status = !readiness.canForecast || !signals.length || (gray && !green && !red && !amber) ? 'gray' : (red ? 'red' : (amber || gray ? 'amber' : 'green'));
-      var answer = !readiness.canForecast ? 'Сначала проверьте данные плана' : red
-        ? ('Прогноз позже срока: ' + red + ' из ' + signals.length)
-        : (amber
-          ? ('Есть ' + amber + ' ' + pluralRu(amber, ['сомнительная дата', 'сомнительные даты', 'сомнительных дат']))
-          : (!signals.length ? 'Нет контрольных дат для проверки' : (gray ? 'Не все сроки можно проверить' : 'Расчет укладывается в контрольные даты')));
-      if (readiness.canForecast) {
-        if (goalRed) { status = 'red'; if (!red) answer = 'Есть риск по срокам целей: ' + goalRed; }
-        else if (goalAmber) { if (status !== 'red') status = 'amber'; if (!red && !amber) answer = 'Сроки целей требуют проверки: ' + goalAmber; }
-        else if (goalUnknown && !red && !amber) { status = green || goalGreen ? 'amber' : 'gray'; answer = 'Не все сроки можно проверить'; }
-        else if (!signals.length && goalGreen) { status = 'green'; answer = 'Работа по целям укладывается в сроки'; }
-      }
-
-      var slices = [];
-      (rows || []).filter(function (r) { return r && (r.status === 'red' || r.status === 'amber'); }).forEach(function (r) {
-        var ids = (r.drivers || []).map(function (d) { return d && d.id != null ? String(d.id) : ''; }).filter(Boolean);
-        if (!ids.length) return;
-        var deltaDays = r.promised && r.realEnd ? _fcDayDiff(r.promised, r.realEnd) : null;
-        var impactDays = Math.max(0, Number(deltaDays) || 0);
-        slices.push({
-          kind: 'tasks:' + ids.map(encodeURIComponent).join(','),
-          count: ids.length,
-          label: (r.label || 'Контрольная дата') + (impactDays > 0 ? ' · позже срока на ' + impactDays + ' кал. дн.' : (deltaDays === null ? ' · срок не рассчитан' : ' · запас ' + Math.abs(deltaDays) + ' кал. дн.')),
-          impactDays: impactDays,
-          weight: 100000 + impactDays * 100 + ids.length,
-          action: 'Проверить задачи, определяющие срок «' + (r.label || 'контрольной точки') + '»'
+      var decisionRows = (rows || []).map(function (row) {
+        if (!row || (row.status !== 'red' && row.status !== 'amber')
+          || !(row.drivers || []).some(function (driver) {
+            return driver && driver.id != null && String(driver.id);
+          })) return row;
+        return Object.assign({}, row, {
+          deltaDays: row.promised && row.realEnd
+            ? _fcDayDiff(row.promised, row.realEnd) : null
         });
       });
-      if (overdue) slices.push({ kind:'overdue', count:overdue, label:'Просроченные задачи', impactDays:0, weight:50000 + overdue, action:'Разобрать просроченные задачи' });
-      if (noEstimate) slices.push({ kind:'estimate', count:noEstimate, label:'Нет оценки в днях', impactDays:0, weight:1000 + noEstimate, action:'Добавить оценку задачам' });
-      if (noResource) slices.push({ kind:'resource', count:noResource, label:'Не назначен исполнитель', impactDays:0, weight:900 + noResource, action:'Назначить исполнителей' });
-      if (noDates) slices.push({ kind:'dates', count:noDates, label:'Не заданы даты', impactDays:0, weight:800 + noDates, action:'Указать начало и окончание' });
-      slices.sort(function (a, b) { return (b.weight || 0) - (a.weight || 0) || (b.count || 0) - (a.count || 0); });
-
-      var reasons = slices.length ? slices.map(function (x) { return x.label; }) : ['Критичных пробелов в плане не найдено'];
-      var actions = slices.length ? slices.map(function (x) { return x.action; }) : ['Зафиксировать текущий план и следить за изменениями'];
-      return {
-        status: status,
-        answer: answer,
-        red: red,
-        amber: amber,
-        green: green,
-        gray: gray,
-        goalRisks: goalRed + goalAmber,
-        goalUnknown: goalUnknown,
-        confidence: readiness.score,
+      return globalThis.RoadmapModules.createForecastDecisionModel({
+        rows: decisionRows,
+        goals: goals,
         readiness: readiness,
-        tasks: tasks.length,
-        overdue: overdue,
-        noEstimate:noEstimate,
-        noResource:noResource,
-        noDates:noDates,
-        reasons: reasons,
-        slices:slices,
-        actions: actions
-      };
+        taskSummary: {
+          tasks: tasks.length, overdue: overdue,
+          noEstimate: noEstimate, noResource: noResource, noDates: noDates
+        }
+      });
     }
     function _fcReasonItemHtml(item) {
       var reason = (typeof escAttr === 'function') ? escAttr(item.kind || '') : String(item.kind || '');
@@ -27975,15 +28065,15 @@ let resourceView = 'roles'; // 'roles' | 'load'
       orphan.sort(_kanbanUrgencySort);
       const cols = statuses.map(st => {
         const list = byStatus[st.id] || [];
+        if (!list.length && !_kanbanShowEmpty) return '';
         const dot = escAttr(((st.barTheme || st.color || '').split(/\s+/).find(c => /^bg-/.test(c))) || 'bg-slate-400');
         const cards = list.length ? list.map(t => _kanbanCard(t, ro, _allSt)).join('') : '<div class="text-[10px] text-slate-500 text-center py-4 border border-dashed border-slate-200 rounded-lg">Нет задач</div>';
-        const compactEmpty=!list.length&&!_kanbanShowEmpty;
-        return `<div class="kanban-col shrink-0 ${compactEmpty?'w-36':'w-[80vw] sm:w-72'} flex flex-col bg-slate-50 rounded-xl border border-slate-200 overflow-hidden" role="group" aria-label="${escAttr(st.name + ', задач ' + list.length)}" data-status="${escAttr(st.id)}"${ro ? '' : ` ondragover="event.preventDefault(); this.classList.add('ring-2','ring-indigo-300')" ondragleave="this.classList.remove('ring-2','ring-indigo-300')" ondrop="_kanbanDrop(event, '${escJsArg(st.id)}')"`}>
+        return `<div class="kanban-col shrink-0 w-[80vw] sm:w-72 flex flex-col bg-slate-50 rounded-xl border border-slate-200 overflow-hidden" role="group" aria-label="${escAttr(st.name + ', задач ' + list.length)}" data-status="${escAttr(st.id)}"${ro ? '' : ` ondragover="event.preventDefault(); this.classList.add('ring-2','ring-indigo-300')" ondragleave="this.classList.remove('ring-2','ring-indigo-300')" ondrop="_kanbanDrop(event, '${escJsArg(st.id)}')"`}>
           <div class="px-3 py-2.5 flex items-center justify-between gap-2 border-b border-slate-200 sticky top-0 bg-white z-10">
             <span class="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 min-w-0"><span class="w-2.5 h-2.5 rounded-full ${dot} shrink-0"></span><span class="truncate">${escHtml(st.name)}</span></span>
             <span class="text-[10px] font-semibold text-slate-500 bg-slate-100 border border-slate-200 rounded-full px-1.5 py-0.5 tabular-nums shrink-0">${list.length}</span>
           </div>
-          <div class="${compactEmpty?'hidden':'p-2 space-y-2 overflow-y-auto'}" style="max-height:calc(100vh - 320px)">${cards}</div>
+          <div class="p-2 space-y-2 overflow-y-auto" style="max-height:calc(100vh - 320px)">${cards}</div>
         </div>`;
       }).join('');
       const orphanCol = orphan.length ? `<div class="kanban-col shrink-0 w-[80vw] sm:w-72 flex flex-col bg-slate-50 rounded-xl border border-dashed border-slate-300 overflow-hidden">
@@ -27992,10 +28082,10 @@ let resourceView = 'roles'; // 'roles' | 'load'
         </div>` : '';
       kv.innerHTML = `<div class="flex items-center justify-between gap-3 flex-wrap px-4 py-2.5 border-b border-slate-200 bg-slate-50/80 shrink-0 no-print no-image-export">
         <span class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700"><svg aria-hidden="true" class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h4v14H4zM10 5h4v9h-4zM16 5h4v6h-4z"></path></svg>Доска задач по статусам <span class="font-normal text-slate-400">${tasks.length}</span><span id="kanbanMobilePosition" class="kanban-mobile-position min-h-8 items-center rounded-full bg-white border border-slate-200 px-2 text-xs tabular-nums text-slate-600"></span></span>
-        <div class="flex items-center gap-2">${ro ? '' : `<button type="button" onclick="toggleKanbanEmpty()" aria-pressed="${_kanbanShowEmpty?'true':'false'}" class="rm-btn rm-btn-secondary">${_kanbanShowEmpty?'Свернуть пустые':'Показать пустые'}</button><button type="button" onclick="openKanbanColsModal()" class="rm-btn rm-btn-secondary" title="Выбор и порядок столбцов" aria-label="Столбцы доски">Столбцы</button>`}${_viewSwitcherBtnHtml()}</div>
+        <div class="flex items-center gap-2">${ro ? '' : `<button type="button" onclick="toggleKanbanEmpty()" aria-pressed="${_kanbanShowEmpty?'true':'false'}" class="rm-btn rm-btn-secondary">${_kanbanShowEmpty?'Скрыть пустые':'Показать пустые'}</button><button type="button" onclick="openKanbanColsModal()" class="rm-btn rm-btn-secondary" title="Выбор и порядок столбцов" aria-label="Столбцы доски">Столбцы</button>`}${_viewSwitcherBtnHtml()}</div>
       </div>
       ${hiddenByColumns ? `<div class="px-4 py-2 text-xs text-slate-600 bg-slate-50 border-b border-slate-200">В скрытых столбцах: ${hiddenByColumns} задач.${ro ? '' : ' <button type="button" onclick="openKanbanColsModal()" class="underline font-semibold">Настроить столбцы</button>'}</div>` : ''}
-      <div id="kanbanTrack" class="kanban-track flex gap-3 px-4 pt-4 pb-2 overflow-x-auto grow items-start w-full" onscroll="_kanbanTrackScroll(this)">${cols}${orphanCol}</div>
+      <div id="kanbanTrack" class="kanban-track flex gap-3 px-4 pt-4 pb-2 overflow-x-auto grow items-start w-full" onscroll="_kanbanTrackScroll(this)">${cols}${orphanCol}${!cols && !orphanCol ? '<p class="w-full py-8 text-center text-sm text-slate-600">Нет задач для отображения</p>' : ''}</div>
       ${ro ? '' : '<div class="px-4 pb-3 text-[10px] text-slate-400 shrink-0">Перетащите карточку между колонками или выберите нужный статус в карточке. Доска листается по горизонтали ↔</div>'}`;
       requestAnimationFrame(function () { _kanbanTrackScroll(document.getElementById('kanbanTrack')); });
       try { if (!tasks.length && typeof anyTaskFilterActive === 'function' && anyTaskFilterActive()) { const _kbe = document.createElement('div'); _kbe.className = 'px-4 py-2 text-[11px] text-amber-800 bg-amber-50 border-b border-amber-200 flex items-center gap-2 shrink-0'; _kbe.innerHTML = 'Все задачи скрыты фильтрами. <button onclick="resetAllFilters()" class="underline font-semibold cursor-pointer">Сбросить фильтры</button>'; const _hd = kv.firstElementChild; if (_hd && _hd.nextSibling) kv.insertBefore(_kbe, _hd.nextSibling); else kv.appendChild(_kbe); } } catch (e) {}
@@ -30337,7 +30427,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       // Активный чип = выбран в мультисете. «Всего задач» активен, когда выбора нет.
       const getStyle = (active) => active
         ? 'status-filter-active ring-1 ring-indigo-400/20 shadow-sm z-10 opacity-100'
-        : 'opacity-70 hover:opacity-100 hover:scale-[1.02] shadow-none';
+        : 'hover:scale-[1.02] shadow-none';
       const check = (active) => active ? '<svg aria-hidden="true" class="w-3 h-3 shrink-0 text-indigo-500 mr-0.5 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>' : '';
 
       // Общий % готовности проекта показываем в чипе «Всего N (P%)» ниже
@@ -30345,23 +30435,22 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
       statuses.forEach(s => {
         const count = counts.get(s.id) || 0;
-        // Показываем ВСЕ статусы, не схлопываем и не прячем пустые (п.5).
+        // Пустые статусы остаются в справочнике, но не занимают полосу фильтров.
+        if (!count) return;
         // Единый спокойный чип: белый фон + цветная точка (цвет статуса), без радуги фонов.
         const dotClass = ((s.barTheme || s.color || '').split(/\s+/).find(c => /^bg-/.test(c))) || 'bg-slate-400';
         const active = sel.has(s.id);
-        // Пустые статусы показываем (п.5), но слегка приглушаем, чтобы не отвлекали.
-        const zeroMute = (count === 0 && !active) ? ' style="opacity:.66"' : '';
-        addRankedChip(count, `<button data-status-filter="${escAttr(s.id)}" onclick="setStatusFilter('${escJsArg(s.id)}')" aria-pressed="${active}"${zeroMute} class="transition-all inline-flex items-center gap-1.5 pl-2.5 pr-2.5 py-[7px] rounded-xl shrink-0 whitespace-nowrap border border-slate-200 bg-slate-50 text-slate-600 text-xs font-medium cursor-pointer ${getStyle(active)}">${check(active)}<span class="w-2 h-2 rounded-full ${escAttr(dotClass)} shrink-0"></span>${escHtml(s.name)} <span class="px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-600 tabular-nums">${count}</span></button>`);
+        addRankedChip(count, `<button data-status-filter="${escAttr(s.id)}" onclick="setStatusFilter('${escJsArg(s.id)}')" aria-pressed="${active}" class="transition-all inline-flex items-center gap-1.5 pl-2.5 pr-2.5 py-[7px] rounded-xl shrink-0 whitespace-nowrap border border-slate-200 bg-slate-50 text-slate-600 text-xs font-medium cursor-pointer ${getStyle(active)}">${check(active)}<span class="w-2 h-2 rounded-full ${escAttr(dotClass)} shrink-0"></span>${escHtml(s.name)} <span class="px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-600 tabular-nums">${count}</span></button>`);
       });
 
       // Спецчипы показываем только когда есть что показать (или фильтр уже выбран) , чище обзор.
       const specChip = (key, on, label, dot, count, tip) => `<button data-status-filter="${key}" onclick="setStatusFilter('${key}')" aria-pressed="${on}" ${tip ? 'title="' + tip + '"' : ''} class="transition-all inline-flex items-center gap-1.5 pl-2.5 pr-2.5 py-[7px] rounded-xl shrink-0 whitespace-nowrap border border-slate-200 bg-slate-50 text-slate-600 text-xs font-medium cursor-pointer ${getStyle(on)}">${check(on)}<span class="w-2 h-2 rounded-full ${dot} shrink-0"></span>${label} <span class="px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-600 tabular-nums">${count}</span></button>`;
       const ovActive = sel.has('overdue');
-      if (overdueCount > 0 || ovActive) addRankedChip(overdueCount, specChip('overdue', ovActive, 'Просрочено', 'bg-rose-500', overdueCount));
+      if (overdueCount > 0) addRankedChip(overdueCount, specChip('overdue', ovActive, 'Просрочено', 'bg-rose-500', overdueCount));
       const msActive = sel.has('milestone');
-      if (msActive) addRankedChip(milestoneCount, specChip('milestone', msActive, 'Вехи', 'bg-amber-500', milestoneCount));
+      if (msActive && milestoneCount > 0) addRankedChip(milestoneCount, specChip('milestone', msActive, 'Вехи', 'bg-amber-500', milestoneCount));
       const blActive = sel.has('blocked');
-      if (blActive) addRankedChip(blockedCount, specChip('blocked', blActive, 'Блокеры', 'bg-rose-600', blockedCount, 'Заблокированные задачи'));
+      if (blActive && blockedCount > 0) addRankedChip(blockedCount, specChip('blocked', blActive, 'Блокеры', 'bg-rose-600', blockedCount, 'Заблокированные задачи'));
 
       // «Все» закреплен первым; равные количества сохраняют исходный порядок.
       container.innerHTML = chips.concat(rankedChips.sort((a, b) => b.count - a.count || a.order - b.order).map(chip => chip.markup)).join('');
@@ -30395,7 +30484,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       let html = `<button type="button" data-choice-option="all" role="menuitemcheckbox" aria-checked="${statusFilterSel.size === 0}" onclick="setStatusFilter('all');renderStatusCompactMenu()" class="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs ${statusFilterSel.size ? 'text-slate-700 hover:bg-slate-50' : 'bg-indigo-50 text-indigo-700 font-semibold'}"><span>Все статусы</span><span>${total}</span></button>`;
       const rows = [];
       const addRow = (id, name, count, dot) => rows.push({ count, markup: row(id, name, count, dot), order: rows.length });
-      statuses.forEach(st => { const n = counts.get(st.id) || 0; const dot = ((st.barTheme || st.color || '').split(/\s+/).find(c => /^bg-/.test(c))) || 'bg-slate-400'; addRow(st.id, st.name, n, dot); });
+      statuses.forEach(st => { const n = counts.get(st.id) || 0; if (!n) return; const dot = ((st.barTheme || st.color || '').split(/\s+/).find(c => /^bg-/.test(c))) || 'bg-slate-400'; addRow(st.id, st.name, n, dot); });
       if (overdue) addRow('overdue', 'Просрочено', overdue, 'bg-rose-500');
       if (blocked) addRow('blocked', 'Блокеры', blocked, 'bg-rose-600');
       html += rows.sort((a, b) => b.count - a.count || a.order - b.order).map(item => item.markup).join('');
@@ -36901,7 +36990,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v16.0.1 · 12.09.2026</span>
+     <span id="appVersionBadge">v16.1.0 · 19.09.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -36913,7 +37002,7 @@ function syncBodyScrollLock() {
   <div class="info-scroll-content p-6 overflow-y-auto flex-1 space-y-5 text-sm text-slate-600">
 
    <div class="bg-indigo-50/50 rounded-xl p-4 border border-indigo-100/50 shadow-sm">
-    <p class="text-slate-700 text-sm">Локальный планировщик в одном HTML-файле. Все изменения сохраняются автоматически в браузере и, если хотите, дублируются в файл на диске. Ваши данные остаются только у вас, ничего не уходит на сервер.</p>
+    <p class="text-slate-700 text-sm">В рабочем режиме изменения сохраняются в браузере, если его хранилище доступно. Для копии на диске скачайте JSON или подключите файл для автозаписи в поддерживаемом браузере. В демо и учебных примерах правки остаются в памяти вкладки. Обмен с Jira и его автоматическое обновление вы включаете отдельно.</p>
    </div>
 
    <div>
@@ -36947,14 +37036,60 @@ function syncBodyScrollLock() {
      </button>
      <button type="button" onclick="closeInfoModal(); openOnboarding('plan');" class="flex items-start gap-2.5 bg-indigo-600 hover:bg-indigo-700 border border-indigo-600 rounded-xl px-3 py-2.5 text-left transition-colors cursor-pointer">
       <span class="w-8 h-8 rounded-lg bg-white/15 text-white flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></span>
-      <span class="min-w-0"><span class="block text-xs font-semibold text-white">Первый рабочий план</span><span class="block text-[10px] text-indigo-100 leading-snug">Подготовить план, проверить сроки и собрать показ</span></span>
+      <span class="min-w-0"><span class="block text-xs font-semibold text-white">Первый рабочий план</span><span class="block text-[10px] text-white leading-snug">Подготовить план, проверить сроки и собрать показ</span></span>
      </button>
     </div>
    </div>
 
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v16.0.1</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v16.1.0</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="fields" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6M10 15v6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Показывайте нужные поля</h5><span class="info-release-badge">ПОЛЯ</span></div>
+      <p class="text-xs text-slate-600">Скройте лишние поля карточки и шапки в настройках. Значения останутся в плане.</p>
+     </article>
+     <article data-release-card="studio" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4zM4 9h16M9 9v11"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Студия по умолчанию</h5><span class="info-release-badge">ТЕМА</span></div>
+      <p class="text-xs text-slate-600">При первом запуске открывается светлая Студия. Портал и Темная тема доступны в настройках.</p>
+     </article>
+     <article data-release-card="forecast" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19h16M6 15l4-5 4 2 4-7M15 5h3v3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Сразу видно риск срока</h5><span class="info-release-badge">ПРОГНОЗ</span></div>
+      <p class="text-xs text-slate-600">Контрольные даты видны сразу. Цели и пробелы в данных учитываются отдельно.</p>
+     </article>
+     <article data-release-card="dependencies" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h6v6H3zM15 13h6v6h-6zM9 8h4v8h2m-3-3l3 3-3 3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Связи в два шага</h5><span class="info-release-badge">СВЯЗИ</span></div>
+      <p class="text-xs text-slate-600">Выберите, что сделать сначала, а что потом. На карте видны названия задач и направление связи.</p>
+     </article>
+     <article data-release-card="board" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18v16H3zM9 4v16M15 4v16M5 8h2m4 0h2m4 0h2"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Доска без лишних полей</h5><span class="info-release-badge">ДОСКА</span></div>
+      <p class="text-xs text-slate-600">Откройте карточку, чтобы сменить статус. Перетаскивание между колонками тоже работает.</p>
+     </article>
+     <article data-release-card="navigation" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3h10l4 4v14H5zM14 3v5h5M8 12h8m-8 4h5"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Материалы в один шаг</h5><span class="info-release-badge">МЕНЮ</span></div>
+      <p class="text-xs text-slate-600">Отчеты и слайды открываются кнопкой «Материалы». Выгрузка XLSX находится в меню «Данные».</p>
+     </article>
+    </div>
+   </div>
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Возможности v15.8 сохранены</h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Презентация без зависших уведомлений</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ПРЕЗЕНТАЦИЯ</span></div><p class="text-xs text-slate-600">Сообщение после переноса дат больше не занимает место в макете. Вместо постоянного предупреждения — компактное управление датами; пояснение о влиянии на основной план открывается отдельно.</p></div>
+     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Вы сами выбираете шапку отчёта</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">HTML / PDF</span></div><p class="text-xs text-slate-600">В настройках набора можно скрыть всю шапку или отдельно название проекта, РО, дату, значок, версию, метки релизов и каждый показатель. Выбор сохраняется для этого набора и одинаково применяется к HTML и PDF.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Финальные статусы настраиваются под процесс</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">СТАТУСЫ</span></div><p class="text-xs text-slate-600">Отметьте нужные статусы как финальные в справочнике. Такие задачи учитываются как завершённые и не попадают в просрочки. Названия статусов и сами задачи при этом не изменяются.</p></div>
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Доска и лента не теряют статусы</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ДОСКА</span></div><p class="text-xs text-slate-600">Импортированные статусы получают собственные колонки и остаются в фильтрах. Новые статусы появляются автоматически, скрытые колонки обозначены счётчиком, а стрелки прокрутки открывают конец длинной статусной ленты.</p></div>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <!-- INFO_RELEASE_ARCHIVED_START -->
+   <div class="info-release-archived">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v16.0.1</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3h12l3 3v15H4V3h1m3 0v6h8V3M8 21v-8h8v8"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Точное сохранение снимков</h5><span class="info-release-badge">ДАННЫЕ</span></div>
@@ -36977,7 +37112,7 @@ function syncBodyScrollLock() {
       <p class="text-xs text-slate-600">Повторное обновление больших списков не переписывает стили неизменных строк.</p>
      </article>
     </div>
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Возможности v16.0 сохранены</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v16.0</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v12m-4-4l4 4 4-4M5 16v5h14v-5"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Исходные статусы Jira</h5><span class="info-release-badge">ИМПОРТ</span></div>
@@ -37005,22 +37140,7 @@ function syncBodyScrollLock() {
      </article>
     </div>
    </div>
-   <div class="info-release-previous">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Возможности v15.8 сохранены</h4>
-    <div class="grid grid-cols-1 gap-3 mb-6">
-     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Презентация без зависших уведомлений</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ПРЕЗЕНТАЦИЯ</span></div><p class="text-xs text-slate-600">Сообщение после переноса дат больше не занимает место в макете. Вместо постоянного предупреждения — компактное управление датами; пояснение о влиянии на основной план открывается отдельно.</p></div>
-     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Вы сами выбираете шапку отчёта</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">HTML / PDF</span></div><p class="text-xs text-slate-600">В настройках набора можно скрыть всю шапку или отдельно название проекта, РО, дату, значок, версию, метки релизов и каждый показатель. Выбор сохраняется для этого набора и одинаково применяется к HTML и PDF.</p></div>
-     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Финальные статусы настраиваются под процесс</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">СТАТУСЫ</span></div><p class="text-xs text-slate-600">Отметьте нужные статусы как финальные в справочнике. Такие задачи учитываются как завершённые и не попадают в просрочки. Названия статусов и сами задачи при этом не изменяются.</p></div>
-     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Доска и лента не теряют статусы</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ДОСКА</span></div><p class="text-xs text-slate-600">Импортированные статусы получают собственные колонки и остаются в фильтрах. Новые статусы появляются автоматически, скрытые колонки обозначены счётчиком, а стрелки прокрутки открывают конец длинной статусной ленты.</p></div>
-    </div>
-   </div>
-
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
+   <!-- INFO_RELEASE_ARCHIVED_END -->
    <div>
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v15.7</h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
@@ -40187,7 +40307,7 @@ function syncBodyScrollLock() {
     </div>
    </a>
    <div class="flex items-center gap-3">
-    <span class="text-[10px] text-slate-500 hidden sm:inline">Все данные хранятся локально , ничего не уходит в интернет.</span>
+    <span class="text-[10px] text-slate-500 hidden sm:inline">Данные плана хранятся локально. Обмен с Jira включаете вы.</span>
    </div>
   </div>
  </div>
@@ -40649,7 +40769,7 @@ function syncBodyScrollLock() {
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 16.0.1</span>
+              <span id="appVersionStartup">версия 16.1.0</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>

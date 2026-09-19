@@ -3,103 +3,191 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Roadmap v16.0.1: локальный планировщик дорожных карт в одном HTML-файле, исходные статусы Jira, задачи, сроки, зависимости, прогноз и презентация плана.">
-  <title>Roadmap v16.0.1: дорожная карта продукта в одном файле</title>
+  <meta name="description" content="Roadmap v16.1.0: локальный планировщик дорожных карт в одном HTML-файле, исходные статусы Jira, задачи, сроки, зависимости, прогноз и презентация плана.">
+  <title>Roadmap v16.1.0: дорожная карта продукта в одном файле</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    :root{--ink:#0f172a;--mut:#64748b;--brand:#4f46e5;--line:#e6eaf1}
+    :root{--ink:#0f172a;--mut:#5b6c85;--brand:#4f46e5;--line:#e6eaf1;--page-wash:linear-gradient(145deg,#f8f9fd,#f2f5fb);--hero-wash:linear-gradient(160deg,#f0f3ff 0%,#edf3fd 42%,#f6f8fc 100%);--button-primary:linear-gradient(135deg,#5148e4,#4941d6);--button-primary-hover:linear-gradient(135deg,#4740cc,#4038ba);--button-secondary:linear-gradient(135deg,#fff,#f4f5fd);--button-secondary-hover:linear-gradient(135deg,#fafaff,#eef0fc)}
     html{scroll-behavior:smooth}
-    body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:#f6f8fc;-webkit-font-smoothing:antialiased;line-height:1.5}
+    body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:#f6f8fc;background-image:var(--page-wash);-webkit-font-smoothing:antialiased;line-height:1.5}
     a{color:inherit;text-decoration:none}.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
-    .hero{position:relative;overflow:hidden;background:linear-gradient(160deg,#eef2ff 0%,#eaf2fe 42%,#f6f8fc 100%);border-bottom:1px solid var(--line)}
-    .hero:before{content:"";position:absolute;top:-160px;right:-120px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(79,70,229,.14),transparent 65%)}
+    .hero{position:relative;overflow:hidden;background:var(--hero-wash);border-bottom:1px solid var(--line)}
+    .hero:before{content:"";position:absolute;top:-160px;right:-120px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(79,70,229,.07),transparent 65%);pointer-events:none}
     .hero .wrap{position:relative;padding:36px 24px 44px}.brand{display:flex;align-items:center;gap:12px}
     .logo{width:52px;height:52px;border-radius:15px;background:linear-gradient(135deg,#3b82f6,#4f46e5);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(79,70,229,.32)}
     .logo svg{width:27px;height:27px;color:#fff}.vchip{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#4338ca;background:#fff;border:1px solid #c7d2fe;border-radius:999px;padding:4px 10px}
     .herogrid{display:grid;grid-template-columns:1.3fr .7fr;gap:44px;align-items:center;margin-top:30px}.heroright{display:flex;justify-content:flex-end}
     h1{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.6px;max-width:680px}.lead{font-size:clamp(15px,2.2vw,19px);color:#475569;max-width:760px;margin:14px 0 0}.lead b{color:var(--ink);font-weight:650}
-    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:50px;padding:0 20px;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s}
-    .btn.primary{background:#4f46e5;color:#fff;box-shadow:0 12px 26px rgba(79,70,229,.32)}.btn.primary:hover{background:#4338ca;transform:translateY(-1px)}
-    .btn.ghost{background:#fff;color:#334155;border:1px solid #d6ddec}.btn.ghost:hover{border-color:#a5b4fc;color:#3730a3}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:50px;padding:0 20px;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;transition:color .15s,border-color .15s,box-shadow .15s,transform .15s}
+    .btn.primary{background:#4f46e5;background-image:var(--button-primary);color:#fff;box-shadow:0 10px 24px rgba(79,70,229,.22)}.btn.primary:hover{background-image:var(--button-primary-hover);transform:translateY(-1px)}
+    .btn.ghost{background:#fff;background-image:var(--button-secondary);color:#334155;border:1px solid #d6ddec}.btn.ghost:hover{background-image:var(--button-secondary-hover);border-color:#a5b4fc;color:#3730a3}
+    .btn:focus-visible{outline:3px solid #4338ca;outline-offset:4px}
     .vhero{width:100%;max-width:350px;background:rgba(255,255,255,.72);backdrop-filter:blur(6px);border:1px solid #e3e9f4;border-radius:18px;padding:22px 24px;box-shadow:0 18px 44px rgba(15,23,42,.1)}
     .vhero .hd{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#4338ca;margin-bottom:14px}.vhero .rw{display:flex;align-items:center;gap:14px}
     .vava{position:relative;overflow:hidden;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#4f46e5);color:#fff;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:800;flex:none;box-shadow:0 8px 20px rgba(79,70,229,.3)}
-    .vava img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.vhero .nm{font-size:17px;font-weight:800}.vhero .rl{font-size:12.5px;color:#64748b;margin-top:2px}.vhero .lk{margin-top:15px;padding-top:15px;border-top:1px solid #eaeef6}.vhero .lk a{font-size:14px;font-weight:600;color:#4f46e5}
-    .metrics-panel{margin-top:28px;padding:22px;border-radius:18px;background:rgba(255,255,255,.62);backdrop-filter:blur(8px);border:1px solid #dbe3f4;box-shadow:0 16px 38px rgba(15,23,42,.08)}.metrics-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}.metrics-head h2{font-size:20px;font-weight:800;letter-spacing:-.25px}.metrics-head p{font-size:13px;color:#64748b;margin-top:4px;max-width:760px}.metrics-badge{flex:none;font-size:11px;font-weight:800;color:#4338ca;background:#eef2ff;border:1px solid #c7d2fe;border-radius:999px;padding:5px 10px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.stat{min-height:112px;background:#fff;border:1px solid #e3e9f4;border-radius:14px;padding:15px;box-shadow:0 6px 18px rgba(15,23,42,.04)}
-    .stat .v{font-size:24px;font-weight:800;letter-spacing:-.5px;background:linear-gradient(120deg,#4f46e5,#3b82f6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}.stat .l{font-size:13px;font-weight:800;color:#0f172a;margin-top:2px}.stat .meta{font-size:11px;color:#64748b;margin-top:6px}.statsrc{font-size:11px;color:#64748b;margin-top:12px}
-    .shotwrap{margin:-24px 0 0}.video{max-width:920px;margin:0 auto;border-radius:18px;overflow:hidden;border:1px solid #1e293b;box-shadow:0 26px 64px rgba(15,23,42,.2);background:#0b1220;line-height:0}.video video{display:block;width:100%;height:auto}.vidnote{max-width:920px;margin:14px auto 0;text-align:center;font-size:13px;color:#64748b}
-    section{padding:56px 0}.alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.sechead{text-align:center;max-width:760px;margin:0 auto 34px}.sechead h2{font-size:clamp(24px,3.5vw,34px);font-weight:800;letter-spacing:-.4px}.sechead p{color:#64748b;font-size:16px;margin-top:10px}
+    .vava img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.vhero .nm{font-size:17px;font-weight:800}.vhero .rl{font-size:12.5px;color:var(--mut);margin-top:2px}.vhero .lk{margin-top:15px;padding-top:15px;border-top:1px solid #eaeef6}.vhero .lk a{font-size:14px;font-weight:600;color:#4f46e5}
+    .metrics-panel{margin-top:28px;padding:22px;border-radius:18px;background:rgba(255,255,255,.62);backdrop-filter:blur(8px);border:1px solid #dbe3f4;box-shadow:0 16px 38px rgba(15,23,42,.08)}.metrics-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}.metrics-head h2{font-size:20px;font-weight:800;letter-spacing:-.25px}.metrics-head p{font-size:13px;color:var(--mut);margin-top:4px;max-width:760px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.stat{min-height:112px;background:#fff;border:1px solid #e3e9f4;border-radius:14px;padding:15px;box-shadow:0 6px 18px rgba(15,23,42,.04)}
+    .stat .v{font-size:24px;font-weight:800;letter-spacing:-.5px;background:linear-gradient(120deg,#4f46e5,#3b82f6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}.stat .l{font-size:13px;font-weight:800;color:#0f172a;margin-top:2px}.statsrc{font-size:11px;color:var(--mut);margin-top:12px}
+    .shotwrap{margin:-24px 0 0}.video{max-width:920px;margin:0 auto;border-radius:18px;overflow:hidden;border:1px solid #1e293b;box-shadow:0 26px 64px rgba(15,23,42,.2);background:#0b1220;line-height:0}.video video{display:block;width:100%;height:auto}.vidnote{max-width:920px;margin:14px auto 0;text-align:center;font-size:13px;color:var(--mut)}
+    section{padding:56px 0}.alt{background:linear-gradient(145deg,#fff,#f8f9fe);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.sechead{text-align:center;max-width:760px;margin:0 auto 34px}.sechead h2{font-size:clamp(24px,3.5vw,34px);font-weight:800;letter-spacing:-.4px}.sechead p{color:var(--mut);font-size:16px;margin-top:10px}
     .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 6px 18px rgba(15,23,42,.05);transition:transform .16s,box-shadow .16s}.card:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(15,23,42,.1)}
-    .card .ic{width:42px;height:42px;border-radius:12px;background:#eef2ff;color:#4f46e5;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-weight:800}.card h3{font-size:17px;font-weight:800}.card p{font-size:13.5px;color:#52607a;margin-top:6px}
+    .card .ic{width:42px;height:42px;border-radius:12px;background:#eef2ff;color:#4f46e5;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-weight:800}.card .ic-label{width:fit-content;max-width:100%;height:auto;min-height:32px;padding:6px 10px;border-radius:8px;font-size:13px;line-height:20px;overflow-wrap:anywhere}.card h3{font-size:17px;font-weight:800}.card p{font-size:13.5px;color:#52607a;margin-top:6px}
     .how{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:900px;margin:0 auto}.how .card{text-align:center}
     .notice{max-width:900px;margin:0 auto;background:#eefbf5;border:1px solid #bbefd6;border-radius:18px;padding:24px 26px;color:#315c4c}.notice h3{font-size:19px;color:#14543e;margin-bottom:8px}.notice p{font-size:14px}.notice p+p{margin-top:8px}
-    .catcta{max-width:960px;margin:0 auto;background:linear-gradient(150deg,#eef2ff,#eaf2fe 55%,#f6f8fc);border:1px solid #dbe3f4;border-radius:20px;padding:32px 28px;box-shadow:0 20px 50px rgba(15,23,42,.08);text-align:center}.catcta p{color:#64748b;margin:8px auto 0;max-width:680px}.catcta .cta{justify-content:center}
-    .finalcta{text-align:center;padding:60px 0}.foot{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:#64748b;font-size:13px}
+    .catcta{max-width:960px;margin:0 auto;background:var(--hero-wash);border:1px solid #dbe3f4;border-radius:20px;padding:32px 28px;box-shadow:0 20px 50px rgba(15,23,42,.08);text-align:center}.catcta p{color:var(--mut);margin:8px auto 0;max-width:680px}.catcta .cta{justify-content:center}
+    .foot{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:var(--mut);font-size:13px}
     @media(max-width:900px){.herogrid{grid-template-columns:1fr;gap:26px}.heroright{justify-content:flex-start}.stats{grid-template-columns:repeat(3,1fr)}}
     @media(max-width:860px){.grid{grid-template-columns:1fr 1fr}}@media(max-width:720px){.how{grid-template-columns:1fr}}
-    @media(max-width:560px){.grid,.stats{grid-template-columns:1fr}.metrics-panel{padding:18px}.metrics-head{display:block}.metrics-badge{display:inline-flex;margin-top:10px}.cta .btn{width:100%}.vhero{max-width:none}section{padding:48px 0}}
+    @media(max-width:560px){.grid,.stats{grid-template-columns:1fr}.metrics-panel{padding:18px}.metrics-head{display:block}.cta .btn{width:100%}.vhero{max-width:none}section{padding:48px 0}}
+    .vhero .lk{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.btn.purchase-open{height:44px;padding:0 14px;font-size:14px;border:0;white-space:nowrap}
+    .purchase-dialog{margin:auto;width:calc(100% - 32px);max-width:560px;max-height:calc(100dvh - 32px);padding:24px;border:1px solid #d6ddec;border-radius:18px;background:#fff;color:var(--ink);box-shadow:0 24px 72px rgba(15,23,42,.24);overflow:auto}
+    .purchase-dialog::backdrop{background:rgba(15,23,42,.42)}.purchase-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.purchase-head h2{font-size:24px;line-height:1.3;min-width:0}.btn.purchase-close{width:44px;height:44px;flex:none;padding:0;font-size:27px;line-height:1}.purchase-note{margin:12px 0 20px;color:#475569;font-size:14px}
+    .purchase-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}.purchase-dialog label{display:flex;flex-wrap:wrap;gap:6px;font-size:14px;font-weight:650;min-width:0}.purchase-wide{grid-column:1/-1}.purchase-optional{font-weight:400;color:#5b6c85}.purchase-dialog input,.purchase-dialog textarea{display:block;width:100%;min-width:0;border:1px solid #94a3b8;border-radius:9px;background:#fff;color:#0f172a;padding:10px 12px;font:400 16px/1.45 -apple-system,"Segoe UI",Roboto,Arial,sans-serif}.purchase-dialog input{min-height:44px}.purchase-dialog textarea{resize:vertical;max-height:240px}.purchase-dialog input:focus-visible,.purchase-dialog textarea:focus-visible,.purchase-fallback summary:focus-visible,.purchase-fallback a:focus-visible{outline:3px solid #4338ca;outline-offset:3px}
+    .purchase-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.purchase-dialog .btn{border:1px solid #d6ddec;transition:none}.purchase-dialog .btn.primary{border-color:transparent}.purchase-dialog .btn.primary:hover{transform:none}.purchase-fallback{border-top:1px solid var(--line);margin-top:20px;padding-top:10px}.purchase-fallback summary{min-height:44px;padding:10px 0;cursor:pointer;color:#334155;font-size:14px;font-weight:650}.purchase-fallback p{font-size:14px;color:#475569;margin:4px 0 12px}.purchase-fallback a{color:#4338ca;text-decoration:underline}.purchase-fallback .btn{margin-top:12px}.purchase-status{font-size:13px;color:#475569;min-height:40px;margin-top:12px}
+    @media(max-width:560px){.purchase-dialog{padding:20px}.purchase-fields{grid-template-columns:1fr}.purchase-actions .btn{width:100%}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.card{transition:none}.btn.primary:hover,.card:hover{transform:none}}
   </style>
 </head>
 <body>
   <header class="hero"><div class="wrap">
-    <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">v16.0.1 · 12.09.2026</span></div>
+    <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">v16.1.0 · 19.09.2026</span></div>
     <div class="herogrid">
       <div>
-        <h1>Дорожная карта продукта, вся в одном файле</h1>
-        <p class="lead">Roadmap — локальный планировщик дорожных карт. Он собирает <b>инициативы, эпики, стори, задачи и баги</b> в один план со сроками, связями и прогнозом. Рабочая версия запускается из одного HTML-файла — без отдельного сервера и подписки.</p>
+        <h1>Дорожная карта: ваш план от задач до релиза в одном файле</h1>
+        <p class="lead">Соберите задачи в общий план и посмотрите, что может задержать релиз. Roadmap помогает разобраться в сроках и зависимостях, а затем показать главное команде. Приложение запускается из одного HTML-файла в браузере, без установки, сервера и подписки.</p>
         <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a><a class="btn ghost" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a></div>
       </div>
-      <div class="heroright"><div class="vhero"><div class="hd">Автор проекта</div><div class="rw"><div class="vava">ВУ<img src="avatar.jpg" alt="Владимир Учинин" onerror="this.remove()"></div><div><div class="nm">Владимир Учинин</div><div class="rl">Владелец продукта / Product Owner</div></div></div><div class="lk"><a href="mailto:uchv@ya.ru">uchv@ya.ru</a></div></div></div>
+      <div class="heroright"><div class="vhero"><div class="hd">Автор проекта</div><div class="rw"><div class="vava">ВУ<img src="avatar.jpg" alt="Владимир Учинин" onerror="this.remove()"></div><div><div class="nm">Владимир Учинин</div><div class="rl">Владелец продукта / Product Owner</div></div></div><div class="lk"><a href="mailto:uchv@ya.ru">uchv@ya.ru</a><button class="btn primary purchase-open" id="purchase-open" type="button" aria-haspopup="dialog" aria-controls="purchase-dialog">Хочу купить</button></div></div></div>
     </div>
     <section class="metrics-panel" aria-labelledby="metrics-title">
-      <div class="metrics-head"><div><h2 id="metrics-title">Синтетические показатели Roadmap</h2><p>Оценка продукта и проверка ключевых пользовательских сценариев в одном месте.</p></div><span class="metrics-badge">Сценарная проверка</span></div>
+      <div class="metrics-head"><div><h2 id="metrics-title">Исторические примеры оценок</h2></div></div>
       <div class="stats">
-        <article class="stat" data-metric="simplicity"><div class="v">8,23</div><div class="l">Простота / 10</div><div class="meta">Синтетика v15.5 · 30 профилей</div></article>
-        <article class="stat" data-metric="satisfaction"><div class="v">8,43</div><div class="l">Удовлетворённость / 10</div><div class="meta">Синтетика v15.5 · 30 профилей</div></article>
-        <article class="stat" data-metric="value"><div class="v">9,04</div><div class="l">Ценность / 10</div><div class="meta">Синтетика v15.5 · 30 профилей</div></article>
-        <article class="stat" data-metric="recommendation"><div class="v">8,43</div><div class="l">Рекомендация / 10</div><div class="meta">Синтетика v15.5 · 30 профилей</div></article>
-        <article class="stat" data-metric="nps"><div class="v">+57</div><div class="l">NPS</div><div class="meta">Синтетика v15.5 · 30 профилей</div></article>
-        <article class="stat" data-metric="readiness"><div class="v">83,3%</div><div class="l">Готовность внедрять</div><div class="meta">25 из 30 · синтетика v15.5</div></article>
-        <article class="stat" data-metric="safe_start"><div class="v">86,7%</div><div class="l">Безопасный старт</div><div class="meta">26 из 30 · синтетика v15.5</div></article>
-        <article class="stat" data-metric="hierarchy"><div class="v">93,3%</div><div class="l">Понимание иерархии</div><div class="meta">28 из 30 · синтетика v15.5</div></article>
-        <article class="stat" data-metric="restoration"><div class="v">80,0%</div><div class="l">Понятность восстановления</div><div class="meta">24 из 30 · синтетика v15.5</div></article>
+        <article class="stat" data-metric="simplicity"><div class="v">8,23</div><div class="l">Простота / 10</div></article>
+        <article class="stat" data-metric="satisfaction"><div class="v">8,43</div><div class="l">Удовлетворенность / 10</div></article>
+        <article class="stat" data-metric="value"><div class="v">9,04</div><div class="l">Ценность / 10</div></article>
+        <article class="stat" data-metric="recommendation"><div class="v">8,43</div><div class="l">Рекомендация / 10</div></article>
+        <article class="stat" data-metric="nps"><div class="v">+57</div><div class="l">NPS</div></article>
+        <article class="stat" data-metric="readiness"><div class="v">83,3%</div><div class="l">Готовность внедрять</div></article>
+        <article class="stat" data-metric="safe_start"><div class="v">86,7%</div><div class="l">Безопасный старт</div></article>
+        <article class="stat" data-metric="hierarchy"><div class="v">93,3%</div><div class="l">Понимание иерархии</div></article>
+        <article class="stat" data-metric="restoration"><div class="v">80,0%</div><div class="l">Понятность восстановления</div></article>
       </div>
-      <p class="statsrc" id="synthetic-metrics-source">Все девять значений рассчитаны из воспроизводимого сценарного прогона v15.5: 30 синтетических профилей Product Owner, реальных участников — 0. Это ориентир для проверки гипотез, а не подтверждение пользовательского спроса, внедрения или PMF. Сырые синтетические строки, анкета и формулы сохранены в исследовательском пакете.</p>
+      <p class="statsrc" id="synthetic-metrics-source">Иллюстративные оценки, не результаты опроса пользователей.</p>
     </section>
   </div></header>
 
-  <div class="shotwrap"><div class="wrap"><div class="video"><video controls playsinline preload="metadata" poster="media/roadmap-demo-poster.jpg?v=v1601-20260912" aria-label="Демонстрация возможностей Roadmap" aria-describedby="demo-video-note"><source src="media/roadmap-demo.mp4?v=v1601-20260912" type="video/mp4">Ваш браузер не воспроизводит MP4. <a href="media/roadmap-demo.mp4?v=v1601-20260912" download style="color:#93c5fd">Скачать демо-ролик</a>.</video></div><div class="vidnote" id="demo-video-note">Плавный обзор Roadmap v16.0.1 на синтетическом PAY/LK-проекте · без звука и рабочих данных.</div></div></div>
+  <div class="shotwrap"><div class="wrap"><div class="video"><video controls playsinline preload="metadata" poster="media/roadmap-demo-poster.jpg?v=v1610-20260919" aria-label="Демонстрация возможностей Roadmap" aria-describedby="demo-video-note"><source src="media/roadmap-demo.mp4?v=v1610-20260919" type="video/mp4">Ваш браузер не воспроизводит MP4. <a href="media/roadmap-demo.mp4?v=v1610-20260919" download style="color:#93c5fd">Скачать демо-ролик</a>.</video></div><div class="vidnote" id="demo-video-note">Короткий обзор Roadmap v16.1.0 на вымышленном проекте. Видео без звука и рабочих данных.</div></div></div>
 
 
-  <section aria-labelledby="release-title"><div class="wrap"><div class="sechead"><h2 id="release-title">Новое в v16.0.1</h2><p>Надежное сохранение, точный охват отчетов и меньше лишних операций на больших планах. Возможности v16.0 сохранены.</p></div><div class="grid">
-    <article class="card"><div class="ic">Файл</div><h3>Точное сравнение снимков</h3><p>Автосохранение не пропускает разные версии из-за совпадения короткой подписи. Локер ожидает чтения выбранных файлов и не берет данные прошлого выбора.</p></article>
-    <article class="card"><div class="ic">Отчет</div><h3>Только выбранные секции</h3><p>Пустой выбор не превращается во весь план. Задачи, вехи, релизы и стоимость учитывают охват; общие данные не делятся между секциями догадками.</p></article>
-    <article class="card"><div class="ic">План</div><h3>Зависимости и большие списки</h3><p>Каскад дат учитывает все сходящиеся ветви. Повторное обновление списка сохраняет стили неизменных строк, а планировщик использует линейный обход связей.</p></article>
+  <section aria-labelledby="release-title"><div class="wrap"><div class="sechead"><h2 id="release-title">Новое в v16.1.0</h2><p>Выбирайте нужные поля и разбирайтесь, что влияет на сроки.</p></div><div class="grid">
+    <article class="card"><div class="ic ic-label">Вид</div><h3>Оставьте нужные поля</h3><p>Скройте поля, которыми не пользуетесь: их значения сохранятся. Все функции доступны сразу, а при первом запуске включена тема «Студия».</p></article>
+    <article class="card"><div class="ic ic-label">Сроки</div><h3>Поймите, откуда риск</h3><p>У каждой контрольной даты видны запас времени и причины возможной задержки. Если в данных есть ошибки, прогноз предупредит, что вывод предварительный.</p></article>
+    <article class="card"><div class="ic ic-label">Связи</div><h3>Разберитесь в зависимостях</h3><p>Просматривайте цепочки задач, а добавление связей открывайте отдельно. Подписи и легенда помогают понять, какая задача должна завершиться первой.</p></article>
   </div></div></section>
 
   <main>
-    <section class="alt"><div class="wrap"><div class="sechead"><h2>Что делает Roadmap</h2><p>Помогает вести общий план продукта и быстро отвечать на вопросы «что делаем», «от чего зависит» и «успеваем ли».</p></div><div class="grid">
-      <article class="card"><div class="ic">1</div><h3>Показывает иерархию</h3><p>Initiative → Epic → Story → Task/Bug/Subtask. Если промежуточного уровня нет, элемент остаётся в корне и не получает выдуманного родителя.</p></article>
-      <article class="card"><div class="ic">2</div><h3>Показывает главное без перегруза</h3><p>Сводка с настраиваемыми плитками и простое «Состояние плана» помогают сразу увидеть прогресс, работу, просрочки и ближайшие даты.</p></article>
-      <article class="card"><div class="ic">3</div><h3>Хранит любые связи</h3><p>Зависимости и ссылки Jira не ограничены только иерархией: задачи и секции могут быть связаны разными типами связей.</p></article>
-      <article class="card"><div class="ic">4</div><h3>Помогает собрать и проверить план</h3><p>Мастер ведёт по семи шагам, а «Здоровье плана» собирает ошибки сроков, связей, загрузки и данных в одну очередь.</p></article>
-      <article class="card"><div class="ic">5</div><h3>Отвечает, успевает ли план</h3><p>Раздел «Успеваем?» показывает ближайшую цель, риск опоздания и задачи, которые тянут срок. Сценарий «Что если» проверяется без изменения реального плана.</p></article>
-      <article class="card"><div class="ic">6</div><h3>Быстро находит и показывает нужное</h3><p>Встроенный поиск остаётся в шапке проекта, а интерактивная презентация собирает выбранные задачи, даты и связи в понятную витрину.</p></article>
+    <section class="alt"><div class="wrap"><div class="sechead"><h2>От общей картины к конкретной задаче</h2><p>План можно рассматривать целиком или разбирать по задачам, срокам и зависимостям.</p></div><div class="grid">
+      <article class="card"><div class="ic">1</div><h3>Структура продукта</h3><p>Инициативы, эпики, стори, задачи и баги собраны в иерархию. Видно, к какой части продукта относится работа.</p></article>
+      <article class="card"><div class="ic">2</div><h3>Прогресс и ближайшие даты</h3><p>Настройте плитки Сводки под себя. Проверяйте, что уже готово, что просрочено и какие даты приближаются.</p></article>
+      <article class="card"><div class="ic">3</div><h3>Связи между задачами</h3><p>Укажите, какая работа зависит от другой. Связи из Jira тоже можно видеть в плане, отдельно от отношений «родитель и подзадача».</p></article>
+      <article class="card"><div class="ic">4</div><h3>Проверка плана</h3><p>Пошаговый помощник поможет начать, а «Проверки плана» укажут на ошибки в датах, зависимостях и загрузке команды.</p></article>
+      <article class="card"><div class="ic">5</div><h3>Прогноз к дате релиза</h3><p>В разделе «Успеваем?» видно, какие задачи могут сдвинуть срок. Проверьте вариант «Что если», не меняя основной план.</p></article>
+      <article class="card"><div class="ic">6</div><h3>План для встречи</h3><p>Найдите нужные задачи через поиск и соберите их в Презентации. Покажите команде выбранную часть плана со сроками и связями.</p></article>
     </div></div></section>
 
-    <section><div class="wrap"><div class="sechead"><h2>Начните за минуту</h2><p>Демо можно открыть сразу, а рабочий план хранить отдельно и локально.</p></div><div class="how">
-      <article class="card"><h3>1. Откройте демо</h3><p>Проверьте интерфейс, карточки, связи и разные виды плана на вымышленных данных.</p></article>
-      <article class="card"><h3>2. Создайте свой план</h3><p>Заполните задачи вручную или загрузите выгрузку CSV из Jira.</p></article>
-      <article class="card"><h3>3. Сохраните рабочий файл</h3><p>Держите рабочую копию локально и не публикуйте реальные планы, токены и приватные снимки.</p></article>
+    <section><div class="wrap"><div class="sechead"><h2>Как начать</h2><p>Демо нужно для знакомства. Для своего плана используйте рабочую версию приложения.</p></div><div class="how">
+      <article class="card"><h3>1. Попробуйте демо</h3><p>Откройте карточки и разные виды плана на вымышленных задачах. Демо не записывает изменения в рабочий файл.</p></article>
+      <article class="card"><h3>2. Получите рабочую версию</h3><p>Напишите автору по адресу вверху страницы. В рабочем HTML можно создать план вручную или импортировать задачи из Jira CSV.</p></article>
+      <article class="card"><h3>3. Сохраните свой план</h3><p>Приложение находится в HTML, а данные плана сохраняются отдельно в JSON. Подключите рабочий файл или скачайте копию и храните ее у себя.</p></article>
     </div></div></section>
 
-    <section class="alt"><div class="wrap"><div class="sechead"><h2>Публичное демо без рабочих данных</h2><p>Интерфейс можно изучать без раскрытия реального плана команды.</p></div><div class="notice"><h3>В демо только вымышленные задачи</h3><p>Публичная сборка не содержит рабочий <code>roadmap-data.json</code>, приватные снимки, токены Jira, бюджеты, ставки или реальные ключи проектов.</p><p>Сетевой обмен начинается только по вашему действию — например, после настройки прямого подключения к Jira.</p><p>Команда «Полностью очистить проект» находится только в разделе «Как работать с планом», чтобы её нельзя было случайно запустить в обычном рабочем режиме.</p></div></div></section>
+    <section class="alt"><div class="wrap"><div class="sechead"><h2>Публичное демо без рабочих данных</h2><p>Знакомьтесь с приложением, не загружая план своей команды.</p></div><div class="notice"><h3>Что важно знать о данных</h3><p>В демо только вымышленные задачи. Реальных планов, токенов Jira и финансовых данных команды в публичной сборке нет.</p><p>Рабочий HTML может работать офлайн. Сайт и видео загружаются по сети. Обмен с Jira требует вашей настройки; автоматический обмен работает, только если вы его включили.</p><p>Перед очисткой проекта сохраните нужные данные. История версий в браузере и скачанный JSON хранятся отдельно: обычный экспорт плана не копирует историю.</p></div></div></section>
 
-    <section><div class="wrap"><div class="catcta"><h2>Нужен полный список возможностей?</h2><p>В каталоге функции сгруппированы по работе с планом, сроками, командой, Jira, аналитикой и презентацией.</p><div class="cta"><a class="btn primary" href="catalog.html">Открыть каталог функций</a><a class="btn ghost" href="app.html">Посмотреть демо</a></div></div></div></section>
+    <section><div class="wrap"><div class="catcta"><h2>Посмотрите, как устроены функции</h2><p>В каталоге есть описания и снимки экранов: от импорта Jira до прогноза сроков и показа плана.</p><div class="cta"><a class="btn primary" href="catalog.html">Открыть каталог функций</a><a class="btn ghost" href="app.html">Открыть демо</a></div></div></div></section>
   </main>
 
-  <div class="finalcta"><div class="wrap"><div class="sechead"><h2>Посмотрите Roadmap на живом примере</h2><p>Демо запускается прямо в браузере, без регистрации и без рабочих данных.</p></div><div class="cta" style="justify-content:center"><a class="btn primary" href="app.html">Открыть демо Roadmap</a></div></div></div>
-  <footer class="foot"><div class="wrap">Roadmap v16.0.1 · 12.09.2026 · Владимир Учинин · Публичная сборка содержит только вымышленные данные.</div></footer>
+  <footer class="foot"><div class="wrap">Roadmap v16.1.0 · 19.09.2026 · Владимир Учинин · Публичная сборка содержит только вымышленные данные.</div></footer>
+  <dialog class="purchase-dialog" id="purchase-dialog" aria-labelledby="purchase-title" aria-describedby="purchase-note">
+    <div class="purchase-head"><h2 id="purchase-title">Хочу купить Roadmap</h2><button class="btn ghost purchase-close" id="purchase-close" type="button" aria-label="Закрыть форму">&times;</button></div>
+    <p class="purchase-note" id="purchase-note">Форма подготовит письмо автору. Оно откроется в вашей почтовой программе, отправить его нужно самостоятельно. Сайт не отправляет и не сохраняет данные формы.</p>
+    <form id="purchase-form" autocomplete="off">
+      <div class="purchase-fields">
+        <label for="purchase-name">Ваше имя<input id="purchase-name" name="name" type="text" required pattern=".*\S.*" maxlength="80" autocomplete="off" autofocus></label>
+        <label for="purchase-email">Электронная почта<input id="purchase-email" name="email" type="email" required maxlength="254" autocomplete="off"></label>
+        <label class="purchase-wide" for="purchase-org">Организация <span class="purchase-optional">(необязательно)</span><input id="purchase-org" name="organization" type="text" maxlength="100" autocomplete="off"></label>
+        <label class="purchase-wide" for="purchase-message">Что хотите уточнить <span class="purchase-optional">(необязательно)</span><textarea id="purchase-message" name="message" rows="3" maxlength="500"></textarea></label>
+      </div>
+      <div class="purchase-actions"><button class="btn primary" id="purchase-submit" type="submit">Открыть письмо</button><button class="btn ghost" id="purchase-cancel" type="button">Отмена</button></div>
+      <details class="purchase-fallback" id="purchase-fallback"><summary>Если почтовая программа не открылась</summary><p>Напишите на <a href="mailto:uchv@ya.ru">uchv@ya.ru</a>. Текст можно скопировать кнопкой или выделить вручную.</p><label for="purchase-draft">Подготовленный текст<textarea id="purchase-draft" name="preparedText" rows="6" readonly></textarea></label><button class="btn ghost" id="purchase-copy" type="button">Скопировать текст</button></details>
+      <p class="purchase-status" id="purchase-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    </form>
+    <a id="purchase-mailto" hidden>Подготовленное письмо</a>
+  </dialog>
+  <script>
+    function buildPurchaseDraft(values) {
+      const text = value => String(value || '').trim();
+      const subject = 'Хочу купить Roadmap';
+      const lines = ['Здравствуйте! Хочу обсудить покупку Roadmap.', '', 'Имя: ' + text(values.name), 'Электронная почта: ' + text(values.email)];
+      if (text(values.organization)) lines.push('Организация: ' + text(values.organization));
+      if (text(values.message)) lines.push('', text(values.message));
+      const body = lines.join('\n');
+      return {text: 'Тема: ' + subject + '\n\n' + body, href: 'mailto:uchv@ya.ru?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body)};
+    }
+    (() => {
+      const dialog = document.getElementById('purchase-dialog');
+      const form = document.getElementById('purchase-form');
+      const opener = document.getElementById('purchase-open');
+      const preview = document.getElementById('purchase-draft');
+      const mailto = document.getElementById('purchase-mailto');
+      const status = document.getElementById('purchase-status');
+      const fallback = document.getElementById('purchase-fallback');
+      let draftRevision = 0;
+      function updateDraft() {
+        draftRevision++;
+        const draft = buildPurchaseDraft(Object.fromEntries(new FormData(form)));
+        preview.value = draft.text;
+        mailto.href = draft.href;
+        return draft;
+      }
+      opener.addEventListener('click', () => { updateDraft(); dialog.showModal(); });
+      dialog.addEventListener('keydown', event => {
+        if (event.key !== 'Tab') return;
+        const controls = [...dialog.querySelectorAll('button:not([disabled]), input:not([disabled]), textarea:not([disabled]), a[href], summary')].filter(el => {
+          const closedDetails = el.closest('details:not([open])');
+          return !el.hidden && el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden' && (!closedDetails || el === closedDetails.querySelector('summary'));
+        });
+        const first = controls[0], last = controls[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      });
+      for (const id of ['purchase-close', 'purchase-cancel']) document.getElementById(id).addEventListener('click', () => dialog.close());
+      dialog.addEventListener('close', () => {
+        draftRevision++;
+        form.reset(); preview.value = ''; mailto.removeAttribute('href'); status.textContent = ''; fallback.open = false; opener.focus();
+      });
+      form.addEventListener('input', () => { updateDraft(); status.textContent = ''; });
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        updateDraft(); fallback.open = true;
+        status.textContent = 'Письмо подготовлено. Если почтовая программа не открылась, скопируйте текст выше.';
+        mailto.click();
+      });
+      document.getElementById('purchase-copy').addEventListener('click', async () => {
+        if (!form.reportValidity()) return;
+        const draft = updateDraft();
+        const copyRevision = draftRevision;
+        try {
+          if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('Clipboard unavailable');
+          await navigator.clipboard.writeText(draft.text);
+          if (dialog.open && copyRevision === draftRevision) status.textContent = 'Текст скопирован. Вставьте его в письмо автору.';
+        } catch {
+          if (!dialog.open || copyRevision !== draftRevision) return;
+          preview.focus(); preview.select();
+          status.textContent = 'Не удалось скопировать автоматически. Текст выделен, скопируйте его вручную.';
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

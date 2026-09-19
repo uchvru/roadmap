@@ -64,7 +64,9 @@ jobs:
   release:
     name: Publish GitHub Release
     needs: package
-    if: github.event_name == 'push' || inputs.publish_release == true
+    # A tag verifies/packages the site but must not add an unrequested Release asset.
+    # Public release ZIPs and their checksums are uploaded after the final local gate.
+    if: github.event_name == 'workflow_dispatch' && inputs.publish_release == true
     runs-on: ubuntu-latest
     timeout-minutes: 8
     permissions:
