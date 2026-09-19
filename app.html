@@ -34352,6 +34352,49 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (targetEnd && ((statusMapping.isFinal && resolved) || !manualEnd) && String(existing.end || '') !== String(targetEnd)) return true;
       return false;
     }
+    function _jiraComputeRowDiff(existing, issue, statusRegistry) {
+      if (!existing) return [];
+      const diffs = [];
+      const title = firstNonEmpty(issue, ['Тема', 'Summary']);
+      if (title && String(existing.name || '') !== String(title)) {
+        diffs.push({ field: 'name', label: 'Название', was: existing.name || '', now: title, conflict: false });
+      }
+      const incomingStatus = jiraStatusSource(issue);
+      const rawStatus = incomingStatus.name;
+      const statusMapping = resolveJiraStatus(incomingStatus, statusRegistry);
+      const mappedStatus = statusMapping.id;
+      if (rawStatus && String(existing.status || '') !== String(mappedStatus)) {
+        diffs.push({ field: 'status', label: 'Статус', was: existing.status || '—', now: mappedStatus || rawStatus, conflict: false });
+      }
+      const resource = firstNonEmpty(issue, ['Исполнитель', 'Assignee', 'Пользовательское поле (Owner)', 'Пользовательское поле (Owner).1']);
+      if (resource && String(existing.resource || '') !== String(resource)) {
+        diffs.push({ field: 'resource', label: 'Исполнитель', was: existing.resource || '—', now: resource, conflict: false });
+      }
+      let start = parseJiraDate(firstNonEmpty(issue, START_COL_KEYS));
+      let end = parseJiraDate(firstNonEmpty(issue, END_COL_KEYS));
+      const resolved = parseJiraDate(firstNonEmpty(issue, RESOLVED_COL_KEYS));
+      if (start && end && String(end) < String(start)) { const tmp = end; end = start; start = tmp; }
+      const syncStart = (existing._jiraSync && existing._jiraSync.start) || '';
+      const syncEnd = (existing._jiraSync && existing._jiraSync.end) || '';
+      const manualStart = !existing._jiraSync || String(existing.start || '') !== String(syncStart);
+      const manualEnd = !existing._jiraSync || String(existing.end || '') !== String(syncEnd);
+      if (start && String(existing.start || '') !== String(start)) {
+        diffs.push({ field: 'start', label: 'Старт', was: existing.start || '—', now: start, conflict: manualStart });
+      }
+      const targetEnd = statusMapping.isFinal && resolved ? resolved : end;
+      if (targetEnd && String(existing.end || '') !== String(targetEnd)) {
+        diffs.push({ field: 'end', label: 'Окончание', was: existing.end || '—', now: targetEnd, conflict: manualEnd });
+      }
+      const storyPoints = firstNonEmpty(issue, ['Пользовательское поле (Story Points)', 'Story Points', 'Пользовательское поле (Estimate)']);
+      if (storyPoints && String(existing.storyPoints || '') !== String(storyPoints)) {
+        diffs.push({ field: 'storyPoints', label: 'Story Points', was: existing.storyPoints || '—', now: storyPoints, conflict: false });
+      }
+      const sprint = getJiraSprint(issue);
+      if (sprint && String(existing.sprint || '') !== String(sprint)) {
+        diffs.push({ field: 'sprint', label: 'Спринт', was: existing.sprint || '—', now: sprint, conflict: false });
+      }
+      return diffs;
+    }
     function _jiraBuildImportPreviewRows(issues, statusIssues) {
       const active = new Map((roadmapData || []).filter(Boolean).map(t => [_jiraPreviewKey(t.jira), t]).filter(pair => pair[0]));
       const archived = new Map((archivedTasks || []).filter(Boolean).map(t => [_jiraPreviewKey(t.jira), t]).filter(pair => pair[0]));
@@ -34395,10 +34438,21 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         const resolved = completed ? parseJiraDate(firstNonEmpty(row.issue, RESOLVED_COL_KEYS)) : '';
         const targetEnd = resolved || end || start || '';
         const autoArchive = rank > 2 && completed && targetEnd && targetEnd < yearStart;
-        if (archivedTask) row.state = _jiraPreviewHasChanges(archivedTask, row.issue,statusRegistry) ? 'archive' : 'unchanged';
-        else if (autoArchive) row.state = 'to_archive';
-        else if (row.linkTaskId !== null) row.state = 'link';
-        else if (existing) row.state = _jiraPreviewHasChanges(existing, row.issue,statusRegistry) ? 'update' : 'unchanged';
+        if (archivedTask) {
+          row.diffs = _jiraComputeRowDiff(archivedTask, row.issue, statusRegistry);
+          row.state = _jiraPreviewHasChanges(archivedTask, row.issue, statusRegistry) ? 'archive' : 'unchanged';
+        } else if (autoArchive) {
+          row.diffs = [];
+          row.state = 'to_archive';
+        } else if (row.linkTaskId !== null) {
+          row.diffs = existing ? _jiraComputeRowDiff(existing, row.issue, statusRegistry) : [];
+          row.state = 'link';
+        } else if (existing) {
+          row.diffs = _jiraComputeRowDiff(existing, row.issue, statusRegistry);
+          row.state = _jiraPreviewHasChanges(existing, row.issue, statusRegistry) ? 'update' : 'unchanged';
+        } else {
+          row.diffs = [];
+        }
       });
       return rows;
     }
@@ -34424,7 +34478,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         const badgeText={new:'Новая',update:'Изменится',link:'Связать с задачей',archive:'Обновится в архиве',to_archive:r.linkTaskId!==null?'Связать и в архив':'В архив',unchanged:'Без изменений'}[r.state];
         const badgeClass=r.state==='new'?'text-emerald-700 bg-emerald-50':(['update','link'].includes(r.state)?'text-indigo-700 bg-indigo-50':(['archive','to_archive'].includes(r.state)?'text-amber-800 bg-amber-50':'text-slate-500 bg-slate-100'));
         const detail=(r.linkTaskId!==null?' · существующая задача #'+r.linkTaskId:'')+(r.state==='to_archive'?' · завершена до начала текущего года':'');
-        return `<label class="flex items-start gap-2.5 px-3 py-2 border-b border-slate-100 last:border-0 ${skip?'opacity-60':'hover:bg-slate-50 cursor-pointer'}"><input data-jira-preview="${i}" onchange="renderJiraImportStatusSummary()" type="checkbox" ${skip?'disabled':'checked'} class="mt-0.5 rounded border-slate-300 text-indigo-600"><div class="grow min-w-0"><div class="text-xs font-semibold text-slate-800 truncate">${escHtml(r.title)}</div><div class="text-[10px] text-slate-500 mt-0.5">${escHtml(r.key+detail)}</div></div><span class="shrink-0 text-[9px] font-bold rounded-full px-2 py-1 ${badgeClass}">${badgeText}</span></label>`;
+        const diffHtml = (r.diffs && r.diffs.length) ? `<div class="mt-1.5 flex flex-wrap gap-1.5">${r.diffs.map(d => `<span class="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 ${d.conflict ? 'border-amber-300 bg-amber-50 text-amber-900' : ''}"><b>${escHtml(d.label)}:</b>&nbsp;<span class="line-through opacity-60">${escHtml(d.was)}</span>&nbsp;➔&nbsp;<span class="font-semibold">${escHtml(d.now)}</span>${d.conflict ? '&nbsp;<span class="text-[9px] text-amber-700 font-bold">(ручная дата)</span>' : ''}</span>`).join('')}</div>` : '';
+        return `<div class="p-3 border-b border-slate-100 last:border-0 ${skip?'opacity-60':'hover:bg-slate-50/80'}"><label class="flex items-start gap-2.5 ${skip?'':'cursor-pointer'}"><input data-jira-preview="${i}" onchange="renderJiraImportStatusSummary()" type="checkbox" ${skip?'disabled':'checked'} class="mt-0.5 rounded border-slate-300 text-indigo-600"><div class="grow min-w-0"><div class="text-xs font-semibold text-slate-800 truncate">${escHtml(r.title)}</div><div class="text-[10px] text-slate-500 mt-0.5">${escHtml(r.key+detail)}</div>${diffHtml}</div><span class="shrink-0 text-[9px] font-bold rounded-full px-2 py-1 ${badgeClass}">${badgeText}</span></label></div>`;
       }).join('');
       modal.innerHTML=`<div class="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-3xl max-h-[88vh] flex flex-col overflow-hidden"><div class="jira-import-preview-header px-5 py-4 border-b border-slate-100"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><h3 class="text-lg font-semibold text-slate-900">Проверьте импорт из Jira</h3><p class="text-xs text-slate-500 mt-1">Данные еще не изменены. Снимите галочку, если строку не нужно загружать.</p></div><button type="button" onclick="closeJiraImportPreview()" aria-label="Закрыть" title="Закрыть" class="shrink-0 w-9 h-9 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50">×</button></div><div class="jira-import-preview-summary"><div class="rounded-xl bg-emerald-50 p-2.5"><b class="text-emerald-700">${counts.new}</b><span class="block text-[10px] text-emerald-700">новых</span></div><div class="rounded-xl bg-indigo-50 p-2.5"><b class="text-indigo-700">${counts.update}</b><span class="block text-[10px] text-indigo-700">изменятся или свяжутся</span></div><div class="rounded-xl bg-amber-50 p-2.5"><b class="text-amber-800">${counts.archive}</b><span class="block text-[10px] text-amber-800">действия с архивом</span></div><div class="rounded-xl bg-slate-100 p-2.5"><b class="text-slate-700">${counts.unchanged}</b><span class="block text-[10px] text-slate-600">без изменений</span></div></div></div><div class="jira-import-preview-list overflow-y-auto grow"><div id="jiraImportStatusSummary">${importStatusSummaryHtml(jiraImportStatusSummary(_jiraPreviewRows.filter(r=>r.state!=='unchanged')),false)}</div>${rows||'<div class="p-8 text-center text-sm text-slate-500">Нет задач для импорта</div>'}</div><div class="jira-import-preview-footer px-5 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3"><span class="text-[10px] text-slate-500">Архивные задачи останутся в архиве. Перенос и привязка к существующим задачам отмечены в списке.</span><div class="flex gap-2"><button type="button" onclick="closeJiraImportPreview()" class="h-9 px-4 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Отмена</button><button id="jiraImportPreviewApply" type="button" onclick="applyJiraImportPreview()" ${selectable?'':'disabled'} class="h-9 px-4 rounded-xl bg-indigo-600 text-white text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed">Применить выбранное</button></div></div></div>`;
       document.body.appendChild(modal); if(typeof syncBodyScrollLock==='function')syncBodyScrollLock(); setTimeout(function(){const first=modal.querySelector('input:not([disabled]),button');if(first)first.focus();},40);
