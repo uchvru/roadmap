@@ -135,7 +135,21 @@ jobs:
           else
             gh release create "$TAG" roadmap-site-public.zip --target "$GITHUB_SHA" --title "Roadmap $TAG" $NOTES_ARG
           fi
-
+      - name: Prune old releases (keep latest 5)
+        if: steps.tag.outputs.should_publish == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "Получение списка существующих релизов..."
+          RELEASES_TO_DELETE=$(gh release list --limit 100 --json tagName --jq '.[5:][].tagName')
+          if [ -n "$RELEASES_TO_DELETE" ]; then
+            for rtag in $RELEASES_TO_DELETE; do
+              echo "Удаление устаревшего релиза: $rtag"
+              gh release delete "$rtag" -y || true
+            done
+          else
+            echo "Устаревших релизов для удаления нет (сохраняются последние 5)."
+          fi
   pages:
     name: Deploy GitHub Pages
     needs: package
