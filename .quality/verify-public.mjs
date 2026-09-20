@@ -109,7 +109,7 @@ const allFiles = walk();
 // renamed exports and access notes cannot bypass filename or content heuristics.
 const privateNames = ['roadmap-mpv0.html', 'roadmap-online.html', 'roadmap-online-r.html', 'roadmap-online-n.html'];
 const allowedFiles = new Set([
-  '.gitignore', '.githooks/pre-commit', '.quality/README.md', '.quality/verify-public.mjs', '.quality/verify-sync.mjs',
+  '.gitignore', '.githooks/pre-commit', '.quality/README.md', '.quality/verify-public.mjs', '.quality/verify-sync.mjs', '.quality/bump-version.py',
   '.github/workflows/README.md', '.github/workflows/quality.yml', '.github/workflows/release.yml',
   'index.html', 'app.html', 'catalog.html', 'README.md', 'RELEASE_NOTES.md', 'LICENSE', 'avatar.jpg', 'robots.txt',
   'Инструкция_Roadmap.md', 'Локер-роадмапов.html', 'schemas/roadmap-data.schema.json',
