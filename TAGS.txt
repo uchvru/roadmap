@@ -1,0 +1,11 @@
+Список Git-тегов Roadmap
+
+Тег          Commit                                     Сообщение
+---          ------                                     --------
+v15.9        3af35518b2cb9097fac83e6b0a17b00a8063c262   Release Roadmap v15.9: consistent UI, archive performance and verified media
+v16.0.1      1d0714207ac69c6ad1b2c54a41ea4a1ce0bb1820   Roadmap v16.0.1
+v16.1.0      9b53fadcd5e730d2e607acc0fb0d1529bb2eb5c4   Roadmap v16.1.0
+v16.2.0      958f3cdad6207dd7509a44f9ae45ad98e3459961   Release v16.2.0: resource capacity filters, Gantt overload badges, and PDF capacity slide
+v16.3.0      91ab3566533cd40fd36bd75e960594d9141f0ec7   Roadmap v16.3.0
+v16.4.0      c1a3b7a00ecd8876b92e57e9ef37213f7e0fdbd1   Release v16.4.0
+v16.5.0      10d5e64409e33f9d43966873b1bc1bc73b895cda   Roadmap v16.5.0
