@@ -8056,6 +8056,23 @@
    #taskDetailsHint,#taskAdvancedHint,#taskTalkHint,#taskLinksHint {
      min-width:0; text-align:right; overflow-wrap:anywhere; word-break:normal; line-height:1.35;
    }
+   #taskForm .task-primary-grid {
+     grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));
+   }
+   #taskForm .task-primary-grid > * { min-width:0; }
+   #taskForm .task-parameters { grid-column:1/-1; }
+   #taskForm .task-kind-field { min-width:0; max-width:100%; flex-wrap:wrap; }
+   #taskForm #taskKind { min-width:0; max-width:100%; }
+   #taskForm #taskExtPartyWrap { min-width:0; width:100%; flex-wrap:wrap; align-items:flex-start; }
+   #taskForm .task-external-field { display:flex; flex-direction:column; gap:.375rem; min-width:0; flex:1 1 12rem; }
+   #taskForm .task-external-field input { min-width:0; width:100%; max-width:100%; }
+   .rm-cutoff-label,.rm-cutoff-label > span,.rm-cutoff-label > button {
+     color:var(--rm-cutoff-ink,#000) !important;
+     -webkit-text-fill-color:currentColor;
+   }
+   .rm-cutoff-label > button:is(:hover,:focus-visible) {
+     outline:2px solid currentColor; outline-offset:-1px;
+   }
    .task-wsjf-row > span {
      min-width:0; flex:1 1 18rem; overflow-wrap:anywhere; word-break:normal; line-height:1.45;
    }
@@ -9397,7 +9414,7 @@
           <div id="taskNameError" class="hidden mt-1 text-[10px] font-medium text-rose-600">Введите короткое и понятное название</div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-start">
+        <div class="task-primary-grid grid gap-4 items-start">
           <div>
             <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Секция плана</label>
             <select id="taskSection" class="w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all cursor-pointer"></select>
@@ -9412,13 +9429,13 @@
             <div id="taskLeaveWarn" class="hidden mt-1 text-[10px] font-medium text-amber-700"></div>
           </div>
           <div class="card-more-wrap" style="grid-column:1/-1"><button type="button" id="cardMoreBtn" onclick="toggleCardAdv()" class="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-100 cursor-pointer" title="Показать тип и приоритет задачи">Тип и приоритет</button></div>
-          <div>
+          <div class="task-parameters">
             <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Параметры</label>
             <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 min-h-9 bg-slate-50/50 px-3 py-2 rounded-xl border border-slate-100">
             <span class="inline-flex items-center gap-1.5"><input type="checkbox" id="taskIsMilestone" onchange="toggleMilestoneMode()" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500/20 w-4 h-4 cursor-pointer"><label for="taskIsMilestone" class="text-xs font-medium text-slate-700 cursor-pointer select-none">Веха</label></span>
             <span class="inline-flex items-center gap-1.5"><input type="checkbox" id="taskIsBlocker" class="rounded border-slate-300 text-rose-600 focus:ring-rose-500/20 w-4 h-4 cursor-pointer"><label for="taskIsBlocker" class="text-xs font-medium text-rose-700 cursor-pointer select-none">Блокер</label></span>
-            <span class="inline-flex items-center gap-1.5" data-adv><label for="taskKind" class="text-xs font-medium text-slate-600 cursor-pointer select-none">Тип</label><select id="taskKind" onchange="_taskKindFormToggle()" aria-label="Тип задачи" class="h-9 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 cursor-pointer"><option value="">Обычная</option><option value="incident">Инцидент</option><option value="hotfix">Хотфикс</option><option value="extdep">Внешняя зависимость</option><option value="research">Исследование</option></select></span>
-            <span id="taskExtPartyWrap" data-adv class="inline-flex items-center gap-1.5 hidden"><label for="taskExtParty" class="text-xs font-medium text-slate-600 select-none">Сторона</label><input type="text" id="taskExtParty" placeholder="подрядчик / отдел" aria-label="Внешняя ответственная сторона" class="h-8 px-2 w-40 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500"><label for="taskExtEta" class="text-xs font-medium text-slate-600 select-none ml-1">Ожидаемая дата</label><input type="date" id="taskExtEta" aria-label="Ожидаемая дата от внешней стороны" title="Ожидаемая дата готовности от внешней стороны, для контроля просрочки" class="h-8 px-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500"></span>
+            <span class="task-kind-field inline-flex items-center gap-1.5" data-adv><label for="taskKind" class="text-xs font-medium text-slate-600 cursor-pointer select-none">Тип</label><select id="taskKind" onchange="_taskKindFormToggle()" aria-label="Тип задачи" class="h-9 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 cursor-pointer"><option value="">Обычная</option><option value="incident">Инцидент</option><option value="hotfix">Хотфикс</option><option value="extdep">Внешняя зависимость</option><option value="research">Исследование</option></select></span>
+            <span id="taskExtPartyWrap" data-adv class="inline-flex items-center gap-1.5 hidden"><span class="task-external-field"><label for="taskExtParty" class="text-xs font-medium text-slate-600 select-none">Сторона</label><input type="text" id="taskExtParty" placeholder="подрядчик / отдел" aria-label="Внешняя ответственная сторона" class="h-8 px-2 w-40 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500"></span><span class="task-external-field"><label for="taskExtEta" class="text-xs font-medium text-slate-600 select-none">Ожидаемая дата</label><input type="date" id="taskExtEta" aria-label="Ожидаемая дата от внешней стороны" title="Ожидаемая дата готовности от внешней стороны, для контроля просрочки" class="h-8 px-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500"></span></span>
             </div>
           </div>
         </div>
@@ -17364,6 +17381,7 @@ if (typeof globalThis !== 'undefined') {
       document.body.classList.toggle('theme-studio', theme === 'studio');
       try { storage.set('gantt_ui_theme', theme); } catch (e) {}
       updateUiThemeBtns();
+      refreshCutoffLabelInk();
     }
     function _applyGlassVars() {
       let op = parseInt(safeStorageGet('gantt_glass_opacity', '30'), 10); if (!Number.isFinite(op)) op = 30;
@@ -28677,6 +28695,25 @@ const m = document.getElementById('mineModeBtn');
       window.addEventListener('pointercancel', cancel);
       window.addEventListener('keydown', onKeyDown);
     }
+    function cutoffContrastInk(rgb) {
+      const luminance = rgb.slice(0, 3).map(value => { const c = value / 255; return c <= .04045 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); }).reduce((sum, value, index) => sum + value * [.2126, .7152, .0722][index], 0);
+      return (luminance + .05) / .05 >= 1.05 / (luminance + .05) ? '#000000' : '#ffffff';
+    }
+    function refreshCutoffLabelInk(root = document) {
+      const labels = root.querySelectorAll('.rm-cutoff-label');
+      if (!labels.length) return;
+      const canvas = document.createElement('canvas'); canvas.width = canvas.height = 1;
+      const context = canvas.getContext('2d', { willReadFrequently:true });
+      const colors = new Map();
+      labels.forEach(label => {
+        const background = getComputedStyle(label).backgroundColor;
+        if (!colors.has(background)) {
+          context.clearRect(0, 0, 1, 1); context.fillStyle = background; context.fillRect(0, 0, 1, 1);
+          colors.set(background, cutoffContrastInk(Array.from(context.getImageData(0, 0, 1, 1).data)));
+        }
+        label.style.setProperty('--rm-cutoff-ink', colors.get(background));
+      });
+    }
     function _taskCapacityOverload(task) {
       try {
         if (!task || task.isMilestone || !task.start || !task.end || isFinalStatus(task.status) || isHeldStatus(task.status)) return null;
@@ -28823,18 +28860,20 @@ const m = document.getElementById('mineModeBtn');
           cLine.className = `absolute top-0 bottom-0 w-px border-l-2 border-dashed ${borderClass} z-20`;
           cLine.style.left = `${cLeft}px`;
           const cLabel = document.createElement('div');
-          cLabel.className = `absolute -left-12 ${bgClass} text-white text-[10px] font-medium px-1.5 py-0.5 rounded shadow-xs whitespace-nowrap flex items-center gap-1 cursor-pointer`;
+          cLabel.className = `rm-cutoff-label absolute -left-12 ${bgClass} text-[10px] font-medium px-1.5 py-0.5 rounded shadow-xs whitespace-nowrap flex items-center gap-1 cursor-pointer`;
+          cLabel.dataset.cutoffId = cutoff.id;
           cLabel.style.top = `${24 + (_coLane[cutoff.id] || 0) * 22}px`;
           // В read-only подпись не должна нести onclick (иначе правило body.read-only [onclick*="openCutoffModal"] прячет текст метки)
           const _roCut = (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE);
           const _apMark = cutoff.approved ? '\u2713 ' : '';
           cLabel.innerHTML = _roCut
             ? `<span>${_apMark}${escHtml(cutoff.name)} (${escHtml(formatDateString(cutoff.date))})</span>`
-            : `<span onclick="openCutoffModal('${escAttr(cutoff.id)}')" class="hover:underline">${_apMark}${escHtml(cutoff.name)} (${escHtml(formatDateString(cutoff.date))})</span><button type="button" onclick="deleteCutoffLine('${escAttr(cutoff.id)}')" aria-label="Удалить метку" title="Удалить метку" class="font-bold ml-1 text-[10px] hover:text-white/70 cursor-pointer">✕</button>`;
+            : `<span onclick="openCutoffModal('${escAttr(cutoff.id)}')" class="hover:underline">${_apMark}${escHtml(cutoff.name)} (${escHtml(formatDateString(cutoff.date))})</span><button type="button" onclick="deleteCutoffLine('${escAttr(cutoff.id)}')" aria-label="Удалить метку" title="Удалить метку" class="font-bold ml-1 text-[10px] cursor-pointer">✕</button>`;
           cLine.appendChild(cLabel);
           // Подпись снизу: чтобы при прокрутке к концу списка было видно, что это за отсечка
           const cLabelBot = document.createElement('div');
-          cLabelBot.className = `no-image-export absolute -left-12 ${bgClass} text-white text-[10px] font-medium px-1.5 py-0.5 rounded shadow-xs whitespace-nowrap cursor-pointer z-20`;
+          cLabelBot.className = `rm-cutoff-label no-image-export absolute -left-12 ${bgClass} text-[10px] font-medium px-1.5 py-0.5 rounded shadow-xs whitespace-nowrap cursor-pointer z-20`;
+          cLabelBot.dataset.cutoffId = cutoff.id;
           cLabelBot.style.bottom = `${4 + (_coLane[cutoff.id] || 0) * 22}px`; // та же раскладка по дорожкам, что и у верхней метки , близкие подписи не налезают
           cLabelBot.innerHTML = _roCut
             ? `<span>${_apMark}${escHtml(cutoff.name)} (${escHtml(formatDateString(cutoff.date))})</span>`
@@ -28868,6 +28907,7 @@ const m = document.getElementById('mineModeBtn');
             window.addEventListener('pointermove', onMouseMove); window.addEventListener('pointerup', onMouseUp);
           });
           barsContainer.appendChild(cLine);
+          refreshCutoffLabelInk(cLine);
           return;
         }
         // Кластер из 2+ отсечек: одна линия + кружок со счетчиком, по клику , список всех (п.4)
