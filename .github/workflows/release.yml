@@ -65,6 +65,7 @@ jobs:
   release:
     name: Publish GitHub Release
     needs: package
+    if: github.event_name == 'workflow_dispatch' && inputs.publish_release == true
     runs-on: ubuntu-latest
     timeout-minutes: 8
     permissions:
@@ -75,39 +76,9 @@ jobs:
       - name: Resolve and validate tag
         id: tag
         env:
-          EVENT_NAME: ${{ github.event_name }}
-          REF_NAME: ${{ github.ref_name }}
           MANUAL_TAG: ${{ inputs.release_tag }}
-          MANUAL_PUBLISH: ${{ inputs.publish_release }}
         run: |
-          TAG=""
-          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
-            if [ "$MANUAL_PUBLISH" != "true" ]; then
-              echo "Ручной запуск без флага публикации Release."
-              exit 0
-            fi
-            TAG="$MANUAL_TAG"
-          elif [ "$EVENT_NAME" = "push" ] && printf '%s' "$REF_NAME" | grep -Eq '^v[0-9]+'; then
-            TAG="$REF_NAME"
-          else
-            # Автоматическое определение версии из README.md при обычном push в main
-            DETECTED=$(grep -oE '\*\*v[0-9]+\.[0-9]+(\.[0-9]+)?' README.md | head -n 1 | tr -d '*')
-            if [ -n "$DETECTED" ]; then
-              if gh release view "$DETECTED" >/dev/null 2>&1; then
-                echo "Релиз $DETECTED уже существует. Пропуск."
-                exit 0
-              else
-                echo "Найдена новая версия в README.md: $DETECTED"
-                TAG="$DETECTED"
-              fi
-            fi
-          fi
-
-          if [ -z "$TAG" ]; then
-            echo "Версия для публикации не определена. Пропуск."
-            exit 0
-          fi
-
+          TAG="$MANUAL_TAG"
           if ! printf '%s' "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
             echo "Тег должен иметь вид vX.Y или vX.Y.Z: $TAG" >&2
             exit 1
@@ -134,21 +105,6 @@ jobs:
             gh release edit "$TAG" --target "$GITHUB_SHA" --title "Roadmap $TAG" $NOTES_ARG
           else
             gh release create "$TAG" roadmap-site-public.zip --target "$GITHUB_SHA" --title "Roadmap $TAG" $NOTES_ARG
-          fi
-      - name: Prune old releases (keep latest 5)
-        if: steps.tag.outputs.should_publish == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          echo "Получение списка существующих релизов..."
-          RELEASES_TO_DELETE=$(gh release list --limit 100 --json tagName --jq '.[5:][].tagName')
-          if [ -n "$RELEASES_TO_DELETE" ]; then
-            for rtag in $RELEASES_TO_DELETE; do
-              echo "Удаление устаревшего релиза: $rtag"
-              gh release delete "$rtag" -y || true
-            done
-          else
-            echo "Устаревших релизов для удаления нет (сохраняются последние 5)."
           fi
   pages:
     name: Deploy GitHub Pages

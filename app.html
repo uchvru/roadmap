@@ -7459,6 +7459,14 @@
    #jiraImportPreviewModal .jira-import-preview-list { min-height:0; overflow-y:auto; }
    #jiraImportPreviewModal .jira-import-preview-footer { flex:none; }
    #jiraImportPreviewModal [data-jira-preview] { flex:none; }
+   #jiraImportPreviewModal .jira-preview-diffs { display:flex; flex-wrap:wrap; gap:.375rem; margin-top:.375rem; min-width:0; }
+   #jiraImportPreviewModal .jira-preview-diff { display:inline-flex; flex-wrap:wrap; align-items:baseline; gap:.2rem; min-width:0; max-width:100%; }
+   #jiraImportPreviewModal .jira-preview-diff > * { min-width:0; max-width:100%; overflow-wrap:anywhere; }
+   #taskModal .task-modal-header { align-items:flex-start; gap:.75rem; }
+   #taskModal .task-modal-heading { display:grid; grid-template-columns:2.25rem minmax(0,1fr) auto; gap:.5rem .75rem; flex:1; align-items:center; }
+   #taskModal #modalTitle { min-width:0; word-break:normal; overflow-wrap:normal; }
+   #taskModal .task-heading-meta { grid-column:2 / -1; display:flex; flex-wrap:wrap; align-items:center; gap:.375rem; min-width:0; }
+   #taskModal .task-heading-meta > * { max-width:100%; min-width:0; overflow-wrap:anywhere; }
    .import-status-summary { margin:.75rem; color:var(--rm-text); font-size:var(--rm-font-xs); line-height:1.45; }
    #csvMapPreview .import-status-summary { margin:.75rem 0; }
    .import-status-summary details { border:1px solid var(--rm-border); border-radius:var(--rm-radius, .5rem); background:var(--rm-surface); }
@@ -8893,7 +8901,7 @@
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v16.5.0</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v16.5.1</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9381,10 +9389,11 @@
 
   <div id="taskModal" data-rm-surface="right-drawer" role="dialog" aria-modal="true" aria-label="Карточка задачи" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-[1000]" style="z-index:1050" data-modal-backdrop>
     <div class="bg-white rounded-2xl max-w-4xl w-full shadow-2xl border border-slate-200/60 overflow-hidden max-h-[88vh] flex flex-col">
-      <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center shrink-0">
-        <div class="flex items-center gap-3 min-w-0">
+      <div class="task-modal-header px-6 py-4 border-b border-slate-100 flex justify-between items-center shrink-0">
+        <div class="task-modal-heading min-w-0">
           <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg></div>
           <h3 id="modalTitle" class="text-lg font-semibold text-slate-800 leading-tight">Карточка задачи</h3> <button type="button" tabindex="-1" class="ml-1 align-middle inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-help shrink-0" aria-label="Об этом окне" title="Карточка задачи или вехи: название, статус, исполнитель, сроки, зависимости со связями между задачами, Story Points, оценка в часах, продуктовые метрики и приоритет RICE или ICE. Изменения применяются по кнопке внизу окна, отменить , Ctrl+Z."><svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></button>
+          <div class="task-heading-meta">
           <span id="modalTypeBadge" class="hidden text-[10px] px-2 py-0.5 rounded font-semibold"></span>
           <span id="modalCritPathBadge" class="hidden text-[10px] px-2 py-0.5 rounded font-semibold bg-violet-100 text-violet-700 border border-violet-200"></span>
           <a id="modalJiraLink" href="#" target="_blank" rel="noopener noreferrer" class="hidden inline-flex items-center gap-1 text-[10px] font-mono font-semibold text-slate-500 hover:text-blue-700 transition-colors shrink-0" title="Открыть задачу в Jira">
@@ -9392,6 +9401,7 @@
             <span id="modalJiraKey"></span>
             <svg aria-hidden="true" class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
           </a>
+          </div>
         </div>
         <button type="button" onclick="requestCloseModal()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-all cursor-pointer" aria-label="Закрыть" title="Закрыть">
           <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -9767,7 +9777,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v16.5.0">
+<script data-roadmap-modules="v16.5.1">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -12365,8 +12375,8 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '16.5.0';
-    const APP_VERSION_DATE = '20.09.2026';
+    const APP_VERSION = '16.5.1';
+    const APP_VERSION_DATE = '23.09.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'версия ' + APP_VERSION; } catch (e) {}
@@ -12547,148 +12557,67 @@ if (typeof globalThis !== 'undefined') {
     if (!sectionDeps || typeof sectionDeps !== 'object' || Array.isArray(sectionDeps)) sectionDeps = {};
     // Показывать связи-зависимости (стрелки) на таймлайне (п.4). По умолчанию включено.
     let showDependencyLines = storage.get('gantt_show_dep_lines') !== '0';
-    // п.6 Критический путь: самая длинная по длительности цепочка зависимостей. По умолчанию выключен.
+    // п.6 Критический путь: задачи без календарного резерва относительно текущего плана. По умолчанию выключен.
     let showCriticalPath = storage.get('gantt_show_critpath') === '1';
     let barColorByStatus = storage.get('gantt_bar_color_by_status') === '1';
     let _compactRows = storage.get('gantt_compact_rows') === '1'; // компактные строки списка: прячут дополнительные чипы в строке задачи
     let _critPathIds = new Set();
-    let _taskSlackMap = {}; // id -> slack in days
+    let _taskSlackMap = {}; // id -> calendar reserve relative to the current plan
+    let _criticalPathIssue = '';
+    let _criticalPathExcluded = 0;
     function computeCriticalPath() {
       _critPathIds = new Set();
-      _taskSlackMap = {};
-      if (typeof featureOn === 'function' && !featureOn('deps')) return;
-      const validTasks = (typeof roadmapData !== 'undefined' ? roadmapData : [])
-        .filter(t => t && !t.isMilestone && !t.hidden && t.start && t.end);
-      if (!validTasks.length) return;
-
-      const byId = {};
-      validTasks.forEach(t => { byId[t.id] = t; });
-
-      const dur = (t) => {
-        if (!t || t.isMilestone) return 0;
-        const s = dateToDays(t.start), e = dateToDays(t.end);
-        return (Number.isFinite(s) && Number.isFinite(e)) ? Math.max(1, e - s + 1) : 1;
-      };
-
-      // Прямой проход: расчет самого длинного предшествующего пути до завершения задачи
-      const memo = {}, fromMemo = {};
-      const longest = (id, stack) => {
-        if (memo[id] !== undefined) return memo[id];
-        if (stack.has(id)) return 0;
-        stack.add(id);
-        const t = byId[id];
-        if (!t) { stack.delete(id); return 0; }
-        let best = 0, bestPred = null;
-        getPredecessorIds(t).forEach(pid => {
-          if (!byId[pid]) return;
-          const di = (typeof _depInfo === 'function') ? _depInfo(t, pid) : { type: 'FS', lag: 0 };
-          let v = longest(pid, stack) + (Number.isFinite(di.lag) ? di.lag : 0);
-          if (di.type === 'SS' || di.type === 'SF') v -= dur(byId[pid]);
-          if (v < 0) v = 0;
-          if (v > best) { best = v; bestPred = pid; }
-        });
-        stack.delete(id);
-        fromMemo[id] = bestPred;
-        memo[id] = best + dur(t);
-        return memo[id];
-      };
-
-      let endId = null, maxLen = -1;
-      validTasks.forEach(t => {
-        const v = longest(t.id, new Set());
-        if (v > maxLen) { maxLen = v; endId = t.id; }
-      });
-
-      // Восстановление критического пути
-      let cur = endId;
-      while (cur != null && byId[cur] && !_critPathIds.has(cur)) {
-        _critPathIds.add(cur);
-        cur = fromMemo[cur];
+      _taskSlackMap = Object.create(null);
+      _criticalPathIssue = '';
+      _criticalPathExcluded = 0;
+      if (typeof featureOn === 'function' && !featureOn('deps')) {
+        _criticalPathIssue = 'Включите связи для расчета резервов времени.';
+        return;
       }
-
-      // Канонический CPM: карта последователей и учет типов связей (FS, SS, FF, SF)
-      const succMap = {};
-      validTasks.forEach(t => {
-        getPredecessorIds(t).forEach(pid => {
-          if (!byId[pid]) return;
-          if (!succMap[pid]) succMap[pid] = [];
-          succMap[pid].push(t);
-        });
-      });
-
-      // Максимальный календарный горизонт проекта (в днях от базовой эпохи)
-      let projectMaxEndDays = -Infinity;
-      validTasks.forEach(t => {
-        const ed = dateToDays(t.end);
-        if (Number.isFinite(ed) && ed > projectMaxEndDays) projectMaxEndDays = ed;
-      });
-
-      // Рекурсивный мемоизированный обратный проход для вычисления Late Finish (LF)
-      const lfMemo = {};
-      const getLateFinish = (id, stack) => {
-        if (lfMemo[id] !== undefined) return lfMemo[id];
-        if (stack.has(id)) {
-          const t = byId[id];
-          return t ? dateToDays(t.end) : projectMaxEndDays;
-        }
-        stack.add(id);
-        const t = byId[id];
-        if (!t) { stack.delete(id); return projectMaxEndDays; }
-
-        const succs = succMap[id] || [];
-        if (!succs.length) {
-          stack.delete(id);
-          lfMemo[id] = projectMaxEndDays;
-          return lfMemo[id];
-        }
-
-        const myDur = dur(t);
-        let minRequiredFinish = Infinity;
-
-        succs.forEach(st => {
-          const succLF = getLateFinish(st.id, stack);
-          const succDur = dur(st);
-          const succLS = succLF - succDur + 1;
-          const di = (typeof _depInfo === 'function') ? _depInfo(st, id) : { type: 'FS', lag: 0 };
-          const lag = Number.isFinite(di.lag) ? di.lag : 0;
-          const depType = (di.type || 'FS').toUpperCase();
-
-          let limit = Infinity;
-          if (depType === 'FS') {
-            // st.start >= t.end + 1 + lag  => t.end <= st.LS - 1 - lag
-            limit = succLS - 1 - lag;
-          } else if (depType === 'SS') {
-            // st.start >= t.start + lag => t.start <= succLS - lag => t.end <= succLS - lag + myDur - 1
-            limit = succLS - lag + myDur - 1;
-          } else if (depType === 'FF') {
-            // st.end >= t.end + lag => t.end <= succLF - lag
-            limit = succLF - lag;
-          } else if (depType === 'SF') {
-            // st.end >= t.start + lag => t.start <= succLF - lag => t.end <= succLF - lag + myDur - 1
-            limit = succLF - lag + myDur - 1;
-          } else {
-            limit = succLS - 1 - lag;
-          }
-
-          if (limit < minRequiredFinish) minRequiredFinish = limit;
-        });
-
-        stack.delete(id);
-        lfMemo[id] = Number.isFinite(minRequiredFinish) ? minRequiredFinish : projectMaxEndDays;
-        return lfMemo[id];
+      // Calendar reserves against the current plan horizon, without changing dates.
+      // Difference constraints: successor.start >= predecessor.start + weight.
+      const day = value => {
+        if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return NaN;
+        const ms = Date.parse(value + 'T00:00:00Z');
+        return Number.isFinite(ms) && new Date(ms).toISOString().slice(0, 10) === value ? ms / 86400000 : NaN;
       };
-
-      // Расчет Total Float (Slack): LF - EF
-      validTasks.forEach(t => {
-        if (_critPathIds.has(t.id)) {
-          _taskSlackMap[t.id] = 0;
-          return;
+      const nodes = new Map();
+      for (const task of (typeof roadmapData !== 'undefined' ? roadmapData : [])) {
+        if (!task || task.hidden) continue;
+        const id = String(task.id), start = day(task.start), end = day(task.isMilestone ? task.start : task.end);
+        if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) { _criticalPathExcluded++; continue; }
+        if (nodes.has(id)) { _criticalPathIssue = 'Резервы не рассчитаны: повторяются ID задач.'; return; }
+        nodes.set(id, { task, start, end, span:end - start, next:[], incoming:0 });
+      }
+      if (!nodes.size) { _criticalPathIssue = 'Для расчета резервов нужны корректные даты задач.'; return; }
+      let horizon = -Infinity;
+      for (const node of nodes.values()) {
+        horizon = Math.max(horizon, node.end);
+        for (const pid of new Set(getPredecessorIds(node.task).map(String))) {
+          const pred = nodes.get(pid);
+          if (!pred) { _criticalPathIssue = 'Резервы не рассчитаны: у связанной задачи нет дат или она вне текущего плана.'; return; }
+          const dep = _depInfo(node.task, pid), lag = Number.isFinite(dep.lag) ? dep.lag : 0;
+          const weight = lag + (dep.type === 'SS' ? 0 : dep.type === 'FF' ? pred.span - node.span : dep.type === 'SF' ? -node.span : pred.span + 1);
+          pred.next.push({ node, weight });
+          node.incoming++;
         }
-        const ef = dateToDays(t.end);
-        const lf = getLateFinish(t.id, new Set());
-        const slack = Math.max(0, lf - ef);
-        _taskSlackMap[t.id] = slack;
-      });
+      }
+      // Kahn order and iterative reverse pass also support very long dependency chains.
+      const order = [...nodes.values()].filter(node => node.incoming === 0);
+      for (let i = 0; i < order.length; i++) {
+        for (const edge of order[i].next) if (--edge.node.incoming === 0) order.push(edge.node);
+      }
+      if (order.length !== nodes.size) { _criticalPathIssue = 'Резервы не рассчитаны: устраните цикл в связях задач.'; return; }
+      for (let i = order.length - 1; i >= 0; i--) {
+        const node = order[i];
+        node.latestStart = horizon - node.span;
+        for (const edge of node.next) node.latestStart = Math.min(node.latestStart, edge.node.latestStart - edge.weight);
+        if (!node.task.isMilestone) {
+          const slack = node.latestStart - node.start;
+          _taskSlackMap[node.task.id] = slack;
+          if (slack <= 0) _critPathIds.add(node.task.id);
+        }
+      }
     }
     function setShowCriticalPath(on) {
       showCriticalPath = !!on;
@@ -24820,8 +24749,9 @@ const m = document.getElementById('mineModeBtn');
     // Экспорт отчета по резервам времени (Float / Slack) и критическому пути в PDF
     function exportSlackReportPdf() {
       if (typeof computeCriticalPath === 'function') computeCriticalPath();
+      if (_criticalPathIssue) { showToast(_criticalPathIssue, 'warn', 6000); return; }
       const tasks = (typeof roadmapData !== 'undefined' ? roadmapData : [])
-        .filter(t => t && !t.isMilestone && !t.hidden && t.start && t.end);
+        .filter(t => t && !t.isMilestone && !t.hidden && Number.isFinite(_taskSlackMap[t.id]));
 
       if (!tasks.length) {
         if (typeof showToast === 'function') showToast('Нет задач с датами для анализа резервов', 'warn', 3000);
@@ -24841,8 +24771,8 @@ const m = document.getElementById('mineModeBtn');
       const safeTasks = [];
 
       tasks.forEach(t => {
-        const sl = (typeof _taskSlackMap !== 'undefined' && _taskSlackMap[t.id] !== undefined) ? _taskSlackMap[t.id] : 0;
-        const isCrit = (_critPathIds && _critPathIds.has(t.id)) || sl === 0;
+        const sl = _taskSlackMap[t.id];
+        const isCrit = _critPathIds.has(t.id);
         const item = { task: t, slack: sl, isCrit };
         if (isCrit) critTasks.push(item);
         else if (sl <= 5) lowSlackTasks.push(item);
@@ -24860,11 +24790,11 @@ const m = document.getElementById('mineModeBtn');
 
         let badgeHtml = '';
         if (item.isCrit) {
-          badgeHtml = '<span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:9pt;font-weight:700;background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;">Критический (0 дн)</span>';
+          badgeHtml = '<span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:9pt;font-weight:700;background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;">' + (sl < 0 ? 'Дефицит: ' + (-sl) + ' дн.' : 'Без резерва (0 дн.)') + '</span>';
         } else if (sl <= 5) {
           badgeHtml = '<span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:9pt;font-weight:700;background:#fffbeb;color:#b45309;border:1px solid #fde68a;">Внимание (+' + sl + ' дн)</span>';
         } else {
-          badgeHtml = '<span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:9pt;font-weight:600;background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;">Надежно (+' + sl + ' дн)</span>';
+          badgeHtml = '<span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:9pt;font-weight:600;background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;">Резерв +' + sl + ' дн.</span>';
         }
 
         return '<tr style="border-bottom:1px solid #f1f5f9;' + (item.isCrit ? 'background:#fffafb;' : '') + '">'
@@ -24903,9 +24833,9 @@ const m = document.getElementById('mineModeBtn');
         + '<div class="sub">Проект: <b>' + esc(projectTitle) + '</b> &middot; Сформирован: ' + esc(todayStr) + '</div>'
         + '</div></div>'
         + '<div class="kpi-row">'
-        + '<div class="kpi-box danger"><div class="kpi-num">' + critTasks.length + '</div><div class="kpi-label">На критическом пути (запас 0д)</div></div>'
+        + '<div class="kpi-box danger"><div class="kpi-num">' + critTasks.length + '</div><div class="kpi-label">Без резерва или с дефицитом</div></div>'
         + '<div class="kpi-box warn"><div class="kpi-num">' + lowSlackTasks.length + '</div><div class="kpi-label">Малый буфер (1–5 дней)</div></div>'
-        + '<div class="kpi-box"><div class="kpi-num">' + safeTasks.length + '</div><div class="kpi-label">Устойчивые задачи (&gt;5 дней)</div></div>'
+        + '<div class="kpi-box"><div class="kpi-num">' + safeTasks.length + '</div><div class="kpi-label">Резерв больше 5 дней</div></div>'
         + '<div class="kpi-box"><div class="kpi-num">' + tasks.length + '</div><div class="kpi-label">Всего задач</div></div>'
         + '</div>'
         + '<table><thead><tr>'
@@ -24917,7 +24847,7 @@ const m = document.getElementById('mineModeBtn');
         + '<th style="width:170px;text-align:center;">Резерв времени</th>'
         + '</tr></thead><tbody>' + rowsHtml + '</tbody></table>'
         + '<div class="footer">'
-        + '<span>Задержка задач с запасом 0 дн. напрямую сдвигает финальный дедлайн проекта.</span>'
+        + '<span>Резерв в календарных днях до конца текущего плана, с учетом связей. Загрузка людей и отпуска не учитываются. Отрицательное значение означает дефицит. Исключено задач без корректных дат: ' + _criticalPathExcluded + '.</span>'
         + '<span>Страница печати / экспорт в PDF</span>'
         + '</div></body></html>';
 
@@ -29610,7 +29540,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
                 bar.title = (task.name || 'Задача') + ' , в работе, но исполнитель в отпуске: ' + _lvNow.name + ' (' + formatDateString(_lvNow.from) + ' , ' + formatDateString(_lvNow.to) + ')';
               }
               bar.title += '. Статус: ' + accessibleStatus;
-              if (_critPathIds.has(task.id)) { bar.title += ' • Критический путь (резерв: 0 дн.)'; }
+              if (_critPathIds.has(task.id)) { bar.title += _taskSlackMap[task.id] < 0 ? ' • Дефицит времени: ' + (-_taskSlackMap[task.id]) + ' дн.' : ' • Без резерва (0 дн.)'; }
               else if (typeof _taskSlackMap !== 'undefined' && _taskSlackMap[task.id] !== undefined) { bar.title += ` • Резерв времени: ${_taskSlackMap[task.id]} дн.`; }
               const txt = document.createElement('span');
               txt.className = `truncate pr-2 pointer-events-none grow`;
@@ -31458,16 +31388,20 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         if (cpb) {
           if (task && !task.isMilestone && task.start && task.end) {
             const slack = (typeof _taskSlackMap !== 'undefined') ? _taskSlackMap[task.id] : undefined;
-            const isCrit = (_critPathIds && _critPathIds.has(task.id)) || slack === 0;
+            const isCrit = _critPathIds.has(task.id);
             cpb.classList.remove('hidden');
-            if (isCrit) {
+            if (_criticalPathIssue) {
+              cpb.className = 'text-[10px] px-2 py-0.5 rounded font-semibold bg-amber-50 text-amber-800';
+              cpb.textContent = 'Резерв не рассчитан';
+              cpb.title = _criticalPathIssue;
+            } else if (isCrit) {
               cpb.className = 'text-[10px] px-2 py-0.5 rounded font-semibold bg-violet-100 text-violet-700 border border-violet-200';
-              cpb.textContent = 'Критический путь (запас: 0 дн.)';
-              cpb.title = 'Любая задержка этой задачи сдвинет финальный срок проекта';
+              cpb.textContent = slack < 0 ? 'Дефицит: ' + (-slack) + ' дн.' : 'Без резерва (0 дн.)';
+              cpb.title = slack < 0 ? 'Текущие даты не укладываются в ограничения связей и плановый срок.' : 'Нет календарного запаса до конца текущего плана при указанных связях.';
             } else if (Number.isFinite(slack)) {
               cpb.className = 'text-[10px] px-2 py-0.5 rounded font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200';
               cpb.textContent = 'Запас: +' + slack + ' дн.';
-              cpb.title = 'Задачу можно сдвинуть на ' + slack + ' дн. без влияния на общий срок проекта';
+              cpb.title = 'Календарный резерв до конца текущего плана: ' + slack + ' дн. Загрузка людей и отпуска в этом расчете не учитываются.';
             } else {
               cpb.classList.add('hidden');
             }
@@ -34882,7 +34816,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         const badgeText={new:'Новая',update:'Изменится',link:'Связать с задачей',archive:'Обновится в архиве',to_archive:r.linkTaskId!==null?'Связать и в архив':'В архив',unchanged:'Без изменений'}[r.state];
         const badgeClass=r.state==='new'?'text-emerald-700 bg-emerald-50':(['update','link'].includes(r.state)?'text-indigo-700 bg-indigo-50':(['archive','to_archive'].includes(r.state)?'text-amber-800 bg-amber-50':'text-slate-500 bg-slate-100'));
         const detail=(r.linkTaskId!==null?' · существующая задача #'+r.linkTaskId:'')+(r.state==='to_archive'?' · завершена до начала текущего года':'');
-        const diffHtml = (r.diffs && r.diffs.length) ? `<div class="mt-1.5 flex flex-wrap gap-1.5">${r.diffs.map(d => `<span class="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 ${d.conflict ? 'border-amber-300 bg-amber-50 text-amber-900' : ''}"><b>${escHtml(d.label)}:</b>&nbsp;<span class="line-through opacity-60">${escHtml(d.was)}</span>&nbsp;➔&nbsp;<span class="font-semibold">${escHtml(d.now)}</span>${d.conflict ? '&nbsp;<span class="text-[9px] text-amber-700 font-bold">(ручная дата)</span>' : ''}</span>`).join('')}</div>` : '';
+        const diffHtml = (r.diffs && r.diffs.length) ? `<div class="jira-preview-diffs">${r.diffs.map(d => `<span class="jira-preview-diff text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 ${d.conflict ? 'border-amber-300 bg-amber-50 text-amber-900' : ''}"><b>${escHtml(d.label)}:</b> <span class="line-through opacity-60">${escHtml(d.was)}</span> ➔ <span class="font-semibold">${escHtml(d.now)}</span>${d.conflict ? ' <span class="text-[9px] text-amber-700 font-bold">(ручная дата)</span>' : ''}</span>`).join('')}</div>` : '';
         return `<div class="p-3 border-b border-slate-100 last:border-0 ${skip?'opacity-60':'hover:bg-slate-50/80'}"><label class="flex items-start gap-2.5 ${skip?'':'cursor-pointer'}"><input data-jira-preview="${i}" onchange="renderJiraImportStatusSummary()" type="checkbox" ${skip?'disabled':'checked'} class="mt-0.5 rounded border-slate-300 text-indigo-600"><div class="grow min-w-0"><div class="text-xs font-semibold text-slate-800 truncate">${escHtml(r.title)}</div><div class="text-[10px] text-slate-500 mt-0.5">${escHtml(r.key+detail)}</div>${diffHtml}</div><span class="shrink-0 text-[9px] font-bold rounded-full px-2 py-1 ${badgeClass}">${badgeText}</span></label></div>`;
       }).join('');
       modal.innerHTML=`<div class="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-3xl max-h-[88vh] flex flex-col overflow-hidden"><div class="jira-import-preview-header px-5 py-4 border-b border-slate-100"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><h3 class="text-lg font-semibold text-slate-900">Проверьте импорт из Jira</h3><p class="text-xs text-slate-500 mt-1">Данные еще не изменены. Снимите галочку, если строку не нужно загружать.</p></div><button type="button" onclick="closeJiraImportPreview()" aria-label="Закрыть" title="Закрыть" class="shrink-0 w-9 h-9 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50">×</button></div><div class="jira-import-preview-summary"><div class="rounded-xl bg-emerald-50 p-2.5"><b class="text-emerald-700">${counts.new}</b><span class="block text-[10px] text-emerald-700">новых</span></div><div class="rounded-xl bg-indigo-50 p-2.5"><b class="text-indigo-700">${counts.update}</b><span class="block text-[10px] text-indigo-700">изменятся или свяжутся</span></div><div class="rounded-xl bg-amber-50 p-2.5"><b class="text-amber-800">${counts.archive}</b><span class="block text-[10px] text-amber-800">действия с архивом</span></div><div class="rounded-xl bg-slate-100 p-2.5"><b class="text-slate-700">${counts.unchanged}</b><span class="block text-[10px] text-slate-600">без изменений</span></div></div></div><div class="jira-import-preview-list overflow-y-auto grow"><div id="jiraImportStatusSummary">${importStatusSummaryHtml(jiraImportStatusSummary(_jiraPreviewRows.filter(r=>r.state!=='unchanged')),false)}</div>${rows||'<div class="p-8 text-center text-sm text-slate-500">Нет задач для импорта</div>'}</div><div class="jira-import-preview-footer px-5 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3"><span class="text-[10px] text-slate-500">Архивные задачи останутся в архиве. Перенос и привязка к существующим задачам отмечены в списке.</span><div class="flex gap-2"><button type="button" onclick="closeJiraImportPreview()" class="h-9 px-4 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Отмена</button><button id="jiraImportPreviewApply" type="button" onclick="applyJiraImportPreview()" ${selectable?'':'disabled'} class="h-9 px-4 rounded-xl bg-indigo-600 text-white text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed">Применить выбранное</button></div></div></div>`;
@@ -37449,7 +37383,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v16.5.0 · 20.09.2026</span>
+     <span id="appVersionBadge">v16.5.1 · 23.09.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -37502,7 +37436,7 @@ function syncBodyScrollLock() {
 
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v16.5.0</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v16.5.1</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="fields" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6M10 15v6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Показывайте нужные поля</h5><span class="info-release-badge">ПОЛЯ</span></div>
@@ -41228,7 +41162,7 @@ function syncBodyScrollLock() {
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 16.5.0</span>
+              <span id="appVersionStartup">версия 16.5.1</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
