@@ -7338,12 +7338,12 @@
      min-width:0; max-width:100%;
    }
    #leaderChooserModal [data-materials-list] {
-     display:grid; grid-template-columns:minmax(0,1fr); gap:.5rem;
+     display:grid; grid-template-columns:minmax(0,1fr); gap:.75rem; padding:.75rem;
    }
    #leaderChooserModal [data-materials-action].rm-btn {
      display:grid; grid-template-columns:minmax(0,1fr); align-content:start;
      align-items:start; justify-content:stretch; gap:.25rem;
-     width:100%; min-height:4.25rem; overflow:hidden; text-align:left;
+     width:100%; min-height:4.25rem; text-align:left;
    }
    #leaderChooserModal [data-materials-copy] { display:block; }
    #leaderChooserModal [data-materials-group-title],
@@ -7356,11 +7356,14 @@
    #leaderChooserModal [data-materials-title] { line-height:1.35; }
    #leaderChooserModal [data-materials-group-hint],
    #leaderChooserModal [data-materials-description] { line-height:1.45; }
+   #leaderChooserModal [data-materials-group] { border:1px solid var(--rm-border); border-radius:var(--rm-radius-md); }
+   #leaderChooserModal [data-materials-group] > summary { padding:1rem; cursor:pointer; color:var(--rm-text); }
+   #leaderChooserModal [data-materials-group-title] { font-size:1rem; }
+   #leaderChooserModal [data-materials-group-hint] { display:block; margin:.25rem 0 0; font-size:.8125rem; }
+   #leaderChooserModal [data-materials-description] { font-size:.8125rem; font-weight:400; }
+   #leaderChooserModal [data-materials-group][open] > summary { border-bottom:1px solid var(--rm-border); }
    @media (min-width:640px) {
-     #leaderChooserModal [data-materials-groups] { grid-template-columns:repeat(2,minmax(0,1fr)); }
-   }
-   @media (min-width:1024px) {
-     #leaderChooserModal [data-materials-groups] { grid-template-columns:repeat(3,minmax(0,1fr)); }
+     #leaderChooserModal [data-materials-list] { grid-template-columns:repeat(2,minmax(0,1fr)); }
    }
    #appHeader .rm-btn,#planViewNav .rm-btn,#planFilterBar .rm-btn {
      font-size:clamp(.6875rem,.72vw,.75rem); white-space:nowrap;
@@ -7551,11 +7554,18 @@
 
    /* Один видимый focus-ring вместо сочетания outline + дополнительной тени. */
    .rm-btn:focus-visible,.rm-action:focus-visible,.rm-control:focus-visible,
-   button:focus-visible,[role="button"]:focus-visible,a:focus-visible,
+   button:focus-visible,[role="button"]:focus-visible,a:focus-visible,summary:focus-visible,
    .rm-dialog-close:focus-visible,.rm-dialog-action:focus-visible,
    .rm-popover button:focus-visible {
      outline:2px solid var(--rm-focus) !important;
      outline-offset:2px !important;
+     box-shadow:none !important;
+   }
+   /* Поле выделяется одной линией внутри границы, без второго кольца и свечения. */
+   body input.rm-control:focus, body select.rm-control:focus, body textarea.rm-control:focus,
+   body input.rm-search-input:focus {
+     outline:2px solid var(--rm-focus) !important;
+     outline-offset:-2px !important;
      box-shadow:none !important;
    }
 
@@ -7707,29 +7717,30 @@
      border:0 !important;
      border-radius:var(--rm-dialog-radius) !important;
      box-shadow:var(--rm-popover-shadow) !important;
+     font-family:inherit; font-size:.875rem; line-height:1.5;
    }
    #headerInsightsDates { margin-top:.75rem; padding-top:.5rem; border-top:0 !important; }
    #headerInsightsPanel .header-insight-block > div[class*="uppercase"],
    #headerInsightsPanel .header-insight-heading div[class*="uppercase"] {
      text-transform:none !important; letter-spacing:0 !important;
-     font-size:var(--rm-font-sm) !important; font-weight:var(--rm-weight-semibold) !important;
+     font-size:.875rem !important; font-weight:var(--rm-weight-semibold) !important;
    }
    #headerInsightsPanel .header-insight-heading {
      display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:.875rem;
    }
    #headerInsightsPanel .header-state-headline {
-     margin-top:.25rem; color:var(--rm-muted); font-size:var(--rm-font-sm); line-height:1.35;
+     margin-top:.25rem; color:var(--rm-muted); font-size:.8125rem; line-height:1.5;
    }
    #headerInsightsPanel .header-insight-link {
      min-height:2rem; padding:.375rem .625rem; border:0; border-radius:var(--rm-radius-sm);
-     background:transparent; color:var(--rm-brand); font-size:var(--rm-font-xs);
-     font-weight:var(--rm-weight-semibold); white-space:nowrap; cursor:pointer;
+     background:transparent; color:var(--rm-brand); font-size:.8125rem;
+     font-weight:var(--rm-weight-semibold); white-space:normal; cursor:pointer;
    }
    #headerInsightsPanel .header-insight-link:hover { background:var(--rm-surface-soft); }
    #headerInsightsPanel .header-insight-count {
      display:inline-flex; align-items:center; justify-content:center; min-width:1.25rem; height:1.25rem;
      margin-left:.25rem; padding:0 .35rem; border-radius:999px; background:var(--rm-surface-soft);
-     color:var(--rm-muted); font-size:var(--rm-font-xs); font-weight:var(--rm-weight-semibold);
+     color:var(--rm-muted); font-size:.75rem; font-weight:var(--rm-weight-semibold);
    }
    #headerInsightsPanel #stateDashboard {
      display:grid !important; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 !important;
@@ -7743,14 +7754,16 @@
      border-left:1px solid var(--rm-border);
    }
    #headerInsightsPanel .plan-state-value {
-     display:block; color:var(--rm-text); font-size:1.25rem; line-height:1.15;
+     display:block; color:var(--rm-text); font-size:1.5rem; line-height:1.2;
      font-weight:var(--rm-weight-bold); font-variant-numeric:tabular-nums;
    }
    #headerInsightsPanel [data-plan-state-tone="danger"] .plan-state-value { color:#e11d48; }
    body.theme-dark #headerInsightsPanel [data-plan-state-tone="danger"] .plan-state-value { color:#fb7185; }
    #headerInsightsPanel .plan-state-label {
-     display:block; margin-top:.2rem; color:var(--rm-muted); font-size:var(--rm-font-xs); line-height:1.25;
+     display:block; margin-top:.35rem; color:var(--rm-muted); font-size:.8125rem; line-height:1.45;
    }
+   #headerInsightsPanel #headerCutoffChips button { font-size:.8125rem; line-height:1.5; white-space:normal; height:auto; }
+   #headerInsightsPanel #headerCutoffChips button span { font-size:inherit; line-height:inherit; }
    #headerInsightsPanel .plan-state-context { color:var(--rm-muted); font-weight:var(--rm-weight-regular); }
    #headerCutoffsSep button {
      border-color:transparent !important;
@@ -7870,7 +7883,7 @@
    .rm-search-input.rm-search-input:focus-visible {
      border-color:var(--rm-focus) !important;
      outline:2px solid var(--rm-focus) !important;
-     outline-offset:2px !important;
+     outline-offset:-2px !important;
      box-shadow:none !important;
    }
    #quickActionsGroup button,
@@ -8841,6 +8854,20 @@
 }
 /* RM_SOFT_SHEEN_END */
 </style>
+  <style id="schedule-preview-styles">
+    .schedule-preview{font-size:13px;line-height:1.55;overflow-wrap:anywhere}
+    .schedule-preview h4{font-size:14px;font-weight:700;margin:18px 0 8px}
+    .schedule-preview-list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+    .schedule-preview-row{padding:12px;border-radius:12px;border:1px solid #cbd5e1}
+    .schedule-preview-dates{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;font-variant-numeric:tabular-nums}
+    .schedule-preview-dates span{display:block}
+    .schedule-preview-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-top:20px}
+    .schedule-preview-actions button{min-height:40px;padding:8px 14px;border-radius:10px;font-weight:600;white-space:normal}
+    .leveling-proposal{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;padding:10px 0;font-size:12px}
+    .leveling-proposal>span{overflow-wrap:anywhere;min-width:0}
+    .leveling-proposal>button{grid-column:2;grid-row:1 / 3;align-self:center;min-height:36px}
+    @media(max-width:520px){.schedule-preview-dates{grid-template-columns:1fr;gap:6px}.schedule-preview-actions button{flex:1 1 140px;min-height:44px}.leveling-proposal{grid-template-columns:1fr}.leveling-proposal>button{grid-column:1;grid-row:auto;justify-self:start}}
+  </style>
 </head>
 <body class="bg-[#f8fafc] text-slate-900 antialiased selection:bg-indigo-100 overflow-x-clip">
   <a href="#ganttMain" class="skip-link no-image-export no-print">Перейти к плану</a>
@@ -8901,7 +8928,7 @@
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v16.5.1</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v16.6.0</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9777,7 +9804,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v16.5.1">
+<script data-roadmap-modules="v16.6.0">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -11239,6 +11266,259 @@ if (typeof globalThis !== 'undefined') {
   const namespace = globalThis.RoadmapModules || (globalThis.RoadmapModules = {});
   namespace.createForecastDecisionModel = createForecastDecisionModel;
 }
+
+/* module:dependency-engine sha256:eec670c38f8b4ab60797103f4bd0a778e8953cc4a84ee0d0fd05a774ba4e047b */
+// Dependency calculations have no DOM, storage or clock access.
+// The caller owns the task array; preview callers must pass a copy.
+function runDependencyCascade(roadmapData, parentTaskId, options) {
+  const { getPredecessorIds, _depInfo, dateToDays, daysToDate, getStatusGroup, today } = options;
+  const byId = new Map(), predecessors = new Map(), successors = new Map();
+  roadmapData.forEach(t => { if (t) byId.set(t.id, t); });
+  const parent = byId.get(parentTaskId);
+  if (!parent) return { shifted: [], cyclic: false };
+  roadmapData.forEach(t => {
+    if (!t) return;
+    const preds = [...new Set(getPredecessorIds(t))];
+    predecessors.set(t.id, preds);
+    preds.forEach(pid => { if (!successors.has(pid)) successors.set(pid, []); successors.get(pid).push(t.id); });
+  });
+  // Сначала все ветви сходятся, затем двигаются их потомки. Рекурсивный
+  // visited обрывал второе обновление потомков в ромбе зависимостей.
+  const reachable = new Set([parentTaskId]), pending = [parentTaskId];
+  for (let head = 0; head < pending.length; head++) {
+    (successors.get(pending[head]) || []).forEach(id => { if (!reachable.has(id)) { reachable.add(id); pending.push(id); } });
+  }
+  const indegree = new Map(), queue = [];
+  pending.forEach(id => {
+    const n = (predecessors.get(id) || []).filter(pid => reachable.has(pid)).length;
+    indegree.set(id, n); if (!n) queue.push(id);
+  });
+  const _shifted = [];
+  const changed = new Set([parentTaskId]);
+  let processed = 0;
+  for (let head = 0; head < queue.length; head++) {
+    const id = queue[head], task = byId.get(id), preds = predecessors.get(id) || [];
+    processed++;
+    (successors.get(id) || []).forEach(next => {
+      const n = indegree.get(next) - 1; indegree.set(next, n); if (!n) queue.push(next);
+    });
+    if (id !== parentTaskId && task && preds.some(pid => changed.has(pid))) {
+      const move = () => {
+      if (!task.start || (!task.isMilestone && !task.end)) return; // задача без дат каскадом не сдвигается
+      const taskStartDays = dateToDays(task.start);
+      const taskEndDays = dateToDays(task.isMilestone ? task.start : task.end);
+      if (!Number.isFinite(taskStartDays) || !Number.isFinite(taskEndDays)) return;
+      const duration = taskEndDays - taskStartDays;
+      // Минимально допустимый старт по КАЖДОМУ предшественнику с учетом типа связи и лага
+      let requiredStart = -Infinity;
+      preds.forEach(predId => {
+        const p = byId.get(predId);
+        if (!p) return;
+        const pStart = p.start ? dateToDays(p.start) : null;
+        const pEnd = p.end ? dateToDays(p.end) : pStart;
+        if (pStart == null && pEnd == null) return;
+        const di = _depInfo(task, predId);
+        let rs;
+        if (di.type === 'SS') rs = (pStart != null ? pStart : pEnd) + di.lag;
+        else if (di.type === 'FF') rs = (pEnd != null ? pEnd : pStart) + di.lag - duration;
+        else if (di.type === 'SF') rs = (pStart != null ? pStart : pEnd) + di.lag - duration;
+        else rs = (pEnd != null ? pEnd : pStart) + 1 + di.lag;
+        requiredStart = Math.max(requiredStart, rs);
+      });
+      if (!Number.isFinite(requiredStart)) return;
+      // Хвост тянется за колбаской в ОБЕ стороны: вправо (нарушение связи) , любая незакрытая,
+      // влево (у зависимой появился зазор) , только запланированная и не раньше сегодня.
+      let _target = null;
+      if (taskStartDays < requiredStart) _target = requiredStart;
+      else if (getStatusGroup(task.status) === 'planned') {
+        const _pullTo = Math.max(requiredStart, dateToDays(today));
+        if (taskStartDays > _pullTo) _target = _pullTo;
+      }
+      if (_target != null) {
+        task.start = daysToDate(_target);
+        task.end = daysToDate(_target + (task.isMilestone ? 0 : Math.max(0, duration)));
+        _shifted.push(task.id);
+        changed.add(task.id);
+      }
+      };
+      move();
+    }
+  }
+  // В цикле нет однозначного порядка: не угадываем новые даты цикла и его хвоста.
+  return { shifted: _shifted, cyclic: processed < reachable.size };
+}
+
+function computePlanReserves(roadmapData, options) {
+  const { getPredecessorIds, _depInfo, enabled = true } = options;
+  let _critPathIds = new Set();
+  let _taskSlackMap = Object.create(null);
+  let _criticalPathIssue = '';
+  let _criticalPathExcluded = 0;
+  if (!enabled) {
+    _criticalPathIssue = 'Включите связи для расчета резервов времени.';
+    return result();
+  }
+  function result() { return { criticalIds: _critPathIds, slack: _taskSlackMap, issue: _criticalPathIssue, excluded: _criticalPathExcluded }; }
+  // Calendar reserves against the current plan horizon, without changing dates.
+  // Difference constraints: successor.start >= predecessor.start + weight.
+  const day = value => {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return NaN;
+    const ms = Date.parse(value + 'T00:00:00Z');
+    return Number.isFinite(ms) && new Date(ms).toISOString().slice(0, 10) === value ? ms / 86400000 : NaN;
+  };
+  const nodes = new Map();
+  for (const task of roadmapData) {
+    if (!task || task.hidden) continue;
+    const id = String(task.id), start = day(task.start), end = day(task.isMilestone ? task.start : task.end);
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) { _criticalPathExcluded++; continue; }
+    if (nodes.has(id)) { _criticalPathIssue = 'Резервы не рассчитаны: повторяются ID задач.'; return result(); }
+    nodes.set(id, { task, start, end, span:end - start, next:[], incoming:0 });
+  }
+  if (!nodes.size) { _criticalPathIssue = 'Для расчета резервов нужны корректные даты задач.'; return result(); }
+  let horizon = -Infinity;
+  for (const node of nodes.values()) {
+    horizon = Math.max(horizon, node.end);
+    for (const pid of new Set(getPredecessorIds(node.task).map(String))) {
+      const pred = nodes.get(pid);
+      if (!pred) { _criticalPathIssue = 'Резервы не рассчитаны: у связанной задачи нет дат или она вне текущего плана.'; return result(); }
+      const dep = _depInfo(node.task, pid), lag = Number.isFinite(dep.lag) ? dep.lag : 0;
+      const weight = lag + (dep.type === 'SS' ? 0 : dep.type === 'FF' ? pred.span - node.span : dep.type === 'SF' ? -node.span : pred.span + 1);
+      pred.next.push({ node, weight });
+      node.incoming++;
+    }
+  }
+  // Kahn order and iterative reverse pass also support very long dependency chains.
+  const order = [...nodes.values()].filter(node => node.incoming === 0);
+  for (let i = 0; i < order.length; i++) {
+    for (const edge of order[i].next) if (--edge.node.incoming === 0) order.push(edge.node);
+  }
+  if (order.length !== nodes.size) { _criticalPathIssue = 'Резервы не рассчитаны: устраните цикл в связях задач.'; return result(); }
+  for (let i = order.length - 1; i >= 0; i--) {
+    const node = order[i];
+    node.latestStart = horizon - node.span;
+    for (const edge of node.next) node.latestStart = Math.min(node.latestStart, edge.node.latestStart - edge.weight);
+    if (!node.task.isMilestone) {
+      const slack = node.latestStart - node.start;
+      _taskSlackMap[node.task.id] = slack;
+      if (slack <= 0) _critPathIds.add(node.task.id);
+    }
+  }
+  return result();
+}
+
+if (typeof globalThis !== 'undefined') {
+  const ns = globalThis.RoadmapModules || (globalThis.RoadmapModules = {});
+  ns.runDependencyCascade = runDependencyCascade;
+  ns.computePlanReserves = computePlanReserves;
+}
+
+/* module:schedule-preview sha256:439cd14ab54d65d5c650e13b06e5682e08e1a38c79d540d47cfc860442f3453a */
+/* bundled internal import: ./dependency-engine.mjs */
+// Pure candidate calculation. Never mutates input tasks, dates or checkpoints.
+function createSchedulePreview({ tasks = [], proposals = [], checkpoints = [], today, cascadeEnabled = true, statusGroup = value => value } = {}) {
+  const day = value => {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return NaN;
+    const ms = Date.parse(value + 'T00:00:00Z');
+    return Number.isFinite(ms) && new Date(ms).toISOString().slice(0, 10) === value ? ms / 86400000 : NaN;
+  };
+  const ymd = value => new Date(value * 86400000).toISOString().slice(0, 10);
+  const key = value => String(value);
+  const predecessors = task => [...new Set(String(task.pred ?? '').split(',').map(s => s.trim()).filter(Boolean))];
+  const depInfo = (task, id) => {
+    const raw = task.depMeta?.[id], lag = parseInt(raw?.lag, 10);
+    return { type: ['FS', 'SS', 'FF', 'SF'].includes(raw?.type) ? raw.type : 'FS', lag: Number.isFinite(lag) ? lag : 0 };
+  };
+  const before = new Map(), after = new Map(), direct = new Set(), blockers = [], warnings = [];
+  for (const task of tasks) {
+    if (!task || task.id == null || before.has(key(task.id))) {
+      blockers.push('У задач отсутствуют или повторяются ID. Сначала исправьте данные.');
+      continue;
+    }
+    before.set(key(task.id), task);
+    after.set(key(task.id), { ...task });
+  }
+  if (!Number.isFinite(day(today))) blockers.push('Не удалось определить текущую дату.');
+  for (const proposal of proposals) {
+    const id = key(proposal.id), task = after.get(id);
+    if (!task || task.hidden) { blockers.push('Одна из выбранных задач отсутствует в активном плане.'); continue; }
+    const start = day(proposal.toStart), end = day(proposal.toEnd);
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end < start || (task.isMilestone && end !== start)) {
+      blockers.push('В предложенном переносе есть некорректные даты.'); continue;
+    }
+    if (direct.has(id)) { blockers.push('Одна задача выбрана для переноса несколько раз.'); continue; }
+    direct.add(id); task.start = proposal.toStart; task.end = proposal.toEnd;
+  }
+  if (!blockers.length && cascadeEnabled) {
+    const candidate = [...after.values()];
+    const options = {
+      getPredecessorIds: task => predecessors(task).map(id => after.get(id)?.id ?? id),
+      _depInfo: depInfo, dateToDays: day, daysToDate: ymd, getStatusGroup: statusGroup, today
+    };
+    for (const id of direct) {
+      if (runDependencyCascade(candidate, after.get(id).id, options).cyclic) {
+        blockers.push('В затронутой цепочке есть цикл. Устраните его перед переносом.');
+        break;
+      }
+    }
+  }
+  if (!cascadeEnabled) warnings.push('Автоматический сдвиг зависимых задач выключен. Связи ниже проверены, но даты по ним не исправлялись.');
+  const changes = [];
+  for (const [id, task] of after) {
+    const original = before.get(id);
+    if (task.start === original.start && task.end === original.end) continue;
+    if (!Number.isFinite(day(task.start)) || !Number.isFinite(day(task.end)) || day(task.end) < day(task.start)) {
+      blockers.push('Каскад сформировал некорректный период. Перенос не будет применен.');
+      continue;
+    }
+    changes.push({ id: original.id, name: task.name || 'Без названия', resource: task.resource || '',
+      fromStart: original.start || '', fromEnd: original.end || original.start || '',
+      toStart: task.start, toEnd: task.end, cause: direct.has(id) ? 'direct' : 'dependency',
+      deltaDays: Number.isFinite(day(original.end || original.start)) ? day(task.end) - day(original.end || original.start) : null,
+      isMilestone: !!task.isMilestone, final: statusGroup(task.status) === 'completed' });
+  }
+  const changed = new Set(changes.map(row => key(row.id)));
+  const dependencies = [];
+  for (const task of after.values()) for (const id of predecessors(task)) {
+    if (!changed.has(key(task.id)) && !changed.has(id)) continue;
+    const pred = after.get(id), dep = depInfo(task, id);
+    const a = day(pred?.start), b = day(pred?.end || pred?.start), c = day(task.start), d = day(task.isMilestone ? task.start : task.end);
+    const needed = dep.type === 'SS' || dep.type === 'SF' ? a : b;
+    const actual = dep.type === 'FF' || dep.type === 'SF' ? d : c;
+    const required = needed + dep.lag + (dep.type === 'FS' ? 1 : 0);
+    if (!Number.isFinite(required) || !Number.isFinite(actual)) {
+      dependencies.push({ id: task.id, name: task.name || 'Без названия', predecessor: pred?.name || id, type: dep.type, unknown: true });
+    } else if (actual < required) {
+      dependencies.push({ id: task.id, name: task.name || 'Без названия', predecessor: pred?.name || id, type: dep.type, lateDays: required - actual, unknown: false });
+    }
+  }
+  const risks = [], unscoped = [];
+  for (const checkpoint of checkpoints) {
+    if (!Number.isFinite(day(checkpoint.date))) continue;
+    if (!Array.isArray(checkpoint.taskIds) || !checkpoint.taskIds.length) { unscoped.push(checkpoint.name || 'Контрольная дата'); continue; }
+    const scope = [...new Set(checkpoint.taskIds.map(key))];
+    const affected = scope.filter(id => changed.has(id));
+    if (!affected.length) continue;
+    const latest = (map) => scope.reduce((max, id) => {
+      const end = day(map.get(id)?.end || map.get(id)?.start);
+      return Number.isFinite(end) ? Math.max(max, end) : max;
+    }, -Infinity);
+    if (scope.some(id => !Number.isFinite(day(after.get(id)?.end || after.get(id)?.start)))) {
+      warnings.push((checkpoint.name || 'Контрольная дата') + ': не у всех связанных задач есть корректная дата окончания. Риск оценен только по известным датам.');
+    }
+    const newEnd = latest(after), oldEnd = latest(before), cutoff = day(checkpoint.date);
+    if (newEnd > cutoff) risks.push({ name: checkpoint.name || 'Контрольная дата', date: checkpoint.date, latest: ymd(newEnd),
+      lateDays: newEnd - cutoff, previousLateDays: Number.isFinite(oldEnd) ? Math.max(0, oldEnd - cutoff) : null,
+      taskIds: affected.map(id => after.get(id).id) });
+  }
+  if (unscoped.length) warnings.push('Не привязаны к задачам и не оценены: ' + unscoped.join(', ') + '.');
+  if (changes.some(row => row.final)) warnings.push('Каскад затрагивает завершенные задачи. Проверьте их даты перед подтверждением.');
+  return { changes, dependencies, risks, warnings, blockers: [...new Set(blockers)], canApply: !blockers.length && changes.length > 0 };
+}
+
+if (typeof globalThis !== 'undefined') {
+  const ns = globalThis.RoadmapModules || (globalThis.RoadmapModules = {});
+  ns.createSchedulePreview = createSchedulePreview;
+}
 })();
 //# sourceURL=roadmap-inline-modules.mjs
 </script>
@@ -11414,40 +11694,41 @@ if (typeof globalThis !== 'undefined') {
       if (!m || m.getAttribute('data-materials-ready') === '1') return;
       var surface = m.firstElementChild; if (!surface) return;
       var groups = [
-        { title:'Понять статус', hint:'Сначала факты и прогноз', items:[
-          ['openStatusOnePager', 'Минута на статус', 'Короткий рассказ: прогресс, риски и решения'],
+        { title:'Проверить статус', hint:'Что готово, где задержки и что требует решения', items:[
+          ['openStatusOnePager', 'Короткий статус', 'Главное о плане на одной странице: прогресс, риски и решения'],
           ['openReportModal', 'Отчет за период', 'Что изменилось за выбранное время'],
           ['openReleaseProgressModal', 'Прогресс по релизам', 'Готовность релизов и прогноз дат'],
-          ['exportSlackReportPdf', 'Резервы времени (PDF)', 'Запас хода по задачам и критические риски']
+          ['exportSlackReportPdf', 'Запас времени по задачам', 'PDF с резервами времени и задачами, от которых зависит срок']
         ]},
-        { title:'Собрать материал', hint:'Готовые форматы для встречи', items:[
-          ['openReportBuilder', 'Одна страница (PDF)', 'Конструктор блоков, брендинг и печать', true],
-          ['buildLeadershipSlide', 'Одна картинка 16:9', 'Компактный слайд без технических полей'],
-          ['exportDeckPdf', 'Набор слайдов (PDF)', 'Обзор, релизы, цели и риски']
+        { title:'Подготовить встречу', hint:'Выберите объем: одна страница, один слайд или презентация', items:[
+          ['openReportBuilder', 'Отчет на одной странице', 'Выберите блоки и оформление, затем распечатайте или сохраните PDF', true],
+          ['buildLeadershipSlide', 'Один слайд 16:9', 'Краткий план по секциям и эпикам без технических полей'],
+          ['exportDeckPdf', 'Презентация в PDF', 'Набор слайдов: обзор плана, релизы, цели и риски']
         ]},
-        { title:'Поделиться или выгрузить', hint:'Чат, изображение и таблица', items:[
+        { title:'Выгрузка', hint:'Отправить текст, сохранить картинку или получить таблицу', items:[
           ['copyChatStatus', 'Статус для чата', 'Короткий текст для чата или письма'],
           ['openExportSlice', 'Картинка и печать', 'PNG периода, печать и мини-постер'],
-          ['exportPlanToXlsx', 'План в XLSX', 'Задачи и сводные листы для расчетов']
+          ['exportPlanToXlsx', 'Выгрузить план в XLSX', 'Таблица задач и сводные листы для работы в Excel']
         ]}
       ];
       surface.classList.remove('max-w-md', 'p-5');
       surface.classList.add('max-w-3xl', 'overflow-hidden', 'max-h-[90vh]', 'flex', 'flex-col');
       surface.innerHTML = '<div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-3">'
-        + '<div><h3 class="text-lg font-semibold text-slate-800">Материалы для руководства</h3><p class="text-xs text-slate-500 mt-1">Начните со статуса, затем выберите подходящий формат.</p></div>'
+        + '<div><h3 class="text-lg font-semibold text-slate-800">Материалы для руководства</h3><p class="text-sm text-slate-500 mt-1">Что нужно подготовить? Откройте подходящий раздел.</p></div>'
         + '<button type="button" data-materials-close aria-label="Закрыть" title="Закрыть" class="w-8 h-8 rounded-lg text-slate-400 hover:bg-slate-100 flex items-center justify-center cursor-pointer shrink-0">×</button></div>'
         + '<div data-materials-groups class="p-5 overflow-y-auto grid gap-4"></div>';
       var host = surface.querySelector('[data-materials-groups]');
-      groups.forEach(function(group){
-        var section = document.createElement('section');
+      groups.forEach(function(group, index){
+        var section = document.createElement('details');
+        section.open = index === 0;
         section.className = 'min-w-0';
         section.setAttribute('data-materials-group', '');
-        section.innerHTML = '<h4 data-materials-group-title class="text-xs font-semibold text-slate-800">' + group.title + '</h4><p data-materials-group-hint class="text-[10px] text-slate-500 mt-0.5 mb-2">' + group.hint + '</p>';
+        section.innerHTML = '<summary><span data-materials-group-title class="font-semibold text-slate-800">' + group.title + '</span><span data-materials-group-hint class="text-slate-500">' + group.hint + '</span></summary>';
         var list = document.createElement('div'); list.className = 'min-w-0'; list.setAttribute('data-materials-list', '');
         group.items.forEach(function(item){
           var button = document.createElement('button');
           button.type = 'button';
-          button.className = 'w-full min-w-0 min-h-[68px] overflow-hidden p-3 rounded-xl border border-slate-200 hover:bg-slate-50 hover:border-indigo-300 text-left cursor-pointer transition-colors';
+          button.className = 'w-full min-w-0 min-h-[68px] p-3 rounded-xl border border-slate-200 hover:bg-slate-50 hover:border-indigo-300 text-left cursor-pointer transition-colors';
           button.innerHTML = '<span data-materials-copy class="block min-w-0"><span data-materials-title class="block min-w-0 text-sm font-semibold text-slate-800">' + item[1] + '</span><span data-materials-description class="block min-w-0 text-[11px] text-slate-500 mt-1">' + item[2] + '</span></span>';
           button.setAttribute('data-materials-action', item[0]);
           if (item[3]) button.setAttribute('data-adv', '');
@@ -12375,7 +12656,7 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '16.5.1';
+    const APP_VERSION = '16.6.0';
     const APP_VERSION_DATE = '23.09.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
@@ -12566,58 +12847,13 @@ if (typeof globalThis !== 'undefined') {
     let _criticalPathIssue = '';
     let _criticalPathExcluded = 0;
     function computeCriticalPath() {
-      _critPathIds = new Set();
-      _taskSlackMap = Object.create(null);
-      _criticalPathIssue = '';
-      _criticalPathExcluded = 0;
-      if (typeof featureOn === 'function' && !featureOn('deps')) {
-        _criticalPathIssue = 'Включите связи для расчета резервов времени.';
-        return;
-      }
-      // Calendar reserves against the current plan horizon, without changing dates.
-      // Difference constraints: successor.start >= predecessor.start + weight.
-      const day = value => {
-        if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return NaN;
-        const ms = Date.parse(value + 'T00:00:00Z');
-        return Number.isFinite(ms) && new Date(ms).toISOString().slice(0, 10) === value ? ms / 86400000 : NaN;
-      };
-      const nodes = new Map();
-      for (const task of (typeof roadmapData !== 'undefined' ? roadmapData : [])) {
-        if (!task || task.hidden) continue;
-        const id = String(task.id), start = day(task.start), end = day(task.isMilestone ? task.start : task.end);
-        if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) { _criticalPathExcluded++; continue; }
-        if (nodes.has(id)) { _criticalPathIssue = 'Резервы не рассчитаны: повторяются ID задач.'; return; }
-        nodes.set(id, { task, start, end, span:end - start, next:[], incoming:0 });
-      }
-      if (!nodes.size) { _criticalPathIssue = 'Для расчета резервов нужны корректные даты задач.'; return; }
-      let horizon = -Infinity;
-      for (const node of nodes.values()) {
-        horizon = Math.max(horizon, node.end);
-        for (const pid of new Set(getPredecessorIds(node.task).map(String))) {
-          const pred = nodes.get(pid);
-          if (!pred) { _criticalPathIssue = 'Резервы не рассчитаны: у связанной задачи нет дат или она вне текущего плана.'; return; }
-          const dep = _depInfo(node.task, pid), lag = Number.isFinite(dep.lag) ? dep.lag : 0;
-          const weight = lag + (dep.type === 'SS' ? 0 : dep.type === 'FF' ? pred.span - node.span : dep.type === 'SF' ? -node.span : pred.span + 1);
-          pred.next.push({ node, weight });
-          node.incoming++;
-        }
-      }
-      // Kahn order and iterative reverse pass also support very long dependency chains.
-      const order = [...nodes.values()].filter(node => node.incoming === 0);
-      for (let i = 0; i < order.length; i++) {
-        for (const edge of order[i].next) if (--edge.node.incoming === 0) order.push(edge.node);
-      }
-      if (order.length !== nodes.size) { _criticalPathIssue = 'Резервы не рассчитаны: устраните цикл в связях задач.'; return; }
-      for (let i = order.length - 1; i >= 0; i--) {
-        const node = order[i];
-        node.latestStart = horizon - node.span;
-        for (const edge of node.next) node.latestStart = Math.min(node.latestStart, edge.node.latestStart - edge.weight);
-        if (!node.task.isMilestone) {
-          const slack = node.latestStart - node.start;
-          _taskSlackMap[node.task.id] = slack;
-          if (slack <= 0) _critPathIds.add(node.task.id);
-        }
-      }
+      const result = RoadmapModules.computePlanReserves(roadmapData, {
+        getPredecessorIds, _depInfo, enabled: typeof featureOn !== 'function' || featureOn('deps')
+      });
+      _critPathIds = result.criticalIds;
+      _taskSlackMap = result.slack;
+      _criticalPathIssue = result.issue;
+      _criticalPathExcluded = result.excluded;
     }
     function setShowCriticalPath(on) {
       showCriticalPath = !!on;
@@ -16485,83 +16721,13 @@ if (typeof globalThis !== 'undefined') {
     }
     // Каскадно сдвигает зависимые задачи: их start должен быть строго после end самого позднего предшественника
     function cascadeDependencies(parentTaskId) {
-      if (typeof featureOn === 'function' && !featureOn('deps')) return; // модуль «Зависимости» выключен , перетаскивание/сдвиг дат не каскадит зависимые
-      const byId = new Map(), predecessors = new Map(), successors = new Map();
-      roadmapData.forEach(t => { if (t) byId.set(t.id, t); });
-      const parent = byId.get(parentTaskId);
-      if (!parent) return [];
-      roadmapData.forEach(t => {
-        if (!t) return;
-        const preds = [...new Set(getPredecessorIds(t))];
-        predecessors.set(t.id, preds);
-        preds.forEach(pid => { if (!successors.has(pid)) successors.set(pid, []); successors.get(pid).push(t.id); });
+      if (typeof featureOn === 'function' && !featureOn('deps')) return;
+      const result = RoadmapModules.runDependencyCascade(roadmapData, parentTaskId, {
+        getPredecessorIds, _depInfo, dateToDays, daysToDate, getStatusGroup, today: toYmdLocal(CURRENT_DATE)
       });
-      // Сначала все ветви сходятся, затем двигаются их потомки. Рекурсивный
-      // visited обрывал второе обновление потомков в ромбе зависимостей.
-      const reachable = new Set([parentTaskId]), pending = [parentTaskId];
-      for (let head = 0; head < pending.length; head++) {
-        (successors.get(pending[head]) || []).forEach(id => { if (!reachable.has(id)) { reachable.add(id); pending.push(id); } });
-      }
-      const indegree = new Map(), queue = [];
-      pending.forEach(id => {
-        const n = (predecessors.get(id) || []).filter(pid => reachable.has(pid)).length;
-        indegree.set(id, n); if (!n) queue.push(id);
-      });
-      const _shifted = [];
-      const changed = new Set([parentTaskId]);
-      let processed = 0;
-      for (let head = 0; head < queue.length; head++) {
-        const id = queue[head], task = byId.get(id), preds = predecessors.get(id) || [];
-        processed++;
-        (successors.get(id) || []).forEach(next => {
-          const n = indegree.get(next) - 1; indegree.set(next, n); if (!n) queue.push(next);
-        });
-        if (id !== parentTaskId && task && preds.some(pid => changed.has(pid))) {
-          const move = () => {
-          if (!task.start || (!task.isMilestone && !task.end)) return; // задача без дат каскадом не сдвигается
-          const taskStartDays = dateToDays(task.start);
-          const taskEndDays = dateToDays(task.isMilestone ? task.start : task.end);
-          if (!Number.isFinite(taskStartDays) || !Number.isFinite(taskEndDays)) return;
-          const duration = taskEndDays - taskStartDays;
-          // Минимально допустимый старт по КАЖДОМУ предшественнику с учетом типа связи и лага
-          let requiredStart = -Infinity;
-          preds.forEach(predId => {
-            const p = byId.get(predId);
-            if (!p) return;
-            const pStart = p.start ? dateToDays(p.start) : null;
-            const pEnd = p.end ? dateToDays(p.end) : pStart;
-            if (pStart == null && pEnd == null) return;
-            const di = _depInfo(task, predId);
-            let rs;
-            if (di.type === 'SS') rs = (pStart != null ? pStart : pEnd) + di.lag;
-            else if (di.type === 'FF') rs = (pEnd != null ? pEnd : pStart) + di.lag - duration;
-            else if (di.type === 'SF') rs = (pStart != null ? pStart : pEnd) + di.lag - duration;
-            else rs = (pEnd != null ? pEnd : pStart) + 1 + di.lag;
-            requiredStart = Math.max(requiredStart, rs);
-          });
-          if (!Number.isFinite(requiredStart)) return;
-          // Хвост тянется за колбаской в ОБЕ стороны: вправо (нарушение связи) , любая незакрытая,
-          // влево (у зависимой появился зазор) , только запланированная и не раньше сегодня.
-          let _target = null;
-          if (taskStartDays < requiredStart) _target = requiredStart;
-          else if (getStatusGroup(task.status) === 'planned') {
-            const _pullTo = Math.max(requiredStart, dateToDays(toYmdLocal(CURRENT_DATE)));
-            if (taskStartDays > _pullTo) _target = _pullTo;
-          }
-          if (_target != null) {
-            task.start = daysToDate(_target);
-            task.end = daysToDate(_target + (task.isMilestone ? 0 : Math.max(0, duration)));
-            _shifted.push(task.id);
-            changed.add(task.id);
-          }
-          };
-          move();
-        }
-      }
-      // В цикле нет однозначного порядка: не угадываем новые даты цикла и его хвоста.
-      if (processed < reachable.size && typeof showToast === 'function') showToast('Циклические зависимости: даты задач в цикле и после него не изменены. Проверьте связи.', 'warn', 5000);
-      _cascadeShifted = _shifted;
-      return _shifted;
+      if (result.cyclic && typeof showToast === 'function') showToast('Циклические зависимости: даты задач в цикле и после него не изменены. Проверьте связи.', 'warn', 5000);
+      _cascadeShifted = result.shifted;
+      return result.shifted;
     }
 
     // true, если задача taskId (транзитивно) зависит от ancestorId , для защиты от циклов
@@ -17511,56 +17677,112 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function showLevelingSuggestions() {
       const el = document.getElementById('levelingSuggestions'); if (!el) return;
       const sugg = computeLevelingSuggestions();
-      if (!sugg.length) { el.innerHTML = '<div class="text-[10px] text-emerald-600 px-1 py-1">Перегрузок нет , двигать нечего.</div>'; return; }
-      const rows = sugg.map(s => `<div class="flex items-center gap-2 py-1 text-[10px] border-b border-slate-100 last:border-b-0">
-        <span class="truncate grow text-slate-700" title="${escAttr(s.name)}">${escHtml(s.person)}: ${escHtml(s.name)}</span>
-        <span class="shrink-0 text-slate-500 tabular-nums">${escHtml(formatDateString(s.fromStart))}..${escHtml(formatDateString(s.fromEnd))} → ${escHtml(formatDateString(s.toStart))}..${escHtml(formatDateString(s.toEnd))}</span>
-        <button type="button" aria-label="Сдвинуть задачу ${escAttr(s.name)} на ${s.shiftDays} дн." onclick="applyLevelingSuggestion(${s.id}, '${escAttr(s.toStart)}', '${escAttr(s.toEnd)}')" class="shrink-0 px-2 py-0.5 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer">Сдвинуть</button>
+      if (!sugg.length) { el.innerHTML = '<p class="text-xs text-slate-600">Новых переносов не предложено. Это не гарантирует отсутствие перегрузки.</p>'; return; }
+      const rows = sugg.map((s, index) => `<div class="leveling-proposal border-b border-slate-200">
+        <span class="text-slate-800"><b>${escHtml(s.name)}</b><br>${escHtml(s.person)}</span>
+        <span class="text-slate-600">${escHtml(s.fromStart)} / ${escHtml(s.fromEnd)} → ${escHtml(s.toStart)} / ${escHtml(s.toEnd)}</span>
+        <button type="button" data-leveling-index="${index}" class="px-3 py-1 rounded-lg bg-indigo-600 text-white" aria-label="Проверить перенос задачи ${escAttr(s.name)}">Проверить</button>
       </div>`).join('');
-      el.innerHTML = `<div class="p-2 bg-white rounded-lg border border-slate-200">
-        <div class="flex items-center justify-between mb-1 px-1">
-          <span class="text-[10px] font-semibold text-slate-600">Предложено сдвигов: ${sugg.length}</span>
-          <button type="button" aria-label="Применить все предложенные сдвиги (${sugg.length})" onclick="applyAllLeveling()" class="px-2 py-0.5 rounded-md bg-amber-600 text-white text-[10px] font-semibold hover:bg-amber-700 cursor-pointer">Применить все</button>
-        </div>
-        ${rows}
-        <div class="text-[10px] text-amber-600 px-1 pt-1 flex items-start gap-1"><svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0 mt-px" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path></svg><span>Сдвиг не проверяет зависимости и дедлайны , после применения посмотрите розовые связи и предупреждения.</span></div>
-      </div>`;
+      el.innerHTML = `<div class="p-3 bg-white rounded-xl border border-slate-200">
+        <div class="flex items-center justify-between gap-2 flex-wrap"><b class="text-xs text-slate-700">Предложено переносов: ${sugg.length}</b>
+        <button type="button" onclick="applyAllLeveling()" class="px-3 py-2 rounded-lg bg-indigo-600 text-white text-xs">Проверить все</button></div>
+        ${rows}<p class="text-xs text-slate-600 mt-2">Сначала покажем итоговые даты, зависимые задачи и риски. До подтверждения план не изменится.</p></div>`;
+      el.querySelectorAll('[data-leveling-index]').forEach(button => button.addEventListener('click', () => {
+        const s = sugg[Number(button.dataset.levelingIndex)];
+        applyLevelingSuggestion(s.id, s.toStart, s.toEnd);
+      }));
+    }
+    let _schedulePreview = null;
+    function _schedulePreviewCheckpoints() {
+      const points = [], releases = _releaseProgressAgg(roadmapData, customCutoffs);
+      releases.rels.forEach(name => {
+        if (releases.relDate[name]) points.push({ name: 'Релиз ' + name, date: releases.relDate[name], taskIds: roadmapData.filter(t => !t.hidden && String(t.release || '').trim() === name).map(t => t.id) });
+      });
+      (customCutoffs || []).forEach(c => {
+        if (!c || !c.date) return;
+        const legacy = String(c.id || '').match(/^task-deadline-(.+)$/);
+        const linked = c.linkedTaskId != null ? c.linkedTaskId : legacy ? legacy[1] : null;
+        const releaseName = String(c.name || '').replace(/^Релиз\s+/i, '').trim();
+        if (linked == null && releases.rels.includes(releaseName)) return;
+        points.push({ name: c.name || 'Контрольная дата', date: c.date, taskIds: linked == null ? [] : [linked] });
+      });
+      roadmapData.forEach(t => {
+        if (t.hidden) return;
+        if (t.isMilestone && t.start) points.push({ name: 'Веха: ' + (t.name || 'Без названия'), date: t.start, taskIds: [t.id] });
+        if (t.deadline) points.push({ name: 'Срок задачи: ' + (t.name || 'Без названия'), date: t.deadline, taskIds: [t.id] });
+      });
+      return points;
+    }
+    function _schedulePreviewSignature() {
+      return _jsonStorage.snapshotContentSignature(buildRoadmapSnapshot(false));
+    }
+    function openSchedulePreview(proposals, title, options) {
+      if (READ_ONLY_MODE || !requireUnlocked() || !proposals.length) return;
+      const cascadeEnabled = options && options.cascade === false ? false : featureOn('deps');
+      const model = RoadmapModules.createSchedulePreview({ tasks: roadmapData, proposals, checkpoints: _schedulePreviewCheckpoints(),
+        today: toYmdLocal(CURRENT_DATE), cascadeEnabled, statusGroup: getStatusGroup });
+      const signature = _schedulePreviewSignature();
+      const dates = (start, end) => escHtml(start === end ? start : start + ' / ' + end);
+      const changes = model.changes.map(row => `<li class="schedule-preview-row bg-white text-slate-700">
+        <b class="text-slate-800">${escHtml(row.name)}</b><div>${row.cause === 'direct' ? 'Выбранный перенос' : 'По зависимости'}${row.isMilestone ? ' · веха' : ''}${row.final ? ' · завершена' : ''}</div>
+        <div class="schedule-preview-dates"><div><span>Сейчас</span><b>${dates(row.fromStart, row.fromEnd)}</b></div><div><span>После подтверждения</span><b>${dates(row.toStart, row.toEnd)}</b></div></div>
+        <div>${row.deltaDays == null ? '' : row.deltaDays === 0 ? 'Дата окончания не меняется' : 'Окончание ' + (row.deltaDays > 0 ? 'позже на ' : 'раньше на ') + Math.abs(row.deltaDays) + ' дн.'}</div></li>`).join('');
+      const list = items => '<ul class="schedule-preview-list">' + items.map(text => '<li class="schedule-preview-row bg-slate-50 text-slate-700">' + escHtml(text) + '</li>').join('') + '</ul>';
+      const dependencies = model.dependencies.map(d => d.name + ' ← ' + d.predecessor + ' (' + d.type + '): ' + (d.unknown ? 'не удалось проверить, нет задачи или корректных дат' : 'нарушение на ' + d.lateDays + ' дн.'));
+      const risks = model.risks.map(r => r.name + ': срок ' + r.date + ', после переноса ' + r.latest + ', позже на ' + r.lateDays + ' дн.' + (r.previousLateDays > 0 ? ' Уже было опоздание: ' + r.previousLateDays + ' дн.' : ' Новый риск.'));
+      const html = `<section id="schedulePreviewContent" class="schedule-preview text-slate-700">
+        <p>Изменится задач: <b>${model.changes.length}</b>. По зависимости: <b>${model.changes.filter(r => r.cause === 'dependency').length}</b>. План пока не изменен.</p>
+        ${model.blockers.length ? '<h4>Перенос недоступен</h4>' + list(model.blockers) : ''}
+        <h4>Что изменится</h4><ul class="schedule-preview-list">${changes || '<li>Изменений дат нет.</li>'}</ul>
+        <h4>Связи после переноса</h4>${dependencies.length ? list(dependencies) : '<p>В затронутых связях нарушений не найдено.</p>'}
+        <h4>Контрольные даты</h4>${risks.length ? list(risks) : '<p>Новых выходов за привязанные контрольные даты не найдено.</p>'}
+        ${model.warnings.length ? '<h4>Важно учесть</h4>' + list(model.warnings) : ''}
+        <p class="mt-3">Это проверка дат и связей, не гарантия сроков или отсутствия перегрузки. Все показанные изменения можно отменить одним действием.</p>
+        <p id="schedulePreviewError" role="alert" class="text-rose-700"></p>
+        <div class="schedule-preview-actions"><button type="button" onclick="closePlanTool()" class="bg-white border border-slate-200 text-slate-700">Отмена</button>
+        <button id="schedulePreviewApply" type="button" onclick="confirmSchedulePreview()" class="bg-indigo-600 text-white" ${model.canApply ? '' : 'disabled'}>Применить ${model.changes.length} ${pluralRu(model.changes.length, ['перенос', 'переноса', 'переносов'])}</button></div></section>`;
+      _openPlanTool(title || 'Перенос дат', 'Проверьте последствия перед подтверждением', html);
+      _schedulePreview = { model, signature, projectId: projectStorageId, token: _projectTransitionToken, title: title || 'Перенос дат', today: toYmdLocal(CURRENT_DATE) };
+    }
+    function confirmSchedulePreview() {
+      const pending = _schedulePreview;
+      if (!pending || !pending.model.canApply || READ_ONLY_MODE || !requireUnlocked()) return;
+      if (!document.getElementById('schedulePreviewContent') || document.getElementById('planToolModal').classList.contains('hidden')) return;
+      if (pending.projectId !== projectStorageId || pending.token !== _projectTransitionToken || pending.today !== toYmdLocal(CURRENT_DATE) || pending.signature !== _schedulePreviewSignature()) {
+        document.getElementById('schedulePreviewError').textContent = 'План изменился после расчета. Закройте окно и проверьте перенос заново.';
+        document.getElementById('schedulePreviewApply').disabled = true;
+        _schedulePreview = null;
+        return;
+      }
+      const byId = new Map(roadmapData.map(task => [String(task.id), task]));
+      const snapshot = captureUndoState();
+      const memory = _captureSnapshotMemoryStore();
+      // Apply exactly the previewed dates, never run a second cascade on live data.
+      try {
+        pending.model.changes.forEach(row => { const task = byId.get(String(row.id)); task.start = row.toStart; task.end = row.toEnd; });
+        if (_persistProjectStateNow() !== true) throw new Error('Не удалось сохранить перенос');
+      } catch (error) {
+        _applyRoadmapSnapshotState(snapshot, { projectIdMode: 'snapshot' });
+        _restoreSnapshotMemoryStore(memory);
+        renderRoadmap(true);
+        document.getElementById('schedulePreviewError').textContent = 'Не удалось сохранить перенос. Исходные даты восстановлены. Проверьте сохранение и откройте предпросмотр заново.';
+        document.getElementById('schedulePreviewApply').disabled = true;
+        _schedulePreview = null;
+        return;
+      }
+      closePlanTool();
+      scheduleAutoSaveFile();
+      document.getElementById('resourceModal').classList.add('hidden');
+      document.getElementById('releaseProgressModal').classList.add('hidden');
+      syncBodyScrollLock();
+      renderRoadmap(true);
+      offerUndo(pending.title + ': ' + pending.model.changes.length + ' задач', snapshot);
     }
     function applyLevelingSuggestion(id, toStart, toEnd) {
-      if (READ_ONLY_MODE) return;
-      if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
-      const t = roadmapData.find(x => x.id === id); if (!t) return;
-      const _snap = (typeof captureUndoState === 'function') ? captureUndoState() : null; // снимок до сдвига , для отмены
-      t.start = toStart; t.end = toEnd;
-      if (typeof cascadeDependencies === 'function') cascadeDependencies(t.id);
-      storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData));
-      if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile();
-      renderRoadmap(true); renderResourceManagerList(); showLevelingSuggestions();
-      if (_snap && typeof offerUndo === 'function') offerUndo('Загрузка выровнена', _snap);
+      openSchedulePreview([{ id, toStart, toEnd }], 'Перенос задачи');
     }
     function applyAllLeveling() {
-      if (READ_ONLY_MODE) return;
-      if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
-      const sugg = computeLevelingSuggestions();
-      if (!sugg.length) return;
-      openConfirm({
-        title: 'Применить все сдвиги?',
-        desc: `Будет передвинуто задач: ${sugg.length}. Зависимости и дедлайны при этом не проверяются , после применения посмотрите розовые связи и предупреждения.`,
-        okText: 'Применить',
-        danger: false,
-        onOk: () => {
-          const _snap = (typeof captureUndoState === 'function') ? captureUndoState() : null; // снимок до массового сдвига , для отмены
-          sugg.forEach(s => { const t = roadmapData.find(x => x.id === s.id); if (t) { t.start = s.toStart; t.end = s.toEnd; } });
-          if (typeof cascadeDependencies === 'function') {
-            sugg.forEach(s => cascadeDependencies(s.id));
-          }
-          storage.set('gantt_roadmap_v10_data', JSON.stringify(roadmapData));
-          if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile();
-          renderRoadmap(true); renderResourceManagerList(); showLevelingSuggestions();
-          if (_snap && typeof offerUndo === 'function') offerUndo(`Применено сдвигов: ${sugg.length}`, _snap);
-          else if (typeof showToast === 'function') showToast(`Применено сдвигов: ${sugg.length}`, 'ok', 3500);
-        }
-      });
+      openSchedulePreview(computeLevelingSuggestions(), 'Выравнивание загрузки');
     }
     function renderResourceManagerList() {
       const container = document.getElementById('resourceManagerList');
@@ -24418,7 +24640,7 @@ const m = document.getElementById('mineModeBtn');
       var b = document.getElementById('planToolBody'); if (b) b.innerHTML = html || '';
       var m = document.getElementById('planToolModal'); if (m) { m.classList.remove('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
     }
-    function closePlanTool() { var m = document.getElementById('planToolModal'); if (m) m.classList.add('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
+    function closePlanTool() { _schedulePreview = null; var m = document.getElementById('planToolModal'); if (m) m.classList.add('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
     function _ptGoTask(id) { closePlanTool(); if (typeof openTaskById === 'function') openTaskById(id); else if (typeof scrollToTask === 'function') scrollToTask(id); }
 
     // ===================== Пункт 7: Проверка правдоподобности плана =====================
@@ -36254,12 +36476,15 @@ function _suspendUiLayer(layer) {
 }
 function _restoreUiLayerRecord(record) {
   const layer = record && record.layer;
-  if (!_uiLayerIsNaturallyOpen(layer) || _uiLayerIsTour(layer)) return false;
+  if (!layer || _uiLayerIsTour(layer)) return false;
   layer.classList.remove('rm-layer-suspended');
   delete layer.dataset.rmLayerSuspended;
   if (record.ariaHidden === null) layer.removeAttribute('aria-hidden');
   else layer.setAttribute('aria-hidden', record.ariaHidden);
   if (!record.hadInert) layer.removeAttribute('inert');
+  // A parent closed together with its child must not retain suspension after
+  // its stack record is discarded, otherwise its next opening stays invisible.
+  if (!_uiLayerIsNaturallyOpen(layer)) return false;
   layer.style.setProperty('--rm-layer-z', String(++_modalLayerSerial));
   _uiLayerActive = layer;
   const restoreTarget = record.focused;
@@ -36453,7 +36678,7 @@ function syncBodyScrollLock() {
         MODAL_IDS.forEach(id => { const e = document.getElementById(id); if (!e || e.classList.contains('hidden') || _uiLayerIsSuspended(e)) return; const zi = parseInt(getComputedStyle(e).zIndex, 10) || 0; if (zi >= z) { z = zi; top = e; } });
         return top;
       }
-      const focusables = (el) => Array.from(el.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')).filter(function (node) {
+      const focusables = (el) => Array.from(el.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),summary,[tabindex]:not([tabindex="-1"])')).filter(function (node) {
         if (!node.isConnected || node.hidden || node.closest('[hidden], details:not([open]) > :not(summary)')) return false;
         const style = getComputedStyle(node);
         const rect = node.getBoundingClientRect();
@@ -37383,7 +37608,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v16.5.1 · 23.09.2026</span>
+     <span id="appVersionBadge">v16.6.0 · 23.09.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -37394,9 +37619,6 @@ function syncBodyScrollLock() {
   </div>
   <div class="info-scroll-content p-6 overflow-y-auto flex-1 space-y-5 text-sm text-slate-600">
 
-   <div class="bg-indigo-50/50 rounded-xl p-4 border border-indigo-100/50 shadow-sm">
-    <p class="text-slate-700 text-sm">В рабочем режиме изменения сохраняются в браузере, если его хранилище доступно. Для копии на диске скачайте JSON или подключите файл для автозаписи в поддерживаемом браузере. В демо и учебных примерах правки остаются в памяти вкладки. Обмен с Jira и его автоматическое обновление вы включаете отдельно.</p>
-   </div>
 
    <div>
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">С чего начать , четыре шага</h4>
@@ -37436,41 +37658,32 @@ function syncBodyScrollLock() {
 
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v16.5.1</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v16.6.0</h4>
     <div class="info-release-grid grid gap-3 mb-6">
-     <article data-release-card="fields" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6M10 15v6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Показывайте нужные поля</h5><span class="info-release-badge">ПОЛЯ</span></div>
-      <p class="text-xs text-slate-600">Скройте лишние поля карточки и шапки в настройках. Значения останутся в плане.</p>
+     <article data-release-card="schedule-preview" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6M10 15v6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Сначала проверьте переносы</h5><span class="info-release-badge">ПЛАНИРОВАНИЕ</span></div>
+      <p class="text-xs text-slate-600">Выравнивание показывает новые даты, зависимые задачи и риски до изменения плана.</p>
      </article>
-     <article data-release-card="studio" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4zM4 9h16M9 9v11"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Студия по умолчанию</h5><span class="info-release-badge">ТЕМА</span></div>
-      <p class="text-xs text-slate-600">При первом запуске открывается светлая Студия. Портал и Темная тема доступны в настройках.</p>
+     <article data-release-card="safe-apply" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4zM4 9h16M9 9v11"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Применение с одной отменой</h5><span class="info-release-badge">СОХРАННОСТЬ</span></div>
+      <p class="text-xs text-slate-600">Применяются только показанные даты. Одно действие отмены возвращает все переносы.</p>
      </article>
-     <article data-release-card="forecast" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19h16M6 15l4-5 4 2 4-7M15 5h3v3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Сразу видно риск срока</h5><span class="info-release-badge">ПРОГНОЗ</span></div>
-      <p class="text-xs text-slate-600">Контрольные даты видны сразу. Цели и пробелы в данных учитываются отдельно.</p>
+     <article data-release-card="materials" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19h16M6 15l4-5 4 2 4-7M15 5h3v3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Материалы по задаче</h5><span class="info-release-badge">МАТЕРИАЛЫ</span></div>
+      <p class="text-xs text-slate-600">Проверьте статус, подготовьте встречу или откройте выгрузку. XLSX находится в разделе «Выгрузка».</p>
      </article>
-     <article data-release-card="dependencies" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h6v6H3zM15 13h6v6h-6zM9 8h4v8h2m-3-3l3 3-3 3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Связи в два шага</h5><span class="info-release-badge">СВЯЗИ</span></div>
-      <p class="text-xs text-slate-600">Выберите, что сделать сначала, а что потом. На карте видны названия задач и направление связи.</p>
+     <article data-release-card="version-history" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h6v6H3zM15 13h6v6h-6zM9 8h4v8h2m-3-3l3 3-3 3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Справка в порядке версий</h5><span class="info-release-badge">ПОМОЩЬ</span></div>
+      <p class="text-xs text-slate-600">Последние выпуски добавлены в историю. Пояснения о хранении данных перенесены вниз.</p>
      </article>
-     <article data-release-card="board" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18v16H3zM9 4v16M15 4v16M5 8h2m4 0h2m4 0h2"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Доска без лишних полей</h5><span class="info-release-badge">ДОСКА</span></div>
-      <p class="text-xs text-slate-600">Откройте карточку, чтобы сменить статус. Перетаскивание между колонками тоже работает.</p>
+     <article data-release-card="keyboard-focus" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18v16H3zM9 4v16M15 4v16M5 8h2m4 0h2m4 0h2"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Удобнее с клавиатурой</h5><span class="info-release-badge">ДОСТУПНОСТЬ</span></div>
+      <p class="text-xs text-slate-600">Tab проходит все разделы материалов. У полей один контур фокуса без лишнего кольца.</p>
      </article>
-     <article data-release-card="navigation" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3h10l4 4v14H5zM14 3v5h5M8 12h8m-8 4h5"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Материалы в один шаг</h5><span class="info-release-badge">МЕНЮ</span></div>
-      <p class="text-xs text-slate-600">Отчеты и слайды открываются кнопкой «Материалы». Выгрузка XLSX находится в меню «Данные».</p>
+     <article data-release-card="plan-status" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3h10l4 4v14H5zM14 3v5h5M8 12h8m-8 4h5"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Читаемое состояние плана</h5><span class="info-release-badge">ИНТЕРФЕЙС</span></div>
+      <p class="text-xs text-slate-600">Крупнее показатели и подписи. Длинные названия контрольных дат переносятся без обрезки.</p>
      </article>
-    </div>
-   </div>
-   <div class="info-release-previous">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Возможности v15.8 сохранены</h4>
-    <div class="grid grid-cols-1 gap-3 mb-6">
-     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Презентация без зависших уведомлений</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ПРЕЗЕНТАЦИЯ</span></div><p class="text-xs text-slate-600">Сообщение после переноса дат больше не занимает место в макете. Вместо постоянного предупреждения — компактное управление датами; пояснение о влиянии на основной план открывается отдельно.</p></div>
-     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Вы сами выбираете шапку отчёта</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">HTML / PDF</span></div><p class="text-xs text-slate-600">В настройках набора можно скрыть всю шапку или отдельно название проекта, РО, дату, значок, версию, метки релизов и каждый показатель. Выбор сохраняется для этого набора и одинаково применяется к HTML и PDF.</p></div>
-     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Финальные статусы настраиваются под процесс</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">СТАТУСЫ</span></div><p class="text-xs text-slate-600">Отметьте нужные статусы как финальные в справочнике. Такие задачи учитываются как завершённые и не попадают в просрочки. Названия статусов и сами задачи при этом не изменяются.</p></div>
-     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Доска и лента не теряют статусы</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ДОСКА</span></div><p class="text-xs text-slate-600">Импортированные статусы получают собственные колонки и остаются в фильтрах. Новые статусы появляются автоматически, скрытые колонки обозначены счётчиком, а стрелки прокрутки открывают конец длинной статусной ленты.</p></div>
     </div>
    </div>
 
@@ -37480,6 +37693,66 @@ function syncBodyScrollLock() {
     <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
    </summary>
    <div class="mt-4 space-y-5">
+   <!-- INFO_RELEASE_RECENT_START -->
+   <section class="rounded-xl border border-slate-200 p-4">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v16.5.1</h4>
+    <div class="mt-3"><h5 class="font-semibold text-slate-800 text-sm">Карточка задачи на узком экране</h5><p class="text-xs text-slate-600 mt-2">Название и кнопки в шапке больше не перекрывают друг друга. Работает во всех трех темах.</p></div>
+    <div class="mt-3"><h5 class="font-semibold text-slate-800 text-sm">Понятнее изменения из Jira</h5><p class="text-xs text-slate-600 mt-2">Длинные значения в предпросмотре переносятся на новые строки. Видно, что именно изменится.</p></div>
+    <div class="mt-3"><h5 class="font-semibold text-slate-800 text-sm">Точнее запас времени</h5><p class="text-xs text-slate-600 mt-2">Расчет учитывает все ветви и типы связей. Нехватка времени показывается как дефицит.</p></div>
+    <div class="mt-3"><h5 class="font-semibold text-slate-800 text-sm">Предупреждения о связях</h5><p class="text-xs text-slate-600 mt-2">Если в связях есть цикл или не хватает данных, расчет объясняет ограничение.</p></div>
+    <div class="mt-3"><h5 class="font-semibold text-slate-800 text-sm">Длинные цепочки задач</h5><p class="text-xs text-slate-600 mt-2">Проверен расчет цепочки из 12 000 задач. Глубокие зависимости не требуют рекурсивного обхода.</p></div>
+    <div class="mt-3"><h5 class="font-semibold text-slate-800 text-sm">Обновлены примеры и инструкция</h5><p class="text-xs text-slate-600 mt-2">Снимки экранов и демонстрационные материалы обновлены для этого выпуска.</p></div>
+   </section>
+   <section class="rounded-xl border border-slate-200 p-4">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v16.5.0</h4>
+    <h5 class="font-semibold text-slate-800 text-sm">Быстрый доступ к критическому пути</h5>
+    <p class="text-xs text-slate-600 mt-2">Фильтр в шапке таймлайна оставляет задачи, которые определяют срок плана, и выделяет их связи.</p>
+   </section>
+   <section class="rounded-xl border border-slate-200 p-4">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v16.4.0</h4>
+    <h5 class="font-semibold text-slate-800 text-sm">Критический путь в фильтрах и карточке</h5>
+    <p class="text-xs text-slate-600 mt-2">Добавлены фильтр задач критического пути и отметка в карточке задачи.</p>
+   </section>
+   <section class="rounded-xl border border-slate-200 p-4">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v16.3.0</h4>
+    <h5 class="font-semibold text-slate-800 text-sm">Зависимые переносы и таблица загрузки</h5>
+    <p class="text-xs text-slate-600 mt-2">Выравнивание сдвигает связанные задачи. Загрузку команды можно выгрузить в CSV по неделям или месяцам.</p>
+   </section>
+   <section class="rounded-xl border border-slate-200 p-4">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v16.2.0</h4>
+    <h5 class="font-semibold text-slate-800 text-sm">Загрузка команды и выравнивание</h5>
+    <p class="text-xs text-slate-600 mt-2">Фильтры показывают перегрузку и резерв. Очередь задач можно выровнять с отменой, а загрузку включить в PDF.</p>
+   </section>
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v16.1.0</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6M10 15v6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Показывайте нужные поля</h5><span class="info-release-badge">ПОЛЯ</span></div>
+      <p class="text-xs text-slate-600">Скройте лишние поля карточки и шапки в настройках. Значения останутся в плане.</p>
+     </article>
+     <article class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4zM4 9h16M9 9v11"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Студия по умолчанию</h5><span class="info-release-badge">ТЕМА</span></div>
+      <p class="text-xs text-slate-600">При первом запуске открывается светлая Студия. Портал и Темная тема доступны в настройках.</p>
+     </article>
+     <article class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19h16M6 15l4-5 4 2 4-7M15 5h3v3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Сразу видно риск срока</h5><span class="info-release-badge">ПРОГНОЗ</span></div>
+      <p class="text-xs text-slate-600">Контрольные даты видны сразу. Цели и пробелы в данных учитываются отдельно.</p>
+     </article>
+     <article class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h6v6H3zM15 13h6v6h-6zM9 8h4v8h2m-3-3l3 3-3 3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Связи в два шага</h5><span class="info-release-badge">СВЯЗИ</span></div>
+      <p class="text-xs text-slate-600">Выберите, что сделать сначала, а что потом. На карте видны названия задач и направление связи.</p>
+     </article>
+     <article class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18v16H3zM9 4v16M15 4v16M5 8h2m4 0h2m4 0h2"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Доска без лишних полей</h5><span class="info-release-badge">ДОСКА</span></div>
+      <p class="text-xs text-slate-600">Откройте карточку, чтобы сменить статус. Перетаскивание между колонками тоже работает.</p>
+     </article>
+     <article class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3h10l4 4v14H5zM14 3v5h5M8 12h8m-8 4h5"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Материалы в один шаг</h5><span class="info-release-badge">МЕНЮ</span></div>
+      <p class="text-xs text-slate-600">Отчеты и слайды открываются кнопкой «Материалы». Выгрузка XLSX находится в меню «Данные».</p>
+     </article>
+    </div>
+   </div>
+   <!-- INFO_RELEASE_RECENT_END -->
    <!-- INFO_RELEASE_ARCHIVED_START -->
    <div class="info-release-archived">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v16.0.1</h4>
@@ -37534,6 +37807,20 @@ function syncBodyScrollLock() {
     </div>
    </div>
    <!-- INFO_RELEASE_ARCHIVED_END -->
+   <section class="rounded-xl border border-slate-200 p-4">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v15.9</h4>
+    <h5 class="font-semibold text-slate-800 text-sm">Читаемые окна, архив и надежный импорт</h5>
+    <p class="text-xs text-slate-600 mt-2">Исправлены окна восстановления и подписи презентации. Архив загружается порциями, а JSON с ошибочными строками не применяется частично.</p>
+   </section>
+   <div class="info-release-archived-158">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v15.8</h4>
+    <div class="grid grid-cols-1 gap-3 mb-6">
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Презентация без зависших уведомлений</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ПРЕЗЕНТАЦИЯ</span></div><p class="text-xs text-slate-600">Сообщение после переноса дат больше не занимает место в макете. Вместо постоянного предупреждения — компактное управление датами; пояснение о влиянии на основной план открывается отдельно.</p></div>
+     <div class="bg-gradient-to-br from-sky-50 to-white p-4 rounded-xl border border-sky-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-sky-700"><h5 class="font-semibold text-slate-800 text-sm">Вы сами выбираете шапку отчёта</h5><span class="ml-auto text-[10px] font-bold text-sky-700 bg-white border border-sky-200 rounded px-1.5 py-0.5">HTML / PDF</span></div><p class="text-xs text-slate-600">В настройках набора можно скрыть всю шапку или отдельно название проекта, РО, дату, значок, версию, метки релизов и каждый показатель. Выбор сохраняется для этого набора и одинаково применяется к HTML и PDF.</p></div>
+     <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-emerald-700"><h5 class="font-semibold text-slate-800 text-sm">Финальные статусы настраиваются под процесс</h5><span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">СТАТУСЫ</span></div><p class="text-xs text-slate-600">Отметьте нужные статусы как финальные в справочнике. Такие задачи учитываются как завершённые и не попадают в просрочки. Названия статусов и сами задачи при этом не изменяются.</p></div>
+     <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm"><div class="flex items-center gap-2 mb-2 text-indigo-700"><h5 class="font-semibold text-slate-800 text-sm">Доска и лента не теряют статусы</h5><span class="ml-auto text-[10px] font-bold text-indigo-700 bg-white border border-indigo-200 rounded px-1.5 py-0.5">ДОСКА</span></div><p class="text-xs text-slate-600">Импортированные статусы получают собственные колонки и остаются в фильтрах. Новые статусы появляются автоматически, скрытые колонки обозначены счётчиком, а стрелки прокрутки открывают конец длинной статусной ленты.</p></div>
+    </div>
+   </div>
    <div>
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1 flex items-center gap-2">Что было в v15.7</h4>
     <div class="grid grid-cols-1 gap-3 mb-6">
@@ -40607,7 +40894,7 @@ function syncBodyScrollLock() {
          <ul class="space-y-2 text-xs">
           <li><b>Продолжить работу позже:</b> «Данные», «Сохранение и восстановление».</li>
           <li><b>Отправить план:</b> «Данные», «Поделиться копией».</li>
-          <li><b>Получить таблицу:</b> «Данные», «Выгрузить план в XLSX».</li>
+          <li><b>Получить таблицу:</b> «Материалы», «Выгрузка», «Выгрузить план в XLSX».</li>
           <li><b>Подготовить отчет или слайды:</b> «Материалы» в шапке.</li>
          </ul>
          <button type="button" onclick="closeInfoModal(); openLeaderChooser();" class="rm-btn rm-btn-secondary mt-3">Подготовить материалы</button>
@@ -40683,6 +40970,9 @@ function syncBodyScrollLock() {
     </div>
    </div>
    <div class="mt-5 pt-4 border-t border-slate-100 flex justify-center"><button type="button" onclick="__selfTest(true)" class="text-[11px] font-semibold text-slate-500 hover:text-indigo-600 px-3 py-1.5 rounded-lg hover:bg-slate-100 cursor-pointer transition-colors" title="Прогнать встроенную самопроверку основных функций">Самопроверка приложения</button></div>
+   <div id="infoStorageNotice" class="bg-indigo-50/50 rounded-xl p-4 border border-indigo-100/50 shadow-sm">
+    <p class="text-slate-700 text-sm">В рабочем режиме изменения сохраняются в браузере, если его хранилище доступно. Для копии на диске скачайте JSON или подключите файл для автозаписи в поддерживаемом браузере. В демо и учебных примерах правки остаются в памяти вкладки. Обмен с Jira и его автоматическое обновление вы включаете отдельно.</p>
+   </div>
    <section id="storageDiagnostics" class="bg-slate-50 rounded-xl px-4 py-3 border border-slate-100" aria-live="polite">
     <dl class="info-storage-metrics text-xs text-slate-600">
      <div><dt class="font-semibold text-slate-700">Текущий снимок:</dt><dd id="storageSnapshotSize">считаем…</dd></div>
@@ -40700,7 +40990,7 @@ function syncBodyScrollLock() {
     </div>
    </a>
    <div class="flex items-center gap-3">
-    <span class="text-[10px] text-slate-500 hidden sm:inline">Данные плана хранятся локально. Обмен с Jira включаете вы.</span>
+    <span class="text-[10px] text-slate-500 hidden sm:inline">План остается у вас. Подключение к Jira настраивается отдельно.</span>
    </div>
   </div>
  </div>
@@ -41162,7 +41452,7 @@ function syncBodyScrollLock() {
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 16.5.1</span>
+              <span id="appVersionStartup">версия 16.6.0</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
@@ -41178,12 +41468,8 @@ function syncBodyScrollLock() {
       </header>
 
       <div class="startup-body px-5 sm:px-6 py-5">
-        <div class="flex items-start gap-2.5 rounded-xl bg-emerald-50 border border-emerald-200 px-3.5 py-3 text-emerald-800">
-          <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5-2a9 9 0 11-16 0 9 9 0 0116 0z"></path></svg>
-          <p class="text-xs leading-relaxed"><strong>Работает локально.</strong> План хранится на вашем компьютере. Обмен с Jira и передача файлов происходят только по вашему действию или включенной вами настройке.</p>
-        </div>
 
-        <div class="flex items-end justify-between gap-3 mt-4 mb-3">
+        <div class="flex items-end justify-between gap-3 mb-3">
           <div><h3 class="text-sm font-semibold text-slate-800">Выберите, с чего начать</h3><p class="text-[11px] text-slate-500 mt-0.5">Все варианты открывают рабочий план сразу после выбора.</p></div>
         </div>
         <button id="btnStartSaved" type="button" onclick="startFromSavedFile()" class="startup-saved-action rm-btn rm-btn-primary hidden w-full flex items-center justify-center gap-2.5 mb-3">
@@ -41219,6 +41505,10 @@ function syncBodyScrollLock() {
           <span title="Можно пропустить и вернуться позже.">Помощь по работе</span>
           <button type="button" onclick="openOnboarding('plan')" class="rm-btn rm-btn-primary">Первый рабочий план</button>
           <button type="button" onclick="startTourFromStartup()" class="startup-tour-btn rm-btn rm-btn-secondary">Обучающие сценарии</button>
+        </div>
+        <div id="startupLocalNotice" class="mt-4 flex items-start gap-2.5 rounded-xl bg-emerald-50 border border-emerald-200 px-3.5 py-3 text-emerald-800">
+          <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5-2a9 9 0 11-16 0 9 9 0 0116 0z"></path></svg>
+          <p class="text-xs leading-relaxed"><strong>Работает локально.</strong> План хранится на вашем компьютере. Обмен с Jira и передача файлов происходят только по вашему действию или включенной вами настройке.</p>
         </div>
       </div>
     </div>
@@ -42110,18 +42400,11 @@ function simplifyDataMenuInformationArchitecture() {
 function simplifyReportsMenuInformationArchitecture() {
   var menu = document.getElementById('reportsMenu');
   var button = document.getElementById('reportsMenuBtn');
-  var data = document.querySelector('#dataMenu [data-data-menu-frequent]');
-  if (!menu || !button || !data || menu.getAttribute('data-reports-menu-ready') === '1') return;
-  var xlsx = menu.querySelector('button[onclick*="exportTasksXlsx"]');
-  if (!xlsx) return;
-  xlsx.setAttribute('onclick', 'closeDataMenu(); exportPlanToXlsx();');
-  xlsx.id = 'dataExportXlsxBtn';
-  var copy = xlsx.querySelector('.grow');
-  if (copy) copy.innerHTML = '<span class="block">Выгрузить план в XLSX</span><span class="block text-[10px] text-slate-500 font-normal">задачи и сводные листы</span>';
-  data.appendChild(xlsx);
+  if (!menu || !button || menu.getAttribute('data-reports-menu-ready') === '1') return;
+  // XLSX доступен в центре материалов, в разделе «Выгрузка».
   button.setAttribute('onclick', 'openLeaderChooser();');
   button.setAttribute('aria-label', 'Материалы для руководства');
-  button.setAttribute('title', 'Материалы для руководства: статус, отчеты и слайды');
+  button.setAttribute('title', 'Материалы для руководства: статус, встреча и выгрузка');
   button.removeAttribute('aria-haspopup');
   button.removeAttribute('aria-expanded');
   var label = button.querySelector('span');
