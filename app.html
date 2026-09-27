@@ -5359,13 +5359,14 @@
       outline: none;
     }
 
-    /* Плавная анимация модалок */
-    [id$="Modal"]:not(.hidden) > div {
-      animation: modal-in 0.18s ease-out;
+    /* Общая анимация окон: без масштабирования текста и изменения геометрии. */
+    :root { --rm-motion-feedback:140ms; --rm-motion-panel:200ms; --rm-motion-ease:cubic-bezier(.16,1,.3,1); }
+    [id$="Modal"]:not(.hidden):not(.rm-right-drawer-overlay) > div {
+      animation: modal-in var(--rm-motion-panel) var(--rm-motion-ease);
     }
     @keyframes modal-in {
-      from { opacity: 0; transform: translateY(8px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+      from { opacity: .65; }
+      to { opacity: 1; }
     }
 
     /* Прокрутка не цепляется на фон/страницу при достижении края (модалки, таймлайн, таблицы) */
@@ -5606,9 +5607,10 @@
     /* Уважение системной настройки «уменьшить движение» */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.001ms !important;
+        animation: none !important;
+        transition-property: color, background-color, border-color, opacity !important;
+        transition-duration: 80ms !important;
+        transition-delay: 0s !important;
         scroll-behavior: auto !important;
       }
     }
@@ -6278,7 +6280,7 @@
      box-shadow:var(--rm-popover-shadow) !important;
      padding:.375rem !important;
      transform-origin:top right;
-     animation:rm-popover-in .12s ease-out;
+     animation:rm-popover-in var(--rm-motion-feedback) var(--rm-motion-ease);
    }
    #moreMenu.rm-popover { position:fixed !important; z-index:980 !important; }
    .rm-popover button, .rm-popover [role="menuitem"] { min-height:2.25rem; border-radius:.5rem !important; }
@@ -6291,7 +6293,7 @@
    .rm-dialog-close:focus-visible, .rm-dialog-action:focus-visible, .rm-popover button:focus-visible {
      outline:3px solid rgba(99,102,241,.28); outline-offset:2px;
    }
-   @keyframes rm-popover-in { from { opacity:0; transform:translateY(-3px) scale(.985); } to { opacity:1; transform:none; } }
+   @keyframes rm-popover-in { from { opacity:.65; transform:translateY(-2px); } to { opacity:1; transform:none; } }
    @media (prefers-reduced-motion:reduce) { .rm-popover { animation:none; } }
    body.theme-dark .rm-dialog-overlay { --rm-overlay:rgba(2,6,23,.72); }
    body.theme-dark .rm-dialog-surface, body.theme-dark .rm-dialog-header, body.theme-dark .rm-dialog-footer, body.theme-dark .rm-popover { border-color:var(--rm-border) !important; }
@@ -6390,9 +6392,9 @@
    body.roadmap-empty #timeline-footer { display:none !important; }
    body.roadmap-empty #timeline-header { width:100% !important; }
    body.roadmap-empty #timeline-header > * { display:none !important; }
-   /* Подпись остается на понедельнике, даже когда неделя занимает только 21px. */
-   .timeline-week-cell { position:relative; height:30px; }
-   .timeline-week-label { position:absolute; top:3px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; white-space:nowrap; line-height:12px; pointer-events:none; }
+   /* Подпись остается на понедельнике; недельный масштаб дает меткам 12px минимум 28px. */
+   .timeline-week-cell { position:relative; height:36px; }
+   .timeline-week-label { position:absolute; top:3px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; white-space:nowrap; line-height:15px; pointer-events:none; }
    body.roadmap-empty #bars-container { width:100% !important; min-width:0 !important; }
    body.roadmap-empty .timeline-scroll { overflow:hidden !important; }
    body.roadmap-empty .timeline-empty-state { position:static; width:100%; min-height:550px; }
@@ -6549,12 +6551,12 @@
      width:min(48rem,calc(100vw - 3rem)) !important; max-width:48rem !important;
      height:100dvh !important; max-height:100dvh !important;
      border-radius:1rem 0 0 1rem !important; border-top:0 !important; border-right:0 !important; border-bottom:0 !important;
-     animation:rm-sheet-in .18s ease-out;
+     animation:rm-sheet-in var(--rm-motion-panel) var(--rm-motion-ease);
    }
    #epicCardModal .rm-side-sheet { width:min(42rem,calc(100vw - 3rem)) !important; max-width:42rem !important; }
    .rm-side-sheet .rm-dialog-header { position:sticky; top:0; z-index:4; }
    .rm-side-sheet .rm-dialog-footer { position:sticky; bottom:0; z-index:4; }
-   @keyframes rm-sheet-in { from { transform:translateX(1.25rem); opacity:.65; } to { transform:none; opacity:1; } }
+   @keyframes rm-sheet-in { from { transform:translateX(.75rem); opacity:.65; } to { transform:none; opacity:1; } }
 
    .task-card-tabs {
      position:sticky; top:0; z-index:3; display:flex; gap:.25rem; padding:.25rem;
@@ -6714,6 +6716,27 @@
      .startup-help-row > button { width:100%; height:100%; white-space:normal; }
    }
 
+   .gantt-history-bar { width:100%; min-width:6px; display:flex; align-items:center; gap:.5rem; overflow:hidden; text-align:left; border:1px dashed currentColor; font-size:10px; font-weight:500; }
+   .gantt-history-bar > .truncate { min-width:0; }
+   .gantt-history-label { flex:0 0 auto; font-size:10px; }
+   #ganttMain { overflow-anchor:none; }
+   body[data-app-view="list"]:not(.image-export-mode) #appHeader { position:sticky; top:0; z-index:60; background:var(--rm-surface) !important; }
+   body[data-app-view="list"]:not(.image-export-mode) #planControlDeck { position:sticky; top:var(--gantt-header-height,0px); z-index:55; }
+   body[data-app-view="list"]:not(.image-export-mode) #planWorkspaceHeader { position:sticky; top:calc(var(--gantt-header-height,0px) + var(--gantt-filters-height,0px)); z-index:50; background:var(--rm-surface); }
+   #ganttPinnedDates { position:fixed; z-index:45; display:flex; background:var(--rm-surface); border-bottom:1px solid var(--rm-border); box-shadow:var(--rm-shadow-sm); }
+   #ganttPinnedDates[hidden] { display:none; }
+   .gantt-pinned-label { flex:none; min-width:0; border-right:1px solid var(--rm-border); }
+   .gantt-pinned-label #taskListHeader { width:100%; height:100%; background:var(--rm-surface); }
+   .gantt-pinned-viewport { flex:1; min-width:0; overflow:hidden; }
+   @media(max-height:600px) {
+     body[data-app-view="list"]:not(.image-export-mode) #appHeader { position:static; }
+     body[data-app-view="list"]:not(.image-export-mode) #planControlDeck { top:0; }
+     body[data-app-view="list"]:not(.image-export-mode) #planWorkspaceHeader { top:var(--gantt-filters-height,0px); }
+   }
+   @media print {
+     body[data-app-view="list"] #appHeader,body[data-app-view="list"] #planControlDeck,body[data-app-view="list"] #planWorkspaceHeader { position:static !important; }
+     #ganttPinnedDates { display:none !important; }
+   }
    #planControlDeck {
      margin-bottom:.75rem; border:1px solid var(--rm-border); border-radius:1rem;
      background:var(--rm-surface); box-shadow:var(--rm-shadow-sm); overflow:visible;
@@ -6747,7 +6770,7 @@
      background:var(--rm-surface); box-shadow:var(--rm-popover-shadow);
    }
    #filterToolsWrap[hidden] { display:none !important; }
-   #resourceFilterPanel,#projectFilterPanel,#releaseFilterMenu,#presetMenu { z-index:990 !important; }
+   #resourceFilterPanel,#projectFilterPanel,#typeFilterPanel,#releaseFilterMenu,#presetMenu { z-index:990 !important; }
    .filter-tools-header { display:flex; align-items:flex-start; justify-content:space-between; gap:.75rem; padding-bottom:.625rem; border-bottom:1px solid var(--rm-border); }
    .filter-tools-title { font-size:.8125rem; line-height:1.2; font-weight:750; color:var(--rm-text); }
    .filter-tools-subtitle { margin-top:.2rem; font-size:.6875rem; line-height:1.35; color:var(--rm-muted); }
@@ -6845,10 +6868,10 @@
      #filterToolsWrap { left:.5rem !important; right:.5rem !important; width:auto !important; top:auto !important; bottom:5rem; max-height:65vh; }
      .filter-tools-actions { grid-template-columns:1fr; }
    }
-   @media (prefers-reduced-motion:reduce) { .rm-side-sheet { animation:none !important; } .rm-btn { transition:none !important; } }
+   @media (prefers-reduced-motion:reduce) { .rm-side-sheet { animation:none !important; } }
    .timeline-empty-state { position:sticky; left:0; width:max(20rem,min(44rem,calc(100vw - 32rem))); min-height:34rem; }
-   body[data-list-density="compact"] #tasks-list-container > div[id^="header-left-"],body[data-list-density="compact"] #bars-container > div[id^="header-right-"] { height:46px !important; }
-   body[data-list-density="compact"] { --rm-task-row-base:38px; }
+   body[data-list-density="compact"] #tasks-list-container > div[id^="header-left-"],body[data-list-density="compact"] #bars-container > div[id^="header-right-"] { height:46px; }
+   body[data-list-density="compact"] { --rm-task-row-base:48px; }
    #tasks-list-container .task-list-row { height:var(--rm-task-row-base,56px); min-height:var(--rm-task-row-base,56px); padding-left:calc(20px + var(--rm-task-indent,0px)); }
    #bars-container .task-timeline-row { height:var(--rm-task-row-height,var(--rm-task-row-base,56px)); min-height:var(--rm-task-row-base,56px); }
    .task-list-row .task-row-content { padding-right:.5rem; }
@@ -6873,7 +6896,7 @@
      .task-actions-disclosure[data-open] .task-row-actions { display:flex; }
      .task-list-row .task-row-actions {
        position:static; grid-column:2; grid-row:2; justify-self:end; opacity:1; pointer-events:auto;
-       padding:0; background:none; border:0; box-shadow:none; height:auto;
+       padding:0; background:none; border:0; box-shadow:none; height:auto; z-index:auto;
      }
      .task-list-row .task-row-actions button { width:2.75rem; height:2.75rem; flex:none; box-shadow:none; }
      .task-list-row > .drag-handle { grid-column:3; grid-row:2; align-self:center; padding:0; }
@@ -6902,12 +6925,34 @@
      #mobilePlanNav button[aria-current="page"] { background:var(--rm-selected-bg); color:var(--rm-selected-text); }
      #mobilePlanNav svg { width:1.1rem; height:1.1rem; }
      #mobilePlanNav button > span { min-width:0; max-width:100%; white-space:nowrap; }
-     #appHeader .app-header-grid { padding:.75rem; grid-template-columns:1fr; }
+     #appHeader .app-header-grid { padding:.5rem .625rem; grid-template-columns:1fr; }
      #appHeader .app-header-toolbar { width:100%; }
      #appHeader #autoSaveBtn,#appHeader #archiveBtn { display:none !important; }
      #planFilterBar { padding:.5rem; gap:.5rem; flex-wrap:wrap; }
      .timeline-empty-state { width:min(100vw,36rem); }
      .pres-edit-row .pres-row-actions { opacity:1; }
+     #toastHost { bottom:calc(4.75rem + env(safe-area-inset-bottom)) !important; }
+     #planWorkspaceHeader .plan-workspace-navigation { gap:.375rem; flex-wrap:nowrap; }
+     #planWorkspaceHeader .plan-command-bar { min-width:0; flex:1; }
+     #planWorkspaceHeader #moreMenuBtn { padding-inline:.5rem; gap:.25rem; }
+     #planWorkspaceHeader #headerOverviewBtn { padding-inline:.5rem; }
+     #planWorkspaceHeader #headerOverviewBtn > svg { display:none; }
+     #demoBanner.rm-learning-banner { flex-wrap:nowrap; justify-content:space-between; gap:.5rem; padding:.375rem .75rem; }
+     #demoBanner > span { font-size:.75rem; line-height:1.4; min-width:0; }
+     #demoBanner > button { flex:none; padding-inline:.625rem; }
+   }
+   .rm-toast > svg { flex:none; }
+   .rm-toast > span { min-width:0; overflow-wrap:anywhere; }
+   .rm-toast-close { flex:none; width:44px; height:44px; padding:0; border:0; border-radius:.5rem; background:transparent; color:inherit; font-size:22px; cursor:pointer; }
+   .rm-toast-close:focus-visible { outline:2px solid currentColor; outline-offset:-3px; }
+   @media (max-width:1023px), (pointer:coarse) {
+     #tasks-list-container > .section-list-header { height:auto !important; min-height:54px; padding:.625rem .75rem !important; flex-wrap:wrap; gap:.5rem; }
+     .section-list-header > .section-heading { flex-basis:calc(100% - 2rem); margin-right:0; }
+     .section-list-header .section-heading-line { flex-wrap:wrap; gap:.375rem; }
+     .section-list-header .section-heading-line > .truncate { flex-basis:100%; white-space:normal; overflow:visible; font-size:.875rem; line-height:1.45; overflow-wrap:anywhere; }
+     .section-list-header .section-heading-meta { flex-wrap:wrap; overflow:visible; }
+     .section-list-header > .section-heading-summary { margin-left:auto; }
+     #bars-container > .section-timeline-header { height:var(--rm-section-row-height,54px) !important; }
    }
 
    /* Единый визуальный язык рабочих экранов.
@@ -6944,6 +6989,13 @@
      --rm-popover-shadow:0 18px 44px rgba(15,23,42,.16),0 4px 12px rgba(15,23,42,.07);
    }
    html,body,button,input,select,textarea { font-family:var(--rm-font-sans); }
+   /* Dense metadata keeps its role, but must not fall below the shared 12 px
+      floor. Applies to generated task/status markup as well as static controls. */
+   body :is([class~="text-[9px]"],[class~="text-[10px]"],[class~="text-[10.5px]"],[class~="text-[11px]"],
+     .rm-type-badge,.planning-hub-badge,.gantt-history-bar,.gantt-history-label,
+     .section-heading-meta,.section-heading-summary,.task-meta-line,
+     .filter-tools-subtitle,.active-filter-chip,.deps-node-key,.header-summary-btn,#appVerChip),
+   body #mobilePlanNav button { font-size:var(--rm-font-xs) !important; }
    body:not([data-app-view="list"]) [data-app-context="list"] { display:none !important; }
    #zoomControl button,#zoomControlMobile button,#zoomControlMobile select,
    #viewIconsBar button,#planViewTabs button,#listDensityBtn,#collapseAllBtn,#selectModeBtn,#sortBtn,
@@ -7218,7 +7270,7 @@
      width:min(44rem,calc(100vw - 1.5rem)) !important; max-width:min(44rem,calc(100vw - 1.5rem)) !important;
      height:calc(100dvh - 1.5rem) !important; max-height:calc(100dvh - 1.5rem) !important; margin:0 !important;
      border-radius:var(--rm-dialog-radius) !important;
-     box-shadow:var(--rm-dialog-shadow) !important; animation:rm-drawer-in .18s ease-out both;
+     box-shadow:var(--rm-dialog-shadow) !important; animation:rm-drawer-in var(--rm-motion-panel) var(--rm-motion-ease) both;
    }
    .rm-right-drawer-surface.rm-dialog-lg { width:min(52rem,calc(100vw - 1.5rem)) !important; max-width:min(52rem,calc(100vw - 1.5rem)) !important; }
    .rm-right-drawer-surface.rm-dialog-sm { width:min(34rem,calc(100vw - 1.5rem)) !important; max-width:min(34rem,calc(100vw - 1.5rem)) !important; }
@@ -7230,7 +7282,7 @@
    .rm-right-drawer-surface > :last-child:not(.rm-dialog-footer) {
      border-radius:0 0 calc(var(--rm-dialog-radius) - 1px) calc(var(--rm-dialog-radius) - 1px) !important;
    }
-   @keyframes rm-drawer-in { from { opacity:.45; transform:translateX(1.5rem); } to { opacity:1; transform:translateX(0); } }
+   @keyframes rm-drawer-in { from { opacity:.65; transform:translateX(.75rem); } to { opacity:1; transform:translateX(0); } }
 
    /* Выпадающие рабочие меню используют ту же шторку и больше не прыгают
       вокруг кнопки на разных размерах экрана. */
@@ -7247,7 +7299,7 @@
      margin:0 !important; padding:.5rem !important; z-index:var(--rm-layer-z,2200) !important;
      border-radius:var(--rm-dialog-radius) !important; overflow-y:auto !important; overflow-x:hidden !important;
      background:var(--rm-surface) !important; box-shadow:var(--rm-dialog-shadow) !important;
-     animation:rm-drawer-in .18s ease-out both; scrollbar-gutter:stable;
+     animation:rm-drawer-in var(--rm-motion-panel) var(--rm-motion-ease) both; scrollbar-gutter:stable;
    }
    body #moreMenu.rm-drawer-popover,body #dataMenu.rm-drawer-popover,
    body #reportsMenu.rm-drawer-popover,body #presetMenu.rm-drawer-popover,
@@ -7816,7 +7868,7 @@
      margin-left:auto; max-width:100%; padding:.125rem .375rem;
      border:1px solid rgb(var(--info-card-tint) / .25); border-radius:.25rem;
      background:rgb(var(--info-card-tint) / .08); color:var(--info-card-ink);
-     font-size:.625rem; font-weight:700; line-height:1.4;
+     font-size:var(--rm-font-xs); font-weight:700; line-height:1.4;
    }
    #infoModal .info-storage-metrics {
      display:grid; grid-template-columns:minmax(0,1fr); gap:.75rem 2rem; margin:0;
@@ -8928,7 +8980,7 @@
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v16.6.0</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v16.7.0</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9258,6 +9310,12 @@
 
         <div class="w-px h-5 bg-slate-200 self-center hidden sm:block"></div>
 
+        <div class="flex items-center bg-slate-50 border border-slate-200 rounded-xl p-0.5">
+          <button type="button" id="typeFilterBtn" data-filter-btn data-active="0" onclick="toggleFilterPanel('type')" aria-haspopup="dialog" aria-controls="typeFilterPanel" aria-expanded="false" class="filter-multibtn h-8 inline-flex items-center gap-1.5 bg-transparent text-slate-700 text-xs font-medium px-2 rounded-lg cursor-pointer">
+            <span id="typeFilterLabel" class="grow text-left">Все типы задач</span>
+            <svg aria-hidden="true" class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="m6 9 6 6 6-6"/></svg>
+          </button>
+        </div>
         <!-- Группа: Ресурс (мультивыбор) -->
         <div data-feat="resources" class="flex items-center bg-slate-50 border border-slate-200 rounded-xl p-0.5 transition-all">
           <div class="pl-2.5 pr-1 text-slate-500">
@@ -9294,6 +9352,7 @@
     <!-- Выпадающие панели мультивыбора фильтров (fixed, чтобы не обрезались overflow секции) -->
     <div id="resourceFilterPanel" data-rm-surface="adaptive-popover" data-filter-panel class="hidden fixed z-[100] w-56 max-h-72 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 no-print no-image-export"></div>
     <div id="projectFilterPanel" data-rm-surface="adaptive-popover" data-filter-panel class="hidden fixed z-[100] w-56 max-h-72 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 no-print no-image-export"></div>
+    <div id="typeFilterPanel" aria-label="Типы задач" data-rm-surface="adaptive-popover" data-filter-panel class="hidden fixed z-[100] w-56 max-h-72 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 no-print no-image-export"></div>
     <div id="taskMovePanel" data-rm-surface="adaptive-popover" class="hidden fixed z-[150] w-52 max-h-72 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 no-print no-image-export"></div>
 
     </div>
@@ -9351,7 +9410,7 @@
     <main id="ganttMain" tabindex="-1" class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col md:flex-row relative focus:outline-none">
       <div id="mobileKanbanHint" class="lg:hidden order-first w-full bg-sky-50 border-b border-sky-200 text-sky-900 text-xs px-4 py-2 flex items-start gap-2 no-print no-image-export">
         <svg aria-hidden="true" class="w-4 h-4 shrink-0 mt-px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        <span>Сначала показан список задач. Переключитесь на «Таймлайн», когда нужны даты и полосы Ганта.</span>
+        <span>Даты и полосы Ганта — во вкладке «Таймлайн».</span>
       </div>
       <div id="zoomControlMobile" data-app-context="list" class="lg:hidden order-first w-full bg-white border-b border-slate-200 px-3 py-1.5 flex items-center gap-2 no-print no-image-export">
         <div id="mobileListPaneSwitch" role="group" aria-label="Режим списка задач" class="grow p-1 rounded-xl bg-slate-100 border border-slate-200">
@@ -9368,7 +9427,7 @@
 
 
       <div class="export-left-col w-full md:w-[460px] shrink-0 border-r border-slate-100 bg-slate-50/30">
-        <div class="h-[64px] border-b border-slate-200 pl-5 pr-3 flex items-center justify-between gap-2 bg-slate-50/80">
+        <div id="taskListHeader" class="h-[64px] border-b border-slate-200 pl-5 pr-3 flex items-center justify-between gap-2 bg-slate-50/80">
           <div class="hidden sm:flex items-center gap-2 font-medium text-slate-500 text-[10px] tracking-wider uppercase min-w-0">
             <svg aria-hidden="true" class="w-3.5 h-3.5 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
             <span class="truncate">Задачи, сроки, критерии</span>
@@ -9804,7 +9863,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v16.6.0">
+<script data-roadmap-modules="v16.7.0">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -11648,6 +11707,11 @@ if (typeof globalThis !== 'undefined') {
         ? '<svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>'
         : '<svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
       toast.innerHTML = `${icon}<span>${escHtml(text)}</span>`;
+      const close = document.createElement('button');
+      close.type = 'button'; close.className = 'rm-toast-close';
+      close.setAttribute('aria-label', 'Закрыть уведомление'); close.textContent = '×';
+      close.addEventListener('click', () => toast.remove());
+      toast.appendChild(close);
       host.appendChild(toast);
       requestAnimationFrame(() => { toast.style.opacity = '1'; toast.style.transform = 'translateY(0)'; });
       setTimeout(() => {
@@ -12632,14 +12696,14 @@ if (typeof globalThis !== 'undefined') {
     let timelineZoom = 'day';
     function timelineViewportWidth() { const sc = document.querySelector('.timeline-scroll'); let w = sc ? sc.clientWidth : 0; if (!w || w < 200) w = Math.max(320, (window.innerWidth || 1200) - 480); return w; }
     let _fitDayWidth = null; // ширина дня для режима «весь план в экран» (timelineZoom === 'fit')
-    function computeDayWidth(level) { if (level === 'fit' && _fitDayWidth) return _fitDayWidth; const days = ZOOM_VISIBLE_DAYS[level] || 30; return Math.max(3, Math.min(60, timelineViewportWidth() / days)); }
+    function computeDayWidth(level) { if (level === 'fit' && _fitDayWidth) return _fitDayWidth; const days = ZOOM_VISIBLE_DAYS[level] || 30; return Math.max(level === 'week' ? 4 : 3, Math.min(60, timelineViewportWidth() / days)); }
     let TOTAL_TIMELINE_DAYS = 365; let _tlMultiYear = false; let _tlHeaderSig = null;
     // Динамический диапазон шкалы: от 1 января минимального года данных до 31 декабря максимального.
     // Чинит баг, когда живые задачи 2025/2027 уезжали за край захардкоженного 2026.
     function recomputeTimelineRange() {
       var minY = null, maxY = null;
       function consider(ymd) { if (!ymd) return; var d = parseLocalDate(ymd); if (!d || isNaN(d)) return; var y = d.getFullYear(); if (y < 2000 || y > 2100) return; if (minY === null || y < minY) minY = y; if (maxY === null || y > maxY) maxY = y; }
-      try { (roadmapData || []).forEach(function (t) { if (t) { consider(t.start); consider(t.end); } }); } catch (e) {}
+      try { (roadmapData || []).forEach(function (t) { if (t) { consider(t.start); consider(t.end); (Array.isArray(t.statusLog) ? t.statusLog : []).forEach(e => { if (e) consider(parseJiraDate(e.at || '')); }); } }); } catch (e) {}
       try { (typeof customCutoffs !== 'undefined' && Array.isArray(customCutoffs) ? customCutoffs : []).forEach(function (c) { if (c) consider(c.date); }); } catch (e) {}
       try { (typeof projectReleases !== 'undefined' && Array.isArray(projectReleases) ? projectReleases : []).forEach(function (r) { if (r) { consider(r.date); consider(r.start); consider(r.end); } }); } catch (e) {}
       try { if (typeof CURRENT_DATE !== 'undefined' && CURRENT_DATE) consider(toYmdLocal(CURRENT_DATE)); } catch (e) {}
@@ -12656,8 +12720,8 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '16.6.0';
-    const APP_VERSION_DATE = '23.09.2026';
+    const APP_VERSION = '16.7.0';
+    const APP_VERSION_DATE = '27.09.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'версия ' + APP_VERSION; } catch (e) {}
@@ -13144,6 +13208,7 @@ if (typeof globalThis !== 'undefined') {
     let _burningBannerDismissed = false; // скрытие баннера «что горит» , только на текущую сессию (не localStorage), чтобы следующее открытие снова подсказало
     let statusFilterSel = new Set();
     let projectFilterSel = new Set();
+    let typeFilterSel = new Set();
     // Фильтр по метке (Jira Labels) и релизу (отдельное меню в шапке списка, не в строке фильтров)
     let releaseFilterSel = new Set();
     let labelFilterSel = new Set();
@@ -14987,8 +15052,8 @@ if (typeof globalThis !== 'undefined') {
       } catch (e) {}
       appInitialized = true;
       if (typeof renderOnboarding === 'function') renderOnboarding();
-      // При входе показываем таймлайн сразу на «Сегодня», чтобы не жать кнопку каждый раз (мгновенно, без анимации от края).
-      try { setTimeout(function () { if (typeof scrollToToday === 'function') scrollToToday(true); }, 60); } catch (e) {}
+      // Рабочий план открывается у сегодняшней даты, демо показывает весь пример.
+      try { setTimeout(function () { if (DEMO_MODE) fitTimelineToPlan(); else if (typeof scrollToToday === 'function') scrollToToday(true); }, 60); } catch (e) {}
       // Вернувшимся в Простом режиме , одноразовая подсказка, что редкое переехало в Продвинутый режим (сбивается мышечная память).
       // gantt_help_seen проверяем ДО его установки ниже: '1' значит был прошлый запуск (вернувшийся), а не первый раз.
       try {
@@ -15068,6 +15133,22 @@ if (typeof globalThis !== 'undefined') {
 
 
     // Режим «Посмотреть демо»: грузим встроенные демо-данные в память и НЕ трогаем реальный проект в localStorage/файле.
+    // Сдвигается только новая копия встроенного примера. Целые недели сохраняют
+    // дни недели, длительности, связи и относительный порядок учебных событий.
+    function createDemoSnapshot(source, today) {
+      const anchor = Date.UTC(2026, 6, 2);
+      const current = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+      const offset = Math.round((current - anchor) / (7 * 86400000)) * 7 * 86400000;
+      function copy(value) {
+        if (Array.isArray(value)) return value.map(copy);
+        if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, copy(item)]));
+        if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}(?:T[\d:.]+Z)?$/.test(value)) return value;
+        const day = new Date(value.slice(0, 10) + 'T00:00:00Z');
+        if (!Number.isFinite(day.getTime())) return value;
+        return new Date(day.getTime() + offset).toISOString().slice(0, 10) + value.slice(10);
+      }
+      return copy(source);
+    }
     let DEMO_MODE = false;
     function startDemo() {
       const d = (typeof DEMO_DATA !== 'undefined') ? DEMO_DATA : null;
@@ -15081,14 +15162,16 @@ if (typeof globalThis !== 'undefined') {
       storage.get = function (key, fallback = null) { return (key in memoryStore) ? memoryStore[key] : fallback; };
       storage.set = function (key, value) { memoryStore[key] = value; return true; };
       storage.stage = function (key, value) { memoryStore[key] = value; return true; };
-      _applyRoadmapSnapshotState(d, { projectIdMode: 'adopt' });
+      _applyRoadmapSnapshotState(createDemoSnapshot(d, getTodayProjectDate()), { projectIdMode: 'adopt' });
       try {
-        const estimates = [3, 5, 8, 2, 6, 4, 3, 5];
-        let index = 0;
         (roadmapData || []).forEach(function (task) {
-          if (task && !task.isMilestone) {
-            if (task.status !== 'completed' && !(parseFloat(task.estimate) > 0)) task.estimate = String(estimates[index % estimates.length]);
-            index++;
+          if (task && !task.isMilestone && task.start && task.end && !(parseFloat(task.estimate) > 0)) {
+            let days = 0;
+            const day = parseLocalDate(task.start), end = parseLocalDate(task.end);
+            for (let guard = 0; day <= end && guard < 800; guard++, day.setDate(day.getDate() + 1)) {
+              if (_resWorks(String(task.resource || '').trim(), day)) days++;
+            }
+            task.estimate = String(Math.max(1, days));
           }
         });
       } catch (e) {}
@@ -15101,7 +15184,7 @@ if (typeof globalThis !== 'undefined') {
       const b = document.createElement('div');
       b.id = 'demoBanner';
       b.className = 'rm-learning-banner no-print no-image-export';
-      b.innerHTML = '<span>Демо-режим: пример проекта, изменения не сохраняются.</span><button type="button" onclick="exitDemo()" class="rm-btn rm-btn-secondary"><svg aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>Выйти из демо</button>';
+      b.innerHTML = '<span>Демо · изменения не сохраняются</span><button type="button" onclick="exitDemo()" class="rm-btn rm-btn-secondary" aria-label="Выйти из демо">Выйти</button>';
       // Ссылка быстрого перехода остается первой в порядке Tab, в том числе в демо.
       const skipLink = document.body.querySelector(':scope > a[href="#ganttMain"]');
       document.body.insertBefore(b, skipLink ? skipLink.nextSibling : document.body.firstChild);
@@ -15176,7 +15259,7 @@ if (typeof globalThis !== 'undefined') {
       memoryStore['gantt_sprints'] = '[]';
       _spCfg = _normalizeSnapshotSprintCfg(null);
       memoryStore['gantt_sprint_cfg'] = JSON.stringify(_spCfg);
-      try { statusFilterSel.clear(); resourceFilterSel.clear(); projectFilterSel.clear(); releaseFilterSel.clear(); labelFilterSel.clear(); componentFilterSel.clear(); customFieldFilterSel = {}; } catch (e) {}
+      try { statusFilterSel.clear(); resourceFilterSel.clear(); projectFilterSel.clear(); typeFilterSel.clear(); releaseFilterSel.clear(); labelFilterSel.clear(); componentFilterSel.clear(); customFieldFilterSel = {}; } catch (e) {}
       try { if (typeof selectedTaskIds !== 'undefined' && selectedTaskIds.clear) selectedTaskIds.clear(); } catch (e) {}
     }
     // Записать текущее состояние проекта во все ключи хранилища (после сброса/загрузки)
@@ -15855,10 +15938,87 @@ if (typeof globalThis !== 'undefined') {
       if (show && typeof showToast === 'function') showToast(msg + (fail ? ' , смотрите консоль (F12)' : ' , все хорошо'), fail ? 'error' : 'ok', fail ? 8000 : 4000);
       return { pass: pass, fail: fail, lines: R };
     }
+    // Единственный визуальный дубль календаря. Исходник остается на месте для
+    // экспорта и доступности; горизонтальная прокрутка синхронизируется по пикселям.
+    function initGanttPinnedHeader() {
+      if (initGanttPinnedHeader.started) { initGanttPinnedHeader.schedule(); return; }
+      const header = document.getElementById('appHeader'), filters = document.getElementById('planControlDeck');
+      const workspace = document.getElementById('planWorkspaceHeader'), main = document.getElementById('ganttMain');
+      const dates = document.getElementById('timeline-header'), scroller = document.querySelector('.timeline-scroll');
+      const controls = document.getElementById('taskListHeader'), leftPane = main && main.querySelector('.export-left-col');
+      if (!header || !filters || !workspace || !main || !dates || !scroller || !controls || !leftPane) return;
+      initGanttPinnedHeader.started = true;
+      const pinned = document.createElement('div');
+      pinned.id = 'ganttPinnedDates'; pinned.className = 'no-print no-image-export';
+      pinned.hidden = true;
+      const label = document.createElement('div'); label.className = 'gantt-pinned-label';
+      const viewport = document.createElement('div'); viewport.className = 'gantt-pinned-viewport';
+      viewport.setAttribute('aria-hidden','true');
+      // Перед списком в DOM: порядок Tab остается «шапка, управление, задачи».
+      pinned.append(label,viewport); main.before(pinned);
+      const placeholder = document.createElement('div'); placeholder.hidden = true;
+      placeholder.setAttribute('aria-hidden','true'); controls.before(placeholder);
+      function restoreControls() {
+        const focused = controls.contains(document.activeElement) ? document.activeElement : null;
+        if (controls.parentNode === label) placeholder.after(controls);
+        placeholder.hidden = true;
+        if (focused && focused.getClientRects().length) focused.focus({preventScroll:true});
+      }
+      let clone = null, dirty = true, frame = 0;
+      function update() {
+        frame = 0;
+        document.body.style.setProperty('--gantt-header-height',header.getBoundingClientRect().height + 'px');
+        document.body.style.setProperty('--gantt-filters-height',filters.getBoundingClientRect().height + 'px');
+        const rect = scroller.getBoundingClientRect(), mainRect = main.getBoundingClientRect();
+        const leftRect = leftPane.getBoundingClientRect(), hasLeft = leftRect.width > 0 && leftRect.height > 0;
+        const origin = placeholder.hidden ? controls : placeholder;
+        const top = workspace.getBoundingClientRect().bottom;
+        const height = Math.max(rect.width ? dates.getBoundingClientRect().height : 0, hasLeft ? origin.getBoundingClientRect().height : 0);
+        // scrollIntoView and keyboard navigation must use the space below the sticky stack.
+        const isList = document.body.dataset.appView === 'list' && !document.body.classList.contains('image-export-mode');
+        const headerInset = getComputedStyle(header).position === 'sticky' ? header.getBoundingClientRect().height : 0;
+        const scrollInset = headerInset + filters.getBoundingClientRect().height
+          + workspace.getBoundingClientRect().height + height + 8;
+        document.documentElement.style.scrollPaddingTop = isList ? scrollInset + 'px' : '';
+        const originTop = hasLeft ? origin.getBoundingClientRect().top : dates.getBoundingClientRect().top;
+        pinned.hidden = document.body.dataset.appView !== 'list' || document.body.classList.contains('image-export-mode')
+          || (!rect.width && !hasLeft) || originTop >= top || mainRect.bottom <= top + height;
+        if (pinned.hidden) { restoreControls(); return; }
+        if (dirty || !clone) {
+          clone = dates.cloneNode(true); clone.removeAttribute('id');
+          clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+          clone.style.fontSize = getComputedStyle(dates).fontSize;
+          viewport.replaceChildren(clone); dirty = false;
+        }
+        const leftWidth = hasLeft ? (rect.width ? Math.max(0,rect.left-mainRect.left) : mainRect.width) : 0;
+        Object.assign(pinned.style,{left:mainRect.left+'px',top:top+'px',width:mainRect.width+'px',height:height+'px'});
+        label.style.width = leftWidth+'px'; label.style.display = leftWidth > 1 ? 'flex' : 'none';
+        viewport.style.display = rect.width ? '' : 'none';
+        if (hasLeft && controls.parentNode !== label) {
+          const focused = controls.contains(document.activeElement) ? document.activeElement : null;
+          placeholder.style.height = controls.getBoundingClientRect().height+'px';
+          placeholder.hidden = false;
+          label.appendChild(controls);
+          if (focused) focused.focus({preventScroll:true});
+        } else if (!hasLeft) restoreControls();
+        clone.style.transform = 'translateX(' + (-scroller.scrollLeft) + 'px)';
+      }
+      const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+      initGanttPinnedHeader.schedule = schedule;
+      new ResizeObserver(schedule).observe(header);
+      const sizes = new ResizeObserver(schedule); [filters,workspace,main,scroller].forEach(el => sizes.observe(el));
+      new MutationObserver(() => { dirty = true; schedule(); }).observe(dates,{subtree:true,childList:true,attributes:true,characterData:true});
+      new MutationObserver(schedule).observe(document.body,{attributes:true,attributeFilter:['data-app-view','data-mobile-list-pane','class']});
+      window.addEventListener('scroll',schedule,{passive:true}); window.addEventListener('resize',schedule,{passive:true});
+      window.addEventListener('beforeprint',restoreControls); window.addEventListener('afterprint',schedule);
+      scroller.addEventListener('scroll',schedule,{passive:true}); schedule();
+    }
     function renderTimelineHeader(preserveScroll) {
       const header = document.getElementById('timeline-header');
       header.innerHTML = '';
       const mode = timelineZoom;
+      // Старый сохраненный масштаб тоже должен вмещать недельные метки 12px.
+      if (mode === 'week') DAY_WIDTH = Math.max(4, DAY_WIDTH);
       // Режим «весь план»: шапка как у недели при достаточной ширине дня, иначе как у месяца
       const hmode = (mode === 'fit') ? (DAY_WIDTH >= 8 ? 'week' : 'month') : (mode === 'quarter' ? 'month' : mode);
       // Ширины контейнеров завязаны на текущий DAY_WIDTH (масштаб)
@@ -19218,7 +19378,35 @@ let resourceView = 'roles'; // 'roles' | 'load'
       }
       return true;
     }
+    function taskFilterTypeLabel(t) {
+      const label = taskTypeLabel(t);
+      if (/^(история|стори|story|user story)$/i.test(label)) return 'Стори';
+      if (/^(initiative|инициатива)$/i.test(label)) return 'Инициатива';
+      return label;
+    }
+    function taskMatchesTypeFilter(t) {
+      if (!typeFilterSel.size || typeFilterSel.has(taskFilterTypeLabel(t)) || typeFilterSel.has(taskTypeLabel(t))) return true;
+      // Эпики и стори являются разделами: при выборе показываем их задачи и поддерево.
+      const seen = new Set();
+      let section = t && t.section;
+      while (section && !seen.has(section)) {
+        seen.add(section);
+        if (typeFilterSel.has(_sectionCopyType(section))) return true;
+        section = sectionParents[section];
+      }
+      return false;
+    }
+    function taskTypeFilterOptions() {
+      const standard = ['Инициатива','Эпик','Стори','Задача','Подзадача','Дефект'];
+      const labels = new Set(standard);
+      planSections.forEach(section => { const type = _sectionCopyType(section); if (type !== 'Раздел') labels.add(type); });
+      roadmapData.filter(t => t && !t.hidden).forEach(t => labels.add(taskFilterTypeLabel(t)));
+      typeFilterSel.forEach(type => labels.add(type));
+      return [...standard, ...[...labels].filter(type => !standard.includes(type)).sort((a,b) => a.localeCompare(b,'ru'))]
+        .map(name => ({id:name,name}));
+    }
     function taskPassesNonStatusFilters(t) {
+      if (!taskMatchesTypeFilter(t)) return false;
       if (_forecastReasonFilter && !_taskMatchesForecastReason(t, _forecastReasonFilter)) return false;
       if (releaseFilterSel.size) { if (!t.release || !releaseFilterSel.has(String(t.release))) return false; }
       if (labelFilterSel.size) {
@@ -19279,6 +19467,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       return true;
     }
     function taskPassesFilters(t) {
+      if (!taskMatchesTypeFilter(t)) return false;
       // R2: режим «Горит» , задача горит (просрочена / срок в ближайшие 2 дня / блокер), кроме завершенных и вех.
       if (_goritMode && !_taskIsHot(t)) return false;
       if (_critPathMode && !_critPathIds.has(t.id)) return false;
@@ -19347,6 +19536,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
           || (componentFilterSel && componentFilterSel.size)
           || (resourceFilterSel && resourceFilterSel.size)
           || (projectFilterSel && projectFilterSel.size)
+          || (typeFilterSel && typeFilterSel.size)
           || (statusFilterSel && statusFilterSel.size)
           || _cfFilterCount());
       } catch (e) { return false; }
@@ -19426,6 +19616,8 @@ const m = document.getElementById('mineModeBtn');
     }
     // Описание трех фильтров для генерации UI
     const FILTER_DEFS = {
+      type: { set: () => typeFilterSel, allLabel: 'Все типы задач', noun: ['тип','типа','типов'],
+            options: taskTypeFilterOptions },
       resource: { set: () => resourceFilterSel, allLabel: 'Все исполнители', noun: ['исполнитель','исполнителя','исполнителей'],
             options: () => {
               const opts = projectResources.map(r => ({ id: r, name: r }));
@@ -19455,7 +19647,7 @@ const m = document.getElementById('mineModeBtn');
       return `${set.size} ${pluralRu(set.size, def.noun)}`;
     }
     function updateFilterLabels() {
-      ['resource', 'status', 'project'].forEach(kind => {
+      ['resource', 'status', 'project', 'type'].forEach(kind => {
         const lbl = document.getElementById(kind + 'FilterLabel');
         if (lbl) lbl.textContent = filterLabelText(kind);
         const btn = document.getElementById(kind + 'FilterBtn');
@@ -19474,6 +19666,8 @@ const m = document.getElementById('mineModeBtn');
       const panel = document.getElementById(kind + 'FilterPanel');
       const btn = document.getElementById(kind + 'FilterBtn');
       if (!panel || !btn) return;
+      // Панель должна быть выше закрепленной шапки и внешнего окна фильтров.
+      if (panel.parentElement !== document.body) document.body.appendChild(panel);
       renderFilterPanelBody(kind);
       panel.classList.remove('hidden');
       btn.setAttribute('aria-expanded', 'true');
@@ -19484,6 +19678,7 @@ const m = document.getElementById('mineModeBtn');
       if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
       panel.style.left = Math.max(8, left) + 'px';
       panel.style.top = (r.bottom + 6) + 'px';
+      panel.querySelector('button[data-act]')?.focus({preventScroll:true});
       setTimeout(() => document.addEventListener('mousedown', filterPanelOutside, true), 0);
     }
     function filterPanelOutside(e) {
@@ -19491,12 +19686,12 @@ const m = document.getElementById('mineModeBtn');
       closeAllFilterPanels();
     }
     function closeAllFilterPanels(force) {
-      const opened = ['resource', 'status', 'project'].some(kind => {
+      const opened = ['resource', 'status', 'project', 'type'].some(kind => {
         const panel = document.getElementById(kind + 'FilterPanel');
         return panel && !panel.classList.contains('hidden');
       });
       if (!force && opened && performance.now() - _filterPanelOpenedAt < 280) return;
-      ['resource', 'status', 'project'].forEach(kind => {
+      ['resource', 'status', 'project', 'type'].forEach(kind => {
         const p = document.getElementById(kind + 'FilterPanel');
         if (p) p.classList.add('hidden');
         const button = document.getElementById(kind + 'FilterBtn');
@@ -19508,6 +19703,8 @@ const m = document.getElementById('mineModeBtn');
       const def = FILTER_DEFS[kind]; const set = def.set();
       const panel = document.getElementById(kind + 'FilterPanel');
       if (!panel) return;
+      const focused = panel.contains(document.activeElement) ? document.activeElement : null;
+      const focusedAction = focused?.dataset.act, focusedValue = focused?.dataset.value;
       const opts = def.options();
       const allActive = set.size === 0;
       let html = `<button type="button" data-act="all" aria-pressed="${allActive}" class="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${allActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-100'}">
@@ -19532,6 +19729,7 @@ const m = document.getElementById('mineModeBtn');
           if (b.dataset.act === 'all') clearFilter(kind);
           else toggleFilterValue(kind, b.dataset.value);
         });
+        if (focusedAction && b.dataset.act === focusedAction && b.dataset.value === focusedValue) b.focus({preventScroll:true});
       });
     }
     function toggleFilterValue(kind, value) {
@@ -19555,7 +19753,7 @@ const m = document.getElementById('mineModeBtn');
     function persistFilters() {
       try {
         storage.set('gantt_filters_active', JSON.stringify({
-          status: [...statusFilterSel], resource: [...resourceFilterSel], project: [...projectFilterSel],
+          status: [...statusFilterSel], resource: [...resourceFilterSel], project: [...projectFilterSel], type: [...typeFilterSel],
           release: [...releaseFilterSel], label: [...labelFilterSel], component: [...componentFilterSel],
           customFields: Object.keys(customFieldFilterSel || {}).reduce((a, k) => { const s = customFieldFilterSel[k]; if (s && s.size) a[k] = [...s]; return a; }, {})
         }));
@@ -19568,7 +19766,7 @@ const m = document.getElementById('mineModeBtn');
         const f = safeJsonParse(raw);
         if (!f || typeof f !== 'object') return;
         const fill = (set, arr) => { if (Array.isArray(arr)) { set.clear(); arr.forEach(x => set.add(x)); } };
-        fill(statusFilterSel, f.status); fill(resourceFilterSel, f.resource); fill(projectFilterSel, f.project);
+        fill(statusFilterSel, f.status); fill(resourceFilterSel, f.resource); fill(projectFilterSel, f.project); fill(typeFilterSel, f.type || []);
         fill(releaseFilterSel, f.release); fill(labelFilterSel, f.label); fill(componentFilterSel, f.component);
         if (f.customFields && typeof f.customFields === 'object' && !Array.isArray(f.customFields)) {
           customFieldFilterSel = {};
@@ -19577,6 +19775,7 @@ const m = document.getElementById('mineModeBtn');
       } catch (e) {}
     }
     function resetAllFilters() {
+      typeFilterSel.clear();
       resourceFilterSel.clear();
       statusFilterSel.clear();
       projectFilterSel.clear();
@@ -20329,12 +20528,12 @@ const m = document.getElementById('mineModeBtn');
       opts = opts || {};
       const next = (mode === 'leadership') ? mode : 'planning';
       const clearedForLeadership = next === 'leadership' && (
-        resourceFilterSel.size || statusFilterSel.size || projectFilterSel.size || releaseFilterSel.size ||
+        resourceFilterSel.size || statusFilterSel.size || projectFilterSel.size || typeFilterSel.size || releaseFilterSel.size ||
         labelFilterSel.size || componentFilterSel.size || Object.keys(customFieldFilterSel || {}).length ||
         _goritMode || _mineMode || _kindFilter || _noGoalFilter || _forecastReasonFilter
       );
       if (clearedForLeadership) {
-        resourceFilterSel.clear(); statusFilterSel.clear(); projectFilterSel.clear(); releaseFilterSel.clear();
+        resourceFilterSel.clear(); statusFilterSel.clear(); projectFilterSel.clear(); typeFilterSel.clear(); releaseFilterSel.clear();
         labelFilterSel.clear(); componentFilterSel.clear(); customFieldFilterSel = {};
         _goritMode = false; _critPathMode = false; _mineMode = false; _kindFilter = ''; _noGoalFilter = false; _forecastReasonFilter = '';
         if (typeof persistFilters === 'function') persistFilters();
@@ -20753,7 +20952,7 @@ const m = document.getElementById('mineModeBtn');
         name = (name || '').trim(); if (!name) return;
         const presets = getFilterPresets().filter(p => p.name !== name);
         presets.push({
-          name, status: [...statusFilterSel], resource: [...resourceFilterSel], project: [...projectFilterSel],
+          name, status: [...statusFilterSel], resource: [...resourceFilterSel], project: [...projectFilterSel], type: [...typeFilterSel],
           release: [...releaseFilterSel], label: [...labelFilterSel], component: [...componentFilterSel],
           customFields: Object.keys(customFieldFilterSel || {}).reduce((out, key) => {
             const values = customFieldFilterSel[key];
@@ -20768,6 +20967,7 @@ const m = document.getElementById('mineModeBtn');
     }
     function applyFilterPreset(idx) {
       const p = getFilterPresets()[idx]; if (!p) return;
+      typeFilterSel = new Set(p.type || []);
       statusFilterSel = new Set(p.status || []); resourceFilterSel = new Set(p.resource || []); projectFilterSel = new Set(p.project || []);
       releaseFilterSel = new Set(p.release || []); labelFilterSel = new Set(p.label || []); componentFilterSel = new Set(p.component || []);
       customFieldFilterSel = {};
@@ -20789,6 +20989,7 @@ const m = document.getElementById('mineModeBtn');
       const parts = [];
       const add = (arr, label) => { const n = (arr || []).length; if (n) parts.push(label + ': ' + n); };
       add(p.status, 'статус'); add(p.project, 'проект'); add(p.resource, 'ресурс');
+      add(p.type, 'тип');
       add(p.release, 'релиз'); add(p.label, 'метки'); add(p.component, 'компоненты');
       const customCount = (p.customFields && typeof p.customFields === 'object' && !Array.isArray(p.customFields))
         ? Object.keys(p.customFields).reduce((sum, key) => sum + (Array.isArray(p.customFields[key]) ? p.customFields[key].length : 0), 0)
@@ -21251,6 +21452,17 @@ const m = document.getElementById('mineModeBtn');
     document.addEventListener('scroll', (e) => {
       const t = e.target;
       if (t !== document && t !== document.documentElement && t !== document.body) return;
+      // Фильтрация меняет высоту списка и может прокрутить корень браузером.
+      // Пока кнопка видна, сохраняем открытый выбор и его привязку к кнопке.
+      const anchoredFilter = ['resource','status','project','type'].some(kind => {
+        const panel = document.getElementById(kind+'FilterPanel'), button = document.getElementById(kind+'FilterBtn');
+        if (!panel || panel.classList.contains('hidden') || !button) return false;
+        const rect = button.getBoundingClientRect();
+        if (!rect.width || rect.top < 0 || rect.bottom > innerHeight) return false;
+        panel.style.top = (rect.bottom+6)+'px';
+        return true;
+      });
+      if (anchoredFilter) return;
       // Правая шторка — самостоятельный рабочий экран. Перевод фокуса в неё
       // иногда создаёт служебный scroll корня; закрывать окно из-за этого нельзя.
       const openedDrawer = Array.from(document.querySelectorAll('.rm-drawer-popover'))
@@ -26158,6 +26370,15 @@ const m = document.getElementById('mineModeBtn');
         if (height > 0) heights.set(row.id.slice('task-row-left-'.length), height + 'px');
       });
       let changed = false;
+      bars.querySelectorAll('.section-timeline-header').forEach(row => {
+        const left = document.getElementById(row.id.replace('header-right-', 'header-left-'));
+        const height = measurable && left ? left.getBoundingClientRect().height : 0;
+        const value = height > 0 ? height + 'px' : '';
+        if (row.style.getPropertyValue('--rm-section-row-height') === value) return;
+        if (value) row.style.setProperty('--rm-section-row-height', value);
+        else row.style.removeProperty('--rm-section-row-height');
+        changed = true;
+      });
       bars.querySelectorAll('.task-timeline-row').forEach(row => {
         const value = heights.get(row.id.slice('task-row-right-'.length)) || '';
         if (row.style.getPropertyValue('--rm-task-row-height') === value) return;
@@ -27052,8 +27273,8 @@ const m = document.getElementById('mineModeBtn');
         + '</div>';
     }
     function _presHex(t) { var sd = (projectStatuses || []).filter(function (s) { return s && s.id === t.status; })[0]; var theme = (sd && sd.barTheme) || ''; var k = theme.split(' ')[0]; var m = { 'bg-slate-500': '#64748b', 'bg-slate-400': '#94a3b8', 'bg-indigo-500': '#6366f1', 'bg-indigo-600': '#4f46e5', 'bg-violet-500': '#8b5cf6', 'bg-amber-500': '#f59e0b', 'bg-amber-400': '#fbbf24', 'bg-teal-500': '#14b8a6', 'bg-emerald-500': '#10b981', 'bg-rose-500': '#f43f5e', 'bg-sky-500': '#0ea5e9' }; return m[k] || '#6366f1'; }
-    // Конец полосы определяется плановой датой и последним фактом смены статуса.
-    // Не растягиваем активную задачу до «сегодня»: это создавало ложную дату на таймлайне.
+    // Исторический конец для презентации: плановая дата и последний переход.
+    // Живой Гант отдельно продлевает активную работу, не меняя исторический отчет.
     function _statusTimelineEnd(task) {
       var end = (task && (task.end || task.start)) || '';
       (task && Array.isArray(task.statusLog) ? task.statusLog : []).forEach(function (e) {
@@ -27061,6 +27282,54 @@ const m = document.getElementById('mineModeBtn');
         if (at && (!end || at > end)) end = at;
       });
       return end;
+    }
+    // Живой Гант: активная работа продолжается до сегодня. План и отчеты не меняем.
+    function _ganttVisualEnd(task, end) {
+      if (!task || task.isMilestone || !isActiveStatus(task.status) || !CURRENT_DATE) return end;
+      const today = toYmdLocal(CURRENT_DATE);
+      return end && end > today ? end : today;
+    }
+    // Только отображение: история не заполняет отсутствующие плановые даты.
+    function _ganttHistoryRange(task) {
+      if (!task || task.isMilestone || (task.start && task.end)) return null;
+      const events = (Array.isArray(task.statusLog) ? task.statusLog : [])
+        .map((event,index) => ({event,index,at: event && parseJiraDate(event.at || '')}))
+        .filter(item => item.at && item.event.to)
+        .sort((a,b) => a.at.localeCompare(b.at) || a.index-b.index);
+      const started = events.findIndex(({event}) => isActiveStatus(event.from) || isActiveStatus(event.to)
+        || isFinalStatus(event.to) || (!['planned','on_hold'].includes(getStatusGroup(event.to))));
+      if (started < 0) {
+        const start = parseJiraDate(task.start || '');
+        return start && isActiveStatus(task.status) ? {start,end:_ganttVisualEnd(task,start)} : null;
+      }
+      return {start:events[started].at,end:_ganttVisualEnd(task,events[events.length-1].at)};
+    }
+    function _renderGanttHistoryBar(row, task, range) {
+      const wrap = document.createElement('div');
+      wrap.className = 'absolute h-7 z-10';
+      wrap.dataset.taskId = task.id;
+      wrap.style.left = (dateToDays(range.start) * DAY_WIDTH) + 'px';
+      wrap.style.width = Math.max(6,inclusiveDurationDays(range.start,range.end) * DAY_WIDTH) + 'px';
+      const bar = document.createElement('button');
+      bar.type = 'button';
+      bar.className = 'gantt-history-bar h-7 rounded-md text-[10px] font-medium text-white px-2 shadow-2xs';
+      bar.dataset.ganttBar = 'true';
+      bar.dataset.dateSource = 'status-history';
+      const status = _presStatusName(task);
+      const live = isActiveStatus(task.status);
+      const description = (live ? 'Активная работа, показ до текущей даты: ' : 'Факт по истории статусов: ') + formatDateString(range.start) + ' → ' + formatDateString(range.end)
+        + '. Статус: ' + status + '. Плановые даты не заданы полностью. Открыть карточку.';
+      bar.title = (task.name || 'Задача') + '. ' + description;
+      bar.setAttribute('aria-label',bar.title);
+      bar.style.background = _statusTimelineGradient(Object.assign({},task,{start:range.start}),range.end) || _presHex(task);
+      const label = document.createElement('span');
+      label.className = 'truncate'; label.textContent = task.name || 'Задача';
+      bar.appendChild(label);
+      const badge = document.createElement('span');
+      badge.className = 'gantt-history-label'; badge.textContent = (live ? 'До сегодня · ' : 'Факт · ') + status;
+      bar.appendChild(badge);
+      bar.addEventListener('click',() => openModal(task));
+      wrap.appendChild(bar); row.appendChild(wrap);
     }
     // Цветные участки одной «колбаски» соответствуют периодам между сменами статусов.
     // Переход начинает действовать с указанного календарного дня.
@@ -28890,6 +29159,7 @@ const m = document.getElementById('mineModeBtn');
       return null;
     }
     function renderRoadmap(skipSave = false) {
+      initGanttPinnedHeader();
       applyListDensity();
       var _prevLeftDate = null;
       try { var _scp = document.querySelector('.timeline-scroll'); if (_scp && _tlHeaderSig !== null && DAY_WIDTH > 0) _prevLeftDate = daysToDate(Math.round(_scp.scrollLeft / DAY_WIDTH)); } catch (e) {}
@@ -29194,7 +29464,7 @@ const m = document.getElementById('mineModeBtn');
         const colorName = colorMatch ? colorMatch[1] : 'slate-400';
         const borderColorClass = `border-${colorName}`;
         // Полоска слева 4px + тонкая нижняя полоска 1px того же цвета
-        headerLeft.className = `h-[54px] px-4 bg-slate-100/90 relative group flex items-center justify-between text-[10px] font-semibold text-slate-600 select-none transition-all border-l-4 ${borderColorClass} border-b ${borderColorClass}/50`;
+        headerLeft.className = `section-list-header h-[54px] px-4 bg-slate-100/90 relative group flex items-center justify-between text-[10px] font-semibold text-slate-600 select-none transition-all border-l-4 ${borderColorClass} border-b ${borderColorClass}/50`;
         if (secDepth) { headerLeft.style.paddingLeft = (20 + secDepth * 22) + 'px'; headerLeft.classList.add('nest-guide'); headerLeft.style.setProperty('--ng-x', (secDepth * 22) + 'px'); }
 
         // Try to find если секция эпиковая , извлекаем краткое имя и ключ Jira
@@ -29356,7 +29626,7 @@ const m = document.getElementById('mineModeBtn');
         }
         // 2-я строка заголовка секции: ключ Jira, статус, оценки, метки , чтобы ИМЯ секции занимало всю первую строку.
         if (jiraKeyLinkHtml || secStatusChip || estChipHtml || secLabelsHtml) {
-          subtitleHtml = `<div class="w-full flex flex-nowrap items-center gap-x-2 mt-0.5 overflow-hidden">${jiraKeyLinkHtml}${secStatusChip}${estChipHtml}${secLabelsHtml}</div>`;
+          subtitleHtml = `<div class="section-heading-meta w-full flex flex-nowrap items-center gap-x-2 mt-0.5 overflow-hidden">${jiraKeyLinkHtml}${secStatusChip}${estChipHtml}${secLabelsHtml}</div>`;
         }
         // Действия секции свернуты в одно меню (kebab) , иначе ряд иконок перекрывал статус и счетчик при наведении.
         let actionsHtml;
@@ -29377,10 +29647,10 @@ const m = document.getElementById('mineModeBtn');
           sectionBulkCb = `<span class="bulk-cb shrink-0 mr-1 w-5 h-5 rounded-md border-2 flex items-center justify-center cursor-pointer transition-colors ${_all ? 'bg-indigo-600 border-indigo-600' : (_some ? 'bg-indigo-100 border-indigo-400' : 'border-slate-300 bg-white')}" role="checkbox" tabindex="0" aria-checked="${_all ? 'true' : (_some ? 'mixed' : 'false')}" data-secbulk="${sectionNameAttr}" onclick="event.stopPropagation(); toggleSectionSelect('${sectionNameAttr}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();toggleSectionSelect('${sectionNameAttr}')}" title="Выбрать все задачи секции">${_all ? '<svg aria-hidden="true" class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>' : (_some ? '<svg aria-hidden="true" class="w-3 h-3 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"><path d="M5 12h14"/></svg>' : '')}</span>`;
         }
         headerLeft.innerHTML = `
-          ${sectionBulkCb}<div class="flex items-start gap-2 grow cursor-pointer min-w-0 mr-2" role="button" tabindex="0" aria-expanded="${!isCollapsed}" aria-label="${isCollapsed ? 'Развернуть' : 'Свернуть'} секцию" onclick="toggleSectionCollapse('${sectionNameAttr}')" onkeydown="if(event.target===this&&(event.key==='Enter'||event.key===' ')){event.preventDefault();toggleSectionCollapse('${sectionNameAttr}')}">
+          ${sectionBulkCb}<div class="section-heading flex items-start gap-2 grow cursor-pointer min-w-0 mr-2" role="button" tabindex="0" aria-expanded="${!isCollapsed}" aria-label="${isCollapsed ? 'Развернуть' : 'Свернуть'} секцию" onclick="toggleSectionCollapse('${sectionNameAttr}')" onkeydown="if(event.target===this&&(event.key==='Enter'||event.key===' ')){event.preventDefault();toggleSectionCollapse('${sectionNameAttr}')}">
             <span class="shrink-0 w-5 h-5 -ml-1 mt-0.5 flex items-center justify-center rounded text-slate-500 group-hover:text-indigo-600 group-hover:bg-slate-200/70 transition-all" title="${isCollapsed ? 'Развернуть' : 'Свернуть'}"><svg aria-hidden="true" class="w-4 h-4 transition-transform ${isCollapsed ? '' : 'rotate-90'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg></span>
             <div class="flex flex-col min-w-0 grow">
-              <div class="flex items-center gap-2 min-w-0 w-full">
+              <div class="section-heading-line flex items-center gap-2 min-w-0 w-full">
                 <button type="button" onclick="event.stopPropagation(); openSectionColorModal('${sectionNameAttr}')" class="w-3 h-3 rounded-full shrink-0 ring-2 ring-transparent hover:ring-offset-1 hover:ring-slate-400 ${sectionColors[sectionName] ? sectionColors[sectionName].split(' ')[0] : 'bg-slate-300'} transition-all cursor-pointer" aria-label="Цвет секции , нажмите, чтобы изменить" title="Цвет секции , нажмите, чтобы изменить"></button>
                 ${sectionRagDotHtml}
                 ${sectionKindBadgeHtml}
@@ -29392,7 +29662,7 @@ const m = document.getElementById('mineModeBtn');
               ${subtitleHtml}
             </div>
           </div>
-          <div class="flex items-center gap-1.5 shrink-0">
+          <div class="section-heading-summary flex items-center gap-1.5 shrink-0">
             ${_aggTasks.length > 0
               ? `${progressHtml}<span class="${isCollapsed ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-200 text-slate-600'} text-[10px] px-1.5 py-0.5 rounded-full font-semibold tabular-nums" aria-label="Вложенных секций: ${_directChildSections.length}; задач в поддереве: ${_aggTasks.length}" title="${_directChildSections.length ? _directChildSections.length + ' дочерних секций · ' : ''}${_aggTasks.length} задач в поддереве">${_directChildSections.length ? _directChildSections.length + ' секц. · ' : ''}${_aggTasks.length}${isCollapsed ? ' свернуто' : ''}</span>`
               : ''}
@@ -29410,7 +29680,7 @@ const m = document.getElementById('mineModeBtn');
         // Заголовок секции на Ганте (Правая панель)
         const headerRight = document.createElement('div');
         headerRight.id = `header-right-${sIdx}`;
-        headerRight.className = `h-[54px] bg-slate-100/40 relative flex items-center overflow-hidden border-b ${borderColorClass}/50`;
+        headerRight.className = `section-timeline-header h-[54px] bg-slate-100/40 relative flex items-center overflow-hidden border-b ${borderColorClass}/50`;
         if (bounds.start) {
           const summaryBar = document.createElement('div');
           summaryBar.className = `absolute top-1/2 -translate-y-1/2 h-4 bg-${colorName}/15 border ${borderColorClass}/40 rounded-md shadow-xs cursor-pointer hover:bg-${colorName}/25 transition-colors overflow-hidden`;
@@ -29635,6 +29905,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
               diamond.addEventListener('dblclick', () => openModal(task));
               rowRight.appendChild(diamond);
             } else {
+              const historyRange = _ganttHistoryRange(task);
+              if (historyRange) {
+                _renderGanttHistoryBar(rowRight,task,historyRange);
+                barsContainer.appendChild(rowRight);
+                return;
+              }
               const estimateDays = (typeof _taskEstDays === 'function') ? (_taskEstDays(task) || null) : parseEstimateDays(task.estimate);
 
               if (estimateDays && !task.actualStart) {
@@ -29656,9 +29932,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
                 return;
               }
 
-              // Плановая полоса расширяется только до последней реальной смены статуса.
-              // Дата просмотра страницы не является фактом по задаче и больше не подставляется в конец полосы.
-              const _visEndYmd = (typeof _statusTimelineEnd === 'function' ? _statusTimelineEnd(task) : '') || task.end;
+              // Продление активной полосы не записывается в плановые даты.
+              const _visEndYmd = _ganttVisualEnd(task, _statusTimelineEnd(task) || task.end);
               const _grewPastPlan = !!(_visEndYmd && task.end && _visEndYmd > task.end);
               const visualActualDays = inclusiveDurationDays(task.start, _visEndYmd);
               const _baseEndYmd = (estimateDays && task.start && typeof _spSpan === 'function') ? _spSpan(task.start, estimateDays, String(task.resource || '').trim()).end : null;
@@ -29781,7 +30056,9 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
                 _ov.className = 'absolute inset-y-0 right-0 rounded-r-md pointer-events-none';
                 _ov.style.left = `${_plannedW}px`;
                 _ov.style.background = 'repeating-linear-gradient(135deg, rgba(255,255,255,0.4) 0 5px, rgba(255,255,255,0) 5px 10px)';
-                _ov.title = `Смена статуса зафиксирована после планового срока (${formatDateString(task.end)})`;
+                _ov.title = isActiveStatus(task.status)
+                  ? `Работа продолжается после планового срока (${formatDateString(task.end)}). Плановые даты не изменены.`
+                  : `Смена статуса зафиксирована после планового срока (${formatDateString(task.end)})`;
                 bar.appendChild(_ov);
                 // Засечка планового срока: темная риска на месте, где задача должна была закончиться
                 const _tick = document.createElement('div');
@@ -30253,7 +30530,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       // Тип из выгрузки Jira мог сохраниться в описании строкой «Тип: ...» (импорт прошлых версий) , достаем его
       if (task.notes) {
         const m = String(task.notes).match(/(?:^|\n)\s*Тип:\s*([^\n]+)/i);
-        if (m && m[1].trim()) return m[1].trim();
+        if (m && m[1].trim()) return _localizeIssueType(m[1].trim());
       }
       // Есть ключ Jira, но тип не пришел , это все равно задача из Jira, а не ручная
       if (task.jira && String(task.jira).trim()) return 'Задача';
@@ -30787,7 +31064,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const ring = `<svg aria-hidden="true" width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" style="transform:rotate(-90deg);display:var(--rm-progress-ring-display,block);flex:none">`
         + `<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" style="stroke:var(--donut-track,#e2e8f0)" stroke-width="${sw}"/>`
         + `<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${arc}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"/></svg>`;
-      const frac = (opts.frac === false) ? '' : ` <span class="tabular-nums" style="font-size:10.5px;color:var(--donut-frac,#64748b);font-weight:500">(${doneN}/${total})</span>`;
+      const frac = (opts.frac === false) ? '' : ` <span class="tabular-nums" style="font-size:var(--rm-font-xs,12px);line-height:1.3;color:var(--donut-frac,#64748b);font-weight:500">(${doneN}/${total})</span>`;
       return `<span role="img" aria-label="${title}" class="shrink-0 inline-flex items-center gap-1.5 align-middle whitespace-nowrap" title="${title}">${ring}<span class="leading-none"><span class="tabular-nums" style="font-size:12px;font-weight:700;color:${pctCol}">${pct}%</span>${frac}</span></span>`;
     }
     // R1: компактный дашборд состояния проекта. Числа ГЛОБАЛЬНЫЕ (по всем задачам, не по фильтру) ,
@@ -30830,6 +31107,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     }
     function activeFilterToolCount() {
       let n = 0;
+      n += typeFilterSel.size;
       try { n += projectFilterSel.size + resourceFilterSel.size + releaseFilterSel.size + labelFilterSel.size + componentFilterSel.size; } catch (e) {}
       try { n += _cfActiveFieldCount(); } catch (e) {}
       try { if (_goritMode) n++; } catch (e) {}
@@ -30850,6 +31128,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         items.push(label + ': ' + (visible && !/^Все\s/i.test(visible) ? visible : (values.length === 1 ? values[0] : values.length)));
       };
       try { addSelection('Проект', projectFilterSel, 'projectFilterLabel'); } catch (e) {}
+      addSelection('Тип', typeFilterSel, 'typeFilterLabel');
       try { addSelection('Исполнитель', resourceFilterSel, 'resourceFilterLabel'); } catch (e) {}
       try { addSelection('Релиз', releaseFilterSel); } catch (e) {}
       try { addSelection('Метка', labelFilterSel); } catch (e) {}
@@ -36014,6 +36293,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       }
       if (resourceFilterSel && resourceFilterSel.size) fparts.push('ресурс , ' + [...resourceFilterSel].join(', '));
       if (projectFilterSel && projectFilterSel.size) fparts.push('проект , ' + [...projectFilterSel].join(', '));
+      if (typeFilterSel.size) fparts.push('тип: ' + [...typeFilterSel].join(', '));
       if (releaseFilterSel && releaseFilterSel.size) fparts.push('релиз , ' + [...releaseFilterSel].join(', '));
       if (labelFilterSel && labelFilterSel.size) fparts.push('метка , ' + [...labelFilterSel].join(', '));
       const filterText = fparts.length ? fparts.join(' · ') : 'показаны все задачи';
@@ -37608,7 +37888,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v16.6.0 · 23.09.2026</span>
+     <span id="appVersionBadge">v16.7.0 · 27.09.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -37658,7 +37938,44 @@ function syncBodyScrollLock() {
 
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v16.6.0</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v16.7.0</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="type-filter" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6M10 15v6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Типы задач в одном фильтре</h5><span class="info-release-badge">ФИЛЬТРЫ</span></div>
+      <p class="text-xs text-slate-600">Выбирайте инициативы, эпики, стори, задачи и подзадачи. Пользовательские типы Jira тоже доступны.</p>
+     </article>
+     <article data-release-card="hierarchy-filter" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4zM4 9h16M9 9v11"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Иерархия остается понятной</h5><span class="info-release-badge">СТРУКТУРА</span></div>
+      <p class="text-xs text-slate-600">При выборе эпика или стори видны вложенные задачи и их место в общем плане.</p>
+     </article>
+     <article data-release-card="history-gantt" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19h16M6 15l4-5 4 2 4-7M15 5h3v3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">На Ганте видна история работы</h5><span class="info-release-badge">ГАНТ</span></div>
+      <p class="text-xs text-slate-600">Без плановых дат полоса строится по истории статусов. Ревью и тестирование остаются на таймлайне.</p>
+     </article>
+     <article data-release-card="active-today" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h6v6H3zM15 13h6v6h-6zM9 8h4v8h2m-3-3l3 3-3 3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Активная работа до сегодня</h5><span class="info-release-badge">СРОКИ</span></div>
+      <p class="text-xs text-slate-600">Полоса незавершенной работы продолжается до сегодня. Плановые даты и прогноз не изменяются.</p>
+     </article>
+     <article data-release-card="sticky-header" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18v16H3zM9 4v16M15 4v16M5 8h2m4 0h2m4 0h2"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Шапка и даты всегда рядом</h5><span class="info-release-badge">НАВИГАЦИЯ</span></div>
+      <p class="text-xs text-slate-600">При прокрутке остаются видны шапка, статусы и календарь. Даты двигаются вместе с таймлайном.</p>
+     </article>
+     <article data-release-card="sticky-controls" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3h10l4 4v14H5zM14 3v5h5M8 12h8m-8 4h5"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Кнопки задач закреплены</h5><span class="info-release-badge">УПРАВЛЕНИЕ</span></div>
+      <p class="text-xs text-slate-600">Плотность, сворачивание, выбор, сортировка и добавление доступны при прокрутке списка.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <!-- INFO_RELEASE_RECENT_START -->
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v16.6.0</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="schedule-preview" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6M10 15v6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Сначала проверьте переносы</h5><span class="info-release-badge">ПЛАНИРОВАНИЕ</span></div>
@@ -37687,13 +38004,7 @@ function syncBodyScrollLock() {
     </div>
    </div>
 
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
-   <!-- INFO_RELEASE_RECENT_START -->
+
    <section class="rounded-xl border border-slate-200 p-4">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v16.5.1</h4>
     <div class="mt-3"><h5 class="font-semibold text-slate-800 text-sm">Карточка задачи на узком экране</h5><p class="text-xs text-slate-600 mt-2">Название и кнопки в шапке больше не перекрывают друг друга. Работает во всех трех темах.</p></div>
@@ -41452,7 +41763,7 @@ function syncBodyScrollLock() {
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 16.6.0</span>
+              <span id="appVersionStartup">версия 16.7.0</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
@@ -42183,7 +42494,7 @@ function _drawerPopupTitle(popup) {
     presetMenu:'Наборы фильтров', releaseFilterMenu:'Релизы и метки', zoomMenu:'Масштаб',
     depLinesMenu:'Связи задач', sortMenu:'Сортировка', taskMovePanel:'Перемещение задачи',
     statusCompactMenu:'Статусы', viewMenu:'Виды плана',
-    projectFilterPanel:'Проекты', resourceFilterPanel:'Исполнители',
+    projectFilterPanel:'Проекты', resourceFilterPanel:'Исполнители', typeFilterPanel:'Типы задач',
     sectionActionsMenu:'Действия с секцией', bulkPopover:'Массовые действия',
     cutoffClusterPopover:'Метки на близкие даты'
   };
@@ -42212,7 +42523,7 @@ function _closeDrawerPopover(popup) {
 }
 var _ADAPTIVE_POPOVER_IDS = new Set([
   'zoomMenu','depLinesMenu','sortMenu','presetMenu','releaseFilterMenu',
-  'resourceFilterPanel','projectFilterPanel','statusCompactMenu','taskMovePanel',
+  'resourceFilterPanel','projectFilterPanel','typeFilterPanel','statusCompactMenu','taskMovePanel',
   'viewMenu','cutoffClusterPopover','sectionActionsMenu'
 ]);
 function _isAdaptivePopover(popup) {
@@ -42494,7 +42805,13 @@ function _syncDrawerScrim() {
     setTimeout(function () {
       if (!openedPopup.isConnected || !_uiLayerIsVisuallyOpen(openedPopup) || openedPopup.contains(document.activeElement)) return;
       var focusable = openedPopup.querySelector('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])');
-      if (focusable) focusable.focus();
+      if (focusable) {
+        // Opening focus must not summon a tooltip that consumes the first Escape.
+        // User-driven Tab focus still shows contextual help normally.
+        var previousNoTip = window.__progFocusNoTip;
+        try { window.__progFocusNoTip = true; focusable.focus({ preventScroll:true }); }
+        finally { window.__progFocusNoTip = previousNoTip; }
+      }
     }, 30);
   } else if (!opened && _drawerWasOpen && _drawerLastFocus) {
     try { _drawerLastFocus.focus(); } catch (e) {}

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Roadmap v16.6.0: локальный планировщик дорожных карт в одном HTML-файле, исходные статусы Jira, задачи, сроки, зависимости, прогноз и презентация плана.">
-  <title>Roadmap v16.6.0: дорожная карта продукта в одном файле</title>
+  <meta name="description" content="Roadmap v16.7.0: локальный планировщик дорожных карт в одном HTML-файле, исходные статусы Jira, задачи, сроки, зависимости, прогноз и презентация плана.">
+  <title>Roadmap v16.7.0: дорожная карта продукта в одном файле</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     :root{--ink:#0f172a;--mut:#5b6c85;--brand:#4f46e5;--line:#e6eaf1;--page-wash:linear-gradient(145deg,#f8f9fd,#f2f5fb);--hero-wash:linear-gradient(160deg,#f0f3ff 0%,#edf3fd 42%,#f6f8fc 100%);--button-primary:linear-gradient(135deg,#5148e4,#4941d6);--button-primary-hover:linear-gradient(135deg,#4740cc,#4038ba);--button-secondary:linear-gradient(135deg,#fff,#f4f5fd);--button-secondary-hover:linear-gradient(135deg,#fafaff,#eef0fc)}
@@ -16,8 +16,8 @@
     .hero .wrap{position:relative;padding:36px 24px 44px}.brand{display:flex;align-items:center;gap:12px}
     .logo{width:52px;height:52px;border-radius:15px;background:linear-gradient(135deg,#3b82f6,#4f46e5);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(79,70,229,.32)}
     .logo svg{width:27px;height:27px;color:#fff}.vchip{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#4338ca;background:#fff;border:1px solid #c7d2fe;border-radius:999px;padding:4px 10px}
-    .herogrid{display:grid;grid-template-columns:1.3fr .7fr;gap:44px;align-items:center;margin-top:30px}.heroright{display:flex;justify-content:flex-end}
-    h1{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.6px;max-width:680px}.lead{font-size:clamp(15px,2.2vw,19px);color:#475569;max-width:760px;margin:14px 0 0}.lead b{color:var(--ink);font-weight:650}
+    .herogrid{display:grid;grid-template-columns:1fr;gap:24px;align-items:center;margin-top:30px}.heroright{display:flex;justify-content:flex-end}
+    h1{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.6px;max-width:940px;line-height:1.18}.lead{font-size:clamp(15px,2.2vw,19px);color:#475569;max-width:760px;margin:14px 0 0}.lead b{color:var(--ink);font-weight:650}
     .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:50px;padding:0 20px;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;transition:color .15s,border-color .15s,box-shadow .15s,transform .15s}
     .btn.primary{background:#4f46e5;background-image:var(--button-primary);color:#fff;box-shadow:0 10px 24px rgba(79,70,229,.22)}.btn.primary:hover{background-image:var(--button-primary-hover);transform:translateY(-1px)}
     .btn.ghost{background:#fff;background-image:var(--button-secondary);color:#334155;border:1px solid #d6ddec}.btn.ghost:hover{background-image:var(--button-secondary-hover);border-color:#a5b4fc;color:#3730a3}
@@ -28,7 +28,7 @@
     .vava img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.vhero .nm{font-size:17px;font-weight:800}.vhero .rl{font-size:12.5px;color:var(--mut);margin-top:2px}.vhero .lk{margin-top:15px;padding-top:15px;border-top:1px solid #eaeef6}.vhero .lk a{font-size:14px;font-weight:600;color:#4f46e5}
     .metrics-panel{margin-top:28px;padding:22px;border-radius:18px;background:rgba(255,255,255,.62);backdrop-filter:blur(8px);border:1px solid #dbe3f4;box-shadow:0 16px 38px rgba(15,23,42,.08)}.metrics-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}.metrics-head h2{font-size:20px;font-weight:800;letter-spacing:-.25px}.metrics-head p{font-size:13px;color:var(--mut);margin-top:4px;max-width:760px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.stat{min-height:112px;background:#fff;border:1px solid #e3e9f4;border-radius:14px;padding:15px;box-shadow:0 6px 18px rgba(15,23,42,.04)}
     .stat .v{font-size:24px;font-weight:800;letter-spacing:-.5px;background:linear-gradient(120deg,#4f46e5,#3b82f6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}.stat .l{font-size:13px;font-weight:800;color:#0f172a;margin-top:2px}.statsrc{font-size:11px;color:var(--mut);margin-top:12px}
-    .shotwrap{margin:-24px 0 0}.video{max-width:920px;margin:0 auto;border-radius:18px;overflow:hidden;border:1px solid #1e293b;box-shadow:0 26px 64px rgba(15,23,42,.2);background:#0b1220;line-height:0}.video video{display:block;width:100%;height:auto}.vidnote{max-width:920px;margin:14px auto 0;text-align:center;font-size:13px;color:var(--mut)}
+    .shotwrap{margin:28px 0 0}.video{max-width:920px;margin:0 auto;border-radius:18px;overflow:hidden;border:1px solid #1e293b;box-shadow:0 26px 64px rgba(15,23,42,.2);background:#0b1220;line-height:0}.video video{display:block;width:100%;height:auto}.vidnote{max-width:920px;margin:14px auto 0;text-align:center;font-size:13px;color:var(--mut)}
     section{padding:56px 0}.alt{background:linear-gradient(145deg,#fff,#f8f9fe);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.sechead{text-align:center;max-width:760px;margin:0 auto 34px}.sechead h2{font-size:clamp(24px,3.5vw,34px);font-weight:800;letter-spacing:-.4px}.sechead p{color:var(--mut);font-size:16px;margin-top:10px}
     .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 6px 18px rgba(15,23,42,.05);transition:transform .16s,box-shadow .16s}.card:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(15,23,42,.1)}
     .card .ic{width:42px;height:42px;border-radius:12px;background:#eef2ff;color:#4f46e5;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-weight:800}.card .ic-label{width:fit-content;max-width:100%;height:auto;min-height:32px;padding:6px 10px;border-radius:8px;font-size:13px;line-height:20px;overflow-wrap:anywhere}.card h3{font-size:17px;font-weight:800}.card p{font-size:13.5px;color:#52607a;margin-top:6px}
@@ -45,44 +45,33 @@
     .purchase-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}.purchase-dialog label{display:flex;flex-wrap:wrap;gap:6px;font-size:14px;font-weight:650;min-width:0}.purchase-wide{grid-column:1/-1}.purchase-optional{font-weight:400;color:#5b6c85}.purchase-dialog input,.purchase-dialog textarea{display:block;width:100%;min-width:0;border:1px solid #94a3b8;border-radius:9px;background:#fff;color:#0f172a;padding:10px 12px;font:400 16px/1.45 -apple-system,"Segoe UI",Roboto,Arial,sans-serif}.purchase-dialog input{min-height:44px}.purchase-dialog textarea{resize:vertical;max-height:240px}.purchase-dialog input:focus,.purchase-dialog textarea:focus{outline:2px solid #4338ca;outline-offset:-2px;box-shadow:none}.purchase-fallback summary:focus-visible,.purchase-fallback a:focus-visible{outline:3px solid #4338ca;outline-offset:3px}
     .purchase-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.purchase-dialog .btn{border:1px solid #d6ddec;transition:none}.purchase-dialog .btn.primary{border-color:transparent}.purchase-dialog .btn.primary:hover{transform:none}.purchase-fallback{border-top:1px solid var(--line);margin-top:20px;padding-top:10px}.purchase-fallback summary{min-height:44px;padding:10px 0;cursor:pointer;color:#334155;font-size:14px;font-weight:650}.purchase-fallback p{font-size:14px;color:#475569;margin:4px 0 12px}.purchase-fallback a{color:#4338ca;text-decoration:underline}.purchase-fallback .btn{margin-top:12px}.purchase-status{font-size:13px;color:#475569;min-height:40px;margin-top:12px}
     @media(max-width:560px){.purchase-dialog{padding:20px}.purchase-fields{grid-template-columns:1fr}.purchase-actions .btn{width:100%}}
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.card{transition:none}.btn.primary:hover,.card:hover{transform:none}}
+    .purchase-dialog[open]{animation:purchase-in .2s cubic-bezier(.16,1,.3,1)}
+    .purchase-dialog .btn{transition:color .14s,border-color .14s,box-shadow .14s}
+    @keyframes purchase-in{from{opacity:.65}to{opacity:1}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.card,.purchase-dialog .btn{transition:color .08s,border-color .08s}.purchase-dialog[open]{animation:none}.btn.primary:hover,.card:hover{transform:none}}
+    .author-section{display:grid;grid-template-columns:350px minmax(0,1fr);gap:40px;align-items:center}.author-about h2{font-size:26px;line-height:1.25}.author-about p{margin:12px 0 20px;color:var(--mut);max-width:520px}.history-wrap{padding-bottom:36px}.historical-metrics{margin:0;padding:12px 20px;background:transparent;box-shadow:none}.historical-metrics summary{min-height:44px;padding:10px 0;cursor:pointer;font-weight:650;color:#475569}.historical-metrics summary:focus-visible{outline:2px solid var(--brand);outline-offset:3px}.historical-metrics .stat .v{background:none;-webkit-text-fill-color:currentColor;color:#475569}.historical-metrics .statsrc{font-size:13px}
+    @media(max-width:720px){.author-section{grid-template-columns:1fr;gap:24px}.author-card .vhero{max-width:none}.hero .wrap{padding:24px 20px 28px}.herogrid{margin-top:24px}.shotwrap .wrap{padding:0 12px}.video{border-radius:10px}.vidnote{font-size:12px}.hero .cta{margin-top:20px;gap:10px}.hero .cta .btn{width:auto;flex:1 1 140px;padding:0 12px;font-size:14px}}
   </style>
 </head>
 <body>
   <header class="hero"><div class="wrap">
-    <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">v16.6.0 · 23.09.2026</span></div>
+    <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">v16.7.0 · 27.09.2026</span></div>
     <div class="herogrid">
       <div>
         <h1>Дорожная карта: ваш план от задач до релиза в одном файле</h1>
-        <p class="lead">Соберите задачи в общий план и посмотрите, что может задержать релиз. Roadmap помогает разобраться в сроках и зависимостях, а затем показать главное команде. Приложение запускается из одного HTML-файла в браузере, без установки, сервера и подписки.</p>
-        <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a><a class="btn ghost" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a></div>
+        <p class="lead">Соберите задачи, проверьте риски срока и подготовьте план для команды. Работает в браузере без установки и сервера.</p>
+        <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a></div>
       </div>
-      <div class="heroright"><div class="vhero"><div class="hd">Автор проекта</div><div class="rw"><div class="vava">ВУ<img src="avatar.jpg" alt="Владимир Учинин" onerror="this.remove()"></div><div><div class="nm">Владимир Учинин</div><div class="rl">Владелец продукта / Product Owner</div></div></div><div class="lk"><a href="mailto:uchv@ya.ru">uchv@ya.ru</a><button class="btn primary purchase-open" id="purchase-open" type="button" aria-haspopup="dialog" aria-controls="purchase-dialog">Хочу купить</button></div></div></div>
     </div>
-    <section class="metrics-panel" aria-labelledby="metrics-title">
-      <div class="metrics-head"><div><h2 id="metrics-title">Исторические примеры оценок</h2></div></div>
-      <div class="stats">
-        <article class="stat" data-metric="simplicity"><div class="v">8,23</div><div class="l">Простота / 10</div></article>
-        <article class="stat" data-metric="satisfaction"><div class="v">8,43</div><div class="l">Удовлетворенность / 10</div></article>
-        <article class="stat" data-metric="value"><div class="v">9,04</div><div class="l">Ценность / 10</div></article>
-        <article class="stat" data-metric="recommendation"><div class="v">8,43</div><div class="l">Рекомендация / 10</div></article>
-        <article class="stat" data-metric="nps"><div class="v">+57</div><div class="l">NPS</div></article>
-        <article class="stat" data-metric="readiness"><div class="v">83,3%</div><div class="l">Готовность внедрять</div></article>
-        <article class="stat" data-metric="safe_start"><div class="v">86,7%</div><div class="l">Безопасный старт</div></article>
-        <article class="stat" data-metric="hierarchy"><div class="v">93,3%</div><div class="l">Понимание иерархии</div></article>
-        <article class="stat" data-metric="restoration"><div class="v">80,0%</div><div class="l">Понятность восстановления</div></article>
-      </div>
-      <p class="statsrc" id="synthetic-metrics-source">Иллюстративные оценки, не результаты опроса пользователей.</p>
-    </section>
   </div></header>
 
-  <div class="shotwrap"><div class="wrap"><div class="video"><video controls playsinline preload="metadata" poster="media/roadmap-demo-poster.jpg?v=v1610-20260919" aria-label="Демонстрация возможностей Roadmap" aria-describedby="demo-video-note"><source src="media/roadmap-demo.mp4?v=v1610-20260919" type="video/mp4">Ваш браузер не воспроизводит MP4. <a href="media/roadmap-demo.mp4?v=v1610-20260919" download style="color:#93c5fd">Скачать демо-ролик</a>.</video></div><div class="vidnote" id="demo-video-note">Короткий обзор Roadmap v16.6.0 на вымышленном проекте. Видео без звука и рабочих данных.</div></div></div>
+  <div class="shotwrap"><div class="wrap"><div class="video"><video controls playsinline preload="metadata" poster="media/roadmap-demo-poster.jpg?v=v1670-film-light-20260927" aria-label="Демонстрация возможностей Roadmap" aria-describedby="demo-video-note"><source src="media/roadmap-demo.mp4?v=v1670-film-light-20260927" type="video/mp4">Ваш браузер не воспроизводит MP4. <a href="media/roadmap-demo.mp4?v=v1670-film-light-20260927" download style="color:#93c5fd">Скачать демо-ролик</a>.</video></div><div class="vidnote" id="demo-video-note">От задач до релиза за 43 секунды: обзор Roadmap v16.7.0. Видео без звука; все проекты вымышленные.</div></div></div>
 
 
-  <section aria-labelledby="release-title"><div class="wrap"><div class="sechead"><h2 id="release-title">Новое в v16.6.0</h2><p>Проверяйте переносы до применения и готовьте материалы под свою задачу.</p></div><div class="grid">
-    <article class="card"><div class="ic ic-label">План</div><h3>Сначала посмотрите новые даты</h3><p>Выравнивание загрузки показывает текущие и итоговые даты, зависимые задачи и риски. План не меняется, пока вы не подтвердите переносы.</p></article>
-    <article class="card"><div class="ic ic-label">Отмена</div><h3>Верните все переносы одним действием</h3><p>Применяются только показанные изменения. Одно действие отмены возвращает исходные даты. Если план изменился после расчета, потребуется новый предпросмотр.</p></article>
-    <article class="card"><div class="ic ic-label">Материалы</div><h3>Выберите задачу, затем формат</h3><p>Проверьте статус, подготовьте встречу или откройте выгрузку. Отчеты, слайды, текст и изображения разложены по разделам. План в XLSX тоже находится здесь.</p></article>
+  <section aria-labelledby="release-title"><div class="wrap"><div class="sechead"><h2 id="release-title">Новое в v16.7.0</h2><p>Нужные типы задач, история работы и управление всегда под рукой.</p></div><div class="grid">
+    <article class="card"><div class="ic ic-label">Типы</div><h3>От инициативы до подзадачи</h3><p>Выбирайте эпики, стори, задачи и другие типы. Фильтр сохраняет вложенные задачи и контекст иерархии, включая пользовательские типы Jira.</p></article>
+    <article class="card"><div class="ic ic-label">Гант</div><h3>Работа видна без плановых дат</h3><p>Если даты не заданы, полоса строится по известной истории статусов. Активная работа продолжается до сегодня. Плановые даты не меняются.</p></article>
+    <article class="card"><div class="ic ic-label">Шапка</div><h3>Управление остается на экране</h3><p>Прокручивайте длинный план: шапка, статусы, календарь и кнопки задач остаются доступны. На узком экране закрепляется управление списком.</p></article>
   </div></div></section>
 
   <main>
@@ -97,16 +86,37 @@
 
     <section><div class="wrap"><div class="sechead"><h2>Как начать</h2><p>Демо нужно для знакомства. Для своего плана используйте рабочую версию приложения.</p></div><div class="how">
       <article class="card"><h3>1. Попробуйте демо</h3><p>Откройте карточки и разные виды плана на вымышленных задачах. Демо не записывает изменения в рабочий файл.</p></article>
-      <article class="card"><h3>2. Получите рабочую версию</h3><p>Напишите автору по адресу вверху страницы. В рабочем HTML можно создать план вручную или импортировать задачи из Jira CSV.</p></article>
+      <article class="card"><h3>2. Получите рабочую версию</h3><p>Свяжитесь с автором через форму «Хочу купить» ниже. В рабочем HTML можно создать план вручную или импортировать задачи из Jira CSV.</p></article>
       <article class="card"><h3>3. Сохраните свой план</h3><p>Приложение находится в HTML, а данные плана сохраняются отдельно в JSON. Подключите рабочий файл или скачайте копию и храните ее у себя.</p></article>
     </div></div></section>
 
     <section class="alt"><div class="wrap"><div class="sechead"><h2>Публичное демо без рабочих данных</h2><p>Знакомьтесь с приложением, не загружая план своей команды.</p></div><div class="notice"><h3>Что важно знать о данных</h3><p>В демо только вымышленные задачи. Реальных планов, токенов Jira и финансовых данных команды в публичной сборке нет.</p><p>Рабочий HTML может работать офлайн. Сайт и видео загружаются по сети. Обмен с Jira требует вашей настройки; автоматический обмен работает, только если вы его включили.</p><p>Перед очисткой проекта сохраните нужные данные. История версий в браузере и скачанный JSON хранятся отдельно: обычный экспорт плана не копирует историю.</p></div></div></section>
 
     <section><div class="wrap"><div class="catcta"><h2>Посмотрите, как устроены функции</h2><p>В каталоге есть описания и снимки экранов: от импорта Jira до прогноза сроков и показа плана.</p><div class="cta"><a class="btn primary" href="catalog.html">Открыть каталог функций</a><a class="btn ghost" href="app.html">Открыть демо</a></div></div></div></section>
+    <section id="author" aria-label="Связаться с автором"><div class="wrap author-section">
+      <div class="author-card"><div class="vhero"><div class="hd">Автор проекта</div><div class="rw"><div class="vava">ВУ<img src="avatar.jpg" alt="Владимир Учинин" onerror="this.remove()"></div><div><div class="nm">Владимир Учинин</div><div class="rl">Владелец продукта / Product Owner</div></div></div><div class="lk"><a href="mailto:uchv@ya.ru">uchv@ya.ru</a><button class="btn primary purchase-open" id="purchase-open" type="button" aria-haspopup="dialog" aria-controls="purchase-dialog">Хочу купить</button></div></div></div>
+      <div class="author-about"><h2>Нужен свой рабочий план?</h2><p>Напишите, для какой команды вы выбираете Roadmap. Форма подготовит письмо автору в вашей почтовой программе.</p><a class="btn ghost" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a></div>
+    </div></section>
+    <div class="wrap history-wrap">
+    <details class="metrics-panel historical-metrics">
+      <summary id="metrics-title">Исторические примеры оценок · иллюстрация</summary>
+      <div class="stats">
+        <article class="stat" data-metric="simplicity"><div class="v">8,23</div><div class="l">Простота / 10</div></article>
+        <article class="stat" data-metric="satisfaction"><div class="v">8,43</div><div class="l">Удовлетворенность / 10</div></article>
+        <article class="stat" data-metric="value"><div class="v">9,04</div><div class="l">Ценность / 10</div></article>
+        <article class="stat" data-metric="recommendation"><div class="v">8,43</div><div class="l">Рекомендация / 10</div></article>
+        <article class="stat" data-metric="nps"><div class="v">+57</div><div class="l">NPS</div></article>
+        <article class="stat" data-metric="readiness"><div class="v">83,3%</div><div class="l">Готовность внедрять</div></article>
+        <article class="stat" data-metric="safe_start"><div class="v">86,7%</div><div class="l">Безопасный старт</div></article>
+        <article class="stat" data-metric="hierarchy"><div class="v">93,3%</div><div class="l">Понимание иерархии</div></article>
+        <article class="stat" data-metric="restoration"><div class="v">80,0%</div><div class="l">Понятность восстановления</div></article>
+      </div>
+      <p class="statsrc" id="synthetic-metrics-source">Иллюстративные оценки, не результаты опроса пользователей.</p>
+    </details>
+    </div>
   </main>
 
-  <footer class="foot"><div class="wrap">Roadmap v16.6.0 · 23.09.2026 · Владимир Учинин · Публичная сборка содержит только вымышленные данные.</div></footer>
+  <footer class="foot"><div class="wrap">Roadmap v16.7.0 · 27.09.2026 · Владимир Учинин · Публичная сборка содержит только вымышленные данные.</div></footer>
   <dialog class="purchase-dialog" id="purchase-dialog" aria-labelledby="purchase-title" aria-describedby="purchase-note">
     <div class="purchase-head"><h2 id="purchase-title">Хочу купить Roadmap</h2><button class="btn ghost purchase-close" id="purchase-close" type="button" aria-label="Закрыть форму">&times;</button></div>
     <p class="purchase-note" id="purchase-note">Форма подготовит письмо автору. Оно откроется в вашей почтовой программе, отправить его нужно самостоятельно. Сайт не отправляет и не сохраняет данные формы.</p>

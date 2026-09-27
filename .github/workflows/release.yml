@@ -50,7 +50,7 @@ jobs:
           media robots.txt schemas Инструкция_Roadmap.md Локер-роадмапов.html
       - name: Verify the release ZIP excludes private material
         run: |
-          if unzip -Z1 roadmap-site-public.zip | grep -Eq '(^|/)private/|(^|/)roadmap-data\.json$'; then
+          if unzip -Z1 roadmap-site-public.zip | grep -Eq '(^|/)private/|(^|/)roadmap-data\.json$|(^|/)roadmap\.html$'; then
             echo "Release ZIP contains private material." >&2
             exit 1
           fi
