@@ -3,37 +3,39 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Roadmap v16.7.0: локальный планировщик дорожных карт в одном HTML-файле, исходные статусы Jira, задачи, сроки, зависимости, прогноз и презентация плана.">
-  <title>Roadmap v16.7.0: дорожная карта продукта в одном файле</title>
+  <meta name="description" content="Roadmap v16.7.1: локальный планировщик дорожных карт в одном HTML-файле, исходные статусы Jira, задачи, сроки, зависимости, прогноз и презентация плана.">
+  <title>Roadmap v16.7.1: дорожная карта продукта в одном файле</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     :root{--ink:#0f172a;--mut:#5b6c85;--brand:#4f46e5;--line:#e6eaf1;--page-wash:linear-gradient(145deg,#f8f9fd,#f2f5fb);--hero-wash:linear-gradient(160deg,#f0f3ff 0%,#edf3fd 42%,#f6f8fc 100%);--button-primary:linear-gradient(135deg,#5148e4,#4941d6);--button-primary-hover:linear-gradient(135deg,#4740cc,#4038ba);--button-secondary:linear-gradient(135deg,#fff,#f4f5fd);--button-secondary-hover:linear-gradient(135deg,#fafaff,#eef0fc)}
     html{scroll-behavior:smooth}
-    body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:#f6f8fc;background-image:var(--page-wash);-webkit-font-smoothing:antialiased;line-height:1.5}
+    body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#f6f8fc;background-image:var(--page-wash);-webkit-font-smoothing:antialiased;line-height:1.5}
     a{color:inherit;text-decoration:none}.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
     .hero{position:relative;overflow:hidden;background:var(--hero-wash);border-bottom:1px solid var(--line)}
     .hero:before{content:"";position:absolute;top:-160px;right:-120px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(79,70,229,.07),transparent 65%);pointer-events:none}
     .hero .wrap{position:relative;padding:36px 24px 44px}.brand{display:flex;align-items:center;gap:12px}
     .logo{width:52px;height:52px;border-radius:15px;background:linear-gradient(135deg,#3b82f6,#4f46e5);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(79,70,229,.32)}
     .logo svg{width:27px;height:27px;color:#fff}.vchip{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#4338ca;background:#fff;border:1px solid #c7d2fe;border-radius:999px;padding:4px 10px}
-    .herogrid{display:grid;grid-template-columns:1fr;gap:24px;align-items:center;margin-top:30px}.heroright{display:flex;justify-content:flex-end}
+    .herogrid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:32px;align-items:start;margin-top:30px}.heroright{display:flex;justify-content:flex-end;min-width:0}
     h1{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.6px;max-width:940px;line-height:1.18}.lead{font-size:clamp(15px,2.2vw,19px);color:#475569;max-width:760px;margin:14px 0 0}.lead b{color:var(--ink);font-weight:650}
     .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:50px;padding:0 20px;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;transition:color .15s,border-color .15s,box-shadow .15s,transform .15s}
     .btn.primary{background:#4f46e5;background-image:var(--button-primary);color:#fff;box-shadow:0 10px 24px rgba(79,70,229,.22)}.btn.primary:hover{background-image:var(--button-primary-hover);transform:translateY(-1px)}
     .btn.ghost{background:#fff;background-image:var(--button-secondary);color:#334155;border:1px solid #d6ddec}.btn.ghost:hover{background-image:var(--button-secondary-hover);border-color:#a5b4fc;color:#3730a3}
     .btn:focus-visible{outline:3px solid #4338ca;outline-offset:4px}
-    .vhero{width:100%;max-width:350px;background:rgba(255,255,255,.72);backdrop-filter:blur(6px);border:1px solid #e3e9f4;border-radius:18px;padding:22px 24px;box-shadow:0 18px 44px rgba(15,23,42,.1)}
+    .vhero{width:100%;max-width:350px;background:#fff;border:1px solid #e3e9f4;border-radius:16px;padding:22px}
     .vhero .hd{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#4338ca;margin-bottom:14px}.vhero .rw{display:flex;align-items:center;gap:14px}
     .vava{position:relative;overflow:hidden;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#4f46e5);color:#fff;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:800;flex:none;box-shadow:0 8px 20px rgba(79,70,229,.3)}
     .vava img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.vhero .nm{font-size:17px;font-weight:800}.vhero .rl{font-size:12.5px;color:var(--mut);margin-top:2px}.vhero .lk{margin-top:15px;padding-top:15px;border-top:1px solid #eaeef6}.vhero .lk a{font-size:14px;font-weight:600;color:#4f46e5}
     .metrics-panel{margin-top:28px;padding:22px;border-radius:18px;background:rgba(255,255,255,.62);backdrop-filter:blur(8px);border:1px solid #dbe3f4;box-shadow:0 16px 38px rgba(15,23,42,.08)}.metrics-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}.metrics-head h2{font-size:20px;font-weight:800;letter-spacing:-.25px}.metrics-head p{font-size:13px;color:var(--mut);margin-top:4px;max-width:760px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.stat{min-height:112px;background:#fff;border:1px solid #e3e9f4;border-radius:14px;padding:15px;box-shadow:0 6px 18px rgba(15,23,42,.04)}
     .stat .v{font-size:24px;font-weight:800;letter-spacing:-.5px;background:linear-gradient(120deg,#4f46e5,#3b82f6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}.stat .l{font-size:13px;font-weight:800;color:#0f172a;margin-top:2px}.statsrc{font-size:11px;color:var(--mut);margin-top:12px}
-    .shotwrap{margin:28px 0 0}.video{max-width:920px;margin:0 auto;border-radius:18px;overflow:hidden;border:1px solid #1e293b;box-shadow:0 26px 64px rgba(15,23,42,.2);background:#0b1220;line-height:0}.video video{display:block;width:100%;height:auto}.vidnote{max-width:920px;margin:14px auto 0;text-align:center;font-size:13px;color:var(--mut)}
+    .shotwrap{margin:32px 0 0}.video{position:relative;max-width:1072px;margin:0 auto;border-radius:16px;overflow:hidden;border:1px solid #d6ddec;background:#f0f3ff;line-height:0;aspect-ratio:16/9}.video video{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain}.vidnote{max-width:920px;margin:14px auto 0;text-align:center;font-size:13px;color:var(--mut)}
+    .video-cover{position:absolute;inset:0;background:var(--hero-wash);line-height:1.4}.video-cover[hidden]{display:none}.video-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.video-start{position:absolute;left:50%;bottom:12%;translate:-50% 0;border:0;min-height:50px;height:auto;padding:14px 24px;white-space:nowrap;max-width:calc(100% - 24px);box-shadow:0 8px 24px rgba(15,23,42,.2)}.video-start svg{width:22px;height:22px;flex:none}.video-start:disabled{cursor:wait}.video-cover[data-poster-error="true"]:before{content:"Roadmap: от задач до релиза";position:absolute;left:8%;right:8%;top:20%;font-size:clamp(22px,4vw,44px);font-weight:800;line-height:1.2}.video-help{max-width:1072px;margin:10px auto 0;font-size:13px;line-height:1.5;color:var(--mut);display:flex;gap:8px 18px;justify-content:center;flex-wrap:wrap}.video-help a{color:#4338ca;text-decoration:underline;text-underline-offset:3px;min-height:44px;display:inline-flex;align-items:center}.video-help a:focus-visible{outline:3px solid #4338ca;outline-offset:3px}.video-status{flex-basis:100%;text-align:center}.video-status:empty{display:none}
+    @media(max-width:560px){.video-start{height:44px;min-height:44px;padding:0 14px;font-size:14px}}
     section{padding:56px 0}.alt{background:linear-gradient(145deg,#fff,#f8f9fe);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.sechead{text-align:center;max-width:760px;margin:0 auto 34px}.sechead h2{font-size:clamp(24px,3.5vw,34px);font-weight:800;letter-spacing:-.4px}.sechead p{color:var(--mut);font-size:16px;margin-top:10px}
     .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 6px 18px rgba(15,23,42,.05);transition:transform .16s,box-shadow .16s}.card:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(15,23,42,.1)}
     .card .ic{width:42px;height:42px;border-radius:12px;background:#eef2ff;color:#4f46e5;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-weight:800}.card .ic-label{width:fit-content;max-width:100%;height:auto;min-height:32px;padding:6px 10px;border-radius:8px;font-size:13px;line-height:20px;overflow-wrap:anywhere}.card h3{font-size:17px;font-weight:800}.card p{font-size:13.5px;color:#52607a;margin-top:6px}
     .how{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:900px;margin:0 auto}.how .card{text-align:center}
-    .notice{max-width:900px;margin:0 auto;background:#eefbf5;border:1px solid #bbefd6;border-radius:18px;padding:24px 26px;color:#315c4c}.notice h3{font-size:19px;color:#14543e;margin-bottom:8px}.notice p{font-size:14px}.notice p+p{margin-top:8px}
+    .notice{max-width:900px;margin:0 auto;background:#eef2ff;border:1px solid #d6ddec;border-radius:16px;padding:24px 26px;color:#475569}.notice h3{font-size:19px;color:#0f172a;margin-bottom:8px}.notice p{font-size:14px}.notice p+p{margin-top:8px}
     .catcta{max-width:960px;margin:0 auto;background:var(--hero-wash);border:1px solid #dbe3f4;border-radius:20px;padding:32px 28px;box-shadow:0 20px 50px rgba(15,23,42,.08);text-align:center}.catcta p{color:var(--mut);margin:8px auto 0;max-width:680px}.catcta .cta{justify-content:center}
     .foot{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:var(--mut);font-size:13px}
     @media(max-width:900px){.herogrid{grid-template-columns:1fr;gap:26px}.heroright{justify-content:flex-start}.stats{grid-template-columns:repeat(3,1fr)}}
@@ -49,29 +51,40 @@
     .purchase-dialog .btn{transition:color .14s,border-color .14s,box-shadow .14s}
     @keyframes purchase-in{from{opacity:.65}to{opacity:1}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.card,.purchase-dialog .btn{transition:color .08s,border-color .08s}.purchase-dialog[open]{animation:none}.btn.primary:hover,.card:hover{transform:none}}
-    .author-section{display:grid;grid-template-columns:350px minmax(0,1fr);gap:40px;align-items:center}.author-about h2{font-size:26px;line-height:1.25}.author-about p{margin:12px 0 20px;color:var(--mut);max-width:520px}.history-wrap{padding-bottom:36px}.historical-metrics{margin:0;padding:12px 20px;background:transparent;box-shadow:none}.historical-metrics summary{min-height:44px;padding:10px 0;cursor:pointer;font-weight:650;color:#475569}.historical-metrics summary:focus-visible{outline:2px solid var(--brand);outline-offset:3px}.historical-metrics .stat .v{background:none;-webkit-text-fill-color:currentColor;color:#475569}.historical-metrics .statsrc{font-size:13px}
-    @media(max-width:720px){.author-section{grid-template-columns:1fr;gap:24px}.author-card .vhero{max-width:none}.hero .wrap{padding:24px 20px 28px}.herogrid{margin-top:24px}.shotwrap .wrap{padding:0 12px}.video{border-radius:10px}.vidnote{font-size:12px}.hero .cta{margin-top:20px;gap:10px}.hero .cta .btn{width:auto;flex:1 1 140px;padding:0 12px;font-size:14px}}
+    .author-note{margin-top:14px;font-size:13px;color:var(--mut)}.vchip,.vhero .hd{font-size:12px}.vhero .rw>div:last-child{min-width:0}.vhero .nm{overflow-wrap:anywhere}.vhero .lk{gap:10px}.history-wrap{padding-bottom:36px}.historical-metrics{margin:0;padding:20px;background:#f0f3ff;box-shadow:none;backdrop-filter:none;border-radius:16px}.historical-metrics summary{min-height:44px;padding:10px 0;cursor:pointer;font-weight:700;color:var(--ink)}.historical-metrics summary:focus-visible{outline:2px solid var(--brand);outline-offset:3px}.historical-metrics .stat .v{background:none;-webkit-text-fill-color:currentColor;color:var(--brand);font-variant-numeric:tabular-nums}.historical-metrics .statsrc{font-size:13px}
+    ::selection{background:#dfe3ff;color:#0f172a}input,textarea{caret-color:var(--brand)}
+    @media(max-width:900px){.heroright{justify-content:flex-start}.heroright .vhero{max-width:none}}
+    @media(max-width:720px){.hero .wrap{padding:24px 20px 28px}.herogrid{margin-top:24px}.shotwrap .wrap{padding:0 20px}.video{border-radius:12px}.vidnote{font-size:12px}.hero .cta{margin-top:20px;gap:10px}.hero .cta .btn{width:auto;flex:1 1 180px;padding:0 12px;font-size:14px}}
   </style>
 </head>
 <body>
   <header class="hero"><div class="wrap">
-    <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">v16.7.0 · 27.09.2026</span></div>
+    <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">v16.7.1 · 27.09.2026</span></div>
     <div class="herogrid">
       <div>
         <h1>Дорожная карта: ваш план от задач до релиза в одном файле</h1>
-        <p class="lead">Соберите задачи, проверьте риски срока и подготовьте план для команды. Работает в браузере без установки и сервера.</p>
-        <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a></div>
+        <p class="lead">Roadmap помогает владельцу продукта и команде вести общий план: от инициатив и эпиков до задач, сроков и зависимостей. Импортируйте задачи из Jira, следите за работой на Ганте и Доске, разбирайте риски в разделе «Успеваем?» и готовьте презентацию к встрече.</p>
+        <p class="lead">Приложение открывается из одного HTML-файла в браузере, без установки и сервера. Данные вашего плана сохраняются отдельно в JSON.</p>
+        <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a><a class="btn ghost" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a></div>
       </div>
+      <aside class="heroright" id="author" aria-label="Связаться с автором"><div class="vhero"><div class="hd">Автор проекта</div><div class="rw"><div class="vava">ВУ<img src="avatar.jpg" alt="Владимир Учинин" width="64" height="64" onerror="this.remove()"></div><div><div class="nm">Владимир Учинин</div><div class="rl">Владелец продукта / Product Owner</div></div></div><div class="lk"><a href="mailto:uchv@ya.ru">uchv@ya.ru</a><button class="btn primary purchase-open" id="purchase-open" type="button" aria-haspopup="dialog" aria-controls="purchase-dialog">Хочу купить</button></div><p class="author-note">Нужен свой рабочий план? Напишите, для какой команды вы выбираете Roadmap. Форма подготовит письмо в вашей почтовой программе.</p></div></aside>
     </div>
   </div></header>
 
-  <div class="shotwrap"><div class="wrap"><div class="video"><video controls playsinline preload="metadata" poster="media/roadmap-demo-poster.jpg?v=v1670-film-light-20260927" aria-label="Демонстрация возможностей Roadmap" aria-describedby="demo-video-note"><source src="media/roadmap-demo.mp4?v=v1670-film-light-20260927" type="video/mp4">Ваш браузер не воспроизводит MP4. <a href="media/roadmap-demo.mp4?v=v1670-film-light-20260927" download style="color:#93c5fd">Скачать демо-ролик</a>.</video></div><div class="vidnote" id="demo-video-note">От задач до релиза за 43 секунды: обзор Roadmap v16.7.0. Видео без звука; все проекты вымышленные.</div></div></div>
+  <div class="shotwrap"><div class="wrap">
+    <div class="video" id="demo-player">
+      <video id="demo-video" controls playsinline preload="metadata" width="1440" height="810" poster="media/roadmap-demo-poster.jpg" aria-label="Демонстрация возможностей Roadmap" aria-describedby="demo-video-note"><source src="media/roadmap-demo.mp4" type="video/mp4">Ваш браузер не воспроизводит MP4. <a href="media/roadmap-demo.mp4" download>Скачать демо-ролик</a>.</video>
+      <div class="video-cover" id="demo-cover" hidden><img id="demo-poster" src="media/roadmap-demo-poster.jpg" width="1440" height="810" alt="" decoding="sync"><button class="btn primary video-start" id="demo-play" type="button" aria-controls="demo-video"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l14-8z"/></svg><span>Смотреть ролик · 2 минуты</span></button></div>
+    </div>
+    <div class="vidnote" id="demo-video-note">От задач до релиза за 2 минуты: обзор Roadmap v16.7.1. Видео без звука; все проекты вымышленные.</div>
+    <div class="video-help"><span id="demo-video-status" class="video-status" role="status" aria-live="polite"></span><a href="media/roadmap-demo.mp4" target="_blank" rel="noopener">Открыть MP4 отдельно</a><a href="media/roadmap-demo.mp4" download>Скачать ролик</a></div>
+  </div></div>
 
 
-  <section aria-labelledby="release-title"><div class="wrap"><div class="sechead"><h2 id="release-title">Новое в v16.7.0</h2><p>Нужные типы задач, история работы и управление всегда под рукой.</p></div><div class="grid">
-    <article class="card"><div class="ic ic-label">Типы</div><h3>От инициативы до подзадачи</h3><p>Выбирайте эпики, стори, задачи и другие типы. Фильтр сохраняет вложенные задачи и контекст иерархии, включая пользовательские типы Jira.</p></article>
-    <article class="card"><div class="ic ic-label">Гант</div><h3>Работа видна без плановых дат</h3><p>Если даты не заданы, полоса строится по известной истории статусов. Активная работа продолжается до сегодня. Плановые даты не меняются.</p></article>
-    <article class="card"><div class="ic ic-label">Шапка</div><h3>Управление остается на экране</h3><p>Прокручивайте длинный план: шапка, статусы, календарь и кнопки задач остаются доступны. На узком экране закрепляется управление списком.</p></article>
+  <section aria-labelledby="release-title"><div class="wrap"><div class="sechead"><h2 id="release-title">Новое в v16.7.1</h2><p>Понятнее сохранение, точнее подписи и удобнее работа на телефоне.</p></div><div class="grid">
+    <article class="card"><div class="ic ic-label">Сохранение</div><h3>Видно, где ваши правки</h3><p>Состояние браузерного хранилища и записи в JSON показано отдельно. Ошибка сохранения остается видимой, пока не будет устранена.</p></article>
+    <article class="card"><div class="ic ic-label">Сводка</div><h3>Полнота не равна готовности</h3><p>Заполненность полей отделена от ошибок плана. Прогноз на другой год показывает полные даты, а подписи читаются во всех темах.</p></article>
+    <article class="card"><div class="ic ic-label">Показ</div><h3>План раньше настроек</h3><p>На телефоне дополнительные действия раскрываются по кнопке. Длинные названия иерархии переносятся, небольшие сенсорные кнопки удобнее нажимать.</p></article>
   </div></div></section>
 
   <main>
@@ -86,19 +99,15 @@
 
     <section><div class="wrap"><div class="sechead"><h2>Как начать</h2><p>Демо нужно для знакомства. Для своего плана используйте рабочую версию приложения.</p></div><div class="how">
       <article class="card"><h3>1. Попробуйте демо</h3><p>Откройте карточки и разные виды плана на вымышленных задачах. Демо не записывает изменения в рабочий файл.</p></article>
-      <article class="card"><h3>2. Получите рабочую версию</h3><p>Свяжитесь с автором через форму «Хочу купить» ниже. В рабочем HTML можно создать план вручную или импортировать задачи из Jira CSV.</p></article>
+      <article class="card"><h3>2. Получите рабочую версию</h3><p>Свяжитесь с автором через форму «Хочу купить» в начале страницы. В рабочем HTML можно создать план вручную или импортировать задачи из Jira CSV.</p></article>
       <article class="card"><h3>3. Сохраните свой план</h3><p>Приложение находится в HTML, а данные плана сохраняются отдельно в JSON. Подключите рабочий файл или скачайте копию и храните ее у себя.</p></article>
     </div></div></section>
 
     <section class="alt"><div class="wrap"><div class="sechead"><h2>Публичное демо без рабочих данных</h2><p>Знакомьтесь с приложением, не загружая план своей команды.</p></div><div class="notice"><h3>Что важно знать о данных</h3><p>В демо только вымышленные задачи. Реальных планов, токенов Jira и финансовых данных команды в публичной сборке нет.</p><p>Рабочий HTML может работать офлайн. Сайт и видео загружаются по сети. Обмен с Jira требует вашей настройки; автоматический обмен работает, только если вы его включили.</p><p>Перед очисткой проекта сохраните нужные данные. История версий в браузере и скачанный JSON хранятся отдельно: обычный экспорт плана не копирует историю.</p></div></div></section>
 
     <section><div class="wrap"><div class="catcta"><h2>Посмотрите, как устроены функции</h2><p>В каталоге есть описания и снимки экранов: от импорта Jira до прогноза сроков и показа плана.</p><div class="cta"><a class="btn primary" href="catalog.html">Открыть каталог функций</a><a class="btn ghost" href="app.html">Открыть демо</a></div></div></div></section>
-    <section id="author" aria-label="Связаться с автором"><div class="wrap author-section">
-      <div class="author-card"><div class="vhero"><div class="hd">Автор проекта</div><div class="rw"><div class="vava">ВУ<img src="avatar.jpg" alt="Владимир Учинин" onerror="this.remove()"></div><div><div class="nm">Владимир Учинин</div><div class="rl">Владелец продукта / Product Owner</div></div></div><div class="lk"><a href="mailto:uchv@ya.ru">uchv@ya.ru</a><button class="btn primary purchase-open" id="purchase-open" type="button" aria-haspopup="dialog" aria-controls="purchase-dialog">Хочу купить</button></div></div></div>
-      <div class="author-about"><h2>Нужен свой рабочий план?</h2><p>Напишите, для какой команды вы выбираете Roadmap. Форма подготовит письмо автору в вашей почтовой программе.</p><a class="btn ghost" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a></div>
-    </div></section>
     <div class="wrap history-wrap">
-    <details class="metrics-panel historical-metrics">
+    <details class="metrics-panel historical-metrics" open>
       <summary id="metrics-title">Исторические примеры оценок · иллюстрация</summary>
       <div class="stats">
         <article class="stat" data-metric="simplicity"><div class="v">8,23</div><div class="l">Простота / 10</div></article>
@@ -116,7 +125,7 @@
     </div>
   </main>
 
-  <footer class="foot"><div class="wrap">Roadmap v16.7.0 · 27.09.2026 · Владимир Учинин · Публичная сборка содержит только вымышленные данные.</div></footer>
+  <footer class="foot"><div class="wrap">Roadmap v16.7.1 · 27.09.2026 · Владимир Учинин · Публичная сборка содержит только вымышленные данные.</div></footer>
   <dialog class="purchase-dialog" id="purchase-dialog" aria-labelledby="purchase-title" aria-describedby="purchase-note">
     <div class="purchase-head"><h2 id="purchase-title">Хочу купить Roadmap</h2><button class="btn ghost purchase-close" id="purchase-close" type="button" aria-label="Закрыть форму">&times;</button></div>
     <p class="purchase-note" id="purchase-note">Форма подготовит письмо автору. Оно откроется в вашей почтовой программе, отправить его нужно самостоятельно. Сайт не отправляет и не сохраняет данные формы.</p>
@@ -133,6 +142,59 @@
     </form>
     <a id="purchase-mailto" hidden>Подготовленное письмо</a>
   </dialog>
+  <script>
+    (() => {
+      const video = document.getElementById('demo-video');
+      const cover = document.getElementById('demo-cover');
+      const poster = document.getElementById('demo-poster');
+      const button = document.getElementById('demo-play');
+      const label = button.querySelector('span');
+      const status = document.getElementById('demo-video-status');
+      let loadingTimer;
+      let attempt = 0;
+      cover.hidden = false;
+      function clearLoading() { clearTimeout(loadingTimer); button.disabled = false; }
+      function failed(message) {
+        attempt++;
+        clearLoading();
+        cover.hidden = false;
+        label.textContent = 'Попробовать еще раз';
+        status.textContent = message;
+      }
+      poster.addEventListener('error', () => { cover.dataset.posterError = 'true'; poster.hidden = true; });
+      if (poster.complete && !poster.naturalWidth) { cover.dataset.posterError = 'true'; poster.hidden = true; }
+      button.addEventListener('click', async () => {
+        const currentAttempt = ++attempt;
+        clearLoading();
+        button.disabled = true;
+        label.textContent = 'Загрузка ролика…';
+        status.textContent = '';
+        // A failed <source> may set NETWORK_NO_SOURCE without video.error.
+        if (video.error || video.networkState === video.NETWORK_NO_SOURCE || !video.currentSrc) video.load();
+        if (video.ended) video.currentTime = 0;
+        loadingTimer = setTimeout(() => {
+          if (currentAttempt !== attempt) return;
+          video.pause();
+          failed('Загрузка занимает больше времени. Повторите запуск или откройте MP4 отдельно.');
+        }, 12000);
+        try { await video.play(); }
+        catch (error) {
+          if (currentAttempt !== attempt) return;
+          failed(error.name === 'NotAllowedError' ? 'Браузер заблокировал запуск. Нажмите еще раз или откройте MP4 отдельно.' : 'Не удалось воспроизвести ролик. Откройте MP4 отдельно или скачайте файл.');
+        }
+      });
+      video.addEventListener('playing', () => {
+        clearLoading(); cover.hidden = true; status.textContent = '';
+        if (document.activeElement === button) video.focus();
+      });
+      video.addEventListener('ended', () => {
+        clearLoading(); cover.hidden = false; label.textContent = 'Посмотреть еще раз';
+      });
+      video.addEventListener('error', () => failed('Не удалось загрузить ролик. Откройте MP4 отдельно или скачайте файл.'));
+      video.querySelector('source').addEventListener('error', () => failed('Не удалось загрузить ролик. Откройте MP4 отдельно или скачайте файл.'));
+      video.tabIndex = 0;
+    })();
+  </script>
   <script>
     function buildPurchaseDraft(values) {
       const text = value => String(value || '').trim();
@@ -170,10 +232,20 @@
         if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
       });
-      for (const id of ['purchase-close', 'purchase-cancel']) document.getElementById(id).addEventListener('click', () => dialog.close());
-      dialog.addEventListener('close', () => {
+      function resetPurchaseForm() {
         draftRevision++;
-        form.reset(); preview.value = ''; mailto.removeAttribute('href'); status.textContent = ''; fallback.open = false; opener.focus();
+        form.reset(); preview.value = ''; mailto.removeAttribute('href'); status.textContent = ''; fallback.open = false;
+      }
+      function closePurchaseForm() {
+        resetPurchaseForm();
+        dialog.close();
+        opener.focus();
+      }
+      for (const id of ['purchase-close', 'purchase-cancel']) document.getElementById(id).addEventListener('click', closePurchaseForm);
+      dialog.addEventListener('cancel', event => { event.preventDefault(); closePurchaseForm(); });
+      dialog.addEventListener('close', () => {
+        if (dialog.open) return;
+        resetPurchaseForm(); opener.focus();
       });
       form.addEventListener('input', () => { updateDraft(); status.textContent = ''; });
       form.addEventListener('submit', event => {

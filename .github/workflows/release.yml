@@ -12,7 +12,7 @@ on:
         required: false
         type: string
       publish_release:
-        description: 'Создать GitHub Release (по умолчанию только dry-run артефакт)'
+        description: 'Устаревший путь отключен. Release создается из проверенного комплекта вручную'
         required: true
         default: false
         type: boolean
@@ -63,49 +63,18 @@ jobs:
           retention-days: 14
 
   release:
-    name: Publish GitHub Release
+    name: Reject legacy publication
     needs: package
     if: github.event_name == 'workflow_dispatch' && inputs.publish_release == true
     runs-on: ubuntu-latest
     timeout-minutes: 8
     permissions:
-      contents: write
+      contents: read
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Resolve and validate tag
-        id: tag
-        env:
-          MANUAL_TAG: ${{ inputs.release_tag }}
+      - name: Stop without changing tags or release assets
         run: |
-          TAG="$MANUAL_TAG"
-          if ! printf '%s' "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
-            echo "Тег должен иметь вид vX.Y или vX.Y.Z: $TAG" >&2
-            exit 1
-          fi
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-          echo "should_publish=true" >> "$GITHUB_OUTPUT"
-      - name: Download packaged site
-        if: steps.tag.outputs.should_publish == 'true'
-        uses: actions/download-artifact@v7
-        with:
-          name: roadmap-static-${{ github.sha }}
-      - name: Create or refresh release
-        if: steps.tag.outputs.should_publish == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TAG: ${{ steps.tag.outputs.tag }}
-        run: |
-          NOTES_ARG="--generate-notes"
-          if [ -f "RELEASE_NOTES.md" ]; then
-            NOTES_ARG="--notes-file RELEASE_NOTES.md"
-          fi
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" roadmap-site-public.zip --clobber
-            gh release edit "$TAG" --target "$GITHUB_SHA" --title "Roadmap $TAG" $NOTES_ARG
-          else
-            gh release create "$TAG" roadmap-site-public.zip --target "$GITHUB_SHA" --title "Roadmap $TAG" $NOTES_ARG
-          fi
+          echo "::error::Старый путь публикации отключен: он не проверял совпадение тега и архива. Создайте новый тег на проверенном commit и отдельный Release только с Roadmap-vX.Y.Z-public.zip и его SHA-256. См. README.md."
+          exit 1
   pages:
     name: Deploy GitHub Pages
     needs: package

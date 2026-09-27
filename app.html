@@ -8011,9 +8011,21 @@
    #presentView .pres-common-actions select { min-height:44px; max-width:min(100%,24rem); min-width:0; }
    #presentView .pres-common-actions button,#presentView .pres-common-actions summary { min-height:44px; }
    #presentView .pres-common-exports { display:flex; flex-wrap:wrap; gap:.5rem; margin-left:auto; }
+   #presentView .pres-actions-extra { display:contents; }
+   #presentView .pres-actions-toggle { display:none; }
+   #presentView .pres-mobile-protection { display:none; }
    @media (max-width:639px) {
+     #presentView .pres-common-actions { display:grid; grid-template-columns:minmax(0,1fr) auto; }
+     #presentView .pres-common-actions > label { display:none; }
+     #presentView .pres-common-actions select { width:100%; }
+     #presentView .pres-actions-toggle { display:inline-flex; align-items:center; justify-content:center; padding:.5rem .75rem; border:1px solid var(--rm-border); border-radius:var(--rm-radius-sm); color:var(--rm-text); background:var(--rm-surface); font-size:.75rem; font-weight:600; }
+     #presentView .pres-actions-extra { display:none; grid-column:1/-1; flex-wrap:wrap; gap:.5rem; }
+     #presentView .pres-actions-extra[data-open="true"] { display:flex; }
      #presentView .pres-common-exports { width:100%; margin-left:0; }
      #presentView .pres-common-exports button { flex:1 1 auto; justify-content:center; }
+     #presentView #presPreviewPane :is(.pres-edit-toolbar,.pres-preview-meta) { display:none; }
+     #presentView:has(#presExtraActions[data-open="true"]) #presPreviewPane :is(.pres-edit-toolbar,.pres-preview-meta) { display:flex; }
+     #presentView .pres-mobile-protection { display:block; margin:0 0 .5rem; color:var(--rm-muted); font-size:12px; line-height:1.5; }
    }
    #presentView .pres-edit-toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem .75rem; margin-bottom:.75rem; color:var(--rm-muted); font-size:.75rem; line-height:1.5; }
    #presentView .pres-edit-toggle { display:inline-flex; align-items:center; gap:.5rem; min-height:44px; padding:.5rem .75rem; border:1px solid var(--rm-border,#e2e8f0); border-radius:.75rem; background:var(--rm-surface,#fff); color:var(--rm-text,#334155); font-weight:600; flex-shrink:0; }
@@ -8882,6 +8894,30 @@
     .onboarding-footer > .onboarding-actions { justify-content:space-between; }
     .onboarding-scenarios { grid-template-columns:minmax(0,1fr); }
   }
+  /* v16.7.1: читаемые смысловые цвета и заголовки без потери метаданных. */
+  #summaryView { --summary-amber:#92400e; --summary-green:#047857; }
+  body.theme-dark #summaryView { --summary-amber:#fcd34d; --summary-green:#6ee7b7; }
+  body #summaryView [class*="text-amber-"] { color:var(--summary-amber) !important; }
+  body #summaryView :is([class*="text-emerald-"],[class*="text-teal-"]) { color:var(--summary-green) !important; }
+  body:not(.theme-dark) #summaryView [class*="text-sky-"] { color:#0369a1 !important; }
+  body:not(.theme-dark) #summaryView .text-rose-500 { color:#be123c !important; }
+  body:not(.theme-dark) #summaryView :is(.text-slate-400,.text-slate-500) { color:#526174 !important; }
+  .section-list-header { height:auto !important; min-height:54px; align-items:flex-start; padding-top:.625rem; padding-bottom:.625rem; }
+  .section-list-header .section-heading-line { flex-wrap:wrap; }
+  .section-list-header .section-heading-line > .truncate { flex-basis:100%; white-space:normal; overflow:visible; overflow-wrap:anywhere; line-height:1.45; }
+  .section-list-header .section-heading-meta { flex-wrap:wrap; overflow:visible; }
+  .section-timeline-header { height:var(--rm-section-row-height,54px) !important; }
+  .section-color-control { display:inline-flex; align-items:center; justify-content:center; background:transparent; border:0; padding:0; }
+  .section-color-dot { display:block; width:12px; height:12px; border-radius:50%; flex:none; }
+  #storageLocationStatus { grid-column:1/-1; flex-basis:100%; color:var(--rm-muted); font-size:12px; line-height:1.5; min-height:18px; }
+  #storageLocationStatus[data-error="true"] { color:#be123c; }
+  body.theme-dark #storageLocationStatus[data-error="true"] { color:#fda4af; }
+  @media(max-width:639px) { #storageLocationStatus { min-height:36px; } }
+  @media (pointer:coarse) {
+    .section-list-header button[aria-label="Действия с секцией"],
+    .section-list-header .section-color-control { min-width:44px; min-height:44px; opacity:1; }
+    .task-list-row [role="button"][aria-label^="Статус "] { min-height:44px; display:inline-flex; align-items:center; justify-content:center; padding:.5rem .75rem; }
+  }
 /* RM_SOFT_SHEEN_START */
 /* Мягкое статическое переливание: только экран и общие поверхности интерфейса.
    Базовые цвета, смысловые маркеры и геометрия остаются в своих правилах. */
@@ -8980,7 +9016,7 @@
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v16.7.0</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v16.7.1</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9225,6 +9261,7 @@
         <input type="file" id="csvGenericFile" class="hidden" accept=".csv,text/csv,text/plain" onchange="onCsvFileChosen(event)">
         <input type="file" id="mergeFile" class="hidden" accept=".json,application/json" onchange="onMergeFileChosen(event)">
       </div>
+        <div id="storageLocationStatus" class="no-print no-image-export" role="status" aria-live="polite" title="Состояние текущих правок. История точек возврата хранится отдельно: Данные, Сохранение и восстановление.">Хранение: проверяется</div>
         <div class="app-header-insight-row no-print no-image-export">
           <button type="button" id="headerOverviewBtn" class="header-summary-btn" onclick="toggleHeaderInsights()" aria-expanded="false" aria-controls="headerInsightsPanel">
             <svg aria-hidden="true" class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19V9m5 10V5m5 14v-7m5 7V3"></path></svg>
@@ -9863,7 +9900,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v16.7.0">
+<script data-roadmap-modules="v16.7.1">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -12720,7 +12757,7 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '16.7.0';
+    const APP_VERSION = '16.7.1';
     const APP_VERSION_DATE = '27.09.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
@@ -15264,7 +15301,20 @@ if (typeof globalThis !== 'undefined') {
     }
     // Записать текущее состояние проекта во все ключи хранилища (после сброса/загрузки)
     let _ppsTimer = null, _ppsLast = 0;
+    var _browserSaveState = 'unknown', _fileSaveMessage = '';
+    function renderStorageLocationStatus() {
+      var el = document.getElementById('storageLocationStatus');
+      if (!el) return;
+      var ephemeral = (typeof DEMO_MODE !== 'undefined' && DEMO_MODE) || (typeof LEARNING_SCENARIO !== 'undefined' && LEARNING_SCENARIO);
+      var readonly = typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE;
+      var browser = ({ saved:'сохранено', pending:'сохранение...', error:'не сохранено', unknown:'запись не подтверждена' })[_browserSaveState] || 'запись не подтверждена';
+      var file = _fileSaveMessage || (typeof autoSaveFileHandle !== 'undefined' && autoSaveFileHandle ? 'подключен, запись не подтверждена' : 'не подключен');
+      el.textContent = ephemeral ? 'Учебный пример: правки только в этой вкладке, без записи в рабочий файл.' : (readonly ? 'Режим просмотра: запись отключена.' : 'Браузер: ' + browser + ' · JSON: ' + file);
+      el.dataset.error = String(!ephemeral && !readonly && (_browserSaveState === 'error' || /ошибка|не удалось|приостановлен|не сохранено/.test(file)));
+    }
     function persistProjectState() {
+      _browserSaveState = 'pending';
+      renderStorageLocationStatus();
       const _now = Date.now();
       if (_now - _ppsLast > 300) { _ppsLast = _now; return _persistProjectStateNow(); }
       else if (!_ppsTimer) { _ppsTimer = setTimeout(function () { _ppsTimer = null; _ppsLast = Date.now(); _persistProjectStateNow(); }, 300); }
@@ -15340,10 +15390,12 @@ if (typeof globalThis !== 'undefined') {
           if (localStorage.getItem(k) !== pairs[k]) throw new Error('storage verify failed: ' + k);
         });
         if (localStorage.getItem('gantt_saved_at') !== _ts) throw new Error('storage verify failed: gantt_saved_at');
+        _browserSaveState = 'saved'; renderStorageLocationStatus();
         return true;
       } catch (e) {
         _written.forEach(wk => { try { if (_prev[wk] === null) localStorage.removeItem(wk); else localStorage.setItem(wk, _prev[wk]); } catch (e2) {} });
         try { if (_prevTs === null) localStorage.removeItem('gantt_saved_at'); else localStorage.setItem('gantt_saved_at', _prevTs); } catch (e2) {}
+        _browserSaveState = 'error'; renderStorageLocationStatus();
         if (typeof notifyStorageFailing === 'function') notifyStorageFailing();
         return false;
       }
@@ -15717,6 +15769,13 @@ if (typeof globalThis !== 'undefined') {
       const date = parseLocalDate(dateStr);
       if (isNaN(date)) return dateStr;
       return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+    function formatForecastDate(dateStr, peerDate) {
+      if (!dateStr) return '';
+      const year = String(dateStr).slice(0, 4);
+      const peerYear = String(peerDate || toYmdLocal(CURRENT_DATE)).slice(0, 4);
+      return year !== peerYear || year !== String(CURRENT_DATE.getFullYear())
+        ? formatDateWithYear(dateStr) : formatDateString(dateStr);
     }
     function formatDateString(dateStr) {
       if (!dateStr) return '';
@@ -26372,7 +26431,7 @@ const m = document.getElementById('mineModeBtn');
       let changed = false;
       bars.querySelectorAll('.section-timeline-header').forEach(row => {
         const left = document.getElementById(row.id.replace('header-right-', 'header-left-'));
-        const height = measurable && left ? left.getBoundingClientRect().height : 0;
+        const height = left && list.getBoundingClientRect().width > 0 ? left.getBoundingClientRect().height : 0;
         const value = height > 0 ? height + 'px' : '';
         if (row.style.getPropertyValue('--rm-section-row-height') === value) return;
         if (value) row.style.setProperty('--rm-section-row-height', value);
@@ -26718,9 +26777,9 @@ const m = document.getElementById('mineModeBtn');
         else if (nNoEst / act.length >= 0.5) { status = 'gray'; verdict = 'мало данных: оцените ' + nNoEst + ' ' + pluralRu(nNoEst, ['задачу', 'задачи', 'задач']); reason = _fcReason(act, sched); }
         else {
           var slip = _fcDayDiff(promised, realEnd);
-          if (realEnd <= promised) { status = 'green'; var reserve = _fcDayDiff(realEnd, promised); verdict = 'успеваем, прогноз ' + formatDateString(realEnd) + (reserve > 0 ? ' (запас ' + reserve + ' дн)' : ''); }
-          else if (optEnd && optEnd <= promised) { status = 'amber'; verdict = 'под вопросом, прогноз ' + formatDateString(realEnd) + ' (+' + Math.max(1, slip) + ' дн)'; }
-          else { status = 'red'; verdict = 'опоздаем, прогноз ' + formatDateString(realEnd) + ' (+' + Math.max(1, slip) + ' дн)'; }
+          if (realEnd <= promised) { status = 'green'; var reserve = _fcDayDiff(realEnd, promised); verdict = 'успеваем, прогноз ' + formatForecastDate(realEnd, promised) + (reserve > 0 ? ' (запас ' + reserve + ' дн)' : ''); }
+          else if (optEnd && optEnd <= promised) { status = 'amber'; verdict = 'под вопросом, прогноз ' + formatForecastDate(realEnd, promised) + ' (+' + Math.max(1, slip) + ' дн)'; }
+          else { status = 'red'; verdict = 'опоздаем, прогноз ' + formatForecastDate(realEnd, promised) + ' (+' + Math.max(1, slip) + ' дн)'; }
           reason = status === 'green' ? 'идет по плану' : _fcReason(act, sched);
         }
         var drivers = [];
@@ -26768,10 +26827,10 @@ const m = document.getElementById('mineModeBtn');
         else if (done.length === total) { status = 'green'; verdict = 'вся работа закрыта'; }
         else if (!active.length && held.length) { status = 'gray'; verdict = 'прогноз приостановлен: работа на холде'; }
         else if (active.length && nNoEst / active.length >= 0.5) { status = 'gray'; verdict = 'мало оценок, прогноз неточный'; }
-        else if (!promised) { status = 'info'; verdict = realEnd ? ('работа завершится ' + formatDateString(realEnd)) : 'не хватает данных для прогноза'; }
-        else if (realEnd <= promised) { status = 'green'; verdict = 'успеваем к горизонту, прогноз ' + formatDateString(realEnd); }
-        else if (optEnd && optEnd <= promised) { status = 'amber'; verdict = 'под вопросом, прогноз ' + formatDateString(realEnd) + ' (+' + Math.max(1, _fcDayDiff(promised, realEnd)) + ' дн)'; }
-        else { status = 'red'; verdict = 'не успеваем, прогноз ' + formatDateString(realEnd) + ' (+' + Math.max(1, _fcDayDiff(promised, realEnd)) + ' дн)'; }
+        else if (!promised) { status = 'info'; verdict = realEnd ? ('работа завершится ' + formatForecastDate(realEnd, promised)) : 'не хватает данных для прогноза'; }
+        else if (realEnd <= promised) { status = 'green'; verdict = 'успеваем к горизонту, прогноз ' + formatForecastDate(realEnd, promised); }
+        else if (optEnd && optEnd <= promised) { status = 'amber'; verdict = 'под вопросом, прогноз ' + formatForecastDate(realEnd, promised) + ' (+' + Math.max(1, _fcDayDiff(promised, realEnd)) + ' дн)'; }
+        else { status = 'red'; verdict = 'не успеваем, прогноз ' + formatForecastDate(realEnd, promised) + ' (+' + Math.max(1, _fcDayDiff(promised, realEnd)) + ' дн)'; }
         var initRows = gi.map(function (it) { var its = tasks.filter(function (t) { return t.initiativeId === it.id; }); var iAct = its.filter(function (t) { return !isFinalStatus(t.status) && !isHeldStatus(t.status) && sched[t.id]; }); var iEnd = ''; iAct.forEach(function (t) { if (sched[t.id].end > iEnd) iEnd = sched[t.id].end; }); var iDone = its.length ? Math.round(its.filter(function (t) { return isFinalStatus(t.status); }).length / its.length * 100) : 0; return { name: it.name || 'Инициатива', n: its.length, done: iDone, end: iEnd }; });
         return { goal: g, status: status, verdict: verdict, promised: promised, realEnd: realEnd, total: total, nOpen: active.length, nHeld: held.length, pct: (typeof goalPct === 'function' ? goalPct(g) : null), initRows: initRows };
       }).filter(function (row) { return !filtered || row.total > 0; });
@@ -27067,7 +27126,7 @@ const m = document.getElementById('mineModeBtn');
     var _presDateEditTouched = false;
     function _presEditToolbarHtml() {
       if (_presRo()) return '';
-      return '<div class="pres-edit-toolbar no-print no-image-export" data-html2canvas-ignore>' +
+      return '<p class="pres-mobile-protection no-print no-image-export">' + (_presDateEditMode ? 'Изменение дат включено.' : 'Даты защищены.') + ' Подробнее в «Действиях».</p><div class="pres-edit-toolbar no-print no-image-export" data-html2canvas-ignore>' +
         '<button type="button" class="pres-edit-toggle" data-pres-date-edit aria-pressed="' + (_presDateEditMode ? 'true' : 'false') + '" onclick="_presSetDateEditMode(' + (!_presDateEditMode) + ')"><span class="pres-edit-indicator" aria-hidden="true"></span>Изменять даты</button>' +
         '<span>' + (_presDateEditMode ? 'Сохраняются в основном плане' : 'Даты защищены') + '</span>' +
         '<details class="pres-edit-help"><summary>Как это работает</summary><p>Включите переключатель и двигайте полоску задачи. Меняются даты основной задачи; длительность берётся из «Оценки (дни)» с учётом рабочих дней. Без оценки сохраняется прежняя длительность. Изменение можно отменить. Финальные задачи не перемещаются.</p></details></div>';
@@ -27267,7 +27326,7 @@ const m = document.getElementById('mineModeBtn');
       var depText = dep.total
         ? (dep.internal + ' ' + _presNSvyaz(dep.internal) + ' в наборе' + (dep.external ? ' · ' + dep.external + ' вне показа' : '') + (dep.archived ? ' · ' + dep.archived + ' в архиве' : '') + (dep.missing ? ' · ' + dep.missing + ' не найдено' : ''))
         : 'Связей в выбранных задачах нет';
-      return '<div class="flex items-center justify-between gap-3 mb-2 no-print no-image-export">'
+      return '<div class="pres-preview-meta flex items-center justify-between gap-3 mb-2 no-print no-image-export">'
         + '<span class="text-[11px] font-semibold text-slate-500">Живой предпросмотр</span>'
         + '<span class="inline-flex items-center gap-2 text-[11px] text-slate-500"><span class="font-semibold text-slate-700">Сегодня · ' + escHtml(today.label) + '</span><span aria-hidden="true" class="text-slate-300">·</span><span>' + escHtml(depText) + '</span></span>'
         + '</div>';
@@ -27734,6 +27793,21 @@ const m = document.getElementById('mineModeBtn');
         + '<div class="mt-2 border-t border-slate-100">' + option('stats', 'Показатели всего плана')
         + '<div class="pl-3">' + option('progress', 'Готово: процент и число задач') + option('inProgress', 'В работе') + option('overdue', 'Просрочено') + '</div></div></div></details>';
     }
+    var _presActionsOpen = false;
+    function _presToggleActions(open) {
+      _presActionsOpen = !!open;
+      var panel = document.getElementById('presExtraActions');
+      var button = document.getElementById('presActionsToggle');
+      if (panel) panel.dataset.open = String(_presActionsOpen);
+      if (button) button.setAttribute('aria-expanded', String(_presActionsOpen));
+    }
+    document.addEventListener('keydown', function (event) {
+      var panel = document.getElementById('presExtraActions');
+      if (event.key === 'Escape' && panel && (panel.contains(event.target) || event.target.closest('.pres-edit-toolbar')) && _presActionsOpen) {
+        event.preventDefault(); event.stopPropagation(); _presToggleActions(false);
+        document.getElementById('presActionsToggle').focus();
+      }
+    });
     // ---- панель управления (не печатается) ----
     function _presCommonActionsHtml(set) {
       var ro = _presRo();
@@ -27743,8 +27817,9 @@ const m = document.getElementById('mineModeBtn');
       var htmlBtn = '<button onclick="savePresentHtml()" class="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg border border-slate-200 bg-white text-slate-700 text-[12px] font-semibold hover:bg-slate-50 cursor-pointer" title="Скачать показ одним html-файлом: шапка приложения (название, РО, дата, показатели и метки релизов), группы, таймлайн и стрелки связей. Открывается в любом браузере, удобно отправить коллегам"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>Сохранить в HTML</button>';
       var top = '<div class="pres-common-actions no-print no-image-export" data-pres-common-actions data-html2canvas-ignore><label for="presSetSelect" class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Набор</label>'
         + '<select id="presSetSelect" data-pres-set-select onchange="_presSetActive(this.value)" class="h-8 px-2 bg-white border border-slate-200 rounded-lg text-[12px] text-slate-700 cursor-pointer">' + opts + '</select>'
+        + '<button type="button" id="presActionsToggle" class="pres-actions-toggle" aria-controls="presExtraActions" aria-expanded="' + _presActionsOpen + '" onclick="_presToggleActions(!_presActionsOpen)">Действия</button><div id="presExtraActions" class="pres-actions-extra" data-open="' + _presActionsOpen + '">'
         + (ro ? '' : '<details class="relative"><summary class="list-none inline-flex items-center h-8 px-3 rounded-lg border border-slate-200 bg-white text-slate-700 text-[12px] font-semibold hover:bg-slate-50 cursor-pointer">Управление набором</summary><div class="absolute left-0 top-9 z-30 w-56 bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 flex flex-col gap-1"><button onclick="_presNew()" class="' + _PB + ' text-left">Новый набор</button><button onclick="_presDuplicate()" class="' + _PB + ' text-left">Дублировать</button><button onclick="_presBuildFromReleases()" class="' + _PB + ' text-left">Собрать из релизов</button><button onclick="_presRename()" class="' + _PB + ' text-left">Переименовать</button><button onclick="_presSyncDues()" class="' + _PB + ' text-left">Подтянуть сроки</button><button onclick="_presDelete()" class="' + _PB + ' text-rose-600 text-left">Удалить</button></div></details>')
-        + '<div class="pres-common-exports">' + pdfBtn + htmlBtn + '</div></div>';
+        + '<div class="pres-common-exports">' + pdfBtn + htmlBtn + '</div></div></div>';
       return top;
     }
     function _presControlHtml(set) {
@@ -28286,10 +28361,10 @@ const m = document.getElementById('mineModeBtn');
       return rows.map(function (r, i) {
         var meta = _fcStatusMeta(r.status); var hidden = i >= 6 ? ' hidden' : '';
         var dotClass = r.status === 'green' ? 'bg-emerald-500' : (r.status === 'amber' ? 'bg-amber-500' : (r.status === 'red' ? 'bg-rose-500' : (r.status === 'info' ? 'bg-indigo-500' : 'bg-slate-400')));
-        var forecast = r.realEnd ? formatDateString(r.realEnd) : 'не считается';
+        var forecast = r.realEnd ? formatForecastDate(r.realEnd, r.promised) : 'не считается';
         return '<article data-forecast-date class="' + hidden + ' forecast-date-row grid items-center px-3 py-3 border-b border-slate-100 last:border-0">'
           + '<div class="min-w-0"><div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full ' + dotClass + '"></span><span class="font-semibold text-sm text-slate-800 break-words lg:truncate">' + esc(r.label) + '</span></div><div class="text-[11px] text-slate-500 mt-1 break-words lg:truncate">' + esc(r.reason || r.verdict || '') + '</div></div>'
-          + '<div><div class="text-[10px] uppercase tracking-wider text-slate-400">Обещано</div><div class="text-sm tabular-nums text-slate-700">' + esc(formatDateString(r.promised)) + '</div></div>'
+          + '<div><div class="text-[10px] uppercase tracking-wider text-slate-400">Обещано</div><div class="text-sm tabular-nums text-slate-700">' + esc(formatForecastDate(r.promised, r.realEnd)) + '</div></div>'
           + '<div><div class="text-[10px] uppercase tracking-wider text-slate-400">Прогноз</div><div class="text-sm tabular-nums font-semibold ' + meta.t + '">' + esc(forecast) + '</div></div>'
           + '<div class="lg:text-right"><div class="text-xs font-semibold ' + meta.t + '">' + esc(r.verdict) + '</div><div class="text-[10px] text-slate-400 mt-1">' + r.nTasks + ' ' + pluralRu(r.nTasks, ['задача', 'задачи', 'задач']) + (r.nHeld ? ' · на холде ' + r.nHeld : '') + '</div></div></article>';
       }).join('');
@@ -28427,7 +28502,7 @@ const m = document.getElementById('mineModeBtn');
       setAppView('list');
       if (typeof afterFilterChange === 'function') afterFilterChange();
     }
-    var _SUM_TILE_NAMES = { inwork: 'В работе сейчас', overdue: 'Просрочено', week: 'На этой неделе', leave: 'Кто в отпуске', next: 'Ближайшая дата', ready: 'Готовность', signals: 'Сигналы', quality: 'Данные', capacity: 'Перегруз' };
+    var _SUM_TILE_NAMES = { inwork: 'В работе сейчас', overdue: 'Просрочено', week: 'На этой неделе', leave: 'Кто в отпуске', next: 'Ближайшая дата', ready: 'Готовность', signals: 'Сигналы', quality: 'Заполненность полей', capacity: 'Перегруз' };
     var _SUM_PRIMARY_TILES = ['ready', 'overdue', 'capacity', 'quality'];
     function _sumTilesCfg() {
       var c = null; try { c = JSON.parse(storage.get('gantt_summary_tiles') || 'null'); } catch (e) {}
@@ -28490,7 +28565,7 @@ const m = document.getElementById('mineModeBtn');
         .sort(function (a, b) { return b.n - a.n; }).slice(0, 6);
       var readyPct = work.length ? Math.round(work.filter(function (t) { return isFinalStatus(t.status); }).length / work.length * 100) : 0;
       var qualityTasks = work.filter(function (t) { return !isFinalStatus(t.status) && !isHeldStatus(t.status); });
-      var quality = _planReadinessSnapshot(tasks);
+      var quality = _forecastReadinessModel(null, filtered ? tasks : null);
       var qualityNoEstimate = qualityTasks.filter(function (t) { return !((typeof _taskEstDays === 'function' ? _taskEstDays(t) : parseFloat(t.estimate)) > 0); }).length;
       var qualityNoResource = qualityTasks.filter(function (t) { return !String(t.resource || '').trim(); }).length;
       var qualityNoDates = qualityTasks.filter(function (t) { return !t.start || !t.end; }).length;
@@ -28511,7 +28586,9 @@ const m = document.getElementById('mineModeBtn');
       var qualityRows = [
         { label:'Без оценки', value:String(st.qualityNoEstimate) },
         { label:'Без исполнителя', value:String(st.qualityNoResource) },
-        { label:'Без дат', value:String(st.qualityNoDates) }
+        { label:'Без дат', value:String(st.qualityNoDates) },
+        { label:'Ошибки проверок плана', value:String(st.quality.errors) },
+        { label:'Предупреждения проверок', value:String(st.quality.warnings) }
       ];
       var title = ''; try { if (typeof roadmapTitleText === 'string' && roadmapTitleText) title = roadmapTitleText; } catch (e) {}
       return '<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Сводка</title><style>@page{size:A4 portrait;margin:14mm}*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}body{margin:0;color:#1e293b}</style></head><body>'
@@ -28547,6 +28624,8 @@ const m = document.getElementById('mineModeBtn');
       L.push('  - Без оценки: ' + st.qualityNoEstimate);
       L.push('  - Без исполнителя: ' + st.qualityNoResource);
       L.push('  - Без дат: ' + st.qualityNoDates);
+      L.push('  - Ошибки проверок плана: ' + st.quality.errors);
+      L.push('  - Предупреждения проверок: ' + st.quality.warnings);
       var txt = L.join('\n');
       var done = function () { if (typeof showToast === 'function') showToast('Сводка скопирована , вставьте в чат или письмо', 'ok', 3000); };
       var fb = function () { try { var ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); done(); } catch (e) { if (typeof showToast === 'function') showToast('Не удалось скопировать', 'error', 2500); } };
@@ -28634,15 +28713,16 @@ const m = document.getElementById('mineModeBtn');
         var _sigTotal = _sigBlocked + _sigNoRes + _sigNoDates + _sigMsOver;
         tiles.push(tile({ key: 'signals', title: 'Сигналы', big: String(_sigTotal), cap: _sigTotal ? 'text-rose-600' : 'text-emerald-600', num: _sigTotal ? 'text-rose-600' : 'text-slate-900', border: _sigTotal ? 'border-rose-200' : 'border-emerald-200', body: _sigBody }));
       } catch (e) { tiles.push(tile({ key:'signals', title:'Сигналы', big:'—', cap:'text-slate-600', num:'text-slate-700', border:'border-slate-200', body:'<div class="text-sm text-slate-500">Недостаточно данных</div>' })); }
-      // Качество исходных данных: показывает, можно ли доверять срокам и прогнозам.
+      // Полнота полей не равна корректности плана: результаты проверок показаны отдельно.
       try {
         var _quality = primary.quality;
         var _qNoEst = primary.qualityNoEstimate;
         var _qNoRes = primary.qualityNoResource;
         var _qNoDates = primary.qualityNoDates;
         var _qBody = '<div class="space-y-1">' + [['Без оценки',_qNoEst],['Без исполнителя',_qNoRes],['Без дат',_qNoDates]].map(function (r) { return '<div class="flex items-center gap-2 text-[11px]"><span class="grow text-slate-600">' + r[0] + '</span><span class="font-semibold tabular-nums ' + (r[1] ? 'text-amber-600' : 'text-emerald-600') + '">' + r[1] + '</span></div>'; }).join('') + '</div>';
-        tiles.push(tile({ key: 'quality', primary: true, title: 'Данные', big: _quality.score + '%', cap: 'text-indigo-600', num: _quality.score >= 80 ? 'text-emerald-700' : (_quality.score >= 60 ? 'text-amber-600' : 'text-rose-600'), border: _quality.score >= 80 ? 'border-emerald-200' : 'border-amber-200', body: _qBody, click: 'openPlanHealthCenter()', foot: 'проверить и заполнить пробелы' }));
-      } catch (e) { tiles.push(tile({ key:'quality', primary:true, title:'Данные', big:'—', cap:'text-slate-600', num:'text-slate-700', border:'border-slate-200', body:'<div class="text-sm text-slate-500">Недостаточно данных</div>', click:'openPlanHealthCenter()' })); }
+        _qBody += '<div data-summary-plan-checks class="mt-2 text-xs ' + (_quality.errors ? 'text-rose-600' : (_quality.warnings ? 'text-amber-600' : 'text-slate-600')) + '">Проверки плана: ошибок ' + _quality.errors + ', предупреждений ' + _quality.warnings + '</div>';
+        tiles.push(tile({ key: 'quality', primary: true, title: _SUM_TILE_NAMES.quality, big: _quality.score + '%', cap: 'text-indigo-600', num: 'text-slate-900', border: _quality.errors ? 'border-rose-200' : 'border-slate-200', body: _qBody, click: 'openPlanHealthCenter()', foot: 'Открыть проверки. Полнота полей не гарантирует срок.' }));
+      } catch (e) { tiles.push(tile({ key:'quality', primary:true, title:_SUM_TILE_NAMES.quality, big:'—', cap:'text-slate-600', num:'text-slate-700', border:'border-slate-200', body:'<div class="text-sm text-slate-500">Недостаточно данных</div>', click:'openPlanHealthCenter()' })); }
       // Загрузка команды: число людей с перегруженными периодами и ближайшие узкие места.
       try {
         var _overPeople = primary.capacityPeople;
@@ -29651,7 +29731,7 @@ const m = document.getElementById('mineModeBtn');
             <span class="shrink-0 w-5 h-5 -ml-1 mt-0.5 flex items-center justify-center rounded text-slate-500 group-hover:text-indigo-600 group-hover:bg-slate-200/70 transition-all" title="${isCollapsed ? 'Развернуть' : 'Свернуть'}"><svg aria-hidden="true" class="w-4 h-4 transition-transform ${isCollapsed ? '' : 'rotate-90'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg></span>
             <div class="flex flex-col min-w-0 grow">
               <div class="section-heading-line flex items-center gap-2 min-w-0 w-full">
-                <button type="button" onclick="event.stopPropagation(); openSectionColorModal('${sectionNameAttr}')" class="w-3 h-3 rounded-full shrink-0 ring-2 ring-transparent hover:ring-offset-1 hover:ring-slate-400 ${sectionColors[sectionName] ? sectionColors[sectionName].split(' ')[0] : 'bg-slate-300'} transition-all cursor-pointer" aria-label="Цвет секции , нажмите, чтобы изменить" title="Цвет секции , нажмите, чтобы изменить"></button>
+                <button type="button" onclick="event.stopPropagation(); openSectionColorModal('${sectionNameAttr}')" class="section-color-control w-3 h-3 rounded-full shrink-0 cursor-pointer" aria-label="Цвет секции , нажмите, чтобы изменить" title="Цвет секции , нажмите, чтобы изменить"><span aria-hidden="true" class="section-color-dot ${sectionColors[sectionName] ? sectionColors[sectionName].split(' ')[0] : 'bg-slate-300'}"></span></button>
                 ${sectionRagDotHtml}
                 ${sectionKindBadgeHtml}
                 ${projBadgeHtml}
@@ -32110,7 +32190,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
       syncDeadlineCutoff(taskObj);
       cascadeDependencies(taskObj.id); closeModal(); renderRoadmap(); _flashShifted(_cascadeShifted);
-      if (_taskUndoSnap && typeof offerUndo === 'function') offerUndo('Задача сохранена', _taskUndoSnap);
+      if (_taskUndoSnap && typeof offerUndo === 'function') offerUndo('Задача обновлена', _taskUndoSnap);
     };
 
     // Связь задача → отсечка (автоматический «дедлайн релиз/отсечка» по дате дедлайна)
@@ -32877,6 +32957,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
 
     function updateAutoSaveStatus(text, tone = 'muted') {
+      if (/^(Автосохранение:|Файл (защищен|изменен))/.test(String(text || ''))) {
+        _fileSaveMessage = String(text).replace(/^Автосохранение:\s*/, '');
+        renderStorageLocationStatus();
+      }
       const el = document.getElementById('autosaveStatus');
       if (!el) return;
       if (!text && (typeof autoSaveFileHandle === 'undefined' || !autoSaveFileHandle) && (typeof _lastSavedBy !== 'undefined') && (_lastSavedBy || _lastSavedAt)) { if (typeof _renderSaveBadge === 'function') _renderSaveBadge(); return; }
@@ -32894,6 +32978,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
     // Кнопка автосохранения: зеленая дискета, когда файл привязан (автосохранение идет), иначе серая
     function updateAutoSaveBtn() {
+      if (!autoSaveFileHandle) _fileSaveMessage = window.__pendingAutoSaveName ? 'нужно подключить заново' : '';
+      renderStorageLocationStatus();
       const btn = document.getElementById('autoSaveBtn');
       if (!btn) return;
       const on = !!autoSaveFileHandle;
@@ -37888,7 +37974,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v16.7.0 · 27.09.2026</span>
+     <span id="appVersionBadge">v16.7.1 · 27.09.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -37938,7 +38024,44 @@ function syncBodyScrollLock() {
 
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v16.7.0</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v16.7.1</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="storage-location" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21H5V3h11l5 5v13zM17 21v-8H7v8M7 3v5h8"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Где сохранены правки</h5><span class="info-release-badge">СОХРАНЕНИЕ</span></div>
+      <p class="text-xs text-slate-600">Браузер и JSON показаны отдельно. Запись файла подтверждается только после завершения; ошибки остаются видимыми.</p>
+     </article>
+     <article data-release-card="field-completeness" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h16v14H4zM8 9h8M8 13h5"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Полнота не равна корректности</h5><span class="info-release-badge">СВОДКА</span></div>
+      <p class="text-xs text-slate-600">Заполненность полей отделена от ошибок и предупреждений проверок плана.</p>
+     </article>
+     <article data-release-card="forecast-year" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16v15H4zM8 3v6m8-6v6M4 11h16"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Прогноз с понятным годом</h5><span class="info-release-badge">СРОКИ</span></div>
+      <p class="text-xs text-slate-600">При переходе через границу года и обещанная, и расчетная дата показывают год.</p>
+     </article>
+     <article data-release-card="hierarchy-readability" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v6H4zM14 14h6v6h-6zM7 10v7h7"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Названия иерархии целиком</h5><span class="info-release-badge">СТРУКТУРА</span></div>
+      <p class="text-xs text-slate-600">Название имеет собственную строку. Метаданные и действия сохранены, высота списка и Ганта совпадает.</p>
+     </article>
+     <article data-release-card="mobile-preview" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18v14H3zM8 22h8m-4-4v4"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Сначала сам план</h5><span class="info-release-badge">ПРЕЗЕНТАЦИЯ</span></div>
+      <p class="text-xs text-slate-600">На телефоне дополнительные действия и настройка дат раскрываются по кнопке. PDF и HTML остаются доступны.</p>
+     </article>
+     <article data-release-card="readable-controls" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h16M4 12h12M4 19h16"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Читаемые подписи и кнопки</h5><span class="info-release-badge">ИНТЕРФЕЙС</span></div>
+      <p class="text-xs text-slate-600">Исправлен контраст Сводки во всех темах. Сенсорные цели статусов и действий секции увеличены.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <!-- INFO_RELEASE_RECENT_START -->
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v16.7.0</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="type-filter" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6M10 15v6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Типы задач в одном фильтре</h5><span class="info-release-badge">ФИЛЬТРЫ</span></div>
@@ -37966,14 +38089,6 @@ function syncBodyScrollLock() {
      </article>
     </div>
    </div>
-
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
-   <!-- INFO_RELEASE_RECENT_START -->
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v16.6.0</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -41763,7 +41878,7 @@ function syncBodyScrollLock() {
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 16.7.0</span>
+              <span id="appVersionStartup">версия 16.7.1</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
