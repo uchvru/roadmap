@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Roadmap v16.7.1: локальный планировщик дорожных карт в одном HTML-файле, исходные статусы Jira, задачи, сроки, зависимости, прогноз и презентация плана.">
-  <title>Roadmap v16.7.1: дорожная карта продукта в одном файле</title>
+  <meta name="description" content="Roadmap v17.0: локальный планировщик дорожных карт в одном HTML-файле, исходные статусы Jira, задачи, сроки, зависимости, прогноз и презентация плана.">
+  <title>Roadmap v17.0: дорожная карта продукта в одном файле</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     :root{--ink:#0f172a;--mut:#5b6c85;--brand:#4f46e5;--line:#e6eaf1;--page-wash:linear-gradient(145deg,#f8f9fd,#f2f5fb);--hero-wash:linear-gradient(160deg,#f0f3ff 0%,#edf3fd 42%,#f6f8fc 100%);--button-primary:linear-gradient(135deg,#5148e4,#4941d6);--button-primary-hover:linear-gradient(135deg,#4740cc,#4038ba);--button-secondary:linear-gradient(135deg,#fff,#f4f5fd);--button-secondary-hover:linear-gradient(135deg,#fafaff,#eef0fc)}
@@ -59,12 +59,12 @@
 </head>
 <body>
   <header class="hero"><div class="wrap">
-    <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">v16.7.1 · 27.09.2026</span></div>
+    <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">v17.0 · 30.09.2026</span></div>
     <div class="herogrid">
       <div>
         <h1>Дорожная карта: ваш план от задач до релиза в одном файле</h1>
         <p class="lead">Roadmap помогает владельцу продукта и команде вести общий план: от инициатив и эпиков до задач, сроков и зависимостей. Импортируйте задачи из Jira, следите за работой на Ганте и Доске, разбирайте риски в разделе «Успеваем?» и готовьте презентацию к встрече.</p>
-        <p class="lead">Приложение открывается из одного HTML-файла в браузере, без установки и сервера. Данные вашего плана сохраняются отдельно в JSON.</p>
+        <p class="lead">Приложение открывается в браузере, без установки и сервера. Сохраните план вместе с программой в один рабочий HTML и перенесите его на другой компьютер.</p>
         <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a><a class="btn ghost" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a></div>
       </div>
       <aside class="heroright" id="author" aria-label="Связаться с автором"><div class="vhero"><div class="hd">Автор проекта</div><div class="rw"><div class="vava">ВУ<img src="avatar.jpg" alt="Владимир Учинин" width="64" height="64" onerror="this.remove()"></div><div><div class="nm">Владимир Учинин</div><div class="rl">Владелец продукта / Product Owner</div></div></div><div class="lk"><a href="mailto:uchv@ya.ru">uchv@ya.ru</a><button class="btn primary purchase-open" id="purchase-open" type="button" aria-haspopup="dialog" aria-controls="purchase-dialog">Хочу купить</button></div><p class="author-note">Нужен свой рабочий план? Напишите, для какой команды вы выбираете Roadmap. Форма подготовит письмо в вашей почтовой программе.</p></div></aside>
@@ -76,15 +76,15 @@
       <video id="demo-video" controls playsinline preload="metadata" width="1440" height="810" poster="media/roadmap-demo-poster.jpg" aria-label="Демонстрация возможностей Roadmap" aria-describedby="demo-video-note"><source src="media/roadmap-demo.mp4" type="video/mp4">Ваш браузер не воспроизводит MP4. <a href="media/roadmap-demo.mp4" download>Скачать демо-ролик</a>.</video>
       <div class="video-cover" id="demo-cover" hidden><img id="demo-poster" src="media/roadmap-demo-poster.jpg" width="1440" height="810" alt="" decoding="sync"><button class="btn primary video-start" id="demo-play" type="button" aria-controls="demo-video"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l14-8z"/></svg><span>Смотреть ролик · 2 минуты</span></button></div>
     </div>
-    <div class="vidnote" id="demo-video-note">От задач до релиза за 2 минуты: обзор Roadmap v16.7.1. Видео без звука; все проекты вымышленные.</div>
+    <div class="vidnote" id="demo-video-note">От задач до релиза за 2 минуты: обзор Roadmap v17.0. Видео без звука; все проекты вымышленные.</div>
     <div class="video-help"><span id="demo-video-status" class="video-status" role="status" aria-live="polite"></span><a href="media/roadmap-demo.mp4" target="_blank" rel="noopener">Открыть MP4 отдельно</a><a href="media/roadmap-demo.mp4" download>Скачать ролик</a></div>
   </div></div>
 
 
-  <section aria-labelledby="release-title"><div class="wrap"><div class="sechead"><h2 id="release-title">Новое в v16.7.1</h2><p>Понятнее сохранение, точнее подписи и удобнее работа на телефоне.</p></div><div class="grid">
-    <article class="card"><div class="ic ic-label">Сохранение</div><h3>Видно, где ваши правки</h3><p>Состояние браузерного хранилища и записи в JSON показано отдельно. Ошибка сохранения остается видимой, пока не будет устранена.</p></article>
-    <article class="card"><div class="ic ic-label">Сводка</div><h3>Полнота не равна готовности</h3><p>Заполненность полей отделена от ошибок плана. Прогноз на другой год показывает полные даты, а подписи читаются во всех темах.</p></article>
-    <article class="card"><div class="ic ic-label">Показ</div><h3>План раньше настроек</h3><p>На телефоне дополнительные действия раскрываются по кнопке. Длинные названия иерархии переносятся, небольшие сенсорные кнопки удобнее нажимать.</p></article>
+  <section aria-labelledby="release-title"><div class="wrap"><div class="sechead"><h2 id="release-title">Новое в v17.0</h2><p>Переносите рабочий план одним HTML и продолжайте работу на другом компьютере.</p></div><div class="grid">
+    <article class="card"><div class="ic ic-label">Один HTML</div><h3>Приложение вместе с планом</h3><p>Сохраните задачи, архив и точки возврата в одном файле. Откройте его на другом компьютере, обновите задачи из Jira и сохраните снова. Действие находится в «Данные → Сохранение и восстановление».</p></article>
+    <article class="card"><div class="ic ic-label">Папки Jira</div><h3>Эпик, история, задачи</h3><p>Импорт восстанавливает папки по подтвержденным родителям. Задачи без истории остаются отдельно. Типы и направления связей сохраняются при обмене с Jira.</p></article>
+    <article class="card"><div class="ic ic-label">Ваши данные</div><h3>Выберите, что передать</h3><p>Личный HTML с PIN шифруется после скачивания защищенной копии. Обычный HTML и отдельные выгрузки не защищены. Для других людей подготовьте копию для просмотра или защищенную копию.</p></article>
   </div></div></section>
 
   <main>
@@ -100,10 +100,10 @@
     <section><div class="wrap"><div class="sechead"><h2>Как начать</h2><p>Демо нужно для знакомства. Для своего плана используйте рабочую версию приложения.</p></div><div class="how">
       <article class="card"><h3>1. Попробуйте демо</h3><p>Откройте карточки и разные виды плана на вымышленных задачах. Демо не записывает изменения в рабочий файл.</p></article>
       <article class="card"><h3>2. Получите рабочую версию</h3><p>Свяжитесь с автором через форму «Хочу купить» в начале страницы. В рабочем HTML можно создать план вручную или импортировать задачи из Jira CSV.</p></article>
-      <article class="card"><h3>3. Сохраните свой план</h3><p>Приложение находится в HTML, а данные плана сохраняются отдельно в JSON. Подключите рабочий файл или скачайте копию и храните ее у себя.</p></article>
+      <article class="card"><h3>3. Сохраните свой план</h3><p>В рабочей версии откройте «Данные → Сохранение и восстановление» и сохраните рабочий HTML. Если браузер скачал новую копию, переносите именно ее из папки загрузок. Отдельный JSON для переноса не нужен.</p></article>
     </div></div></section>
 
-    <section class="alt"><div class="wrap"><div class="sechead"><h2>Публичное демо без рабочих данных</h2><p>Знакомьтесь с приложением, не загружая план своей команды.</p></div><div class="notice"><h3>Что важно знать о данных</h3><p>В демо только вымышленные задачи. Реальных планов, токенов Jira и финансовых данных команды в публичной сборке нет.</p><p>Рабочий HTML может работать офлайн. Сайт и видео загружаются по сети. Обмен с Jira требует вашей настройки; автоматический обмен работает, только если вы его включили.</p><p>Перед очисткой проекта сохраните нужные данные. История версий в браузере и скачанный JSON хранятся отдельно: обычный экспорт плана не копирует историю.</p></div></div></section>
+    <section class="alt"><div class="wrap"><div class="sechead"><h2>Публичное демо без рабочих данных</h2><p>Знакомьтесь с приложением, не загружая план своей команды.</p></div><div class="notice"><h3>Что важно знать о данных</h3><p>В демо только вымышленные задачи. Реальных планов, токенов Jira и финансовых данных команды в публичной сборке нет.</p><p>Рабочий HTML может работать офлайн. Сайт и видео загружаются по сети. Обмен с Jira требует вашей настройки; автоматический обмен работает, только если вы его включили.</p><p>Перед очисткой проекта сохраните рабочий HTML с точками возврата. Обычный экспорт JSON не копирует историю браузера. Не публикуйте личный HTML: для него нужна отдельная защищенная копия.</p></div></div></section>
 
     <section><div class="wrap"><div class="catcta"><h2>Посмотрите, как устроены функции</h2><p>В каталоге есть описания и снимки экранов: от импорта Jira до прогноза сроков и показа плана.</p><div class="cta"><a class="btn primary" href="catalog.html">Открыть каталог функций</a><a class="btn ghost" href="app.html">Открыть демо</a></div></div></div></section>
     <div class="wrap history-wrap">
@@ -125,7 +125,7 @@
     </div>
   </main>
 
-  <footer class="foot"><div class="wrap">Roadmap v16.7.1 · 27.09.2026 · Владимир Учинин · Публичная сборка содержит только вымышленные данные.</div></footer>
+  <footer class="foot"><div class="wrap">Roadmap v17.0 · 30.09.2026 · Владимир Учинин · Публичная сборка содержит только вымышленные данные.</div></footer>
   <dialog class="purchase-dialog" id="purchase-dialog" aria-labelledby="purchase-title" aria-describedby="purchase-note">
     <div class="purchase-head"><h2 id="purchase-title">Хочу купить Roadmap</h2><button class="btn ghost purchase-close" id="purchase-close" type="button" aria-label="Закрыть форму">&times;</button></div>
     <p class="purchase-note" id="purchase-note">Форма подготовит письмо автору. Оно откроется в вашей почтовой программе, отправить его нужно самостоятельно. Сайт не отправляет и не сохраняет данные формы.</p>
