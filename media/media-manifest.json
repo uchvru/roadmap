@@ -1,9 +1,9 @@
 {
-  "version": "17.1",
-  "generatedAt": "2026-10-08",
-  "renderedAt": "2026-10-07T21:49:29.546Z",
+  "version": "17.2",
+  "generatedAt": "2026-10-09",
+  "renderedAt": "2026-10-08T23:25:17.334Z",
   "source": "synthetic-demo-PAY-LK",
-  "appSha256": "356507e9c4c5282a4b7a3e2a9f7acff685620e21712b83559e8b6b2bce908428",
+  "appSha256": "db207057361cc614eb0ee378d5acb72fcc185e1975f74fea5827dd4d8b4852a4",
   "renderer": "Remotion 4.0.529",
   "composition": "RoadmapFilm",
   "sources": {
@@ -21,18 +21,18 @@
     "src/scenes/Hook.tsx": "9511d5e9c519175014c1b72831c9df707834885ab802f6b927875d2a6d7db997",
     "src/scenes/LiveWork.tsx": "428baa7374810a0cf3d44df98f75f4f33de4e34afb8d5d503dd19edf05274d3c",
     "src/scenes/Local.tsx": "cf6ca92be52f179db1cbcb4456b30f58b7afe106d44756d3dd668151e67e0201",
-    "src/scenes/Meeting.tsx": "bcaf4695337dd21f3b2b064d7902606067b6f7806cfe237c12f9d4d1bc5a9a61",
+    "src/scenes/Meeting.tsx": "a50e947fe9d354cba979a3e57ac80d5e8590578a55e1563ce004a11ea6265b3e",
     "src/scenes/Plan.tsx": "6321be3f395eb44595977366fd5bf3d3702f6ddb3d2a53907bab4ebe8a836ce7",
     "src/scenes/Risk.tsx": "0752f1c714a1afb914733f003f85860c558043fa4237cf8af7eb661b317052d7",
     "src/scenes/Start.tsx": "f403a0834d8679ff9e4f07a5a5c45599a5a8f968e4da8e9ed8f59af9b4e94867",
-    "public/f01_light.webp": "3c7f278d4f4e27e38df5db91dad76c06f87e3a0d1f57c22892c8fd1181d9f5a7",
-    "public/f04_light.webp": "44887ec71c080ee2086a00d7a0ee9fd283eac377b7a7ae95880a12160ddaa113",
-    "public/f05_light.webp": "d5a8ea59318334d1bc8b18eeb22bdd3c34c89c5db3ea53a90ec0812239d52b67"
+    "public/f01_light.webp": "bbce8998ca1b457a41970a387b29c88f925fcad05691a5704c5c755f360ab0ff",
+    "public/f04_light.webp": "776d993a1199bc7d47fe5ba13dd94f3d6c2b7007b5aaa347620383c54a2a728f",
+    "public/f05_light.webp": "b5ff07a02ade8a7c3385ec828c96fcda21b675996b9bd4ee7938921aad32c6df"
   },
   "video": {
     "file": "roadmap-demo.mp4",
-    "sha256": "4cc1db6bb9743da52c5fc2797990918b920de1d16e09fcc918414082b433b60b",
-    "bytes": 8326936,
+    "sha256": "767690c643522dbc008060e6a3be226910bf145fc9b03fcf60788a669e45f41c",
+    "bytes": 8502554,
     "durationSeconds": 120,
     "width": 1440,
     "height": 810,
@@ -58,8 +58,8 @@
   },
   "poster": {
     "file": "roadmap-demo-poster.jpg",
-    "sha256": "d3e553bbbbff444021c652d38eefbd75bdbbcd975e97e637578428bbbd3b8368",
-    "bytes": 65770,
+    "sha256": "828b879b9ba1c269f46a0b24ef178f1dd726e83080d3445de67089b830d1079b",
+    "bytes": 65682,
     "width": 1440,
     "height": 810,
     "frame": 0

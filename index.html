@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="roadmap-build-date" content="2026-10-08">
-  <meta name="roadmap-publication-date" content="2026-10-08">
-  <meta name="description" content="Roadmap v17.1: соберите план из Jira, разберите риски срока и подготовьте материал для встречи. Автономное приложение и ваш план в одном HTML-файле.">
-  <title>Roadmap v17.1: дорожная карта продукта в одном файле</title>
+  <meta name="roadmap-build-date" content="2026-10-09">
+  <meta name="roadmap-publication-date" content="2026-10-09">
+  <meta name="description" content="Roadmap: задачи и сроки в одном плане. Добавляйте задачи вручную или из Jira, следите за выполнением и сохраняйте план в один файл.">
+  <title>Roadmap v17.2: задачи и сроки в одном плане</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     :root{--ink:#0f172a;--mut:#5b6c85;--brand:#4f46e5;--line:#e6eaf1;--page-wash:linear-gradient(145deg,#f8f9fd,#f2f5fb);--hero-wash:linear-gradient(160deg,#f0f3ff 0%,#edf3fd 42%,#f6f8fc 100%);--button-primary:linear-gradient(135deg,#5148e4,#4941d6);--button-primary-hover:linear-gradient(135deg,#4740cc,#4038ba);--button-secondary:linear-gradient(135deg,#fff,#f4f5fd);--button-secondary-hover:linear-gradient(135deg,#fafaff,#eef0fc)}
@@ -61,12 +61,12 @@
 </head>
 <body>
   <header class="hero"><div class="wrap">
-    <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip" title="Дата публикации">v17.1 · 08.10.2026</span></div>
+    <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip" title="Дата публикации">v17.2 · 09.10.2026</span></div>
     <div class="herogrid">
       <div>
-        <h1>Из Jira в понятный план релиза</h1>
-        <p class="lead">Roadmap помогает владельцу продукта собрать задачи в план, понять причины риска срока и подготовить материал для встречи с командой.</p>
-        <p class="lead">Приложение и ваш план в одном HTML-файле. Открывайте его в браузере без установки и сервера; после правок сохраните файл и перенесите на другой компьютер.</p>
+        <h1>Все задачи и сроки в одном плане</h1>
+        <p class="lead">Roadmap помогает видеть, кто чем занят, что уже готово и где работа задерживается. Добавляйте задачи вручную или загружайте их из Jira, следите за сроками и выбирайте, что показать команде на встрече.</p>
+        <p class="lead">Работает в браузере без установки. План и программа сохраняются в один файл: его можно перенести на другой компьютер и продолжить работу. После изменений сохраняйте новую копию.</p>
         <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a><a class="btn ghost" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a></div>
       </div>
       <aside class="heroright" id="author" aria-label="Связаться с автором"><div class="vhero"><div class="hd">Автор проекта</div><div class="rw"><div class="vava">ВУ<img src="avatar.jpg" alt="Владимир Учинин" width="64" height="64" onerror="this.remove()"></div><div><div class="nm">Владимир Учинин</div><div class="rl">Владелец продукта / Product Owner</div></div></div><div class="lk"><a href="mailto:uchv@ya.ru">uchv@ya.ru</a><button class="btn primary purchase-open" id="purchase-open" type="button" aria-haspopup="dialog" aria-controls="purchase-dialog">Запросить рабочую версию</button></div><p class="author-note">Расскажите, для какой команды нужен план. Цена и условия уточняются у автора. Кнопка подготовит письмо, оплаты на сайте нет.</p></div></aside>
@@ -78,7 +78,7 @@
       <video id="demo-video" controls playsinline preload="metadata" width="1440" height="810" poster="media/roadmap-demo-poster.jpg" aria-label="Демонстрация возможностей Roadmap" aria-describedby="demo-video-note"><source src="media/roadmap-demo.mp4" type="video/mp4">Ваш браузер не воспроизводит MP4. <a href="media/roadmap-demo.mp4" download>Скачать демо-ролик</a>.</video>
       <div class="video-cover" id="demo-cover" hidden><img id="demo-poster" src="media/roadmap-demo-poster.jpg" width="1440" height="810" alt="" decoding="sync"><button class="btn primary video-start" id="demo-play" type="button" aria-controls="demo-video"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l14-8z"/></svg><span>Смотреть ролик · 2 минуты</span></button></div>
     </div>
-    <div class="vidnote" id="demo-video-note">От задач до релиза за 2 минуты: обзор Roadmap v17.1. Видео без звука; все проекты вымышленные. Подробности и пути к функциям указаны в каталоге.</div>
+    <div class="vidnote" id="demo-video-note">От задач до релиза за 2 минуты: обзор Roadmap v17.2. Видео без звука; все проекты вымышленные. Подробности и пути к функциям указаны в каталоге.</div>
     <div class="video-help"><span id="demo-video-status" class="video-status" role="status" aria-live="polite"></span><a href="media/roadmap-demo.mp4" target="_blank" rel="noopener">Открыть MP4 отдельно</a><a href="media/roadmap-demo.mp4" download>Скачать ролик</a></div>
   </div></div>
 
@@ -88,7 +88,7 @@
       <li><h3>Соберите план из Jira</h3><p>Импортируйте CSV и получите иерархию эпиков, историй и задач со сроками на Ганте. Доска помогает разбирать работу по статусам.</p><p class="detail">Родители берутся из выгрузки, не угадываются. Задачи без истории остаются отдельно. Типы и направления связей сохраняются.</p></li>
       <li><h3>Поймите, что мешает сроку</h3><p>Разберите зависимости, загрузку команды и пропуски в данных. Сравните вариант «Что если», не меняя основной план.</p><p class="detail">Прогноз зависит от оценок, связей и доступности команды. Это расчет, а не обещание даты.</p></li>
       <li><h3>Подготовьте материал для встречи</h3><p>Выберите нужную часть плана, проверьте предпросмотр и подготовьте статус или презентацию. Не нужно показывать весь рабочий проект.</p><p class="detail">Для передачи выбирайте состав и формат отдельно: отчет для просмотра не заменяет рабочий файл.</p></li>
-    </ol><p class="edition-note">В v17.1 три основных раздела: «План», «Сроки и риски», «Для встречи». Сохранение рабочего HTML собрано в одном окне; дополнительные инструменты подключаются по необходимости.</p></div></section>
+    </ol><p class="edition-note">В v17.2 задачи, Доска, сроки и материалы встречи открываются прямо из одной панели. Статусы и фильтры находятся рядом, а окно «Поделиться» помогает выбрать, что передать другому человеку.</p></div></section>
 
     <section><div class="wrap"><div class="sechead"><h2>Как начать</h2><p>Демо нужно для знакомства. Для своего плана используйте рабочую версию приложения.</p></div><div class="how">
       <article class="card"><h3>1. Попробуйте демо</h3><p>Откройте карточки и разные виды плана на вымышленных задачах. Демо не записывает изменения в рабочий файл.</p></article>
@@ -101,7 +101,7 @@
     <section><div class="wrap"><div class="catcta"><h2>Нужны подробности конкретной функции?</h2><p>Каталог остается справочником: описания, ограничения и снимки экранов сгруппированы по разделам. Для первого знакомства начните с демо.</p><div class="cta"><a class="btn primary" href="catalog.html">Открыть каталог функций</a><a class="btn ghost" href="app.html">Открыть демо</a></div></div></div></section>
   </main>
 
-  <footer class="foot"><div class="wrap">Roadmap v17.1 · Опубликовано 08.10.2026 · Владимир Учинин · Публичная сборка содержит только вымышленные данные.</div></footer>
+  <footer class="foot"><div class="wrap">Roadmap v17.2 · Опубликовано 09.10.2026 · Владимир Учинин · Публичная сборка содержит только вымышленные данные.</div></footer>
   <dialog class="purchase-dialog" id="purchase-dialog" aria-labelledby="purchase-title" aria-describedby="purchase-note">
     <div class="purchase-head"><h2 id="purchase-title">Запросить рабочую версию</h2><button class="btn ghost purchase-close" id="purchase-close" type="button" aria-label="Закрыть форму">&times;</button></div>
     <p class="purchase-note" id="purchase-note">Форма подготовит письмо автору для обсуждения цены и условий. Оно откроется в вашей почтовой программе, отправить его нужно самостоятельно. Это не заказ и не оплата. Сайт не отправляет и не сохраняет данные формы.</p>

@@ -5523,45 +5523,6 @@
       body.liquid-glass header, body.liquid-glass main,
       body.liquid-glass [role="dialog"] > div { transition: background-color .2s ease, box-shadow .2s ease, border-color .2s ease; }
     }
-    /* === Тема «Портал»: чистый светлый дизайн с синим акцентом (вдохновлен новостным порталом) === */
-    body.theme-portal {
-      /* Акцент индиго -> синий через переменные Tailwind v4 (без правки классов, обратимо) */
-      --color-indigo-50: #eff6ff; --color-indigo-100: #dbeafe; --color-indigo-200: #bfdbfe;
-      --color-indigo-300: #93c5fd; --color-indigo-400: #60a5fa; --color-indigo-500: #3b82f6;
-      --color-indigo-600: #2563eb; --color-indigo-700: #1d4ed8; --color-indigo-800: #1e40af;
-      --color-indigo-900: #1e3a8a; --color-indigo-950: #172554;
-      /* Мягче и круглее (скругления Tailwind) */
-      --radius-lg: 0.7rem; --radius-xl: 0.95rem; --radius-2xl: 1.35rem; --radius-3xl: 1.85rem;
-      background: #f4f7fc !important;
-    }
-    /* Воздушные карточки: светлая рамка + мягкая рассеянная тень */
-    body.theme-portal header,
-    body.theme-portal #roadmap-root > section,
-    body.theme-portal main,
-    body.theme-portal #snapshotInfoBar {
-      border-color: #e9f0f9 !important;
-      box-shadow: 0 6px 26px rgba(15,23,42,0.05), 0 1px 2px rgba(15,23,42,0.03) !important;
-    }
-    body.theme-portal header,
-    body.theme-portal main,
-    body.theme-portal #roadmap-root > section { border-radius: 1.5rem !important; }
-    /* Модальные окна используют общий радиус и тень во всех темах. */
-    body.theme-portal [role="dialog"][class*="justify-center"] > div {
-      border-radius: var(--rm-dialog-radius, 1rem) !important;
-      box-shadow: var(--rm-dialog-shadow, 0 24px 64px rgba(15,23,42,.22)) !important;
-    }
-    body.theme-portal #epicAuditModal > div { border-radius: var(--rm-dialog-radius, 1rem) !important; }
-    /* Меню и всплывающие панели: мягкая тень и скругление */
-    body.theme-portal #dataMenu, body.theme-portal #moreMenu, body.theme-portal #presetMenu,
-    body.theme-portal #sortMenu, body.theme-portal #depLinesMenu, body.theme-portal #releaseFilterMenu,
-    body.theme-portal [data-filter-panel], body.theme-portal #taskMovePanel {
-      border-radius: var(--rm-radius-md, .75rem) !important;
-      box-shadow: var(--rm-popover-shadow, 0 16px 40px rgba(15,23,42,.16)) !important;
-    }
-    /* Фильтры статусов используют общую геометрию кнопок. */
-    body.theme-portal #statusOverview button { border-radius:var(--rm-radius-sm) !important; }
-    /* Логотип: в «Портал» делаем сине-голубым (фиолетовая половина иначе не перекрашивается) */
-    body.theme-portal header [class*="from-indigo-500"][class*="to-violet-500"] { background-image: linear-gradient(to bottom right, #2563eb, #38bdf8) !important; }
     /* Подсказка прокрутки ленты статусов: затухание у края, где есть еще контент */
     #statusOverview { scroll-behavior: smooth; }
     #statusOverview.fade-right { -webkit-mask-image: linear-gradient(to right, #000 84%, transparent 100%); mask-image: linear-gradient(to right, #000 84%, transparent 100%); }
@@ -6162,7 +6123,7 @@
    body.theme-dark ::-webkit-scrollbar-thumb { background:#3a4a5f; }
    body.theme-dark ::-webkit-scrollbar-track { background:#0f1519; }
    /* Активная кнопка-пилюля темы видна на темном треке */
-   body.theme-dark #themePortalBtn[aria-pressed="true"], body.theme-dark #themeDarkBtn[aria-pressed="true"] { background-color:#3a4a5f !important; color:#c7d2fe !important; }
+   body.theme-dark #themeStudioBtn[aria-pressed="true"], body.theme-dark #themeDarkBtn[aria-pressed="true"] { background-color:#3a4a5f !important; color:#c7d2fe !important; }
    /* Тени глубже на темном */
    body.theme-dark .shadow-sm, body.theme-dark .shadow, body.theme-dark .shadow-md, body.theme-dark .shadow-lg, body.theme-dark .shadow-xl, body.theme-dark .shadow-2xl, body.theme-dark .shadow-xs { box-shadow:0 8px 30px rgba(0,0,0,.5) !important; }
    /* Светлые декоративные градиенты (from-*-50 to-white) , плоский темный фон. Насыщенные кнопочные градиенты (to-violet-500 и т.п.) не трогаем. */
@@ -6458,7 +6419,7 @@
      .workspace-select { min-width:8.5rem; max-width:8.5rem; }
    }
    /* v14.0: adaptive planning shell. */
-   #statusCompactWrap,#mobilePlanNav { display:none; }
+   #mobilePlanNav { display:none; }
    .planning-hub-badge { min-width:1.25rem; height:1.25rem; padding:0 .35rem; border-radius:999px; background:#e11d48; color:#fff; font-size:.625rem; font-weight:800; align-items:center; justify-content:center; }
    #planViewNav #jiraChangesChip { display:none; }
    #planViewNav .workspace-picker,#planViewNav .workspace-mode-label { display:none !important; }
@@ -6852,7 +6813,7 @@
    #statusOverview > .status-filter-active { border-color:var(--color-indigo-400,#818cf8); }
    .status-scroll-arrow { flex:none; display:inline-flex; align-items:center; justify-content:center; width:2.25rem; min-height:var(--rm-hit-target,2.75rem); border:1px solid var(--rm-border); border-radius:.7rem; background:var(--rm-surface-soft); color:var(--rm-text); cursor:pointer; }
    .status-scroll-arrow[hidden] { display:none; }
-   #statusCompactWrap { display:none !important; }
+   #statusCompactWrap { display:block; }
    #statusCompactBtn { width:auto !important; min-width:9.5rem; }
    #summaryView > div:first-child { min-height:3rem; }
 
@@ -6892,7 +6853,6 @@
      }
      #appHeader .app-header-grid > :first-child { gap:.25rem; }
      #appHeader .app-header-meta { margin-top:0 !important; flex-wrap:nowrap; }
-     #appHeader .app-header-date { display:none !important; }
      #appHeader #roadmapTitle { font-size:1rem; }
      #appHeader .app-header-toolbar { gap:.375rem; }
      #appHeader .app-header-toolbar > button:first-child { min-width:0; }
@@ -6956,7 +6916,7 @@
      #presentView .pres-edit-row select { width:100%; }
    }
    @media (max-width:1100px) {
-     #statusOverview { display:flex !important; max-width:calc(100% - 6.75rem); }
+     #statusOverview { display:none; }
      #planFilterBar { flex-direction:row !important; align-items:center !important; }
      #planViewNav .plan-view-caption { display:none !important; }
    }
@@ -6970,7 +6930,6 @@
      #mobilePlanNav button > span { min-width:0; max-width:100%; white-space:nowrap; }
      #appHeader .app-header-grid { padding:.5rem .625rem; grid-template-columns:1fr; }
      #appHeader .app-header-toolbar { width:100%; }
-     #appHeader #autoSaveBtn,#appHeader #archiveBtn { display:none !important; }
      #planFilterBar { padding:.5rem; gap:.5rem; flex-wrap:wrap; }
      .timeline-empty-state { width:min(100vw,36rem); }
      .pres-edit-row .pres-row-actions { opacity:1; }
@@ -7561,6 +7520,8 @@
    #jiraImportPreviewModal .jira-import-preview-list { min-height:0; overflow-y:auto; }
    #jiraImportPreviewModal .jira-import-preview-footer { flex:none; }
    #jiraImportPreviewModal [data-jira-preview] { flex:none; }
+   #jiraImportPreviewModal [data-jira-row][hidden] { display:none; }
+   #jiraImportPreviewModal [data-jira-scope][aria-pressed="true"] { background:var(--rm-selected-bg); color:var(--rm-selected-text); border-color:var(--rm-selected-border); }
    #jiraImportPreviewModal .jira-preview-diffs { display:flex; flex-wrap:wrap; gap:.375rem; margin-top:.375rem; min-width:0; }
    #jiraImportPreviewModal .jira-preview-diff { display:inline-flex; flex-wrap:wrap; align-items:baseline; gap:.2rem; min-width:0; max-width:100%; }
    #jiraImportPreviewModal .jira-preview-diff > * { min-width:0; max-width:100%; overflow-wrap:anywhere; }
@@ -7986,7 +7947,7 @@
      box-shadow:none !important;
    }
    #quickActionsGroup button,
-   #autoSaveBtn,#settingsBtn,#archiveBtn {
+   #settingsBtn {
      width:var(--rm-hit-target) !important;
      min-width:var(--rm-hit-target) !important;
      height:var(--rm-hit-target) !important;
@@ -8068,8 +8029,9 @@
    #presentView .pres-common-actions select { min-height:44px; max-width:min(100%,24rem); min-width:0; }
    #presentView .pres-common-actions button,#presentView .pres-common-actions summary { min-height:44px; }
    #presentView .pres-common-exports { display:flex; flex-wrap:wrap; gap:.5rem; margin-left:auto; }
-   #presentView .pres-actions-extra { display:contents; }
-   #presentView .pres-actions-toggle { display:none; }
+   #presentView .pres-actions-extra { display:none; width:100%; flex-wrap:wrap; gap:.5rem; }
+   #presentView .pres-actions-extra[data-open="true"] { display:flex; }
+   #presentView .pres-actions-toggle { display:inline-flex; align-items:center; justify-content:center; padding:.5rem .75rem; border:1px solid var(--rm-border); border-radius:var(--rm-radius-sm); color:var(--rm-text); background:var(--rm-surface); font-size:.75rem; font-weight:600; }
    #presentView .pres-mobile-protection { display:none; }
    @media (max-width:639px) {
      #presentView .pres-common-actions { display:grid; grid-template-columns:minmax(0,1fr) auto; }
@@ -8285,11 +8247,9 @@
      }
    }
    @media (max-width:767px) {
-     #mobileMoreBtn { display:inline-flex !important; }
      #appHeader { margin-bottom:.5rem; }
      #appHeader .app-header-grid { padding:.5rem .625rem; gap:.375rem; }
      #appHeader .app-header-brand { gap:0; }
-     #appHeader #appVerChip,#appHeader .app-header-meta { display:none; }
      #appHeader #roadmapTitle { font-size:.9375rem; line-height:1.2; padding:.125rem .25rem; }
      #appHeader .app-header-toolbar { gap:.375rem; flex-wrap:wrap; }
      #appHeader .app-header-actions { width:auto; min-width:0; flex:0 0 auto; flex-wrap:nowrap; }
@@ -8758,7 +8718,6 @@
   body #forecastView .forecast-readiness-metrics > div { display:flex; align-items:center; justify-content:space-between; gap:1rem; min-width:10rem; padding:.625rem .75rem; border:1px solid var(--rm-border); border-radius:var(--rm-radius-sm); background:var(--rm-surface-soft); }
   /* Common contracts apply in every palette, including dynamically created windows. */
   body { --rm-icon-control-h:var(--rm-control-h); --rm-filter-button-radius:.5rem; --rm-segment-selected-bg:var(--rm-selected-bg,#eef2ff); --rm-selected-text:#4338ca; --rm-selected-bg:#eef2ff; --rm-selected-border:#c7d2fe; }
-  body.theme-portal { --rm-primary:#2563eb; --rm-primary-hover:#1d4ed8; --rm-selected-text:#1d4ed8; --rm-selected-bg:#dbeafe; --rm-selected-border:#93c5fd; }
   body.theme-dark { --rm-selected-text:#c7d2fe; --rm-selected-bg:#24304a; --rm-selected-border:#6576a0; }
   /* The same readiness warning is rendered in the quality center and the plan builder. */
   body.theme-dark [data-readiness-decision] > div.text-amber-900 { color:#fcd34d; }
@@ -8964,9 +8923,15 @@
   body:not(.theme-dark) #summaryView :is(.text-slate-400,.text-slate-500) { color:#526174 !important; }
   .section-list-header { height:auto !important; min-height:54px; align-items:flex-start; padding-top:.625rem; padding-bottom:.625rem; }
   .section-list-header .section-heading-line { flex-wrap:wrap; }
-  .section-list-header .section-heading-line > .truncate { flex-basis:100%; white-space:normal; overflow:visible; overflow-wrap:anywhere; line-height:1.45; }
+  .section-list-header .section-heading-line > .truncate { flex:1 1 140px; white-space:normal; overflow:visible; overflow-wrap:anywhere; line-height:1.45; }
   .section-list-header .section-heading-meta { flex-wrap:wrap; overflow:visible; }
   .section-timeline-header { height:var(--rm-section-row-height,54px) !important; }
+  @media(min-width:1024px) and (pointer:fine) {
+    #tasks-list-container .task-list-row { padding-right:6px; }
+    .task-list-row .task-row-content { padding-right:4px; }
+    .task-list-row .task-actions-disclosure { margin-right:0; }
+    .task-list-row > .drag-handle { padding-left:0; width:16px; }
+  }
   .section-color-control { display:inline-flex; align-items:center; justify-content:center; background:transparent; border:0; padding:0; }
   .section-color-dot { display:block; width:12px; height:12px; border-radius:50%; flex:none; }
   #storageLocationStatus { color:var(--rm-muted); font-size:12px; line-height:1.5; padding:.625rem 0; }
@@ -9001,7 +8966,10 @@
 }
 /* RM_SOFT_SHEEN_END */
 /* Three user journeys; underlying views and exports retain their contracts. */
-#productContextNav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 12px;border-top:1px solid var(--rm-border);background:var(--rm-surface);width:100%;min-width:0}
+#planWorkspaceHeader #planViewNav{flex:0 1 auto}
+#productContextNav{display:flex;flex:0 1 auto;flex-wrap:wrap;align-items:center;gap:6px;padding:0 8px;border-left:1px solid var(--rm-border);background:var(--rm-surface);width:auto;min-width:0}
+#moreMenu #planOverviewHost{margin:0;border-bottom:1px solid var(--rm-border)}
+#moreMenu #planOverviewHost .app-header-insight-row,#moreMenu #headerOverviewBtn{width:100%}
 #productContextNav[hidden]{display:none}
 #productContextNav button[aria-pressed="true"],.meeting-choice[aria-pressed="true"]{box-shadow:inset 0 0 0 1px var(--rm-selected-border)}
 .meeting-choices{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
@@ -9015,7 +8983,7 @@
 .meeting-result h3{font-size:18px;line-height:1.4;font-weight:700;margin:0 0 8px;color:var(--rm-text)}
 .meeting-result p{margin:0 0 16px;max-width:70ch;font-size:14px;line-height:1.55;color:var(--rm-muted)}
 .meeting-result-actions{display:flex;flex-wrap:wrap;gap:8px}
-#mobilePlanNav{grid-template-columns:repeat(3,minmax(0,1fr))}
+#mobilePlanNav{grid-template-columns:repeat(4,minmax(0,1fr))}
 #mobilePlanNav [data-product-area]{min-width:0;white-space:normal;line-height:1.2;min-height:48px;font-size:12px}
 #mobilePlanNav [data-product-area]>span{white-space:normal;text-align:center}
 @media(max-width:359px){#mobilePlanNav [data-product-area]{padding:4px}body{padding-bottom:5.5rem}}
@@ -9023,6 +8991,53 @@
 /* The meeting page already exposes every material; avoid a duplicate mobile row. */
 @media(max-width:639px){body[data-app-view="present"] #appHeader #reportsMenuWrap{display:none}}
 @media print{#productContextNav,.meeting-choices,.meeting-formats,.meeting-intro{display:none}}
+/* Компактная рабочая панель: файл сверху, представления и фильтры рядом с планом. */
+body.compact-workspace #planControlDeck,body.compact-workspace #statusOverview,
+body.compact-workspace #statusScrollPrev,body.compact-workspace #statusScrollMore{display:none}
+#planWorkspaceHeader #planFilterBar{padding:0;gap:6px;flex:0 1 auto;min-width:0;overflow:visible;background:transparent;border:0;flex-direction:row}
+#planWorkspaceHeader #statusCompactBtn{white-space:nowrap;width:auto}
+#planWorkspaceHeader #activeFiltersBar{flex-basis:100%;width:100%;border:0;padding:4px 0;gap:6px}
+#planWorkspaceHeader #activeFiltersBar[hidden]{display:none}
+#planWorkspaceHeader #filterToolsBtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:44px;min-height:var(--rm-toolbar-h);padding:8px 12px;border:1px solid var(--rm-border);border-radius:var(--rm-radius-sm);color:var(--rm-text);background:var(--rm-surface);white-space:nowrap}
+#planWorkspaceHeader #filterToolsBtn:is(:hover,[aria-expanded="true"],[data-active="1"]){color:var(--rm-selected-text);background:var(--rm-selected-bg);border-color:var(--rm-selected-border)}
+#appHeader :is(#autoSaveBtn,#archiveBtn){width:var(--rm-toolbar-h);min-width:var(--rm-toolbar-h);padding:0;flex-shrink:0}
+#appHeader .app-header-meta{display:flex;flex-wrap:wrap;gap:4px 8px}
+#appHeader #appVerChip{display:inline-flex}
+#appHeader #moreMenuWrap{flex-shrink:0}
+#appHeader .app-header-actions{flex-wrap:wrap;max-width:100%}
+#planWorkspaceHeader .plan-command-divider{display:none}
+@media(min-width:1024px){body.compact-workspace #appHeader .app-header-grid{grid-template-columns:minmax(270px,.7fr) minmax(0,2fr);padding:12px 16px;gap:12px}body.compact-workspace #appHeader .app-header-toolbar{flex-wrap:wrap}body.compact-workspace #appHeader #globalSearchHost{flex:1 1 180px}}
+[data-compact-tools-label]{display:none}
+@media(max-width:767px){
+  body.compact-workspace #appHeader .app-header-toolbar{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:6px}
+  body.compact-workspace #appHeader #globalSearchHost{grid-column:1;grid-row:1;width:100%;min-width:0}
+  body.compact-workspace #appHeader #addTaskHeaderBtn{grid-column:2;grid-row:1;width:44px;min-width:44px;padding:0;justify-content:center}
+  body.compact-workspace #appHeader .app-header-actions{grid-column:1/-1;grid-row:2;width:100%;display:flex;flex-wrap:nowrap;gap:6px;justify-content:flex-end}
+  body.compact-workspace #appHeader #moreMenuBtn{width:44px;min-width:44px;padding:0;justify-content:center}
+  body.compact-workspace #appHeader #moreMenuBtn :is([data-compact-tools-label],#workspaceHubLabel,svg:last-child){display:none}
+}
+@media(max-width:359px){body.compact-workspace #appHeader .app-header-actions{gap:4px}body.compact-workspace #appHeader #dataMenuBtn{padding-left:8px;padding-right:8px}}
+/* Keep the first preview task above mobile navigation, including the demo banner. */
+@media(max-width:639px){
+  body.compact-workspace #presentView>.p-4.grow{padding:8px}
+  body.compact-workspace #presentView .meeting-choices{margin-bottom:8px}
+  body.compact-workspace #presentView .pres-pane-tabs{margin-bottom:8px}
+  body.compact-workspace #presentView .pres-common-actions{margin-bottom:8px}
+  body.compact-workspace #presentView #presPreviewPane{padding:8px}
+}
+@media(max-width:767px){#planWorkspaceHeader #planFilterBar{margin-left:auto}#planWorkspaceHeader #zoomControl{margin-left:0}#appHeader #autoSaveBtn{display:inline-flex}#workspaceHubLabel{display:none}[data-compact-tools-label]{display:inline}#appHeader .app-header-meta{font-size:11px}#appHeader .app-header-meta-chip{min-height:28px}}
+#shareCenterModal .share-surface{width:min(600px,100%);max-height:calc(100dvh - 32px);display:flex;flex-direction:column;padding:0;overflow:hidden;background:var(--rm-surface);color:var(--rm-text);border:1px solid var(--rm-border);border-radius:16px}
+#shareCenterModal .share-content{padding:0 24px 20px;overflow-y:auto;min-height:0}
+#shareCenterModal .share-intro{margin:0 0 12px;font-size:14px;line-height:1.5;color:var(--rm-muted)}
+#shareCenterModal .share-option{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:16px 0;border-top:1px solid var(--rm-border)}
+#shareCenterModal .share-option h3{margin:0 0 4px;font-size:15px;font-weight:650;color:var(--rm-text)}
+#shareCenterModal .share-option p,#shareCenterModal .share-extra p{margin:0;font-size:13px;line-height:1.5;color:var(--rm-muted);overflow-wrap:anywhere}
+#shareCenterModal .share-option button{min-height:40px;white-space:nowrap}
+#shareCenterModal .share-extra{border-top:1px solid var(--rm-border);padding-top:4px}
+#shareCenterModal .share-extra summary{display:list-item;cursor:pointer;padding:12px 0;font-size:13px;font-weight:600;min-height:44px}
+#shareCenterModal .share-extra button{margin-top:12px;white-space:normal;text-align:left}
+#shareCenterModal #shareEditableNote{margin-top:6px}
+@media(max-width:520px){#shareCenterModal .share-content{padding:0 16px 16px}#shareCenterModal .share-option{grid-template-columns:1fr;gap:10px}#shareCenterModal .share-option button{justify-self:start;min-height:44px}}
 </style>
   <style id="schedule-preview-styles">
     .schedule-preview{font-size:13px;line-height:1.55;overflow-wrap:anywhere}
@@ -9044,7 +9059,7 @@
   <script>
     if (window.__roadmapLearningIsolationError) throw new Error('Learning theme initialization stopped: storage is not isolated');
     function _normalizeUiTheme(theme) {
-      return theme === 'dark' || theme === 'portal' ? theme : 'studio';
+      return theme === 'dark' ? 'dark' : 'studio';
     }
     (function initUiTheme() {
       var theme = 'studio';
@@ -9098,7 +9113,7 @@
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.1</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.2</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9180,13 +9195,14 @@
         </div>
         <!-- Дополнительные инструменты открываются из строки представлений. -->
         <div id="moreMenu" data-rm-surface="drawer-popover" class="hidden fixed w-72 bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-[220] no-print no-image-export">
+          <div id="planOverviewHost" class="flex items-center"></div>
             <div class="workspace-menu-heading px-2.5 pt-1 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Режим плана</div>
             <div class="workspace-menu-modes grid grid-cols-2 gap-1 px-1 pb-1.5" role="group" aria-label="Режим плана">
               <button type="button" data-workspace-choice="planning" onclick="closeMoreMenu();setWorkspaceMode('planning')" class="h-8 rounded-lg border border-slate-200 text-[10px] font-semibold text-slate-600 hover:bg-indigo-50">Планирование</button>
               <button type="button" data-workspace-choice="leadership" onclick="closeMoreMenu();setWorkspaceMode('leadership')" class="h-8 rounded-lg border border-slate-200 text-[10px] font-semibold text-slate-600 hover:bg-indigo-50">Руководство</button>
             </div>
             <div class="grid grid-cols-2 gap-1 px-1 pb-1.5">
-              <button type="button" onclick="closeMoreMenu();openPlanBuilder()" class="min-h-12 px-2 py-2 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-semibold text-left hover:bg-indigo-100"><span class="block">Собрать план</span><span class="block text-[10px] font-normal text-indigo-500">7 шагов проверки</span></button>
+              <button type="button" onclick="closeMoreMenu();openPlanBuilder()" class="min-h-12 px-2 py-2 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-semibold text-left hover:bg-indigo-100"><span class="block">Собрать план</span><span class="block text-[10px] font-normal text-indigo-500">4 шага до сохраненного файла</span></button>
               <button type="button" onclick="closeMoreMenu();openPlanHealthCenter()" class="min-h-12 px-2 py-2 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-semibold text-left hover:bg-emerald-100"><span class="flex items-center gap-1">Проверки плана <span id="planningMenuHealth" class="text-[10px] bg-rose-600 text-white rounded-full px-1.5"></span></span><span class="block text-[10px] font-normal text-emerald-600">ошибки и риски</span></button>
             </div>
             <button type="button" id="planningJiraChanges" data-feat="jira" onclick="closeMoreMenu();openJiraChangesModal()" class="hidden w-full items-center justify-between px-2.5 py-2 mb-1 rounded-lg bg-amber-50 text-amber-800 text-xs font-semibold hover:bg-amber-100"><span>Изменения из Jira</span><span id="planningJiraFreshDate" class="text-[10px] tabular-nums"></span></button>
@@ -9298,11 +9314,11 @@
             <div class="my-1 h-px bg-slate-100"></div>
             <div class="px-2.5 pt-1.5 pb-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Поделиться и версии</div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-1">
-            <button type="button" onclick="closeDataMenu(); openRoExport();" aria-label="Скачать копию для просмотра" title="Самодостаточный HTML со вшитыми данными, только для просмотра. Отправляйте «посмотреть», не передавая редактируемый файл. Получателю ничего ставить не нужно, его данные не затрутся" class="sm:col-span-2 w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-sky-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
+            <button type="button" onclick="openShareCenter();" aria-label="Поделиться" title="Просмотр, материалы встречи или полная рабочая копия" class="sm:col-span-2 w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-sky-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
               <span class="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></span>
-              <span class="grow">Скачать для просмотра</span>
+              <span class="grow">Поделиться</span>
             </button>
-            <button type="button" onclick="closeDataMenu(); openRoadmapLocker();" aria-label="Защищенные копии" title="Подготовить зашифрованные HTML-копии с отдельными паролями" class="sm:col-span-2 w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-amber-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
+            <button hidden type="button" onclick="closeDataMenu(); openRoadmapLocker();" aria-label="Защищенные копии" title="Доступно через Поделиться → Дополнительно" class="sm:col-span-2 w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-amber-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left">
               <span class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></span>
               <span class="grow"><span class="block">Защищенные копии</span><span class="block text-xs text-slate-500 font-normal">HTML с шифрованием и отдельными паролями</span></span>
             </button>
@@ -9344,10 +9360,10 @@
         <input type="file" id="mergeFile" class="hidden" accept=".json,application/json" onchange="onMergeFileChosen(event)">
       </div>
         <div class="app-header-insight-row no-print no-image-export">
-          <button type="button" id="headerOverviewBtn" class="header-summary-btn" onclick="toggleHeaderInsights()" aria-expanded="false" aria-controls="headerInsightsPanel">
+          <button type="button" id="headerOverviewBtn" class="header-summary-btn" onclick="closeMoreMenu(true); toggleHeaderInsights()" aria-expanded="false" aria-controls="headerInsightsPanel">
             <svg aria-hidden="true" class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19V9m5 10V5m5 14v-7m5 7V3"></path></svg>
-            <span>План</span>
-            <span id="headerStateSummary" class="header-summary-value"></span>
+            <span>Сводка плана</span>
+            <span id="headerStateSummary" class="header-summary-value" hidden></span>
           </button>
           <span id="autosaveStatus" role="status" aria-live="polite" class="hidden"></span>
         </div>
@@ -9503,7 +9519,6 @@
             <span class="text-xs font-semibold">Изменения из Jira · <span id="jiraFreshDate" class="tabular-nums">--</span><span id="jiraFreshCount" class="hidden"></span></span>
           </button>
         </div>
-        <div id="planOverviewHost" class="flex items-center shrink-0"></div>
       </div>
     </nav>
       <nav id="productContextNav" aria-label="Виды плана" class="no-print no-image-export"></nav>
@@ -9538,8 +9553,7 @@
         </div>
         <button type="button" data-mobile-timeline-control onclick="scrollToToday()" class="mobile-timeline-control inline-flex items-center min-h-11 px-3 rounded-lg border border-slate-200 bg-slate-50 text-xs font-medium text-slate-700 cursor-pointer">Сегодня</button>
         <select id="zoomMobileSel" data-mobile-timeline-control onchange="applyTimelinePreset(this.value)" aria-label="Масштаб шкалы времени" class="mobile-timeline-control min-h-11 px-2 grow bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-700 cursor-pointer">
-          <option value="currentWeek">Текущая неделя</option>
-          <option value="day">День</option><option value="week">Неделя</option><option value="month">Месяц</option><option value="quarter">Квартал</option><option value="fit">Весь план</option>
+          <option value="day">По дням</option><option value="currentWeek">Неделя</option><option value="month">Месяц</option>
         </select>
         <button type="button" data-mobile-timeline-control onclick="showGanttLegend()" aria-label="Как читать таймлайн" title="Как читать таймлайн" class="mobile-timeline-control rm-btn rm-btn-secondary rm-btn-icon">?</button>
         <button type="button" data-mobile-timeline-control data-feat="deps" onclick="openDepsOverview()" aria-label="Связи и зависимости" class="mobile-timeline-control rm-btn rm-btn-secondary">Связи</button>
@@ -9983,7 +9997,7 @@
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v17.1">
+<script data-roadmap-modules="v17.2">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -11587,7 +11601,7 @@ if (typeof globalThis !== 'undefined') {
   namespace.createRowVirtualizationController = createRowVirtualizationController;
 }
 
-/* module:locker-runtime sha256:854aff1a1180abd7d70a052cb0e7ee4fbc8a04791e8f2ef0994cb10a7498d27b */
+/* module:locker-runtime sha256:da63af6ae43d0de7ca5668787f0cf9e6ef042a351e450bc5e4859bbad9545fe0 */
 /** Private packages are prepared locally. This module never uploads or stores passwords. */
 const lockerRuntime = (() => {
   const profiles = Object.freeze([
@@ -12049,7 +12063,15 @@ const lockerRuntime = (() => {
     }
     return Object.freeze({ read, getState: snapshot, hasPending: () => [...states.values()].some(state => state.pending), dispose });
   }
-  return Object.freeze({ profiles, generatePasswords, validatePasswords, preparePackage, verifyPackage, savePackage, buildShareText, createFileReader, getLauncherMetadata, renderLauncher });
+  async function protectSingleHtml(html, password, metadata = {}) {
+    const words = String(password || '').trim().split(/\s+/).filter(Boolean);
+    if (/\p{Cc}/u.test(password) || !(String(password || '').trim().length >= 14 || (words.length >= 4 && words.every(word => word.length >= 3)))) {
+      throw new Error('Нужно не менее 14 символов или четыре слова, без управляющих символов.');
+    }
+    if (typeof html !== 'string' || !html.trim()) throw new Error('Нет содержимого для передачи.');
+    return buildLocked(await encrypt(html, password), metadata);
+  }
+  return Object.freeze({ profiles, generatePasswords, validatePasswords, preparePackage, verifyPackage, savePackage, buildShareText, createFileReader, getLauncherMetadata, renderLauncher, protectSingleHtml });
 })();
 
 if (typeof globalThis !== 'undefined') {
@@ -14260,8 +14282,8 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '17.1';
-    const APP_VERSION_DATE = '08.10.2026';
+    const APP_VERSION = '17.2';
+    const APP_VERSION_DATE = '09.10.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'версия ' + APP_VERSION; } catch (e) {}
@@ -16073,6 +16095,13 @@ if (typeof globalThis !== 'undefined') {
       return `<div class="rm-plan-builder-intro mb-4"><div class="text-[10px] font-bold tracking-widest uppercase text-indigo-600">Шаг ${step + 1} из 7</div><h3 class="text-xl font-semibold text-slate-900 mt-1">${escHtml(title)}</h3><p class="text-sm leading-relaxed text-slate-500 mt-2">${escHtml(text)}</p></div>`;
     }
     function openPlanBuilder(step) {
+      closeMoreMenu(true);
+      // Старые входы ведут в тот же маршрут, что и обучение.
+      openOnboarding('plan');
+      const target = Number(step) === 6 ? 'save' : Number(step) >= 3 ? 'readiness' : 'source';
+      onboardingStep(ONBOARDING_SCENARIOS.plan.steps.indexOf(target));
+    }
+    function openPlanDetails(step) {
       const panel = document.getElementById('planBuilderPanel'), backdrop = document.getElementById('planBuilderBackdrop');
       if (!panel || !backdrop) return;
       _planBuilderReturnFocus = document.activeElement && document.activeElement !== document.body ? document.activeElement : null;
@@ -17305,7 +17334,7 @@ if (typeof globalThis !== 'undefined') {
       return root;
     }
     // п.4 Read-only выгрузка: самодостаточный HTML со вшитым публичным снимком, только для просмотра. Не пишет в localStorage получателя.
-    function downloadReadOnlyHtml(opts) {
+    async function downloadReadOnlyHtml(opts) {
       opts = opts || { dropInternal: true };
       try {
         const root = _readOnlyTemplateRoot();
@@ -17315,6 +17344,8 @@ if (typeof globalThis !== 'undefined') {
         let html = '<!DOCTYPE html>\n' + lic + root.outerHTML;
         if (/<body[^>]*>/i.test(html)) html = html.replace(/(<body[^>]*>)/i, '$1\n' + boot);
         else html = boot + html;
+        if (opts.password) html = await RoadmapModules.lockerRuntime.protectSingleHtml(html, opts.password,
+          RoadmapModules.lockerRuntime.getLauncherMetadata(html, new Date().toISOString(), {label:'План для просмотра',editable:false}));
         const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -17435,6 +17466,38 @@ if (typeof globalThis !== 'undefined') {
         syncBodyScrollLock();
       } catch (e) { showToast('Не удалось открыть защищенные копии: ' + (e.message || e), 'error', 5000); }
     }
+    function openShareCenter() {
+      closeDataMenu();
+      let modal = document.getElementById('shareCenterModal');
+      if (!modal) {
+        modal = document.createElement('div'); modal.id = 'shareCenterModal';
+        modal.className = 'fixed inset-0 z-[1250] bg-slate-900/50 flex items-center justify-center p-4';
+        modal.setAttribute('role','dialog'); modal.setAttribute('aria-modal','true'); modal.setAttribute('aria-label','Поделиться'); modal.setAttribute('data-modal-backdrop','');
+        modal.innerHTML = '<div class="share-surface"><div class="rm-dialog-header flex items-center justify-between gap-3"><h2 class="rm-dialog-title">Поделиться</h2><button type="button" class="rm-btn rm-btn-ghost rm-btn-icon rm-dialog-close" aria-label="Закрыть" onclick="closeShareCenter()"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg></button></div><div class="share-content"><p class="share-intro">Выберите, что передать. Файл скачается на ваш компьютер, отправить его нужно самостоятельно.</p>'
+          + '<section class="share-option" aria-labelledby="shareViewTitle"><div><h3 id="shareViewTitle">Для просмотра</h3><p id="shareViewDesc">Выбранные разделы без внутренних задач и истории. Можно задать отдельный пароль.</p></div><button type="button" class="rm-btn rm-btn-primary" aria-describedby="shareViewDesc" onclick="shareCenterAction(\'view\')">Выбрать разделы</button></section>'
+          + '<section class="share-option" aria-labelledby="shareMeetingTitle"><div><h3 id="shareMeetingTitle">Для встречи</h3><p id="shareMeetingDesc">Презентация или отчет в PDF / HTML. Сначала проверьте состав и вид документа.</p></div><button type="button" class="rm-btn rm-btn-secondary" aria-describedby="shareMeetingDesc" onclick="shareCenterAction(\'meeting\')">Подготовить</button></section>'
+          + '<section class="share-option" aria-labelledby="shareEditTitle"><div><h3 id="shareEditTitle">Для редактирования</h3><p id="shareEditDesc">Полный план, архив и история. Прежний PIN защищенного файла сохранится. Только для доверенного человека.</p><p id="shareEditableNote" hidden>Доступно в рабочем HTML с правом редактирования.</p></div><button type="button" id="shareEditable" class="rm-btn rm-btn-secondary" aria-describedby="shareEditDesc shareEditableNote" onclick="shareCenterAction(\'edit\')">Создать копию</button></section>'
+          + '<details class="share-extra"><summary>Дополнительно</summary><p>Четыре защищенные копии с отдельными паролями для разных получателей.</p><button type="button" class="rm-btn rm-btn-secondary" onclick="shareCenterAction(\'package\')">Создать пакет копий</button></details></div></div>';
+        document.body.appendChild(modal);
+      }
+      modal.querySelector('#shareEditable').disabled = !!(READ_ONLY_MODE || DEMO_MODE || !_portableSession);
+      modal.querySelector('#shareEditableNote').hidden = !modal.querySelector('#shareEditable').disabled;
+      syncBodyScrollLock(); requestAnimationFrame(() => modal.querySelector('button').focus());
+    }
+    function closeShareCenter() {
+      document.getElementById('shareCenterModal')?.remove(); syncBodyScrollLock();
+      document.getElementById('dataMenuBtn')?.focus({preventScroll:true});
+    }
+    function shareCenterAction(action) {
+      closeShareCenter();
+      if (action === 'view') openRoExport();
+      else if (action === 'meeting') { setMeetingContent('plan'); _presToggleActions(true); }
+      else if (action === 'package') openRoadmapLocker();
+      else if (action === 'edit' && !READ_ONLY_MODE && !DEMO_MODE && _portableSession) {
+        if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
+        openConfirm({title:'Передать весь рабочий план?',desc:'Копия содержит внутренние задачи, архив и историю. Получатель сможет их читать и изменять. Прежний PIN сохранится: передавайте его отдельно, не публикуйте файл.',okText:'Скачать полную копию',onOk:()=>saveWorkingHtml(true)});
+      }
+    }
     function openRoExport() {
       const m = document.getElementById('roExportModal'); if (!m) return;
       const box = document.getElementById('roExportSections');
@@ -17443,12 +17506,16 @@ if (typeof globalThis !== 'undefined') {
       const an = document.getElementById('roExportAnon'); if (an) { an.checked = true; an.disabled = true; }
       const di = document.getElementById('roExportDropInternal'); if (di) { di.checked = true; di.disabled = true; }
       const st = document.getElementById('roExportStamp'); if (st) st.value = '';
+      const pw = document.getElementById('roExportPassword'); if (pw) pw.value = '';
+      const repeat = document.getElementById('roExportPasswordRepeat'); if (repeat) repeat.value = '';
+      const protect = document.getElementById('roExportProtect'); if (protect) protect.checked = false;
+      const passwordFields = document.getElementById('roExportPasswordFields'); if (passwordFields) passwordFields.hidden = true;
       // Профили: предвыбираем последний использованный и сразу применяем его к форме
       try { const lastP = storage.get('gantt_ro_last_profile') || ''; renderRoProfileSel(lastP); if (lastP && roProfiles[lastP]) _applyRoProfileToForm(roProfiles[lastP]); } catch (e) {}
       m.classList.remove('hidden');
       if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
     }
-    function closeRoExport() { const m = document.getElementById('roExportModal'); if (m) m.classList.add('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
+    function closeRoExport() { const m = document.getElementById('roExportModal'); if (m) { m.classList.add('hidden'); m.querySelectorAll('input[type="password"]').forEach(input=>{input.value='';}); } if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
     function roExportSelectAll(on) { document.querySelectorAll('#roExportSections .ro-export-sec').forEach(cb => { cb.checked = !!on; }); }
     function applyRoExport() {
       const sections = Array.from(document.querySelectorAll('#roExportSections .ro-export-sec')).filter(cb => cb.checked).map(cb => cb.value);
@@ -17459,6 +17526,13 @@ if (typeof globalThis !== 'undefined') {
         dropInternal: true,
         stamp: (document.getElementById('roExportStamp') || {}).value || ''
       };
+      if (document.getElementById('roExportProtect')?.checked) {
+        const password = document.getElementById('roExportPassword').value;
+        const words = password.trim().split(/\s+/).filter(Boolean);
+        if (/\p{Cc}/u.test(password) || !(password.trim().length >= 14 || (words.length >= 4 && words.every(word=>word.length >= 3)))) { showToast('Пароль: не менее 14 символов или четыре слова.', 'warn'); return; }
+        if (password !== document.getElementById('roExportPasswordRepeat').value) { showToast('Пароли не совпадают.', 'warn'); return; }
+        opts.password = password;
+      }
       closeRoExport();
       downloadReadOnlyHtml(opts);
     }
@@ -17900,15 +17974,15 @@ if (typeof globalThis !== 'undefined') {
     function updateZoomControlUI() {
       try { var _zm = document.getElementById('zoomMobileSel'); if (_zm && _zm.value !== timelineZoom) _zm.value = timelineZoom; } catch (e) {}
       var _zl = document.getElementById('zoomMenuLabel');
-      if (_zl) { var _zo = { currentWeek: 'Текущая неделя', day: 'День', week: 'Неделя', month: 'Месяц', quarter: '3 месяца', fit: 'Весь план' }; _zl.textContent = _zo[timelineZoom] || 'День'; }
+      if (_zl) { var _zo = { currentWeek: 'Неделя', day: 'По дням', week: 'Неделя', month: 'Месяц', quarter: '3 месяца', fit: 'Весь план' }; _zl.textContent = _zo[timelineZoom] || 'По дням'; }
       if (typeof updateLevelSegUI === 'function') updateLevelSegUI();
     }
     function scrollTimeline(dir) {
       const el = document.querySelector('.timeline-scroll');
       if (el) el.scrollBy({ left: dir * Math.max(240, el.clientWidth * 0.7), behavior: rmScrollBehavior() });
     }
-    // Компактный выбор масштаба времени: один список вместо ряда кнопок (по умолчанию День).
-    var _ZOOM_OPTS = [['currentWeek', 'Текущая неделя'], ['today', 'Сегодня и ближайшие недели'], ['month', 'Месяц'], ['quarter', '3 месяца'], ['fit', 'Весь план'], ['day', 'По дням'], ['week', 'По неделям']];
+    // Три пользовательских масштаба; при открытии плана выбрана текущая неделя.
+    var _ZOOM_OPTS = [['day', 'По дням'], ['currentWeek', 'Неделя'], ['month', 'Месяц']];
     function choiceMenuItems(menu) {
       return Array.from(menu.querySelectorAll('[role="menuitemradio"],[role="menuitemcheckbox"]')).filter(function (item) { return !item.disabled && item.getAttribute('aria-hidden') !== 'true'; });
     }
@@ -19151,9 +19225,11 @@ if (typeof globalThis !== 'undefined') {
     function toggleHeaderPills() { _headerPillsExpanded = !_headerPillsExpanded; renderHeaderCutoffChips(); }
     function closeHeaderInsights() {
       const panel = document.getElementById('headerInsightsPanel');
+      const restoreFocus = panel && panel.contains(document.activeElement);
       if (panel) panel.hidden = true;
       const btn = document.getElementById('headerOverviewBtn');
       if (btn) btn.setAttribute('aria-expanded', 'false');
+      if (restoreFocus) document.getElementById('moreMenuBtn')?.focus({preventScroll:true});
     }
     function toggleHeaderInsights() {
       const panel = document.getElementById('headerInsightsPanel');
@@ -19169,7 +19245,8 @@ if (typeof globalThis !== 'undefined') {
       dates.hidden = false;
       if (btn) {
         btn.setAttribute('aria-expanded', 'true');
-        const r = btn.getBoundingClientRect(), edge = 8, gap = 6;
+        const anchor = btn.checkVisibility() ? btn : document.getElementById('moreMenuBtn');
+        const r = anchor.getBoundingClientRect(), edge = 8, gap = 6;
         const width = Math.min(640, window.innerWidth - edge * 2);
         panel.style.width = width + 'px';
         panel.style.left = Math.max(edge, Math.min(r.right - width, window.innerWidth - width - edge)) + 'px';
@@ -19177,6 +19254,7 @@ if (typeof globalThis !== 'undefined') {
         const below = r.bottom + gap, above = r.top - gap - height;
         panel.style.top = (below + height <= window.innerHeight - edge ? below : Math.max(edge, above)) + 'px';
       }
+      panel.querySelector('button')?.focus({preventScroll:true});
     }
     function updateHeaderSummary() {
       const host = document.getElementById('planOverviewHost');
@@ -19445,12 +19523,12 @@ if (typeof globalThis !== 'undefined') {
     function toggleHeatmapPerson(name) { if (heatmapPeopleSel.has(name)) heatmapPeopleSel.delete(name); else heatmapPeopleSel.add(name); _persistHeatmapPeople(); renderResourceManagerList(); }
     function setHeatmapAllPeople() { heatmapPeopleSel.clear(); _persistHeatmapPeople(); renderResourceManagerList(); }
     document.addEventListener('click', (e) => { const _b = e.target.closest && e.target.closest('[data-hp]'); if (_b) toggleHeatmapPerson(_b.getAttribute('data-hp')); });
-    // === Локальное оформление: Портал, Студия или Темная ===
+    // === Локальное оформление: Светлая или Темная ===
     function setUiTheme(theme) {
       theme = _normalizeUiTheme(theme);
       document.body.classList.remove('liquid-glass');
       document.body.classList.toggle('theme-dark', theme === 'dark');
-      document.body.classList.toggle('theme-portal', theme === 'portal');
+      document.body.classList.remove('theme-portal');
       document.body.classList.toggle('theme-studio', theme === 'studio');
       try { storage.set('gantt_ui_theme', theme); } catch (e) {}
       updateUiThemeBtns();
@@ -19479,11 +19557,10 @@ if (typeof globalThis !== 'undefined') {
         el.classList.toggle('text-slate-500', !active);
         el.classList.toggle('hover:text-slate-900', !active);
       };
-      setBtn('themePortalBtn', !dark && !studio);
       setBtn('themeStudioBtn', studio);
       setBtn('themeDarkBtn', dark);
       const sub = document.getElementById('themeSubtitle');
-      if (sub) sub.textContent = studio ? 'Студия — минимум оформления, единый акцент, все функции' : (dark ? 'Темная , спокойный темный фон, удобно вечером' : 'Портал , чистый светлый вид с синим акцентом');
+      if (sub) sub.textContent = dark ? 'Темная: спокойный темный фон, удобно вечером' : 'Светлая: минимум оформления, единый акцент, все функции';
     }
     document.addEventListener('DOMContentLoaded', () => { try { _applyGlassVars(); updateUiThemeBtns(); } catch (e) {} });
     // Разбор токена: «PO-a.ivanov» -> {role:'PO', name:'a.ivanov'}; «a.ivanov» или «РО» -> {role:'', name:<токен>}
@@ -22498,12 +22575,12 @@ const m = document.getElementById('mineModeBtn');
     // ===== Онбординг: первый рабочий план и короткие рабочие сценарии =====
     // Прогресс обучения не входит в snapshot проекта. Переходы не правят план.
     const ONBOARDING_SCENARIOS = {
-      plan: { title:'Первый рабочий план', steps:['source','statuses','forecast','save'] },
+      plan: { title:'Рабочий план: от задач до сохранения', steps:['source','readiness','forecast','save'] },
       prepare: { title:'Подготовить план', steps:['source','statuses','save'] },
       timing: { title:'Проверить сроки', steps:['readiness','forecast','decisions'] },
       present: { title:'Подготовить показ', steps:['compose','preview','share'] }
     };
-    const ONBOARDING_LABELS = { source:'Начать работу', statuses:'Проверить статусы', forecast:'Понять сроки', save:'Сохранить JSON-копию', readiness:'Проверить данные', decisions:'Разобрать риски', compose:'Выбрать содержание', preview:'Проверить показ', share:'Выбрать формат' };
+    const ONBOARDING_LABELS = { source:'Начать работу', statuses:'Проверить статусы', forecast:'Понять сроки', save:'Сохранить рабочий файл', readiness:'Проверить данные', decisions:'Разобрать риски', compose:'Выбрать содержание', preview:'Проверить показ', share:'Выбрать формат' };
     let _onboarding = null;
     let _onboardingReturnFocus = null;
     let _onboardingRefreshTimer = null;
@@ -22660,6 +22737,12 @@ const m = document.getElementById('mineModeBtn');
       launcher.textContent = 'Продолжить: ' + ONBOARDING_SCENARIOS[_onboarding.scenario].title;
       if (_onboarding.paused) return;
       const s = _onboardingSnapshot(), config = ONBOARDING_SCENARIOS[_onboarding.scenario];
+      const workingState = _portableSession?.getState();
+      if (_onboarding.scenario === 'plan' && !DEMO_MODE) {
+        s.complete.save = !!(workingState && !workingState.dirty &&
+          (workingState.lastOutcome === 'written' || (workingState.hasDownload && _onboarding.events.workingConfirmed === workingState.revisionId)));
+        s.storage = workingState?.message || 'Сохраните рабочий HTML вместе с планом и историей.';
+      }
       const current = config.steps[_onboarding.step], b = _onboardingButton;
       document.getElementById('onboardingTitle').textContent = _onboarding.chooser ? 'С чего начнём?' : config.title;
       document.getElementById('onboardingStorage').textContent = s.storage;
@@ -22682,7 +22765,7 @@ const m = document.getElementById('mineModeBtn');
           b('Настроить статусы','statuses',true,locked) + b('Подтверждаю эти правила','confirm-statuses',false,!s.tasks)],
         readiness:['Хватит ли данных для прогноза?','Проверьте оценки, исполнителей и даты. Связи нужны только у зависимых задач. Недостающие поля не мешают сохранять план и продолжать работу.',
           'Проверка покажет конкретные задачи. Она не изменяет даты автоматически.',
-          b('Проверить данные','readiness',true,!s.tasks) + b('Открыть мастер плана','builder',false)],
+          b('Проверить данные','readiness',true,!s.tasks) + b('Настроить статусы','statuses',false,locked) + b('Дополнительные настройки плана','details',false)],
         forecast:['Поймите сроки и ограничения','В «Сроки и риски → Прогноз срока» прочитайте главный вывод и причины риска. Если оценок или исполнителей не хватает, сначала посмотрите ограничения прогноза.',
           'Активные фильтры влияют на расчёт. Обучение не сбрасывает ваш выбор и не переносит сроки.',
           b('Открыть прогноз срока','forecast',true,!s.tasks) + b('Что нужно заполнить','readiness',false,!s.tasks)],
@@ -22707,6 +22790,15 @@ const m = document.getElementById('mineModeBtn');
           'Перед отправкой проверьте состав и приватность. Обучение само ничего не выгружает и не публикует.',
           b('Открыть настройки и форматы','share',true,!s.selected)]
       };
+      if (_onboarding.scenario === 'plan') content.save = [
+        'Сохраните рабочий HTML',
+        'Один файл содержит программу, план и историю. После скачивания переносите новую копию из загрузок. JSON остается дополнительным форматом обмена.',
+        s.storage,
+        DEMO_MODE ? b('Понятно, где сохранять','storage',true) :
+          b('Сохранить рабочий файл','working',true,locked || !_portableSession) +
+          (workingState?.hasDownload && !workingState.dirty && !s.complete.save ? b('HTML есть в загрузках','confirm-working',false,locked) : '') +
+          '<details><summary>Дополнительно: JSON и восстановление</summary><div class="onboarding-actions">' + content.save[3] + '</div></details>'
+      ];
       const c = content[current];
       document.getElementById('onboardingBody').innerHTML = '<div class="onboarding-copy"><h3>' + escHtml(c[0]) + '</h3><p>' + escHtml(c[1]) + '</p><p class="onboarding-note">' + escHtml(c[2]) + '</p></div><div class="onboarding-actions">' + c[3] + '</div>';
       const n = config.steps.filter(key => s.complete[key]).length;
@@ -22722,6 +22814,16 @@ const m = document.getElementById('mineModeBtn');
         renderOnboarding(); _onboardingPersist(); return;
       }
       if (action === 'storage' && DEMO_MODE) { _onboarding.events.storage = true; renderOnboarding(); return; }
+      if (action === 'working') {
+        if (READ_ONLY_MODE || DEMO_MODE || isLocked()) return;
+        Promise.resolve(saveWorkingHtml()).then(() => { if (_onboarding) renderOnboarding(); }).catch(() => {});
+        return;
+      }
+      if (action === 'confirm-working') {
+        const state = _portableSession?.getState();
+        if (state?.hasDownload && !state.dirty) _onboarding.events.workingConfirmed = state.revisionId;
+        renderOnboarding(); _onboardingPersist(); return;
+      }
       if (action === 'confirm-download') {
         if (_onboardingSnapshot().downloadCurrent) _onboarding.events.downloadConfirmed = _onboarding.events.download;
         renderOnboarding(); _onboardingPersist(); return;
@@ -22748,6 +22850,7 @@ const m = document.getElementById('mineModeBtn');
       else if (action === 'statuses') openStatusModal();
       else if (action === 'readiness') { openDataQualityCenter('readiness'); onboardingObserve('readiness'); }
       else if (action === 'builder') openPlanBuilder();
+      else if (action === 'details') openPlanDetails();
       else if (action === 'forecast') setAppView('forecast');
       else if (action === 'decisions') { openDataQualityCenter('all'); onboardingObserve('decisions'); }
       else if (action === 'save') { if (autoSaveFileHandle) saveNowToFile(); else setupAutoSaveFile(); }
@@ -28928,7 +29031,7 @@ const m = document.getElementById('mineModeBtn');
     var _presDateEditTouched = false;
     function _presEditToolbarHtml() {
       if (_presRo()) return '';
-      return '<p class="pres-mobile-protection no-print no-image-export">' + (_presDateEditMode ? 'Изменение дат включено.' : 'Даты защищены.') + ' Подробнее в «Действиях».</p><div class="pres-edit-toolbar no-print no-image-export" data-html2canvas-ignore>' +
+      return '<p class="pres-mobile-protection no-print no-image-export">' + (_presDateEditMode ? 'Изменение дат включено.' : 'Даты защищены от случайных правок.') + '</p><div class="pres-edit-toolbar no-print no-image-export" data-html2canvas-ignore>' +
         '<button type="button" class="pres-edit-toggle" data-pres-date-edit aria-pressed="' + (_presDateEditMode ? 'true' : 'false') + '" onclick="_presSetDateEditMode(' + (!_presDateEditMode) + ')"><span class="pres-edit-indicator" aria-hidden="true"></span>Изменять даты</button>' +
         '<span>' + (_presDateEditMode ? 'Сохраняются в основном плане' : 'Даты защищены') + '</span>' +
         '<details class="pres-edit-help"><summary>Как это работает</summary><p>Включите переключатель и двигайте полоску задачи. Меняются даты основной задачи; длительность берётся из «Оценки (дни)» с учётом рабочих дней. Без оценки сохраняется прежняя длительность. Изменение можно отменить. Финальные задачи не перемещаются.</p></details></div>';
@@ -29605,7 +29708,7 @@ const m = document.getElementById('mineModeBtn');
     }
     document.addEventListener('keydown', function (event) {
       var panel = document.getElementById('presExtraActions');
-      if (event.key === 'Escape' && panel && (panel.contains(event.target) || event.target.closest('.pres-edit-toolbar')) && _presActionsOpen) {
+      if (event.key === 'Escape' && panel && (panel.contains(event.target) || event.target.closest('.pres-edit-toolbar') || event.target.id === 'presActionsToggle') && _presActionsOpen) {
         event.preventDefault(); event.stopPropagation(); _presToggleActions(false);
         document.getElementById('presActionsToggle').focus();
       }
@@ -29619,7 +29722,7 @@ const m = document.getElementById('mineModeBtn');
       var htmlBtn = '<button onclick="savePresentHtml()" class="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg border border-slate-200 bg-white text-slate-700 text-[12px] font-semibold hover:bg-slate-50 cursor-pointer" title="Скачать показ одним html-файлом: шапка приложения (название, РО, дата, показатели и метки релизов), группы, таймлайн и стрелки связей. Открывается в любом браузере, удобно отправить коллегам"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>Сохранить в HTML</button>';
       var top = '<div class="pres-common-actions no-print no-image-export" data-pres-common-actions data-html2canvas-ignore><label for="presSetSelect" class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Набор</label>'
         + '<select id="presSetSelect" data-pres-set-select onchange="_presSetActive(this.value)" class="h-8 px-2 bg-white border border-slate-200 rounded-lg text-[12px] text-slate-700 cursor-pointer">' + opts + '</select>'
-        + '<button type="button" id="presActionsToggle" class="pres-actions-toggle" aria-controls="presExtraActions" aria-expanded="' + _presActionsOpen + '" onclick="_presToggleActions(!_presActionsOpen)">Действия</button><div id="presExtraActions" class="pres-actions-extra" data-open="' + _presActionsOpen + '">'
+        + '<button type="button" id="presActionsToggle" class="pres-actions-toggle" aria-controls="presExtraActions" aria-expanded="' + _presActionsOpen + '" onclick="_presToggleActions(!_presActionsOpen)">Настройки и экспорт</button><div id="presExtraActions" class="pres-actions-extra" data-open="' + _presActionsOpen + '">'
         + '<p class="meeting-intro">PDF и HTML сохраняют выбранный набор, а не весь рабочий план. Перед передачей проверьте внутренние задачи и шапку.</p>'
         + (ro ? '' : '<details class="relative"><summary class="list-none inline-flex items-center h-8 px-3 rounded-lg border border-slate-200 bg-white text-slate-700 text-[12px] font-semibold hover:bg-slate-50 cursor-pointer">Управление набором</summary><div class="absolute left-0 top-9 z-30 w-56 bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 flex flex-col gap-1"><button onclick="_presNew()" class="' + _PB + ' text-left">Новый набор</button><button onclick="_presDuplicate()" class="' + _PB + ' text-left">Дублировать</button><button onclick="_presBuildFromReleases()" class="' + _PB + ' text-left">Собрать из релизов</button><button onclick="_presRename()" class="' + _PB + ' text-left">Переименовать</button><button onclick="_presSyncDues()" class="' + _PB + ' text-left">Подтянуть сроки</button><button onclick="_presDelete()" class="' + _PB + ' text-rose-600 text-left">Удалить</button></div></details>')
         + '<div class="pres-common-exports">' + pdfBtn + htmlBtn + '</div></div></div>';
@@ -30320,16 +30423,16 @@ const m = document.getElementById('mineModeBtn');
     }
     function _productAreasHtml(view, mobile) {
       var area = _productAreaForView(view);
-      return [['plan','План','list'],['risks','Сроки и риски','forecast'],['meeting','Для встречи','present']].map(function (item) {
-        var on = area === item[0];
+      return [['plan','Список','list','Список и Гант'],['board','Доска','kanban','Доска задач'],['risks','Сроки','forecast','Сроки и риски'],['meeting','Встреча','present','Для встречи']].map(function (item) {
+        var on = item[0] === 'plan' ? view === 'list' : item[0] === 'board' ? view === 'kanban' : area === item[0];
         var icon = _appViews.find(function(x){ return x.v === item[2]; });
-        return '<button type="button" data-product-area="' + item[0] + '" onclick="openProductArea(\'' + item[0] + '\')" aria-pressed="' + on + '"' + (on ? ' aria-current="page"' : '') + ' class="rm-btn ' + (on ? 'rm-btn-primary' : 'rm-btn-ghost') + '"><svg aria-hidden="true" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="' + icon.d + '"></path></svg><span>' + item[1] + '</span></button>';
+        return '<button type="button" data-product-area="' + item[0] + '" title="' + item[3] + '" aria-label="' + item[3] + '" onclick="openProductArea(\'' + item[0] + '\')" aria-pressed="' + on + '"' + (on ? ' aria-current="page"' : '') + ' class="rm-btn ' + (on ? 'rm-btn-primary' : 'rm-btn-ghost') + '"><svg aria-hidden="true" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="' + icon.d + '"></path></svg><span>' + item[1] + '</span></button>';
       }).join('');
     }
     function openProductArea(area) {
       var current = typeof appView === 'undefined' ? 'list' : appView;
-      var next = area === 'meeting' ? 'present' : area === 'risks' ? 'forecast' : 'list';
-      if (_productAreaForView(current) === area) next = current;
+      var next = area === 'meeting' ? 'present' : area === 'risks' ? 'forecast' : area === 'board' ? 'kanban' : 'list';
+      if (area === 'risks' && _productAreaForView(current) === area) next = current;
       setAppView(next);
     }
     function _syncProductNavigation() {
@@ -30338,9 +30441,9 @@ const m = document.getElementById('mineModeBtn');
       if (mobile) mobile.innerHTML = _productAreasHtml(appView, true);
       var context = document.getElementById('productContextNav');
       if (!context) return;
-      var views = area === 'plan' ? [['list','Список и Гант'],['kanban','Доска']] : area === 'risks' ? [['forecast','Прогноз срока'],['summary','Сводка']] : [];
+      var views = area === 'risks' ? [['forecast','Прогноз','Прогноз срока'],['summary','Сводка','Сводка плана']] : [];
       context.innerHTML = views.map(function(item) {
-        return '<button type="button" class="rm-btn rm-btn-ghost" data-product-view="' + item[0] + '" onclick="setAppView(\'' + item[0] + '\')" aria-pressed="' + (appView === item[0]) + '">' + item[1] + '</button>';
+        return '<button type="button" class="rm-btn rm-btn-ghost" title="' + item[2] + '" aria-label="' + item[2] + '" data-product-view="' + item[0] + '" onclick="setAppView(\'' + item[0] + '\')" aria-pressed="' + (appView === item[0]) + '">' + item[1] + '</button>';
       }).join('') + (area === 'risks' ? '<button type="button" class="rm-btn rm-btn-secondary" onclick="openPlanHealthCenter()">Проверить данные</button>' : '');
       context.hidden = !views.length;
       context.setAttribute('aria-label', area === 'plan' ? 'Виды плана' : 'Сроки и риски');
@@ -31595,8 +31698,9 @@ const m = document.getElementById('mineModeBtn');
           });
         }
         // 2-я строка заголовка секции: ключ Jira, статус, оценки, метки , чтобы ИМЯ секции занимало всю первую строку.
-        if (jiraKeyLinkHtml || secStatusChip || estChipHtml || secLabelsHtml) {
-          subtitleHtml = `<div class="section-heading-meta w-full flex flex-nowrap items-center gap-x-2 mt-0.5 overflow-hidden">${jiraKeyLinkHtml}${secStatusChip}${estChipHtml}${secLabelsHtml}</div>`;
+        const catchAllLabelHtml = isCatchAll && projects.length ? `<span class="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-500 border border-slate-200">${mainTitleSafe}</span>` : '';
+        if (catchAllLabelHtml || jiraKeyLinkHtml || secStatusChip || estChipHtml || secLabelsHtml) {
+          subtitleHtml = `<div class="section-heading-meta w-full flex flex-nowrap items-center gap-x-2 mt-0.5 overflow-hidden">${catchAllLabelHtml}${jiraKeyLinkHtml}${secStatusChip}${estChipHtml}${secLabelsHtml}</div>`;
         }
         // Действия секции свернуты в одно меню (kebab) , иначе ряд иконок перекрывал статус и счетчик при наведении.
         let actionsHtml;
@@ -31626,7 +31730,7 @@ const m = document.getElementById('mineModeBtn');
                 ${sectionKindBadgeHtml}
                 ${projBadgeHtml}
                 ${(isCatchAll && projects.length)
-                  ? `<span class="truncate grow min-w-0 tracking-tight font-bold text-blue-700" title="${escAttr(projects.join(', '))}">${escHtml(projects.slice(0, 2).join(' / ') + (projects.length > 2 ? ' +' + (projects.length - 2) : ''))}</span><span class="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-500 border border-slate-200">${mainTitleSafe}</span>`
+                  ? `<span class="truncate grow min-w-0 tracking-tight font-bold text-blue-700" title="${escAttr(projects.join(', '))}">${escHtml(projects.slice(0, 2).join(' / ') + (projects.length > 2 ? ' +' + (projects.length - 2) : ''))}</span>`
                   : `<span class="truncate grow min-w-0 tracking-tight font-bold text-slate-700" title="${escAttr(mainTitle)}">${mainTitleSafe}</span>`}
               </div>
               ${subtitleHtml}
@@ -33126,15 +33230,38 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const items = activeFilterSummaries();
       const hasForecastReturn = !!_forecastReasonFilter;
       const regularItems = items.filter(text => !/^Причина прогноза:/.test(text));
-      const visible = hasForecastReturn || regularItems.length > 0;
+      const visible = hasForecastReturn || regularItems.length > 0 || statusFilterSel.size > 0;
       bar.hidden = !visible;
       if (deck) deck.classList.toggle('has-active-filters', visible);
       if (!visible) { bar.innerHTML = ''; return; }
       const parts = ['<span class="shrink-0 px-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">Активно</span>'];
+      statusFilterSel.forEach(function(id) {
+        const special = {overdue:'Просрочено',milestone:'Вехи',blocked:'Блокеры'};
+        const label = special[id] || getDisplayStatuses().find(function(s){return s.id === id;})?.name || id;
+        parts.push('<button type="button" class="active-filter-chip" data-clear-status="' + escAttr(id) + '" onclick="clearActiveFilter(\'status\',\'' + escJsArg(id) + '\')" aria-label="Снять фильтр: ' + escAttr(label) + '">' + escHtml(label) + ' <span aria-hidden="true">×</span></button>');
+      });
       if (hasForecastReturn) parts.push('<button type="button" data-forecast-return class="active-filter-chip !border-indigo-200 !bg-indigo-50 !text-indigo-700" onclick="_fcReturnToForecast()" title="Снять срез причины и вернуться к прогнозу">← Вернуться в «Успеваем?»</button>');
-      regularItems.forEach(function (label) { parts.push('<button type="button" class="active-filter-chip" onclick="toggleFilterTools(true)" title="Изменить фильтры">' + escHtml(label) + '</button>'); });
+      const kinds = {'Проект':'project','Тип':'type','Исполнитель':'resource','Релиз':'release','Метка':'label','Компонент':'component','Свои поля':'custom','Горящее':'burning','Критический путь':'critical','Мои задачи':'mine','Инциденты и хотфиксы':'kind','Внешние зависимости':'kind','Тип задачи':'kind','Без цели':'goal'};
+      regularItems.forEach(function (label) {
+        const kind = kinds[label.split(':')[0]];
+        parts.push('<button type="button" class="active-filter-chip" onclick="' + (kind ? 'clearActiveFilter(\'' + kind + '\')' : 'toggleFilterTools(true)') + '" aria-label="' + (kind ? 'Снять фильтр: ' : 'Изменить фильтр: ') + escAttr(label) + '">' + escHtml(label) + (kind ? ' <span aria-hidden="true">×</span>' : '') + '</button>');
+      });
       parts.push('<button type="button" class="active-filter-chip !border-slate-200 !bg-white !text-slate-600 hover:!text-rose-600" onclick="resetAllFilters()" title="Сбросить все фильтры">Сбросить всё</button>');
       bar.innerHTML = parts.join('');
+    }
+    function clearActiveFilter(kind, value) {
+      const sets = {status:statusFilterSel,project:projectFilterSel,type:typeFilterSel,resource:resourceFilterSel,release:releaseFilterSel,label:labelFilterSel,component:componentFilterSel};
+      if (sets[kind]) { if (value !== undefined) sets[kind].delete(value); else sets[kind].clear(); }
+      else if (kind === 'custom') customFieldFilterSel = {};
+      else if (kind === 'burning') _goritMode = false;
+      else if (kind === 'critical') _critPathMode = false;
+      else if (kind === 'mine') _mineMode = false;
+      else if (kind === 'kind') _kindFilter = '';
+      else if (kind === 'goal') _noGoalFilter = false;
+      else return;
+      if (typeof _updateModeButtons === 'function') _updateModeButtons();
+      afterFilterChange();
+      document.getElementById(kind === 'status' ? 'statusCompactBtn' : 'filterToolsBtn')?.focus({preventScroll:true});
     }
     function updateFilterToolsSummary() {
       const btn = document.getElementById('filterToolsBtn'), badge = document.getElementById('filterToolsCount');
@@ -33260,14 +33387,14 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         if (id === 'overdue') names.push('Просрочено'); else if (id === 'milestone') names.push('Вехи'); else if (id === 'blocked') names.push('Блокеры');
         else { const st = statuses.find(s => s.id === id); if (st) names.push(st.name); }
       });
-      label.textContent = names.length ? (names.length === 1 ? names[0] : 'Статусы: ' + names.length) : 'Другие статусы';
+      label.textContent = names.length ? 'Статусы · ' + names.length : 'Статусы · Все';
       countEl.textContent = String(secondaryTotal);
-      countEl.classList.toggle('hidden', secondaryTotal === 0 && names.length === 0);
+      countEl.classList.toggle('hidden', true);
       const row = (id, name, n, dot) => { const on = statusFilterSel.has(id); return `<button type="button" data-choice-option="${escAttr(id)}" role="menuitemcheckbox" aria-checked="${on}" onclick="setStatusFilter('${escJsArg(id)}');renderStatusCompactMenu()" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-left text-xs ${on ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}"><span aria-hidden="true" class="w-2 h-2 rounded-full ${escAttr(dot || 'bg-slate-400')}"></span><span class="grow truncate">${escHtml(name)}</span><span class="tabular-nums text-[10px] ${on ? 'text-indigo-600' : 'text-slate-500'}">${n}</span></button>`; };
       let html = `<button type="button" data-choice-option="all" role="menuitemcheckbox" aria-checked="${statusFilterSel.size === 0}" onclick="setStatusFilter('all');renderStatusCompactMenu()" class="w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs ${statusFilterSel.size ? 'text-slate-700 hover:bg-slate-50' : 'bg-indigo-50 text-indigo-700 font-semibold'}"><span>Все статусы</span><span>${total}</span></button>`;
       const rows = [];
       const addRow = (id, name, count, dot) => rows.push({ count, markup: row(id, name, count, dot), order: rows.length });
-      statuses.forEach(st => { const n = counts.get(st.id) || 0; if (!n) return; const dot = ((st.barTheme || st.color || '').split(/\s+/).find(c => /^bg-/.test(c))) || 'bg-slate-400'; addRow(st.id, st.name, n, dot); });
+      statuses.forEach(st => { const n = counts.get(st.id) || 0; if (!n && !statusFilterSel.has(st.id)) return; const dot = ((st.barTheme || st.color || '').split(/\s+/).find(c => /^bg-/.test(c))) || 'bg-slate-400'; addRow(st.id, st.name, n, dot); });
       if (overdue) addRow('overdue', 'Просрочено', overdue, 'bg-rose-500');
       if (blocked) addRow('blocked', 'Блокеры', blocked, 'bg-rose-600');
       html += rows.sort((a, b) => b.count - a.count || a.order - b.order).map(item => item.markup).join('');
@@ -37112,8 +37239,40 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         return `<div class="p-3 border-b border-slate-100 last:border-0 ${skip?'opacity-60':'hover:bg-slate-50/80'}"><label class="flex items-start gap-2.5 ${skip?'':'cursor-pointer'}"><input data-jira-preview="${i}" onchange="renderJiraImportStatusSummary()" type="checkbox" ${skip?'disabled':'checked'} class="mt-0.5 rounded border-slate-300 text-indigo-600"><div class="grow min-w-0"><div class="text-xs font-semibold text-slate-800 truncate">${escHtml(r.title)}</div><div class="text-[10px] text-slate-500 mt-0.5">${escHtml(r.key+detail)}</div>${diffHtml}</div><span class="shrink-0 text-[9px] font-bold rounded-full px-2 py-1 ${badgeClass}">${badgeText}</span></label></div>`;
       }).join('');
       modal.innerHTML=`<div class="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-3xl max-h-[88vh] flex flex-col overflow-hidden"><div class="jira-import-preview-header px-5 py-4 border-b border-slate-100"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><h3 class="text-lg font-semibold text-slate-900">Проверьте импорт из Jira</h3><p class="text-xs text-slate-500 mt-1">Данные еще не изменены. Снимите галочку, если строку не нужно загружать.</p></div><button type="button" onclick="closeJiraImportPreview()" aria-label="Закрыть" title="Закрыть" class="shrink-0 w-9 h-9 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50">×</button></div><div class="jira-import-preview-summary"><div class="rounded-xl bg-emerald-50 p-2.5"><b class="text-emerald-700">${counts.new}</b><span class="block text-[10px] text-emerald-700">новых</span></div><div class="rounded-xl bg-indigo-50 p-2.5"><b class="text-indigo-700">${counts.update}</b><span class="block text-[10px] text-indigo-700">изменятся или свяжутся</span></div><div class="rounded-xl bg-amber-50 p-2.5"><b class="text-amber-800">${counts.archive}</b><span class="block text-[10px] text-amber-800">действия с архивом</span></div><div class="rounded-xl bg-slate-100 p-2.5"><b class="text-slate-700">${counts.unchanged}</b><span class="block text-[10px] text-slate-600">без изменений</span></div></div></div><div class="jira-import-preview-list overflow-y-auto grow"><div id="jiraImportStatusSummary">${importStatusSummaryHtml(jiraImportStatusSummary(_jiraPreviewRows.filter(r=>r.state!=='unchanged')),false)}</div>${rows||'<div class="p-8 text-center text-sm text-slate-500">Нет задач для импорта</div>'}</div><div class="jira-import-preview-footer px-5 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3"><span class="text-[10px] text-slate-500">Архивные задачи останутся в архиве. Перенос и привязка к существующим задачам отмечены в списке.</span><div class="flex gap-2"><button type="button" onclick="closeJiraImportPreview()" class="h-9 px-4 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700">Отмена</button><button id="jiraImportPreviewApply" type="button" onclick="applyJiraImportPreview()" ${selectable?'':'disabled'} class="h-9 px-4 rounded-xl bg-indigo-600 text-white text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed">Применить выбранное</button></div></div></div>`;
-      modal.querySelector('.jira-import-preview-list')?.insertAdjacentHTML('afterbegin',jiraRelationshipSummaryHtml(issues));
+      const list = modal.querySelector('.jira-import-preview-list');
+      list?.insertAdjacentHTML('afterbegin',jiraRelationshipSummaryHtml(issues));
+      modal.querySelector('.jira-import-preview-header').insertAdjacentHTML('beforeend',
+        '<p class="text-xs text-slate-600 mt-3">Пропущено ранее убранных: '+counts.excluded+'. По умолчанию новые и измененные строки выбраны. Переключение списка не меняет выбор.</p>' +
+        '<div class="flex flex-wrap gap-2 mt-3" role="group" aria-label="Строки импорта"><button type="button" class="rm-btn rm-btn-secondary" data-jira-scope="review" onclick="setJiraPreviewScope(\'review\')">Измененные и спорные</button><button type="button" class="rm-btn rm-btn-secondary" data-jira-scope="all" onclick="setJiraPreviewScope(\'all\')">Полный список ('+_jiraPreviewRows.length+')</button></div><p id="jiraPreviewScopeStatus" class="text-xs text-slate-600 mt-2" role="status"></p>');
+      modal.querySelectorAll('[data-jira-preview]').forEach(input => {
+        const row = input.closest('label').parentElement;
+        row.dataset.jiraRow = input.dataset.jiraPreview;
+      });
+      const statusDetails = document.createElement('details');
+      statusDetails.id = 'jiraImportStatusSummaryWrapper';
+      statusDetails.className = 'p-3 text-xs text-slate-600';
+      statusDetails.innerHTML = '<summary class="cursor-pointer min-h-11">Как будут сопоставлены статусы</summary>';
+      const statusSummary = modal.querySelector('#jiraImportStatusSummary');
+      statusSummary.before(statusDetails); statusDetails.appendChild(statusSummary);
+      // До присоединения DOM задаем только представление; выбор остается прежним.
+      modal.querySelectorAll('[data-jira-row]').forEach(row => {
+        row.hidden = !jiraPreviewNeedsReview(_jiraPreviewRows[Number(row.dataset.jiraRow)]);
+      });
       document.body.appendChild(modal); if(typeof syncBodyScrollLock==='function')syncBodyScrollLock(); setTimeout(function(){const first=modal.querySelector('input:not([disabled]),button');if(first)first.focus();},40);
+      setJiraPreviewScope('review');
+    }
+    function jiraPreviewNeedsReview(row) {
+      return !!row && (['update','link','archive','to_archive'].includes(row.state) || (row.diffs || []).some(diff=>diff.conflict));
+    }
+    function setJiraPreviewScope(scope) {
+      const modal = document.getElementById('jiraImportPreviewModal'); if (!modal) return;
+      const all = scope === 'all'; let visible = 0;
+      modal.querySelectorAll('[data-jira-row]').forEach(node => {
+        node.hidden = !all && !jiraPreviewNeedsReview(_jiraPreviewRows[Number(node.dataset.jiraRow)]);
+        if (!node.hidden) visible++;
+      });
+      modal.querySelectorAll('[data-jira-scope]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.jiraScope === (all?'all':'review'))));
+      modal.querySelector('#jiraPreviewScopeStatus').textContent = visible ? 'Показано строк: '+visible+'. Выбор остальных строк сохранен.' : 'Спорных изменений нет. Новые задачи доступны в полном списке и уже выбраны для добавления.';
     }
     function closeJiraImportPreview(){const m=document.getElementById('jiraImportPreviewModal');if(m)m.remove();if(typeof syncBodyScrollLock==='function')syncBodyScrollLock();}
     function applyJiraImportPreview(){
@@ -38069,13 +38228,13 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     function loadHtml2CanvasPro() {
       // html2canvas-pro вшит в файл (инлайн-скрипт в head) , работает офлайн, без CDN
       if (window.html2canvas) {
-        // Экспорт PNG/PDF всегда в теме Портал: оформление меняем только в клоне.
+        // Экспорт PNG/PDF всегда в Светлой теме: оформление меняем только в клоне.
         var _h2c = window.html2canvas;
         var _wrap = function (el, opts) {
           opts = opts || {};
           var _uc = opts.onclone;
           opts.onclone = function (doc, elc) {
-            try { doc.body.classList.remove('theme-dark', 'theme-studio', 'liquid-glass'); doc.body.classList.add('theme-portal'); } catch (e) {}
+            try { doc.body.classList.remove('theme-dark', 'theme-portal', 'liquid-glass'); doc.body.classList.add('theme-studio'); } catch (e) {}
             if (typeof _uc === 'function') { try { return _uc(doc, elc); } catch (e) {} }
           };
           return _h2c(el, opts);
@@ -38510,6 +38669,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       jiraSyncModal: closeJiraSync,
       jiraChangesModal: closeJiraChangesModal,
       jiraImportPreviewModal: closeJiraImportPreview,
+      shareCenterModal: closeShareCenter,
       backPlanModal: closeBackPlan,
       inputModal: closeInputModal,
       startupModal: closeStartupModal,
@@ -38713,7 +38873,7 @@ function syncBodyScrollLock() {
     });
     // === Доступность модалок: ловушка Tab + возврат фокуса на источник ===
     (function modalFocusA11y() {
-      const MODAL_IDS = ['roadmapLockerModal','taskModal','cutoffModal','sectionColorModal','statusModal','taskKindsModal','resourceModal','infoModal','reportModal','releaseProgressModal','quickAddModal','baselineModal','archiveModal','headerCutoffModal','epicAuditModal','auditTeamsModal','jiraSyncModal','jiraChangesModal','jiraImportPreviewModal','backPlanModal','inputModal','startupModal','versionsModal','dataQualityModal','projectJournalModal','csvMapModal','resourceReplaceModal','mergeModal','duplicateModal','sectionNestModal','exportSliceModal','roExportModal','reportBuilderModal','moneyModal','customFieldsModal','settingsModal','epicCardModal','kanbanColsModal','goalsModal','raidModal','insightsModal','leaderChooserModal','ganttLegend','depsOverview','sprintCfgModal','sectionInitOverlay','planToolModal','planBuilderPanel'];
+      const MODAL_IDS = ['shareCenterModal','roadmapLockerModal','taskModal','cutoffModal','sectionColorModal','statusModal','taskKindsModal','resourceModal','infoModal','reportModal','releaseProgressModal','quickAddModal','baselineModal','archiveModal','headerCutoffModal','epicAuditModal','auditTeamsModal','jiraSyncModal','jiraChangesModal','jiraImportPreviewModal','backPlanModal','inputModal','startupModal','versionsModal','dataQualityModal','projectJournalModal','csvMapModal','resourceReplaceModal','mergeModal','duplicateModal','sectionNestModal','exportSliceModal','roExportModal','reportBuilderModal','moneyModal','customFieldsModal','settingsModal','epicCardModal','kanbanColsModal','goalsModal','raidModal','insightsModal','leaderChooserModal','ganttLegend','depsOverview','sprintCfgModal','sectionInitOverlay','planToolModal','planBuilderPanel'];
       let lastFocus = null;
       const anyOpen = () => MODAL_IDS.some(id => { const e = document.getElementById(id); return e && !e.classList.contains('hidden'); });
       function topModalEl() {
@@ -39350,7 +39510,7 @@ function syncBodyScrollLock() {
      </div>
      <button type="button" onclick="closeSettingsModal()" aria-label="Закрыть" title="Закрыть" class="text-slate-500 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
     </div>
-    <div class="flex flex-col sm:flex-row flex-1 min-h-0"><nav role="tablist" aria-label="Разделы настроек" class="sm:w-44 shrink-0 border-b sm:border-b-0 sm:border-r border-slate-100 p-2 sm:py-3 sm:px-2 flex sm:flex-col gap-1 overflow-x-auto bg-slate-50/50 sm:rounded-bl-2xl"><button type="button" role="tab" data-settings-tab="proj" onclick="settingsTab('proj')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>Проект</button><button type="button" role="tab" data-settings-tab="view" onclick="settingsTab('view')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>Вид</button><button type="button" role="tab" data-settings-tab="modules" onclick="settingsTab('modules')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>Модули</button><button type="button" role="tab" data-settings-tab="manage" onclick="settingsTab('manage')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"></path></svg>Справочники</button></nav><div id="settingsContent" class="flex-1 overflow-y-auto p-5 space-y-2.5"><div id="settingsRoNote" class="hidden bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-xl px-3 py-2 mb-2">Файл открыт для просмотра. Модули, имя автора и порог перегруза изменить нельзя. Тема и режим Простой/Продвинутый , это локальный вид, их можно менять.</div><div data-settings-panel="proj" class="space-y-2"><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Про проект: название, владелец, валюта и связь с Jira. Настройки сохраняются прямо в файле.</p><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-100 to-sky-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Название проекта</div><div class="text-[10px] text-slate-500 leading-snug">Заголовок в шапке роадмапа</div></div></div><input type="text" id="settingsProjectTitle" maxlength="200" onchange="settingsSetProjectTitle(this.value)" placeholder="Дорожная карта" aria-label="Название проекта" class="h-9 px-3 w-56 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shrink-0"></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Владелец продукта</div><div class="text-[10px] text-slate-500 leading-snug">Имя РО в шапке роадмапа</div></div></div><input type="text" id="settingsPoName" maxlength="60" onchange="settingsSetPoName(this.value)" placeholder="Фамилия Имя" aria-label="Владелец продукта (РО)" class="h-9 px-3 w-44 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shrink-0"></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Имя автора</div><div class="text-[10px] text-slate-500 leading-snug">Записывается в историю правок задач, хранится только в этом файле</div></div></div><input type="text" id="settingsAuthorName" maxlength="60" onchange="saveAuthorNameInput(this.value)" placeholder="Фамилия Имя" aria-label="Имя автора для истории правок" class="h-9 px-3 w-44 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shrink-0"></div><div data-feat="jira" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-100 to-blue-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Адрес Jira</div><div class="text-[10px] text-slate-500 leading-snug">Чтобы ключи задач стали кликабельными ссылками</div></div></div><input type="url" id="settingsJiraBase" onchange="settingsSetJiraBase(this.value)" placeholder="https://jira.company.ru" aria-label="Базовый адрес Jira" class="h-9 px-3 w-56 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shrink-0"></div><div data-feat="money" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Валюта проекта</div><div class="text-[10px] text-slate-500 leading-snug">Символ для сумм в «Деньгах» и отчетах</div></div></div><div class="flex items-center gap-2 shrink-0"><select id="settingsCurrency" onchange="settingsCurrencyPick(this.value)" aria-label="Валюта проекта" class="h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 cursor-pointer"><option value="руб">руб</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="__custom">свой</option></select><input type="text" id="settingsCurrencyCustom" maxlength="6" onchange="settingsSetCurrency('__custom', this.value)" placeholder="символ" aria-label="Свой символ валюты" class="hidden h-9 px-3 w-24 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"></div></div></div><div data-settings-panel="view" class="space-y-2 hidden"><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Как выглядит приложение и что показывать в списке задач.</p><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-1 px-1">Оформление</div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm"><div class="flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-100 to-indigo-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 8a2 2 0 01-2-2V5a2 2 0 012-2h16a2 2 0 012 2v1a2 2 0 01-2 2M4 8v10a2 2 0 002 2h12a2 2 0 002-2V8m-9 4h6"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Оформление</div><div id="themeSubtitle" class="text-[10px] text-slate-600 leading-snug">Портал , чистый светлый вид с синим акцентом</div></div></div><div role="group" aria-label="Оформление интерфейса" aria-describedby="themeSubtitle" title="Портал, Студия или тёмная тема" class="inline-flex items-center gap-0.5 bg-slate-100 rounded-lg p-0.5 shrink-0"><button type="button" id="themePortalBtn" onclick="setUiTheme('portal')" aria-pressed="false" class="min-h-[44px] px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-colors cursor-pointer">Портал</button><button type="button" id="themeStudioBtn" onclick="setUiTheme('studio')" aria-pressed="false" class="min-h-[44px] px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-colors cursor-pointer">Студия</button><button type="button" id="themeDarkBtn" onclick="setUiTheme('dark')" aria-pressed="false" class="min-h-[44px] px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-colors cursor-pointer">Темная</button></div></div></div><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-4 px-1">Список и таймлайн</div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-100 to-fuchsia-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Критический путь</div><div class="text-[10px] text-slate-500 leading-snug">Подсветить самую длинную цепочку зависимостей, влияющую на финальный срок. Работает и без показа связей.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="critPathTgl" onchange="setShowCriticalPath(this.checked)" aria-label="Критический путь"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Цвет полосок по статусу</div><div class="text-[10px] text-slate-500 leading-snug">Полоски на таймлайне красятся цветом статуса задачи, а не цветом секции.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="barColorTgl" onchange="setBarColorByStatus(this.checked); renderRoadmap(true)" aria-label="Цвет полосок по статусу"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h11M4 12h16M4 18h8"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Спринты и раскладка</div><div class="text-[10px] text-slate-500 leading-snug">Имена и даты спринтов, длина, доля занятости , для полосы спринтов на таймлайне и прогноза «Успеваем?». Открыть можно и кликом по плашке спринта.</div></div></div><button type="button" onclick="closeSettingsModal(); openSprintCfg();" class="shrink-0 inline-flex items-center h-9 px-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg cursor-pointer">Открыть</button></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h7"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Компактные строки задач</div><div class="text-[10px] text-slate-500 leading-snug">Прячет второстепенные чипы в строке (приоритет, «застряла», свои поля, Story Points, тест, ссылки) , остаются имя, статус, сроки, исполнитель.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="compactRowsTgl" onchange="setCompactRows(this.checked)" aria-label="Компактные строки задач"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-100 to-violet-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h4l2 7 4-14 2 7h4"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Баллы приоритизации в строках</div><div class="text-[10px] text-slate-500 leading-snug">Чип RICE/ICE на задачах с заполненной оценкой плюс сортировка «По приоритету». По умолчанию скрыто.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="prioScoresTgl" onchange="setShowPriorityScores(this.checked)" aria-label="Показывать баллы приоритизации в строках задач"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Подсветка зависших задач</div><div class="text-[10px] text-slate-500 leading-snug">Тихий янтарный маркер на задачах в работе, которые идут заметно дольше своей оценки.</div></div></div><span class="inline-flex items-center gap-1 shrink-0 mr-2"><input type="number" id="ageFactorInput" min="1.1" max="5" step="0.1" onchange="setAgeFactorThreshold(this.value)" aria-label="Во сколько раз дольше оценки считать задачу буксующей" title="Во сколько раз дольше оценки задача считается буксующей" class="w-16 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">x</span></span><span class="feat-switch shrink-0"><input type="checkbox" id="ageFlagsTgl" onchange="setShowAgeFlags(this.checked)" aria-label="Подсвечивать зависшие задачи в работе"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Тихий режим</div><div class="text-[10px] text-slate-500 leading-snug">Прячет всплывающие подсказки и уведомления , удобно для чистых скриншотов. Сообщения об ошибках сохранения остаются.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="quietModeTgl" onchange="setQuietMode(this.checked)" aria-label="Тихий режим , скрыть подсказки и уведомления"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div></div><div data-settings-panel="modules" class="hidden"><div id="fieldVisibilitySettings" class="mb-4"></div><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Включите только нужные разделы. Выключенное прячется из интерфейса, данные сохраняются и вернутся при включении.</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Деньги</span><span class="block text-[10px] text-slate-500 leading-snug">Ставки, бюджеты, фикс-стоимость и табель</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_money" onchange="setFeatureFlag('money', this.checked)" aria-label="Модуль Деньги"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Оценки</span><span class="block text-[10px] text-slate-500 leading-snug">Story Points, часы и оценка в днях</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_estimates" onchange="setFeatureFlag('estimates', this.checked)" aria-label="Модуль Оценки"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Ресурсы и загрузка</span><span class="block text-[10px] text-slate-500 leading-snug">Исполнители, загрузка команды и перегруз</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_resources" onchange="setFeatureFlag('resources', this.checked)" aria-label="Модуль Ресурсы и загрузка"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Метрики и RICE</span><span class="block text-[10px] text-slate-500 leading-snug">Продуктовые метрики и приоритизация</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_metrics" onchange="setFeatureFlag('metrics', this.checked)" aria-label="Модуль Метрики и RICE"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Свои поля</span><span class="block text-[10px] text-slate-500 leading-snug">Дополнительные поля задач, чипы и фильтры</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_custom" onchange="setFeatureFlag('custom', this.checked)" aria-label="Модуль Свои поля"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Jira-интеграция</span><span class="block text-[10px] text-slate-500 leading-snug">Импорт и выгрузка Jira, бейджи ключей</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_jira" onchange="setFeatureFlag('jira', this.checked)" aria-label="Модуль Jira-интеграция"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Зависимости</span><span class="block text-[10px] text-slate-500 leading-snug">Связи между задачами, линии и предшественники</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_deps" onchange="setFeatureFlag('deps', this.checked)" aria-label="Модуль Зависимости"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Цели и инициативы</span><span class="block text-[10px] text-slate-500 leading-snug">Стратегические цели, инициативы и метрики</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_goals" onchange="setFeatureFlag('goals', this.checked)" aria-label="Модуль Цели и инициативы"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Риски</span><span class="block text-[10px] text-slate-500 leading-snug">Журнал рисков, проблем, допущений и зависимостей (RAID)</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_raid" onchange="setFeatureFlag('raid', this.checked)" aria-label="Модуль Риски"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label></div></div><div data-settings-panel="manage" class="hidden"><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Окна управления проектом и пороги, по которым считаются сигналы перегруза и напоминания.</p><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-1 px-1">Окна управления</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><button type="button" onclick="closeSettingsModal(); openStatusModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Статусы задач</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Свои статусы, цвета и порядок</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button><button type="button" onclick="closeSettingsModal(); openTaskKindsModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5a1.99 1.99 0 011.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Типы задач</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Свои типы помимо встроенных</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-feat="custom" onclick="closeSettingsModal(); openCustomFieldsModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h7a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Свои поля</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Доп. поля задач, чипы и фильтры</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-feat="resources" onclick="closeSettingsModal(); openResourceModal('roles');" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-2-7.75M15 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Роли и ресурсы</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Ставки, доступность, отпуска</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button><button type="button" onclick="closeSettingsModal(); openHeaderCutoffPicker();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Метки в шапке</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Отсечки и дедлайны рядом с «Сегодня»</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button><button type="button" onclick="closeSettingsModal(); openVersionsModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">История версий файла</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Снимки файла и откат</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button><button type="button" onclick="closeSettingsModal(); openBaselineModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Версии плана</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Снимки сроков для план/факт</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button><button type="button" onclick="closeSettingsModal(); openArchiveModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Архив задач</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Завершенные вне основного списка</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button></div><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-4 px-1">Пороги и сигналы</div><div class="space-y-2"><div data-feat="resources" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Порог перегруза</div><div class="text-[10px] text-slate-500">Доля от емкости, выше которой период в загрузке команды считается перегрузом</div></div><span class="inline-flex items-center gap-1.5 shrink-0"><input type="number" id="settingsOverloadPct" min="100" max="300" step="10" onchange="setOverloadThreshold(this.value)" aria-label="Порог перегруза в процентах" class="w-20 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">%</span></span></div><div data-feat="resources" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Перегруз по дням</div><div class="text-[10px] text-slate-500">Сколько одновременных задач у человека на шкале «по дням» считать перегрузом (красная отметка)</div></div><span class="inline-flex items-center gap-1.5 shrink-0"><input type="number" id="settingsLevelingTasks" min="2" max="20" step="1" onchange="setLevelingOverloadTasks(this.value)" aria-label="Порог перегруза по дням, задач" class="w-20 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">задач</span></span></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Напоминание о событиях</div><div class="text-[10px] text-slate-500">За сколько дней предупреждать о приближающихся вехах и отсечках в дашборде состояния</div></div><span class="inline-flex items-center gap-1.5 shrink-0"><input type="number" id="settingsMilestoneDays" min="1" max="90" step="1" onchange="setMilestoneWarningThreshold(this.value)" aria-label="Горизонт напоминания в днях" class="w-20 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">дн</span></span></div></div></div></div></div>
+    <div class="flex flex-col sm:flex-row flex-1 min-h-0"><nav role="tablist" aria-label="Разделы настроек" class="sm:w-44 shrink-0 border-b sm:border-b-0 sm:border-r border-slate-100 p-2 sm:py-3 sm:px-2 flex sm:flex-col gap-1 overflow-x-auto bg-slate-50/50 sm:rounded-bl-2xl"><button type="button" role="tab" data-settings-tab="proj" onclick="settingsTab('proj')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>Проект</button><button type="button" role="tab" data-settings-tab="view" onclick="settingsTab('view')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>Вид</button><button type="button" role="tab" data-settings-tab="modules" onclick="settingsTab('modules')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>Модули</button><button type="button" role="tab" data-settings-tab="manage" onclick="settingsTab('manage')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"></path></svg>Справочники</button></nav><div id="settingsContent" class="flex-1 overflow-y-auto p-5 space-y-2.5"><div id="settingsRoNote" class="hidden bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-xl px-3 py-2 mb-2">Файл открыт для просмотра. Модули, имя автора и порог перегруза изменить нельзя. Тема и режим Простой/Продвинутый , это локальный вид, их можно менять.</div><div data-settings-panel="proj" class="space-y-2"><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Про проект: название, владелец, валюта и связь с Jira. Настройки сохраняются прямо в файле.</p><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-100 to-sky-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Название проекта</div><div class="text-[10px] text-slate-500 leading-snug">Заголовок в шапке роадмапа</div></div></div><input type="text" id="settingsProjectTitle" maxlength="200" onchange="settingsSetProjectTitle(this.value)" placeholder="Дорожная карта" aria-label="Название проекта" class="h-9 px-3 w-56 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shrink-0"></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Владелец продукта</div><div class="text-[10px] text-slate-500 leading-snug">Имя РО в шапке роадмапа</div></div></div><input type="text" id="settingsPoName" maxlength="60" onchange="settingsSetPoName(this.value)" placeholder="Фамилия Имя" aria-label="Владелец продукта (РО)" class="h-9 px-3 w-44 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shrink-0"></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Имя автора</div><div class="text-[10px] text-slate-500 leading-snug">Записывается в историю правок задач, хранится только в этом файле</div></div></div><input type="text" id="settingsAuthorName" maxlength="60" onchange="saveAuthorNameInput(this.value)" placeholder="Фамилия Имя" aria-label="Имя автора для истории правок" class="h-9 px-3 w-44 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shrink-0"></div><div data-feat="jira" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-100 to-blue-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Адрес Jira</div><div class="text-[10px] text-slate-500 leading-snug">Чтобы ключи задач стали кликабельными ссылками</div></div></div><input type="url" id="settingsJiraBase" onchange="settingsSetJiraBase(this.value)" placeholder="https://jira.company.ru" aria-label="Базовый адрес Jira" class="h-9 px-3 w-56 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shrink-0"></div><div data-feat="money" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Валюта проекта</div><div class="text-[10px] text-slate-500 leading-snug">Символ для сумм в «Деньгах» и отчетах</div></div></div><div class="flex items-center gap-2 shrink-0"><select id="settingsCurrency" onchange="settingsCurrencyPick(this.value)" aria-label="Валюта проекта" class="h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 cursor-pointer"><option value="руб">руб</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="__custom">свой</option></select><input type="text" id="settingsCurrencyCustom" maxlength="6" onchange="settingsSetCurrency('__custom', this.value)" placeholder="символ" aria-label="Свой символ валюты" class="hidden h-9 px-3 w-24 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"></div></div></div><div data-settings-panel="view" class="space-y-2 hidden"><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Как выглядит приложение и что показывать в списке задач.</p><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-1 px-1">Оформление</div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm"><div class="flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-100 to-indigo-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 8a2 2 0 01-2-2V5a2 2 0 012-2h16a2 2 0 012 2v1a2 2 0 01-2 2M4 8v10a2 2 0 002 2h12a2 2 0 002-2V8m-9 4h6"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Оформление</div><div id="themeSubtitle" class="text-[10px] text-slate-600 leading-snug">Светлая: минимум оформления, единый акцент, все функции</div></div></div><div role="group" aria-label="Оформление интерфейса" aria-describedby="themeSubtitle" title="Светлая или Темная тема" class="inline-flex items-center gap-0.5 bg-slate-100 rounded-lg p-0.5 shrink-0"><button type="button" id="themeStudioBtn" onclick="setUiTheme('studio')" aria-pressed="false" class="min-h-[44px] px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-colors cursor-pointer">Светлая</button><button type="button" id="themeDarkBtn" onclick="setUiTheme('dark')" aria-pressed="false" class="min-h-[44px] px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-colors cursor-pointer">Темная</button></div></div></div><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-4 px-1">Список и таймлайн</div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-100 to-fuchsia-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Критический путь</div><div class="text-[10px] text-slate-500 leading-snug">Подсветить самую длинную цепочку зависимостей, влияющую на финальный срок. Работает и без показа связей.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="critPathTgl" onchange="setShowCriticalPath(this.checked)" aria-label="Критический путь"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Цвет полосок по статусу</div><div class="text-[10px] text-slate-500 leading-snug">Полоски на таймлайне красятся цветом статуса задачи, а не цветом секции.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="barColorTgl" onchange="setBarColorByStatus(this.checked); renderRoadmap(true)" aria-label="Цвет полосок по статусу"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h11M4 12h16M4 18h8"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Спринты и раскладка</div><div class="text-[10px] text-slate-500 leading-snug">Имена и даты спринтов, длина, доля занятости , для полосы спринтов на таймлайне и прогноза «Успеваем?». Открыть можно и кликом по плашке спринта.</div></div></div><button type="button" onclick="closeSettingsModal(); openSprintCfg();" class="shrink-0 inline-flex items-center h-9 px-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg cursor-pointer">Открыть</button></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h7"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Компактные строки задач</div><div class="text-[10px] text-slate-500 leading-snug">Прячет второстепенные чипы в строке (приоритет, «застряла», свои поля, Story Points, тест, ссылки) , остаются имя, статус, сроки, исполнитель.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="compactRowsTgl" onchange="setCompactRows(this.checked)" aria-label="Компактные строки задач"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-100 to-violet-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h4l2 7 4-14 2 7h4"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Баллы приоритизации в строках</div><div class="text-[10px] text-slate-500 leading-snug">Чип RICE/ICE на задачах с заполненной оценкой плюс сортировка «По приоритету». По умолчанию скрыто.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="prioScoresTgl" onchange="setShowPriorityScores(this.checked)" aria-label="Показывать баллы приоритизации в строках задач"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Подсветка зависших задач</div><div class="text-[10px] text-slate-500 leading-snug">Тихий янтарный маркер на задачах в работе, которые идут заметно дольше своей оценки.</div></div></div><span class="inline-flex items-center gap-1 shrink-0 mr-2"><input type="number" id="ageFactorInput" min="1.1" max="5" step="0.1" onchange="setAgeFactorThreshold(this.value)" aria-label="Во сколько раз дольше оценки считать задачу буксующей" title="Во сколько раз дольше оценки задача считается буксующей" class="w-16 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">x</span></span><span class="feat-switch shrink-0"><input type="checkbox" id="ageFlagsTgl" onchange="setShowAgeFlags(this.checked)" aria-label="Подсвечивать зависшие задачи в работе"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Тихий режим</div><div class="text-[10px] text-slate-500 leading-snug">Прячет всплывающие подсказки и уведомления , удобно для чистых скриншотов. Сообщения об ошибках сохранения остаются.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="quietModeTgl" onchange="setQuietMode(this.checked)" aria-label="Тихий режим , скрыть подсказки и уведомления"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div></div><div data-settings-panel="modules" class="hidden"><div id="fieldVisibilitySettings" class="mb-4"></div><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Включите только нужные разделы. Выключенное прячется из интерфейса, данные сохраняются и вернутся при включении.</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Деньги</span><span class="block text-[10px] text-slate-500 leading-snug">Ставки, бюджеты, фикс-стоимость и табель</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_money" onchange="setFeatureFlag('money', this.checked)" aria-label="Модуль Деньги"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Оценки</span><span class="block text-[10px] text-slate-500 leading-snug">Story Points, часы и оценка в днях</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_estimates" onchange="setFeatureFlag('estimates', this.checked)" aria-label="Модуль Оценки"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Ресурсы и загрузка</span><span class="block text-[10px] text-slate-500 leading-snug">Исполнители, загрузка команды и перегруз</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_resources" onchange="setFeatureFlag('resources', this.checked)" aria-label="Модуль Ресурсы и загрузка"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Метрики и RICE</span><span class="block text-[10px] text-slate-500 leading-snug">Продуктовые метрики и приоритизация</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_metrics" onchange="setFeatureFlag('metrics', this.checked)" aria-label="Модуль Метрики и RICE"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Свои поля</span><span class="block text-[10px] text-slate-500 leading-snug">Дополнительные поля задач, чипы и фильтры</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_custom" onchange="setFeatureFlag('custom', this.checked)" aria-label="Модуль Свои поля"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Jira-интеграция</span><span class="block text-[10px] text-slate-500 leading-snug">Импорт и выгрузка Jira, бейджи ключей</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_jira" onchange="setFeatureFlag('jira', this.checked)" aria-label="Модуль Jira-интеграция"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Зависимости</span><span class="block text-[10px] text-slate-500 leading-snug">Связи между задачами, линии и предшественники</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_deps" onchange="setFeatureFlag('deps', this.checked)" aria-label="Модуль Зависимости"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Цели и инициативы</span><span class="block text-[10px] text-slate-500 leading-snug">Стратегические цели, инициативы и метрики</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_goals" onchange="setFeatureFlag('goals', this.checked)" aria-label="Модуль Цели и инициативы"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Риски</span><span class="block text-[10px] text-slate-500 leading-snug">Журнал рисков, проблем, допущений и зависимостей (RAID)</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_raid" onchange="setFeatureFlag('raid', this.checked)" aria-label="Модуль Риски"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label></div></div><div data-settings-panel="manage" class="hidden"><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Окна управления проектом и пороги, по которым считаются сигналы перегруза и напоминания.</p><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-1 px-1">Окна управления</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><button type="button" onclick="closeSettingsModal(); openStatusModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Статусы задач</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Свои статусы, цвета и порядок</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button><button type="button" onclick="closeSettingsModal(); openTaskKindsModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5a1.99 1.99 0 011.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Типы задач</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Свои типы помимо встроенных</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-feat="custom" onclick="closeSettingsModal(); openCustomFieldsModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h7a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Свои поля</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Доп. поля задач, чипы и фильтры</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-feat="resources" onclick="closeSettingsModal(); openResourceModal('roles');" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-2-7.75M15 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Роли и ресурсы</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Ставки, доступность, отпуска</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button><button type="button" onclick="closeSettingsModal(); openHeaderCutoffPicker();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Метки в шапке</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Отсечки и дедлайны рядом с «Сегодня»</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button><button type="button" onclick="closeSettingsModal(); openVersionsModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">История версий файла</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Снимки файла и откат</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button><button type="button" onclick="closeSettingsModal(); openBaselineModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Версии плана</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Снимки сроков для план/факт</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button><button type="button" onclick="closeSettingsModal(); openArchiveModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Архив задач</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Завершенные вне основного списка</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button></div><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-4 px-1">Пороги и сигналы</div><div class="space-y-2"><div data-feat="resources" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Порог перегруза</div><div class="text-[10px] text-slate-500">Доля от емкости, выше которой период в загрузке команды считается перегрузом</div></div><span class="inline-flex items-center gap-1.5 shrink-0"><input type="number" id="settingsOverloadPct" min="100" max="300" step="10" onchange="setOverloadThreshold(this.value)" aria-label="Порог перегруза в процентах" class="w-20 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">%</span></span></div><div data-feat="resources" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Перегруз по дням</div><div class="text-[10px] text-slate-500">Сколько одновременных задач у человека на шкале «по дням» считать перегрузом (красная отметка)</div></div><span class="inline-flex items-center gap-1.5 shrink-0"><input type="number" id="settingsLevelingTasks" min="2" max="20" step="1" onchange="setLevelingOverloadTasks(this.value)" aria-label="Порог перегруза по дням, задач" class="w-20 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">задач</span></span></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Напоминание о событиях</div><div class="text-[10px] text-slate-500">За сколько дней предупреждать о приближающихся вехах и отсечках в дашборде состояния</div></div><span class="inline-flex items-center gap-1.5 shrink-0"><input type="number" id="settingsMilestoneDays" min="1" max="90" step="1" onchange="setMilestoneWarningThreshold(this.value)" aria-label="Горизонт напоминания в днях" class="w-20 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">дн</span></span></div></div></div></div></div>
    </div>
   </div>
 
@@ -39698,7 +39858,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v17.1 · 08.10.2026</span>
+     <span id="appVersionBadge">v17.2 · 09.10.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -39748,7 +39908,43 @@ function syncBodyScrollLock() {
 
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.1</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.2</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="product-areas" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 17h6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Четыре вкладки в одной панели</h5><span class="info-release-badge">НАВИГАЦИЯ</span></div>
+      <p class="text-xs text-slate-600">Переключайте «Список», «Доска», «Сроки» и «Встреча» напрямую. Инструменты находятся справа в шапке.</p>
+     </article>
+     <article data-release-card="working-file-save" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21H5V3h11l5 5v13zM17 21v-8H7v8M7 3v5h8"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Сохранение и Архив под рукой</h5><span class="info-release-badge">ФАЙЛ</span></div>
+      <p class="text-xs text-slate-600">Иконки сохранения и Архива находятся в шапке. У названия снова видны PO, дата и версия.</p>
+     </article>
+     <article data-release-card="meeting-materials" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18v14H3zM8 22h8m-4-4v4M7 9h10M7 13h6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Понятный выбор перед отправкой</h5><span class="info-release-badge">ВСТРЕЧА</span></div>
+      <p class="text-xs text-slate-600">В «Данные → Поделиться» выберите просмотр, материалы встречи или полную копию. Состав и защита объяснены до сохранения.</p>
+     </article>
+     <article data-release-card="week-start" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16v15H4zM8 3v6m8-6v6M4 11h16M8 15h3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Три масштаба вместо длинного меню</h5><span class="info-release-badge">ГАНТ</span></div>
+      <p class="text-xs text-slate-600">Рабочий план открывает текущую неделю. В меню оставлены «По дням», «Неделя» и «Месяц».</p>
+     </article>
+     <article data-release-card="jira-import-memory" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h12l-3-3m3 3l-3 3M20 17H8l3 3m-3-3l3-3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Статусы и фильтры рядом</h5><span class="info-release-badge">ИМПОРТ</span></div>
+      <p class="text-xs text-slate-600">Выбирайте статусы в одном меню. Активные фильтры видны под панелью и снимаются по одному.</p>
+     </article>
+     <article data-release-card="compact-working-file" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 3v5h5M5 3h9l5 5v13H5zM8 12h8M8 16h5"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Больше места для задач</h5><span class="info-release-badge">HTML</span></div>
+      <p class="text-xs text-slate-600">Уменьшены пустые отступы над планом, высота секций и правый край строк. Действия с задачами сохранены.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.1</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="product-areas" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 17h6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Три раздела вместо длинного меню</h5><span class="info-release-badge">НАВИГАЦИЯ</span></div>
@@ -39776,13 +39972,6 @@ function syncBodyScrollLock() {
      </article>
     </div>
    </div>
-
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.0</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -39946,7 +40135,7 @@ function syncBodyScrollLock() {
      </article>
      <article class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4zM4 9h16M9 9v11"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Студия по умолчанию</h5><span class="info-release-badge">ТЕМА</span></div>
-      <p class="text-xs text-slate-600">При первом запуске открывается светлая Студия. Портал и Темная тема доступны в настройках.</p>
+      <p class="text-xs text-slate-600">По умолчанию открывается Светлая тема. В настройках можно выбрать Темную.</p>
      </article>
      <article class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19h16M6 15l4-5 4 2 4-7M15 5h3v3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Сразу видно риск срока</h5><span class="info-release-badge">ПРОГНОЗ</span></div>
@@ -43529,6 +43718,12 @@ function syncBodyScrollLock() {
           <span>Исключить внутренние задачи</span>
         </label>
         <p id="roExportPrivacyPolicy" class="text-xs text-slate-600 leading-relaxed">Обязательная защита безопасной копии. Эти параметры всегда включены. Вы можете выбрать секции и штамп.</p>
+        <label class="flex items-center gap-2 min-h-11 text-sm"><input id="roExportProtect" type="checkbox" onchange="document.getElementById('roExportPasswordFields').hidden=!this.checked">Защитить отдельным паролем</label>
+        <div id="roExportPasswordFields" hidden>
+          <label class="block text-sm" for="roExportPassword">Новый пароль для получателя</label><input id="roExportPassword" type="password" autocomplete="new-password" class="w-full min-h-11 border border-slate-300 rounded-lg px-3">
+          <label class="block text-sm mt-2" for="roExportPasswordRepeat">Повторите пароль</label><input id="roExportPasswordRepeat" type="password" autocomplete="new-password" class="w-full min-h-11 border border-slate-300 rounded-lg px-3">
+          <p class="text-xs text-slate-600 mt-2">Не менее 14 символов или четыре слова. Пароль не сохраняется в настройках. Передайте его отдельно; восстановить его нельзя.</p>
+        </div>
         <div>
           <label for="roExportStamp" class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Штамп</label>
           <select id="roExportStamp" class="ro-system-select w-full h-9 px-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all cursor-pointer">
@@ -43666,7 +43861,7 @@ function syncBodyScrollLock() {
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 17.1</span>
+              <span id="appVersionStartup">версия 17.2</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
@@ -44538,7 +44733,7 @@ function simplifyDataMenuInformationArchitecture() {
 
   var jiraDate = document.getElementById('dataMenuJiraDate');
   var saveCenterButton = actionButton('saveNowToFile');
-  var shareButton = actionButton('openRoExport');
+  var shareButton = actionButton('openShareCenter');
   var lockerButton = actionButton('openRoadmapLocker');
   if (saveCenterButton) {
     saveCenterButton.setAttribute('onclick', 'closeDataMenu(); openVersionsModal();');
@@ -44548,10 +44743,10 @@ function simplifyDataMenuInformationArchitecture() {
     if (saveCenterLabel) saveCenterLabel.textContent = 'Сохранение и восстановление';
   }
   if (shareButton) {
-    shareButton.setAttribute('aria-label', 'Поделиться копией');
-    shareButton.setAttribute('title', 'Подготовить отдельную копию проекта только для просмотра');
+    shareButton.setAttribute('aria-label', 'Поделиться');
+    shareButton.setAttribute('title', 'Просмотр, материалы встречи или полная рабочая копия');
     var shareLabel = shareButton.querySelector('.grow');
-    if (shareLabel) shareLabel.textContent = 'Поделиться копией';
+    if (shareLabel) shareLabel.textContent = 'Поделиться';
   }
   var frequent = document.createElement('div');
   frequent.setAttribute('data-data-menu-frequent', '');
@@ -44580,8 +44775,7 @@ function simplifyDataMenuInformationArchitecture() {
     actionButton('exportData'),
     actionButton('askCompactHistories')
   ]));
-  groups.appendChild(makeGroup('access', 'Защищенные копии', 'Шифрование HTML и JSON для передачи', [
-    lockerButton,
+  groups.appendChild(makeGroup('access', 'Шифрованный JSON', 'Дополнительный формат данных', [
     actionButton('exportEncryptedJSON')
   ]));
   groups.appendChild(makeGroup('editing', 'От случайных правок', 'Замок интерфейса, без шифрования данных', [
@@ -44657,7 +44851,9 @@ function simplifyPlanningInformationArchitecture() {
   var find = function(name) { return buttons.find(function(b) { return (b.getAttribute('onclick') || '').indexOf(name) >= 0; }); };
   var builder = find('openPlanBuilder'), team = find('openResourceModal'), refs = find('openStatusModal');
   var advanced = ['openMoneyModal','openGoalsModal'].map(find).filter(Boolean);
+  var overviewHost = document.getElementById('planOverviewHost');
   menu.innerHTML = '';
+  if (overviewHost) menu.appendChild(overviewHost);
   var intro = document.createElement('p'); intro.className = 'px-2 py-2 text-xs text-slate-500';
   intro.textContent = 'Настройка плана и команды. Проверки и сценарии собраны в разделе «Сроки и риски».';
   menu.appendChild(intro);
@@ -44686,6 +44882,34 @@ function simplifyPlanningInformationArchitecture() {
   var trigger = document.getElementById('moreMenuBtn');
   if (trigger) { trigger.setAttribute('aria-label','Инструменты плана'); trigger.setAttribute('title','Инструменты плана'); }
   var label = document.getElementById('workspaceHubLabel'); if (label) label.textContent = 'Инструменты';
+}
+
+function mountCompactWorkspaceChrome() {
+  var header = document.getElementById('planWorkspaceHeader');
+  if (!header || header.dataset.compactReady) return;
+  var zoom = document.getElementById('zoomControl');
+  var filters = document.getElementById('planFilterBar');
+  var active = document.getElementById('activeFiltersBar');
+  if (filters) header.insertBefore(filters, zoom);
+  if (active) header.appendChild(active);
+  var filterButton = document.getElementById('filterToolsBtn');
+  if (filterButton) { filterButton.setAttribute('aria-label','Все фильтры'); filterButton.title = 'Все фильтры'; }
+  var toolsButton = document.getElementById('moreMenuBtn');
+  if (toolsButton) { var shortLabel = document.createElement('span'); shortLabel.dataset.compactToolsLabel = ''; shortLabel.textContent = 'Еще'; toolsButton.insertBefore(shortLabel,document.getElementById('planningHubBadge')); }
+  var toolbar = document.querySelector('#appHeader .app-header-toolbar');
+  var toolsWrap = document.getElementById('moreMenuWrap');
+  var dataWrap = document.getElementById('dataMenuWrap');
+  if (toolbar && toolsWrap) {
+    var actions = dataWrap ? dataWrap.parentElement : toolbar;
+    actions.insertBefore(toolsWrap, dataWrap);
+  }
+  var reports = document.getElementById('reportsMenuBtn');
+  if (reports) {
+    // Старый обработчик остается для совместимости, единственный видимый вход: «Встреча».
+    var legacy = document.createElement('div'); legacy.hidden = true; legacy.id = 'legacyHeaderActions';
+    document.body.appendChild(legacy); legacy.appendChild(reports);
+  }
+  header.dataset.compactReady = '1'; document.body.classList.add('compact-workspace');
 }
 
 function simplifySettingsInformationArchitecture() {
@@ -45114,6 +45338,7 @@ try { simplifyDataMenuInformationArchitecture(); } catch (e) { console.warn('Dat
 try { simplifyReportsMenuInformationArchitecture(); } catch (e) { console.warn('Reports menu simplification unavailable:', e); }
 try { simplifyPlanningInformationArchitecture(); } catch (e) { console.warn('Planning simplification unavailable:', e); }
 try { simplifySettingsInformationArchitecture(); } catch (e) { console.warn('Settings simplification unavailable:', e); }
+try { mountCompactWorkspaceChrome(); } catch (e) { console.warn('Compact workspace unavailable:', e); }
 try {
   mountDeclaredUiContracts(document.body);
   normalizeUiChrome(document.body);
