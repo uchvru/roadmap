@@ -5669,8 +5669,6 @@
     body.project-locked-mode .no-print.no-image-export button:not(#lockProjectBtn):not(#autoSaveBtn):not([onclick*="openGlobalSearch"]):not([onclick*="openInfoModal"]):not([onclick*="openStartupModal"]):not([onclick*="openEpicAudit"]):not([onclick*="openReportModal"]){ opacity:0.45; pointer-events:none !important; cursor:not-allowed !important; }
     body.project-locked-mode .lock-overlay-bar { display:flex !important; }
     /* Режим мультивыбора активен: зеленая кнопка (отличается от синей «+») */
-    button.select-on { background:#059669 !important; border-color:#059669 !important; color:#fff !important; }
-    button.select-on:hover { background:#047857 !important; border-color:#047857 !important; }
     /* Активный фильтр по релизу/метке: индиго-точка-индикатор */
     button.relfilter-on { background:var(--rm-selected-bg,#eef2ff) !important; border-color:var(--rm-selected-border,#a5b4fc) !important; color:var(--rm-selected-text,#4338ca) !important; }
 
@@ -6449,7 +6447,7 @@
    }
    body.theme-dark {
      --rm-control-bg:#111c2c; --rm-control-disabled:#202c3c;
-     --rm-primary:#5b5ee6; --rm-primary-hover:#5053d5;
+     --rm-primary:#635bdb; --rm-primary-hover:#554bc8; --rm-brand:#635bdb; --rm-focus:#a5b4fc;
      --rm-danger-text:#fda4af; --rm-danger-border:#9f4459;
    }
    .rm-dialog-surface .rm-control {
@@ -7138,7 +7136,8 @@
      border:1px solid transparent; border-radius:var(--rm-radius-sm) !important;
      color:var(--rm-text); font-size:var(--rm-font-md); line-height:var(--rm-line-tight);
    }
-   .rm-popover .rm-menu-action:hover { border-color:var(--rm-border); background:var(--rm-surface-soft) !important; }
+   .rm-popover .rm-menu-action:hover { border-color:transparent; background:var(--rm-surface-soft) !important; }
+   .rm-popover .rm-menu-action[aria-pressed="true"] { color:var(--rm-selected-text); background:var(--rm-selected-bg) !important; }
    .rm-popover .rm-menu-action > span:first-child[class*="w-"][class*="h-"]:not(.grow):not(.rm-choice-indicator) { width:2rem !important; height:2rem !important; border-radius:var(--rm-radius-sm) !important; }
    .rm-choice-indicator { width:1rem !important; height:1rem !important; min-width:1rem !important; min-height:1rem !important; border-radius:.3125rem !important; }
    .rm-menu-item-title { color:var(--rm-text) !important; font-size:var(--rm-font-md) !important; font-weight:var(--rm-weight-semibold) !important; line-height:1.25 !important; }
@@ -8561,24 +8560,24 @@
     --color-indigo-300:#93c5fd; --color-indigo-400:#60a5fa; --color-indigo-500:#3b82f6;
     --color-indigo-600:#2563eb; --color-indigo-700:#1d4ed8; --color-indigo-800:#1e40af;
     --color-indigo-900:#1e3a8a; --color-indigo-950:#172554;
-    --rm-page-bg:#f5f6f5;
+    --rm-page-bg:#f5f6fa;
     --rm-surface:#fff;
-    --rm-surface-soft:#f4f6f5;
+    --rm-surface-soft:#f5f6fb;
     --rm-control-bg:#fff;
-    --rm-control-disabled:#edf0ee;
-    --rm-text:#24332f;
-    --rm-muted:#566860;
-    --rm-border:#d5ddd8;
-    --rm-chrome-border:#d5ddd8;
-    --rm-card-border:#d5ddd8;
-    --rm-primary:#126b5d;
-    --rm-primary-hover:#0d5147;
-    --rm-brand:#126b5d;
-    --rm-selected-text:#0d5147;
-    --rm-selected-bg:#d9e9e0;
-    --rm-selected-border:#8bb4a1;
+    --rm-control-disabled:#eef0f6;
+    --rm-text:#243047;
+    --rm-muted:#52607a;
+    --rm-border:#d6ddec;
+    --rm-chrome-border:#d6ddec;
+    --rm-card-border:#d6ddec;
+    --rm-primary:#4f46e5;
+    --rm-primary-hover:#4338ca;
+    --rm-brand:#4f46e5;
+    --rm-selected-text:#4338ca;
+    --rm-selected-bg:#eef2ff;
+    --rm-selected-border:#8b83d6;
     --rm-segment-selected-bg:var(--rm-selected-bg);
-    --rm-focus:#126b5d;
+    --rm-focus:#4338ca;
     --rm-radius-xs:.25rem;
     --rm-radius-sm:.5rem;
     --rm-radius-md:.5rem;
@@ -8587,8 +8586,8 @@
     --rm-popover-radius:.5rem;
     --rm-shadow-xs:none;
     --rm-shadow-sm:none;
-    --rm-dialog-shadow:0 4px 16px rgb(27 47 37 / 10%);
-    --rm-popover-shadow:0 3px 12px rgb(27 47 37 / 8%);
+    --rm-dialog-shadow:0 4px 16px rgb(30 35 65 / 10%);
+    --rm-popover-shadow:0 3px 12px rgb(30 35 65 / 8%);
     --rm-ring:none;
     --rm-backdrop-filter:none;
     --rm-progress-ring-display:none;
@@ -8601,10 +8600,10 @@
   body.theme-studio #appHeader #titleContainer > button { color:var(--rm-muted); }
   body.theme-studio #appHeader .app-header-meta-chip { background:transparent; border-color:transparent; color:var(--rm-muted); border-radius:var(--rm-radius-sm); }
   body.theme-studio #appHeader .app-header-meta-chip span { color:inherit; }
-  body #appHeader #appLogoBtn > span { background:#116d60; color:#fff; border-radius:var(--rm-radius-sm); box-shadow:none; }
+  body #appHeader #appLogoBtn > span { background:var(--rm-brand,var(--rm-primary)); color:#fff; border-radius:var(--rm-radius-sm); box-shadow:none; }
   body.theme-studio #appHeader #appVerChip:hover { color:var(--rm-primary); }
-  body.theme-studio #appHeader #addTaskHeaderBtn { background:var(--rm-primary); color:#fff; border:1px solid var(--rm-primary); border-radius:var(--rm-radius-sm); box-shadow:none; }
-  body.theme-studio #appHeader #addTaskHeaderBtn:hover { background:var(--rm-primary-hover); border-color:var(--rm-primary-hover); }
+  body #appHeader #addTaskHeaderBtn { background:var(--rm-primary); color:#fff; border:1px solid var(--rm-primary); border-radius:var(--rm-radius-sm); box-shadow:none; }
+  body #appHeader #addTaskHeaderBtn:hover { background:var(--rm-primary-hover); border-color:var(--rm-primary-hover); }
   body.theme-studio #appHeader .app-header-toolbar > .relative > button,
   body.theme-studio #appHeader #reportsMenuBtn,
   body.theme-studio #appHeader #dataMenuBtn,
@@ -8664,10 +8663,10 @@
     --rm-workspace-card-border:transparent; --rm-workspace-card-bg:transparent;
   }
   body.theme-studio :is(.rm-btn,.rm-action,.rm-menu-action,.rm-segmented button,[role="tab"],#planViewNav button,#appHeader button,#zoomControl button,#zoomControlMobile button,#filterToolsWrap button,#taskListToolbar button,#forecastView button,#summaryView button,#presentView button) {
-    --color-indigo-50:#eaf2ee; --color-indigo-100:#d9e9e0; --color-indigo-200:#b6cfc3; --color-indigo-300:#8bb4a1;
-    --color-indigo-400:#4b9180; --color-indigo-500:#27806f; --color-indigo-600:#126b5d; --color-indigo-700:#0d5147; --color-indigo-800:#103f36;
-    --color-blue-50:#eaf2ee; --color-blue-100:#d9e9e0; --color-blue-200:#b6cfc3; --color-blue-300:#8bb4a1;
-    --color-blue-400:#4b9180; --color-blue-500:#27806f; --color-blue-600:#126b5d; --color-blue-700:#0d5147; --color-blue-800:#103f36;
+    --color-indigo-50:#eef2ff; --color-indigo-100:#e0e7ff; --color-indigo-200:#c7d2fe; --color-indigo-300:#a5b4fc;
+    --color-indigo-400:#818cf8; --color-indigo-500:#6366f1; --color-indigo-600:#4f46e5; --color-indigo-700:#4338ca; --color-indigo-800:#3730a3;
+    --color-blue-50:#eef2ff; --color-blue-100:#e0e7ff; --color-blue-200:#c7d2fe; --color-blue-300:#a5b4fc;
+    --color-blue-400:#818cf8; --color-blue-500:#6366f1; --color-blue-600:#4f46e5; --color-blue-700:#4338ca; --color-blue-800:#3730a3;
   }
   body #planViewTabs button { height:var(--rm-control-h); padding:.375rem .625rem; }
   body #mobileMoreBtn[aria-expanded="true"] { color:var(--rm-selected-text); background:var(--rm-selected-bg); border-color:var(--rm-selected-border); }
@@ -8766,6 +8765,9 @@
   body.theme-studio .feat-switch input:checked + .fs-track { background:var(--rm-primary); }
   body.theme-studio .feat-switch input:focus-visible + .fs-track { outline-color:var(--rm-focus); }
   body.theme-studio .feat-switch .fs-knob { box-shadow:none; }
+  body input,body textarea { caret-color:var(--rm-focus); }
+  body input[type="checkbox"]:not(.accent-rose-600),body input[type="radio"] { accent-color:var(--rm-primary); }
+  body ::selection { background:var(--rm-selected-bg); color:var(--rm-selected-text); }
   .rm-type-initiative { --type-ink:#92400e; --type-bg:#fef3c7; --type-edge:#fcd34d; }
   .rm-type-epic { --type-ink:#6d28d9; --type-bg:#ede9fe; --type-edge:#c4b5fd; }
   .rm-type-story { --type-ink:#166534; --type-bg:#dcfce7; --type-edge:#86efac; }
@@ -8842,6 +8844,8 @@
     --rm-primary-hover:var(--rm-surface-soft);
     --rm-primary-text:var(--rm-muted);
   }
+  body #selectModeBtn.select-on,
+  body #statusOverview > button[aria-pressed="true"],
   body .rm-btn[aria-pressed="true"],
   body .rm-btn[aria-selected="true"],
   body .rm-btn[aria-checked="true"],
@@ -8867,6 +8871,7 @@
     font-weight:650;
   }
 
+  body .task-date-label { color:var(--rm-selected-text); }
   #settingsModal [aria-label="Оформление интерфейса"] { flex-wrap:wrap; max-width:100%; }
   #settingsModal .rm-segmented[aria-label="Оформление интерфейса"] button.rm-btn { min-height:var(--rm-control-h,2.75rem); display:inline-flex; align-items:center; justify-content:center; gap:.5rem; flex:1 1 auto; }
 }
@@ -8874,7 +8879,7 @@
   body { --rm-hit-target:2.25rem; --rm-control-h:2.25rem; --rm-toolbar-h:2.25rem; --rm-field-h:2.25rem; }
 }
 @media screen and (prefers-contrast:more) {
-  body.theme-studio { --rm-border:#6a7f70; --rm-chrome-border:#6a7f70; --rm-card-border:#6a7f70; --rm-muted:#3c5146; --rm-focus:#0d5147; }
+  body.theme-studio { --rm-border:#66748e; --rm-chrome-border:#66748e; --rm-card-border:#66748e; --rm-muted:#3e4961; --rm-focus:#3730a3; }
 }
   /* Обучение — обычная панель в потоке, без перекрывающего план оверлея. */
   .rm-onboarding { margin:0 0 1rem; color:var(--rm-text); font-size:var(--rm-font-sm); line-height:1.5; }
@@ -8971,7 +8976,7 @@
 #moreMenu #planOverviewHost{margin:0;border-bottom:1px solid var(--rm-border)}
 #moreMenu #planOverviewHost .app-header-insight-row,#moreMenu #headerOverviewBtn{width:100%}
 #productContextNav[hidden]{display:none}
-#productContextNav button[aria-pressed="true"],.meeting-choice[aria-pressed="true"]{box-shadow:inset 0 0 0 1px var(--rm-selected-border)}
+#productContextNav button[aria-pressed="true"],.meeting-choice[aria-pressed="true"]{box-shadow:none}
 .meeting-choices{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
 .meeting-choices button{min-height:40px;white-space:normal}
 .meeting-intro{margin:0 0 16px;color:var(--rm-muted);font-size:14px;line-height:1.55;max-width:70ch}
@@ -8992,23 +8997,63 @@
 @media(max-width:639px){body[data-app-view="present"] #appHeader #reportsMenuWrap{display:none}}
 @media print{#productContextNav,.meeting-choices,.meeting-formats,.meeting-intro{display:none}}
 /* Компактная рабочая панель: файл сверху, представления и фильтры рядом с планом. */
-body.compact-workspace #planControlDeck,body.compact-workspace #statusOverview,
-body.compact-workspace #statusScrollPrev,body.compact-workspace #statusScrollMore{display:none}
-#planWorkspaceHeader #planFilterBar{padding:0;gap:6px;flex:0 1 auto;min-width:0;overflow:visible;background:transparent;border:0;flex-direction:row}
-#planWorkspaceHeader #statusCompactBtn{white-space:nowrap;width:auto}
-#planWorkspaceHeader #activeFiltersBar{flex-basis:100%;width:100%;border:0;padding:4px 0;gap:6px}
-#planWorkspaceHeader #activeFiltersBar[hidden]{display:none}
-#planWorkspaceHeader #filterToolsBtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:44px;min-height:var(--rm-toolbar-h);padding:8px 12px;border:1px solid var(--rm-border);border-radius:var(--rm-radius-sm);color:var(--rm-text);background:var(--rm-surface);white-space:nowrap}
-#planWorkspaceHeader #filterToolsBtn:is(:hover,[aria-expanded="true"],[data-active="1"]){color:var(--rm-selected-text);background:var(--rm-selected-bg);border-color:var(--rm-selected-border)}
+body.compact-workspace #planControlDeck{border-radius:var(--rm-radius-lg)}
+body.compact-workspace #planControlDeck #planFilterBar{flex-direction:row;min-width:0;border-radius:var(--rm-radius-lg) !important}
+body.compact-workspace #statusOverview{display:flex;max-width:none;touch-action:pan-x;scrollbar-width:thin;scroll-padding-inline:4px}
+body.compact-workspace #statusOverview>button{min-height:var(--rm-toolbar-h);scroll-margin-inline:4px}
+body.compact-workspace #statusCompactBtn{width:var(--rm-toolbar-h) !important;min-width:var(--rm-toolbar-h);padding:0;justify-content:center}
+body.compact-workspace #statusCompactLabel{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+body.compact-workspace #filterToolsBtn{flex:none;white-space:nowrap}
+body.compact-workspace #planWorkspaceHeader{border-radius:var(--rm-radius-lg) var(--rm-radius-lg) 0 0}
+body.compact-workspace #appHeader .app-header-grid{grid-template-rows:auto;padding-block:8px;row-gap:8px}
 #appHeader :is(#autoSaveBtn,#archiveBtn){width:var(--rm-toolbar-h);min-width:var(--rm-toolbar-h);padding:0;flex-shrink:0}
-#appHeader .app-header-meta{display:flex;flex-wrap:wrap;gap:4px 8px}
+#appHeader .app-header-meta{display:flex;flex-wrap:wrap;gap:4px}
+#appHeader .app-header-meta-chip{padding-inline:4px}
 #appHeader #appVerChip{display:inline-flex}
 #appHeader #moreMenuWrap{flex-shrink:0}
 #appHeader .app-header-actions{flex-wrap:wrap;max-width:100%}
 #planWorkspaceHeader .plan-command-divider{display:none}
-@media(min-width:1024px){body.compact-workspace #appHeader .app-header-grid{grid-template-columns:minmax(270px,.7fr) minmax(0,2fr);padding:12px 16px;gap:12px}body.compact-workspace #appHeader .app-header-toolbar{flex-wrap:wrap}body.compact-workspace #appHeader #globalSearchHost{flex:1 1 180px}}
+/* Группы выбора без общей подложки; кнопки разделены одинаковым промежутком. */
+body .rm-segmented:has(>button),body.theme-dark .rm-segmented:has(>button),body [role="tablist"],
+body #moreMenu .workspace-menu-modes,body .task-card-tabs {
+  gap:8px !important;padding:0 !important;background:transparent !important;border:0 !important;box-shadow:none !important;
+}
+body #planWorkspaceHeader :is(#productContextNav,.meeting-choices,.pres-pane-tabs,.kanban-view-actions){display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0;background:transparent;padding-block:0}
+body #planWorkspaceHeader #planViewTabs{gap:8px;margin:0;background:transparent;padding-block:0}
+body #planWorkspaceHeader :is(.meeting-choices,.pres-pane-tabs,.kanban-view-actions){border:0;padding:0}
+body #planWorkspaceHeader .pres-pane-tabs{padding-left:8px;border-left:1px solid var(--rm-border)}
+body #planWorkspaceHeader :is(.rm-btn,[role="tab"]){min-height:var(--rm-toolbar-h);flex:0 0 auto;width:auto;border-color:transparent !important;box-shadow:none !important}
+body #planWorkspaceHeader :is(.rm-btn,[role="tab"]):not([aria-pressed="true"]):not([aria-selected="true"]){background:transparent !important;color:var(--rm-muted) !important}
+body[data-input-mode="pointer"] :is(button,[role="tab"],[role="button"]):focus{outline:none !important;box-shadow:none !important}
+.scrum-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;border-bottom:1px solid var(--rm-border);flex-wrap:wrap}
+.scrum-heading h2{font-size:14px;font-weight:600;margin:0}.scrum-heading h2 span{color:var(--rm-muted);margin-left:8px;font-weight:400}
+.scrum-filters{display:flex;align-items:end;flex-wrap:wrap;gap:12px;padding:16px 16px 8px}
+.scrum-facet{display:flex;flex-direction:column;gap:6px;flex:0 1 300px;min-width:0;color:var(--rm-muted);font-size:12px;font-weight:600}
+#kanbanView .scrum-facet select,#kanbanView .scrum-task select{width:100%;min-width:0;min-height:40px;border:1px solid var(--rm-border);border-radius:8px;background:var(--rm-surface);color:var(--rm-text);font-size:13px;padding:8px}
+.scrum-hint{font-size:12px;line-height:1.5;color:var(--rm-muted);margin:0;padding:0 16px 12px}
+.scrum-groups{display:flex;flex-direction:column;gap:16px;padding:0 16px 16px}
+.scrum-sprint{border:1px solid var(--rm-border);border-radius:12px;overflow:hidden;min-width:0}
+.scrum-sprint>header{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;padding:12px;font-size:12px;color:var(--rm-muted);border-bottom:1px solid var(--rm-border)}
+.scrum-sprint h3{font-size:14px;font-weight:600;color:var(--rm-text);margin:0}.scrum-sprint time{margin-left:auto;font-variant-numeric:tabular-nums}
+.scrum-active{color:var(--rm-selected-text);font-weight:600}
+.scrum-task{display:grid;grid-template-columns:minmax(0,1fr) minmax(140px,220px);align-items:center;gap:12px;padding:8px 12px;border-bottom:1px solid var(--rm-border)}
+.scrum-task:last-child{border-bottom:0}
+#kanbanView .scrum-task-open{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:6px;min-width:0;width:100%;padding:4px 0;background:transparent;border:0;color:var(--rm-text);border-radius:4px;cursor:pointer;white-space:normal;min-height:44px;box-shadow:none}
+.scrum-task-title{font-size:14px;line-height:1.4;overflow-wrap:anywhere}.scrum-key{color:var(--rm-selected-text);font-weight:600}
+.scrum-task-meta{font-size:12px;line-height:1.4;color:var(--rm-muted);overflow-wrap:anywhere}
+.scrum-empty{padding:20px 12px;margin:0;font-size:13px;color:var(--rm-muted)}
+.scrum-drop-active{outline:2px dashed var(--rm-selected-text);outline-offset:-3px}
+@media(max-width:767px){.scrum-groups{padding-inline:8px;gap:12px}.scrum-task{grid-template-columns:minmax(0,1fr);gap:8px}.scrum-facet{flex:1 1 100%}.scrum-sprint time{margin-left:0}#kanbanView .scrum-facet select,#kanbanView .scrum-task select{min-height:44px}.scrum-heading,.scrum-filters{padding-inline:12px}}
+@media(max-width:767px){body #planWorkspaceHeader #productContextNav{padding:8px;border-left:0}body #planWorkspaceHeader :is(.rm-btn,[role="tab"]){min-height:44px}}
+@media(min-width:1024px){body.compact-workspace #appHeader .app-header-grid{grid-template-columns:minmax(400px,.8fr) minmax(0,2fr);padding:8px 16px;column-gap:12px}body.compact-workspace #appHeader .app-header-toolbar{grid-column:2;grid-row:1;flex-wrap:wrap}body.compact-workspace #appHeader #globalSearchHost{flex:1 1 180px}}
 [data-compact-tools-label]{display:none}
 @media(max-width:767px){
+  body.compact-workspace #appHeader .app-header-grid{padding-block:4px;row-gap:4px}
+  body.compact-workspace #statusOverview>button{min-height:44px}
+  body.compact-workspace #statusCompactBtn{width:44px !important;min-width:44px}
+  body.compact-workspace .status-scroll-arrow{display:none}
+  body.compact-workspace #planWorkspaceHeader{padding:0;border-bottom:0;min-height:0}
+  body.compact-workspace #planWorkspaceHeader #zoomControl{margin:6px}
   body.compact-workspace #appHeader .app-header-toolbar{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:6px}
   body.compact-workspace #appHeader #globalSearchHost{grid-column:1;grid-row:1;width:100%;min-width:0}
   body.compact-workspace #appHeader #addTaskHeaderBtn{grid-column:2;grid-row:1;width:44px;min-width:44px;padding:0;justify-content:center}
@@ -9025,7 +9070,14 @@ body.compact-workspace #statusScrollPrev,body.compact-workspace #statusScrollMor
   body.compact-workspace #presentView .pres-common-actions{margin-bottom:8px}
   body.compact-workspace #presentView #presPreviewPane{padding:8px}
 }
-@media(max-width:767px){#planWorkspaceHeader #planFilterBar{margin-left:auto}#planWorkspaceHeader #zoomControl{margin-left:0}#appHeader #autoSaveBtn{display:inline-flex}#workspaceHubLabel{display:none}[data-compact-tools-label]{display:inline}#appHeader .app-header-meta{font-size:11px}#appHeader .app-header-meta-chip{min-height:28px}}
+@media(max-width:767px){#planWorkspaceHeader #zoomControl{margin-left:0}#appHeader #autoSaveBtn{display:inline-flex}#workspaceHubLabel{display:none}[data-compact-tools-label]{display:inline}#appHeader .app-header-meta{font-size:11px}#appHeader .app-header-meta-chip{min-height:28px}}
+/* Поля настраиваются внутри собственного блока, а не вплотную к его границе. */
+#settingsModal #fieldVisibilitySettings{padding:0 12px 12px;min-width:0}
+#settingsModal #fieldVisibilitySettings fieldset{min-width:0;margin:0 0 16px}
+#settingsModal #fieldVisibilitySettings legend{padding:0;margin-bottom:8px}
+#settingsModal .field-visibility-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:8px}
+#settingsModal #fieldVisibilitySettings .rm-settings-card{min-height:48px;align-items:center;gap:12px}
+#settingsModal #fieldVisibilitySettings label>span:first-child{flex:1;min-width:0;white-space:normal;line-height:1.4;overflow-wrap:break-word}
 #shareCenterModal .share-surface{width:min(600px,100%);max-height:calc(100dvh - 32px);display:flex;flex-direction:column;padding:0;overflow:hidden;background:var(--rm-surface);color:var(--rm-text);border:1px solid var(--rm-border);border-radius:16px}
 #shareCenterModal .share-content{padding:0 24px 20px;overflow-y:auto;min-height:0}
 #shareCenterModal .share-intro{margin:0 0 12px;font-size:14px;line-height:1.5;color:var(--rm-muted)}
@@ -9113,7 +9165,7 @@ body.compact-workspace #statusScrollPrev,body.compact-workspace #statusScrollMor
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.2</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.3</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9405,6 +9457,7 @@ body.compact-workspace #statusScrollPrev,body.compact-workspace #statusScrollMor
         <button type="button" id="statusCompactBtn" onclick="toggleStatusCompactMenu(event)" aria-haspopup="menu" aria-expanded="false" class="w-full h-9 px-3 inline-flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">
           <span id="statusCompactLabel" class="truncate">Другие статусы</span>
           <span id="statusCompactCount" class="shrink-0 text-[10px] font-bold text-slate-500"></span>
+          <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 9l6 6 6-6"/></svg>
         </button>
         <div id="statusCompactMenu" data-rm-surface="adaptive-popover" class="hidden fixed w-72 max-h-80 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-[240]"></div>
       </div>
@@ -9436,7 +9489,7 @@ body.compact-workspace #statusScrollPrev,body.compact-workspace #statusScrollMor
           <div class="pl-2.5 pr-1 text-blue-500">
             <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="6" fill="#2563eb"/><text x="12" y="16.5" fill="white" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">J</text></svg>
           </div>
-          <button type="button" id="projectFilterBtn" data-filter-btn data-active="0" onclick="toggleFilterPanel('project')" aria-haspopup="dialog" aria-controls="projectFilterPanel" aria-expanded="false" class="filter-multibtn filter-multibtn-blue h-8 inline-flex items-center gap-1.5 bg-transparent text-slate-700 text-xs font-medium px-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/40 cursor-pointer w-[140px]">
+          <button type="button" id="projectFilterBtn" data-filter-btn data-active="0" onclick="toggleFilterPanel('project',event)" aria-haspopup="dialog" aria-controls="projectFilterPanel" aria-expanded="false" class="filter-multibtn filter-multibtn-blue h-8 inline-flex items-center gap-1.5 bg-transparent text-slate-700 text-xs font-medium px-2 rounded-lg cursor-pointer w-[140px]">
             <span id="projectFilterLabel" class="truncate grow text-left">Все проекты</span>
             <svg aria-hidden="true" class="w-3 h-3 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
           </button>
@@ -9445,7 +9498,7 @@ body.compact-workspace #statusScrollPrev,body.compact-workspace #statusScrollMor
         <div class="w-px h-5 bg-slate-200 self-center hidden sm:block"></div>
 
         <div class="flex items-center bg-slate-50 border border-slate-200 rounded-xl p-0.5">
-          <button type="button" id="typeFilterBtn" data-filter-btn data-active="0" onclick="toggleFilterPanel('type')" aria-haspopup="dialog" aria-controls="typeFilterPanel" aria-expanded="false" class="filter-multibtn h-8 inline-flex items-center gap-1.5 bg-transparent text-slate-700 text-xs font-medium px-2 rounded-lg cursor-pointer">
+          <button type="button" id="typeFilterBtn" data-filter-btn data-active="0" onclick="toggleFilterPanel('type',event)" aria-haspopup="dialog" aria-controls="typeFilterPanel" aria-expanded="false" class="filter-multibtn h-8 inline-flex items-center gap-1.5 bg-transparent text-slate-700 text-xs font-medium px-2 rounded-lg cursor-pointer">
             <span id="typeFilterLabel" class="grow text-left">Все типы задач</span>
             <svg aria-hidden="true" class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="m6 9 6 6 6-6"/></svg>
           </button>
@@ -9455,7 +9508,7 @@ body.compact-workspace #statusScrollPrev,body.compact-workspace #statusScrollMor
           <div class="pl-2.5 pr-1 text-slate-500">
             <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
           </div>
-          <button type="button" id="resourceFilterBtn" data-filter-btn data-active="0" onclick="toggleFilterPanel('resource')" aria-haspopup="dialog" aria-controls="resourceFilterPanel" aria-expanded="false" class="filter-multibtn h-8 inline-flex items-center gap-1.5 bg-transparent text-slate-700 text-xs font-medium px-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/40 cursor-pointer w-[130px]">
+          <button type="button" id="resourceFilterBtn" data-filter-btn data-active="0" onclick="toggleFilterPanel('resource',event)" aria-haspopup="dialog" aria-controls="resourceFilterPanel" aria-expanded="false" class="filter-multibtn h-8 inline-flex items-center gap-1.5 bg-transparent text-slate-700 text-xs font-medium px-2 rounded-lg cursor-pointer w-[130px]">
             <span id="resourceFilterLabel" class="truncate grow text-left">Все исполнители</span>
             <svg aria-hidden="true" class="w-3 h-3 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
           </button>
@@ -9598,7 +9651,7 @@ body.compact-workspace #statusScrollPrev,body.compact-workspace #statusScrollMor
         <div class="h-[64px] border-t border-slate-200 flex relative text-[10px] font-medium text-slate-500 bg-slate-50/80" id="timeline-footer" style="width: 7300px;">
         </div>
       </div>
-      <div id="kanbanView" class="grow min-w-0 min-h-[550px] bg-white flex-col overflow-hidden" style="display:none" role="region" aria-label="Доска задач по статусам"></div>
+      <div id="kanbanView" class="grow min-w-0 min-h-[550px] bg-white flex-col overflow-hidden" style="display:none" role="region" aria-label="Доска задач"></div>
       <div id="forecastView" class="grow min-w-0 min-h-[550px] bg-white flex-col overflow-hidden" style="display:none" role="region" aria-label="Успеваем?: честный прогноз сроков"></div>
       <div id="presentView" class="grow min-w-0 min-h-[550px] bg-white flex-col overflow-hidden" style="display:none" role="region" aria-label="Презентация: роадмап для показа"></div>
       <div id="summaryView" class="grow min-w-0 min-h-[550px] bg-white flex-col overflow-hidden" style="display:none" role="region" aria-label="Сводка: главное о плане одним взглядом"></div>
@@ -9997,7 +10050,7 @@ body.compact-workspace #statusScrollPrev,body.compact-workspace #statusScrollMor
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v17.2">
+<script data-roadmap-modules="v17.3">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -14282,7 +14335,7 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '17.2';
+    const APP_VERSION = '17.3';
     const APP_VERSION_DATE = '09.10.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
@@ -17590,11 +17643,23 @@ if (typeof globalThis !== 'undefined') {
       return toYmdLocal(d);
     }
 
+    var _uiDateFormatters;
+    function _formatUiDate(date, year) {
+      // Кешируется только форматтер, не даты или данные плана.
+      if (!_uiDateFormatters) _uiDateFormatters = Object.create(null);
+      const key = year || 'day-month';
+      if (!_uiDateFormatters[key]) {
+        const options = { day: '2-digit', month: '2-digit' };
+        if (year) options.year = year;
+        _uiDateFormatters[key] = new Intl.DateTimeFormat('ru-RU', options);
+      }
+      return _uiDateFormatters[key].format(date);
+    }
     function formatDateWithYear(dateStr) {
       if (!dateStr) return '';
       const date = parseLocalDate(dateStr);
       if (isNaN(date)) return dateStr;
-      return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      return _formatUiDate(date, 'numeric');
     }
     function formatForecastDate(dateStr, peerDate) {
       if (!dateStr) return '';
@@ -17607,7 +17672,7 @@ if (typeof globalThis !== 'undefined') {
       if (!dateStr) return '';
       const date = parseLocalDate(dateStr);
       if (isNaN(date)) return dateStr;
-      return date.toLocaleDateString('ru-RU', _tlMultiYear ? { day: '2-digit', month: '2-digit', year: '2-digit' } : { day: '2-digit', month: '2-digit' });
+      return _formatUiDate(date, _tlMultiYear ? '2-digit' : '');
     }
 
     // Номер ISO-недели (правило четверга): неделя принадлежит году, в котором ее четверг
@@ -17983,13 +18048,18 @@ if (typeof globalThis !== 'undefined') {
     }
     // Три пользовательских масштаба; при открытии плана выбрана текущая неделя.
     var _ZOOM_OPTS = [['day', 'По дням'], ['currentWeek', 'Неделя'], ['month', 'Месяц']];
+    // Рамка нужна клавиатуре, но не служебному восстановлению фокуса после клика.
+    document.addEventListener('pointerdown', () => { document.body.dataset.inputMode = 'pointer'; }, true);
+    document.addEventListener('keydown', event => {
+      if (!['Shift','Control','Alt','Meta'].includes(event.key)) document.body.dataset.inputMode = 'keyboard';
+    }, true);
     function choiceMenuItems(menu) {
       return Array.from(menu.querySelectorAll('[role="menuitemradio"],[role="menuitemcheckbox"]')).filter(function (item) { return !item.disabled && item.getAttribute('aria-hidden') !== 'true'; });
     }
     function focusChoiceMenu(menu) {
       const items = choiceMenuItems(menu);
       const current = items.find(function (item) { return item.getAttribute('tabindex') === '0'; }) || items[0];
-      if (current) current.focus();
+      if (current) current.focus({preventScroll:true});
     }
     function openChoiceMenuFromKey(event, trigger, menu) {
       if (!menu || (event.key !== 'ArrowDown' && event.key !== 'ArrowUp')) return;
@@ -17997,7 +18067,7 @@ if (typeof globalThis !== 'undefined') {
       if (menu.classList.contains('hidden')) trigger.click();
       const choices = choiceMenuItems(menu);
       const target = event.key === 'ArrowUp' ? choices[choices.length - 1] : choices[0];
-      if (target) target.focus();
+      if (target) target.focus({preventScroll:true});
     }
     function setupChoiceMenu(menu, trigger, restoreKey) {
       if (!menu || !trigger) return;
@@ -18006,14 +18076,14 @@ if (typeof globalThis !== 'undefined') {
       const active = items.find(function (item) { return restoreKey != null && item.getAttribute('data-choice-option') === restoreKey; })
         || items.find(function (item) { return item.getAttribute('aria-checked') === 'true'; }) || items[0];
       items.forEach(function (item) { item.setAttribute('tabindex', item === active ? '0' : '-1'); });
-      if (restoreKey != null && active && !menu.classList.contains('hidden')) active.focus();
+      if (restoreKey != null && active && !menu.classList.contains('hidden')) active.focus({preventScroll:true});
       menu.onfocusin = function (event) {
         const target = event.target.closest('[data-choice-option]');
         if (target && menu.contains(target)) choiceMenuItems(menu).forEach(function (item) { item.setAttribute('tabindex', item === target ? '0' : '-1'); });
       };
       menu.onkeydown = function (event) {
         if (event.key === 'Escape' || event.key === 'Tab') {
-          menu.classList.add('hidden'); trigger.setAttribute('aria-expanded', 'false'); trigger.focus();
+          menu.classList.add('hidden'); trigger.setAttribute('aria-expanded', 'false'); trigger.focus({preventScroll:true});
           if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); }
           return;
         }
@@ -18026,7 +18096,7 @@ if (typeof globalThis !== 'undefined') {
         else if (event.key === 'End') index = choices.length - 1;
         else index = (index + (event.key === 'ArrowDown' ? 1 : -1) + choices.length) % choices.length;
         choices.forEach(function (item, i) { item.setAttribute('tabindex', i === index ? '0' : '-1'); });
-        choices[index].focus();
+        choices[index].focus({preventScroll:true});
       };
       trigger.onkeydown = function (event) { openChoiceMenuFromKey(event, trigger, menu); };
     }
@@ -18042,8 +18112,8 @@ if (typeof globalThis !== 'undefined') {
       }).join('');
       setupChoiceMenu(m, document.getElementById('zoomMenuBtn'));
     }
-    function toggleZoomMenu(e) { if (e) { e.stopPropagation(); } var m = document.getElementById('zoomMenu'), b = document.getElementById('zoomMenuBtn'); if (!m) return; if (m.classList.contains('hidden')) { _renderZoomMenu(); m.classList.remove('hidden'); if (b) b.setAttribute('aria-expanded', 'true'); focusChoiceMenu(m); } else { closeZoomMenu(true); } }
-    function closeZoomMenu(restoreFocus) { var m = document.getElementById('zoomMenu'), b = document.getElementById('zoomMenuBtn'); if (m) m.classList.add('hidden'); if (b) { b.setAttribute('aria-expanded', 'false'); if (restoreFocus) b.focus(); } }
+    function toggleZoomMenu(e) { if (e) { e.stopPropagation(); } var m = document.getElementById('zoomMenu'), b = document.getElementById('zoomMenuBtn'); if (!m) return; if (m.classList.contains('hidden')) { _renderZoomMenu(); m.classList.remove('hidden'); if (b) b.setAttribute('aria-expanded', 'true'); if (e && e.detail === 0) focusChoiceMenu(m); } else { closeZoomMenu(true); } }
+    function closeZoomMenu(restoreFocus) { var m = document.getElementById('zoomMenu'), b = document.getElementById('zoomMenuBtn'); if (m) m.classList.add('hidden'); if (b) { b.setAttribute('aria-expanded', 'false'); if (restoreFocus) b.focus({preventScroll:true}); } }
     document.addEventListener('click', function (e) { var m = document.getElementById('zoomMenu'), b = document.getElementById('zoomMenuBtn'); if (m && !m.classList.contains('hidden') && b && !b.contains(e.target) && !m.contains(e.target)) closeZoomMenu(); }, true);
 
     function setTimelineZoom(level) {
@@ -19008,13 +19078,20 @@ if (typeof globalThis !== 'undefined') {
     }
 
     function toggleSectionCollapse(sectionName) {
+      const origin = document.activeElement;
+      const restoreFocus = origin && origin.matches('[aria-expanded][onclick^="toggleSectionCollapse("]');
       const index = collapsedSections.indexOf(sectionName);
       if (index > -1) collapsedSections.splice(index, 1);
       else collapsedSections.push(sectionName);
       storage.set('gantt_collapsed_sections', JSON.stringify(collapsedSections));
       _detailLevel = null;
       updateLevelSegUI();
-      renderRoadmap(true);
+      renderRoadmap(true, { reuseTaskRows: true });
+      if (restoreFocus) {
+        const header = document.getElementById('header-left-' + planSections.indexOf(sectionName));
+        const trigger = header && header.querySelector('[aria-expanded][onclick^="toggleSectionCollapse("]');
+        if (trigger) trigger.focus({ preventScroll: true });
+      }
     }
     // Свернуть/развернуть все секции разом. Если все уже свернуты , разворачиваем, иначе сворачиваем.
     function toggleAllSections() {
@@ -21361,7 +21438,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (reason === 'dates') return !t.start || !t.end;
       return true;
     }
-    function taskPassesFilters(t) {
+    function taskPassesFilters(t, options = {}) {
       if (!taskMatchesTypeFilter(t)) return false;
       // R2: режим «Горит» , задача горит (просрочена / срок в ближайшие 2 дня / блокер), кроме завершенных и вех.
       if (_goritMode && !_taskIsHot(t)) return false;
@@ -21391,7 +21468,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         if (!ok) return false;
       }
       if (!taskPassesCustomFieldFilters(t)) return false;
-      if (resourceFilterSel.size) {
+      if (resourceFilterSel.size && !options.ignoreResource) {
         const _toks = splitResourceTokens(t.resource).map(x => x.toLowerCase());
         const _names = splitResourceTokens(t.resource).map(x => parseResourceToken(x).name.toLowerCase());
         let ok = false;
@@ -21509,17 +21586,29 @@ const m = document.getElementById('mineModeBtn');
       if (m) { m.setAttribute('aria-pressed', _mineMode ? 'true' : 'false');
         m.className = 'shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl border transition-colors cursor-pointer ' + (_mineMode ? 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200'); }
     }
-    // Описание трех фильтров для генерации UI
+    function resourceFilterSummary() {
+      const counts = new Map();
+      let total = 0;
+      for (const task of roadmapData || []) {
+        if (!task || task.hidden || task.isMilestone || !taskPassesFilters(task, {ignoreResource:true})) continue;
+        total++;
+        const tokens = splitResourceTokens(task.resource);
+        const people = new Set(tokens.flatMap(token => [token.toLowerCase(), parseResourceToken(token).name.toLowerCase()]));
+        if (!String(task.resource || '').trim()) people.add('__unassigned__');
+        people.forEach(name => counts.set(name, (counts.get(name) || 0) + 1));
+      }
+      const ids = new Set([...(projectResources || []), ...resourceFilterSel]);
+      if (counts.has('__unassigned__')) ids.add('__unassigned__');
+      const options = [...ids].map(id => ({id, name:id === '__unassigned__' ? 'Не назначено' : id, count:counts.get(String(id).toLowerCase()) || 0}));
+      options.sort((a,b) => b.count - a.count || a.name.localeCompare(b.name,'ru'));
+      return {total, options};
+    }
+    // Описание фильтров для генерации UI.
     const FILTER_DEFS = {
       type: { set: () => typeFilterSel, allLabel: 'Все типы задач', noun: ['тип','типа','типов'],
             options: taskTypeFilterOptions },
       resource: { set: () => resourceFilterSel, allLabel: 'Все исполнители', noun: ['исполнитель','исполнителя','исполнителей'],
-            options: () => {
-              const opts = projectResources.map(r => ({ id: r, name: r }));
-              // «Не назначено» , вверху, если есть неназначенные задачи (п.1)
-              if (roadmapData.some(t => !t.isMilestone && !(t.resource || '').trim())) opts.unshift({ id: '__unassigned__', name: 'Не назначено' });
-              return opts;
-            } },
+            options: () => resourceFilterSummary().options },
       status:  { set: () => statusFilterSel, allLabel: 'Все статусы', noun: ['статус','статуса','статусов'],
             options: () => getDisplayStatuses().map(s => ({ id: s.id, name: s.name })).concat([{ id: 'overdue', name: 'Просрочено' }, { id: 'milestone', name: 'Вехи' }, { id: 'blocked', name: 'Блокеры' }]) },
       project: { set: () => projectFilterSel, allLabel: 'Все проекты', noun: ['проект','проекта','проектов'],
@@ -21550,14 +21639,30 @@ const m = document.getElementById('mineModeBtn');
       });
     }
     let _filterPanelOpenedAt = 0;
-    function toggleFilterPanel(kind) {
+    function toggleFilterPanel(kind, event) {
       const panel = document.getElementById(kind + 'FilterPanel');
       if (!panel) return;
       const wasHidden = panel.classList.contains('hidden');
-      closeAllFilterPanels();
-      if (wasHidden) openFilterPanel(kind);
+      closeAllFilterPanels(true);
+      closePresetMenu();
+      if (wasHidden) openFilterPanel(kind, event);
     }
-    function openFilterPanel(kind) {
+    function positionFilterPopover(panel, btn) {
+      if (!panel || !btn || panel.classList.contains('hidden')) return;
+      const r = btn.getBoundingClientRect(), edge = 8, gap = 6;
+      if (!r.width || !r.height) return;
+      // На телефоне общий адаптивный стиль закрепляет меню у нижнего края.
+      if (window.innerWidth < 768) return;
+      const pw = panel.offsetWidth || 224;
+      const below = innerHeight - r.bottom - gap - edge, above = r.top - gap - edge;
+      const height = Math.min(panel.scrollHeight, 416);
+      const down = below >= Math.min(height,180) || below >= above;
+      const available = Math.max(80, down ? below : above);
+      panel.style.maxHeight = Math.min(416, available) + 'px';
+      panel.style.left = Math.max(edge, Math.min(r.left, innerWidth - pw - edge)) + 'px';
+      panel.style.top = (down ? r.bottom + gap : Math.max(edge,r.top - gap - Math.min(height,available))) + 'px';
+    }
+    function openFilterPanel(kind, event) {
       const panel = document.getElementById(kind + 'FilterPanel');
       const btn = document.getElementById(kind + 'FilterBtn');
       if (!panel || !btn) return;
@@ -21567,13 +21672,8 @@ const m = document.getElementById('mineModeBtn');
       panel.classList.remove('hidden');
       btn.setAttribute('aria-expanded', 'true');
       _filterPanelOpenedAt = performance.now();
-      const r = btn.getBoundingClientRect();
-      const pw = panel.offsetWidth || 224;
-      let left = r.left;
-      if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
-      panel.style.left = Math.max(8, left) + 'px';
-      panel.style.top = (r.bottom + 6) + 'px';
-      panel.querySelector('button[data-act]')?.focus({preventScroll:true});
+      positionFilterPopover(panel, btn);
+      if (event && event.detail === 0) (panel.querySelector('[aria-pressed="true"]') || panel.querySelector('button[data-act]'))?.focus({preventScroll:true});
       setTimeout(() => document.addEventListener('mousedown', filterPanelOutside, true), 0);
     }
     function filterPanelOutside(e) {
@@ -21600,31 +21700,42 @@ const m = document.getElementById('mineModeBtn');
       if (!panel) return;
       const focused = panel.contains(document.activeElement) ? document.activeElement : null;
       const focusedAction = focused?.dataset.act, focusedValue = focused?.dataset.value;
-      const opts = def.options();
+      const summary = kind === 'resource' ? resourceFilterSummary() : null;
+      const opts = summary ? summary.options : def.options();
       const allActive = set.size === 0;
       let html = `<button type="button" data-act="all" aria-pressed="${allActive}" class="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${allActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-100'}">
-        <span class="w-4 h-4 flex items-center justify-center rounded border ${allActive ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-slate-300'}">${allActive ? '✓' : ''}</span>
-        <span class="grow text-left">${def.allLabel}</span>
+        <span aria-hidden="true" class="rm-choice-indicator w-4 h-4 flex items-center justify-center rounded border ${allActive ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-slate-300'}">${allActive ? '✓' : ''}</span>
+        <span class="grow text-left">${def.allLabel}</span>${summary ? `<span data-task-count class="shrink-0 tabular-nums">${summary.total}</span>` : ''}
       </button>`;
       if (opts.length) {
         html += `<div class="my-1 h-px bg-slate-100"></div>`;
         html += opts.map(o => {
           const checked = set.has(o.id);
           return `<button type="button" data-act="toggle" data-value="${escAttr(o.id)}" aria-pressed="${checked}" class="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${checked ? 'bg-indigo-50 text-indigo-700 font-medium' : 'text-slate-600 hover:bg-slate-100'}">
-            <span class="w-4 h-4 flex items-center justify-center rounded border shrink-0 ${checked ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-slate-300'}">${checked ? '✓' : ''}</span>
-            <span class="grow text-left truncate">${escHtml(o.name)}</span>
+            <span aria-hidden="true" class="rm-choice-indicator w-4 h-4 flex items-center justify-center rounded border shrink-0 ${checked ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-slate-300'}">${checked ? '✓' : ''}</span>
+            <span class="grow text-left truncate">${escHtml(o.name)}</span>${summary ? `<span data-task-count class="shrink-0 tabular-nums">${o.count}</span>` : ''}
           </button>`;
         }).join('');
       } else {
         html += `<div class="px-2.5 py-2 text-[10px] text-slate-500 italic">Нет вариантов</div>`;
       }
-      panel.innerHTML = html;
+      // Сохраняем кнопки при выборе: фокус и прокрутка не теряются из-за innerHTML.
+      const template = document.createElement('template'); template.innerHTML = html;
+      const oldRows = Array.from(panel.children), newRows = Array.from(template.content.children);
+      const sameRows = oldRows.length === newRows.length && oldRows.every((row,i) => row.tagName === newRows[i].tagName && row.dataset.act === newRows[i].dataset.act && row.dataset.value === newRows[i].dataset.value);
+      if (sameRows) oldRows.forEach((row,i) => {
+        row.className = newRows[i].className;
+        if (newRows[i].hasAttribute('aria-pressed')) row.setAttribute('aria-pressed',newRows[i].getAttribute('aria-pressed'));
+        row.innerHTML = newRows[i].innerHTML;
+      });
+      else panel.replaceChildren(template.content);
+      if (typeof normalizeUiChrome === 'function') normalizeUiChrome(panel);
       panel.querySelectorAll('button[data-act]').forEach(b => {
-        b.addEventListener('click', () => {
+        b.onclick = () => {
           if (b.dataset.act === 'all') clearFilter(kind);
           else toggleFilterValue(kind, b.dataset.value);
-        });
-        if (focusedAction && b.dataset.act === focusedAction && b.dataset.value === focusedValue) b.focus({preventScroll:true});
+        };
+        if (!sameRows && focusedAction && b.dataset.act === focusedAction && b.dataset.value === focusedValue) b.focus({preventScroll:true});
       });
     }
     function toggleFilterValue(kind, value) {
@@ -21699,7 +21810,25 @@ const m = document.getElementById('mineModeBtn');
       const btn = document.getElementById('selectModeBtn');
       if (btn) { btn.classList.toggle('select-on', selectMode); btn.title = selectMode ? 'Готово (выйти из режима выбора)' : 'Выбрать несколько задач'; }
       updateBulkBar();
-      renderRoadmap(true);
+      refreshBulkSelectionUI();
+      if (typeof queueTaskRowHeights === 'function') queueTaskRowHeights();
+    }
+    function refreshBulkSelectionUI() {
+      const selectedRows = new Set(Array.from(selectedTaskIds, String));
+      document.querySelectorAll('#tasks-list-container .task-list-row').forEach(row => {
+        const id = row.id.slice('task-row-left-'.length);
+        const on = selectedRows.has(id);
+        row.classList.toggle('bg-indigo-50/60', on);
+        if (selectMode) row.setAttribute('aria-pressed', String(on));
+        else row.removeAttribute('aria-pressed');
+        const cb = row.querySelector('.bulk-cb');
+        if (!cb) return;
+        cb.classList.toggle('bg-indigo-600', on); cb.classList.toggle('border-indigo-600', on);
+        cb.classList.toggle('border-slate-300', !on); cb.classList.toggle('bg-white', !on);
+        const content = on ? '<svg aria-hidden="true" class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>' : '';
+        if (cb.innerHTML !== content) cb.innerHTML = content;
+      });
+      document.querySelectorAll('[data-secbulk]').forEach(cb => _refreshSectionBulkCb(cb.getAttribute('data-secbulk')));
     }
     function _refreshSectionBulkCb(sectionName) {
       if (!sectionName) return;
@@ -21719,7 +21848,7 @@ const m = document.getElementById('mineModeBtn');
       const cb = document.querySelector(`#task-row-left-${id} .bulk-cb`);
       if (cb) { cb.className = `bulk-cb shrink-0 mr-2.5 w-5 h-5 rounded-md border-2 flex items-center justify-center cursor-pointer transition-colors ${on ? 'bg-indigo-600 border-indigo-600' : 'border-slate-300 bg-white'}`; cb.innerHTML = on ? '<svg aria-hidden="true" class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>' : ''; }
       const row = document.getElementById(`task-row-left-${id}`);
-      if (row) row.classList.toggle('bg-indigo-50/60', on);
+      if (row) { row.classList.toggle('bg-indigo-50/60', on); row.setAttribute('aria-pressed', String(on)); }
       const _t = roadmapData.find(t => t.id === id); if (_t) _refreshSectionBulkCb(_t.section); // L17: трехсостоянийный чекбокс секции в синхроне с поштучным выбором
       updateBulkBar();
     }
@@ -21850,7 +21979,7 @@ const m = document.getElementById('mineModeBtn');
       };
       if (typeof openConfirm === 'function') { openConfirm({ title: 'Объединить задачи', danger: true, okText: 'Объединить', desc: others.length + ' ' + _plural(others.length) + ' будут слиты в главную' + (base.jira ? ' (' + base.jira + ')' : '') + ', остальные удалятся. Действие можно отменить.', onOk: _doMerge }); } else { _doMerge(); }
     }
-    function clearBulkSelect() { selectedTaskIds.clear(); updateBulkBar(); renderRoadmap(true); }
+    function clearBulkSelect() { selectedTaskIds.clear(); updateBulkBar(); refreshBulkSelectionUI(); }
     // ===== Массовые операции над выборкой (п. F2): сдвиг дат, релиз, исполнитель, метка. Поповер над панелью выбора =====
     function closeBulkPopover() {
       const p = document.getElementById('bulkPopover');
@@ -21992,7 +22121,7 @@ const m = document.getElementById('mineModeBtn');
       const allSel = ids.every(id => selectedTaskIds.has(id));
       if (allSel) ids.forEach(id => selectedTaskIds.delete(id)); else ids.forEach(id => selectedTaskIds.add(id));
       updateBulkBar();
-      renderRoadmap(true);
+      refreshBulkSelectionUI();
     }
     function duplicateTask() {
       if (READ_ONLY_MODE) return;
@@ -22384,9 +22513,9 @@ const m = document.getElementById('mineModeBtn');
       if (!host) return;
       if (!host.children.length) {
         host.innerHTML = '<p class="text-xs text-slate-500 mb-3">Видимость полей на этом устройстве. Значения и расчеты сохраняются. Поля отключенного модуля появятся после его включения.</p>' +
-          ['task', 'project'].map(group => '<fieldset class="mb-3"><legend class="text-xs font-semibold mb-2">' + (group === 'task' ? 'Поля карточки задачи' : 'Поля в шапке проекта') + '</legend><div class="grid grid-cols-1 sm:grid-cols-2 gap-2">' +
+          ['task', 'project'].map(group => '<fieldset class="mb-3"><legend class="text-xs font-semibold mb-2">' + (group === 'task' ? 'В карточке задачи' : 'В шапке проекта') + '</legend><div class="field-visibility-grid">' +
             FIELD_VISIBILITY.filter(field => field.group === group).map(field => '<label class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer"><span class="min-w-0 text-xs font-medium">' + field.label + '</span><span class="feat-switch shrink-0"><input type="checkbox" id="fieldTgl_' + field.key + '" onchange="setFieldVisibility(\'' + field.key + '\',this.checked)"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label>').join('') + '</div></fieldset>').join('') +
-          '<h3 class="text-xs font-semibold mb-2">Функции проекта</h3>';
+          '';
       }
       FIELD_VISIBILITY.forEach(field => { const control = document.getElementById('fieldTgl_' + field.key); if (control) control.checked = fieldVisibility[field.key] !== false; });
     }
@@ -22933,13 +23062,15 @@ const m = document.getElementById('mineModeBtn');
       const menu = document.getElementById('presetMenu'); if (!menu) return;
       const willOpen = menu.classList.contains('hidden');
       const btn = (e && e.currentTarget && e.currentTarget.id === 'presetBtn') ? e.currentTarget : document.getElementById('presetBtn');
-      const anchorRect = btn ? btn.getBoundingClientRect() : null;
-      closeAllPopovers();
+      closeAllFilterPanels(true);
+      closePresetMenu();
       if (willOpen) {
         if (menu.parentElement !== document.body) document.body.appendChild(menu);
         renderPresetMenu();
-        if (anchorRect) { menu.style.top = (anchorRect.bottom + 6) + 'px'; menu.style.left = Math.max(8, Math.min(anchorRect.right - 224, window.innerWidth - 232)) + 'px'; }
+        if (typeof normalizeUiChrome === 'function') normalizeUiChrome(menu);
         menu.classList.remove('hidden');
+        positionFilterPopover(menu, btn);
+        if (e && e.detail === 0) menu.querySelector('button')?.focus({preventScroll:true});
       }
       if (btn) btn.setAttribute('aria-expanded', !menu.classList.contains('hidden') ? 'true' : 'false');
     }
@@ -23381,10 +23512,14 @@ const m = document.getElementById('mineModeBtn');
         if (!panel || panel.classList.contains('hidden') || !button) return false;
         const rect = button.getBoundingClientRect();
         if (!rect.width || rect.top < 0 || rect.bottom > innerHeight) return false;
-        panel.style.top = (rect.bottom+6)+'px';
+        positionFilterPopover(panel, button);
         return true;
       });
       if (anchoredFilter) return;
+      const preset = document.getElementById('presetMenu'), presetButton = document.getElementById('presetBtn');
+      if (preset && !preset.classList.contains('hidden') && !document.getElementById('filterToolsWrap').hidden) {
+        positionFilterPopover(preset, presetButton); return;
+      }
       // Правая шторка — самостоятельный рабочий экран. Перевод фокуса в неё
       // иногда создаёт служебный scroll корня; закрывать окно из-за этого нельзя.
       const openedDrawer = Array.from(document.querySelectorAll('.rm-drawer-popover'))
@@ -23394,6 +23529,18 @@ const m = document.getElementById('mineModeBtn');
     }, true);
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
+      const child = document.querySelector('[data-filter-panel]:not(.hidden),#presetMenu:not(.hidden)');
+      if (child) {
+        const trigger = document.querySelector('[aria-controls="' + child.id + '"]');
+        closeAllFilterPanels(true); closePresetMenu();
+        trigger?.focus({preventScroll:true});
+        e.preventDefault(); e.stopImmediatePropagation(); return;
+      }
+      const filters = document.getElementById('filterToolsWrap');
+      if (filters && !filters.hidden) {
+        toggleFilterTools(false); document.getElementById('filterToolsBtn')?.focus({preventScroll:true});
+        e.preventDefault(); e.stopImmediatePropagation(); return;
+      }
       const hadDrawer = Array.from(document.querySelectorAll('.rm-drawer-popover')).some(function (popup) {
         return !popup.classList.contains('hidden') && (typeof _uiLayerIsSuspended !== 'function' || !_uiLayerIsSuspended(popup)) && getComputedStyle(popup).display !== 'none';
       });
@@ -29970,11 +30117,11 @@ const m = document.getElementById('mineModeBtn');
       var pane = event.key === 'Home' ? 'compose' : (event.key === 'End' ? 'preview' : (current === 'compose' ? 'preview' : 'compose'));
       _presSetMobilePane(pane);
       var tab = document.querySelector('[data-pres-tab="' + pane + '"]');
-      if (tab) tab.focus();
+      if (tab) tab.focus({preventScroll:true});
     }
     function _presMobileTabsHtml() {
       var composeOn = _presMobilePane === 'compose';
-      return '<div class="pres-pane-tabs mb-3 p-1 rounded-xl bg-slate-100 border border-slate-200 no-print no-image-export" role="tablist" aria-label="Разделы презентации" aria-orientation="horizontal">'
+      return '<div class="pres-pane-tabs no-print no-image-export" role="tablist" aria-label="Разделы презентации" aria-orientation="horizontal">'
         + '<button id="presComposeTab" type="button" role="tab" data-pres-tab="compose" data-active="' + (composeOn ? 'true' : 'false') + '" aria-controls="presComposePane" aria-selected="' + (composeOn ? 'true' : 'false') + '" tabindex="' + (composeOn ? '0' : '-1') + '" onclick="_presSetMobilePane(\'compose\')" onkeydown="_presTabKey(event)" class="min-h-11 px-3 rounded-lg text-sm font-semibold">Содержание</button>'
         + '<button id="presPreviewTab" type="button" role="tab" data-pres-tab="preview" data-active="' + (composeOn ? 'false' : 'true') + '" aria-controls="presPreviewPane" aria-selected="' + (composeOn ? 'false' : 'true') + '" tabindex="' + (composeOn ? '-1' : '0') + '" onclick="_presSetMobilePane(\'preview\')" onkeydown="_presTabKey(event)" class="min-h-11 px-3 rounded-lg text-sm font-semibold">Просмотр</button>'
         + '</div>';
@@ -30022,6 +30169,7 @@ const m = document.getElementById('mineModeBtn');
       var formats = _meetingOtherFormatsHtml();
       if (_meetingContent !== 'plan') {
         v.innerHTML = head + '<div class="p-4 grow overflow-auto">' + choices + _meetingResultHtml() + formats + '</div>';
+        mountViewContextControls('present');
         return;
       }
       var sets = (presentations && presentations.sets) || [];
@@ -30029,6 +30177,7 @@ const m = document.getElementById('mineModeBtn');
         v.innerHTML = head + '<div class="p-6 grow overflow-auto"><div class="max-w-lg mx-auto text-center py-12"><div class="text-sm text-slate-600 mb-4">Соберите роадмап для показа: выберите задачи из плана, дайте им понятные названия и сгруппируйте по MVP со своими сроками. Группы и названия не меняют основной план; перетаскивание полосы меняет даты соответствующей задачи.</div>' + (ro ? '<div class="text-[12px] text-slate-400">В режиме просмотра наборы не создаются.</div>' : '<button onclick="_presNew()" class="inline-flex items-center h-9 px-4 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 cursor-pointer">Создать набор</button><button onclick="_presBuildFromReleases()" class="inline-flex items-center h-9 px-4 rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-semibold hover:bg-slate-50 cursor-pointer ml-2">Собрать из релизов</button>') + '</div></div>';
         var emptyBody = v.querySelector('.grow');
         if (emptyBody) { emptyBody.insertAdjacentHTML('afterbegin', choices); emptyBody.insertAdjacentHTML('beforeend', formats); }
+        mountViewContextControls('present');
         return;
       }
       var set = _presActive();
@@ -30041,6 +30190,7 @@ const m = document.getElementById('mineModeBtn');
         meetingBody.insertAdjacentHTML('afterbegin', choices);
         meetingBody.insertAdjacentHTML('beforeend', formats);
       }
+      mountViewContextControls('present');
       _presApplyMobilePane();
       v.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),select,textarea').forEach(function (control) { control.classList.add('rm-control'); });
       if (typeof _normalizeUiButton === 'function') v.querySelectorAll('.pres-group-editor button').forEach(function (button) {
@@ -30448,6 +30598,17 @@ const m = document.getElementById('mineModeBtn');
       context.hidden = !views.length;
       context.setAttribute('aria-label', area === 'plan' ? 'Виды плана' : 'Сроки и риски');
     }
+    function mountViewContextControls(view) {
+      if (appView !== view) return;
+      const context = document.getElementById('productContextNav');
+      const root = document.getElementById(view === 'present' ? 'presentView' : 'kanbanView');
+      if (!context || !root) return;
+      const controls = Array.from(root.querySelectorAll(view === 'present' ? '.meeting-choices,.pres-pane-tabs' : '.kanban-view-actions'));
+      context.replaceChildren(...controls);
+      context.hidden = !controls.length;
+      context.setAttribute('aria-label',view === 'present' ? 'Для встречи' : 'Настройки доски');
+      if (typeof normalizeUiChrome === 'function') normalizeUiChrome(context);
+    }
     function _viewSwitcherBtnHtml() {
       // Основной переключатель теперь всегда виден отдельной подписанной строкой над планом.
       // Иконки оставляем только как запасной вариант для старых/вырезанных представлений без этой строки.
@@ -30854,8 +31015,106 @@ const m = document.getElementById('mineModeBtn');
       cols.forEach(function (col, i) { var c = col.offsetLeft + col.offsetWidth / 2; var d = Math.abs(c - center); if (d < best) { best = d; nearest = i; } });
       out.textContent = (nearest + 1) + ' / ' + cols.length;
     }
+    // Оба режима используют те же задачи; выбор спринта не меняет сроки и статус.
+    let _boardMode = storage.get('gantt_board_mode') === 'scrum' ? 'scrum' : 'kanban';
+    let _scrumRelease = null, _scrumSection = null;
+    function _boardModeButtons() {
+      return ['kanban','scrum'].map(mode => `<button type="button" class="rm-btn rm-btn-ghost" data-board-mode="${mode}" aria-pressed="${_boardMode===mode}" onclick="setBoardMode('${mode}')">${mode==='scrum'?'Скрам':'Канбан'}</button>`).join('');
+    }
+    function setBoardMode(mode) {
+      if (!['kanban','scrum'].includes(mode)) return;
+      _boardMode = mode; storage.set('gantt_board_mode',mode); renderKanban();
+      const btn = document.querySelector('[data-board-mode="'+mode+'"]');
+      if (btn) btn.focus({preventScroll:true});
+    }
+    function scrumSprintCatalog(tasks, configured) {
+      const catalog = new Map();
+      (Array.isArray(configured)?configured:[]).forEach(s => {
+        const name = String(s && s.name || '').trim();
+        if (name && !catalog.has(name)) catalog.set(name,{name,from:s.from||'',to:s.to||'',id:String(s.id||'')});
+      });
+      (tasks || []).forEach(t => {
+        const name = String(t && t.sprint || '').trim();
+        if (name && !catalog.has(name)) catalog.set(name,{name,from:'',to:'',id:''});
+      });
+      return [...catalog.values()].sort((a,b) => (a.from||'9999').localeCompare(b.from||'9999') || a.name.localeCompare(b.name,'ru',{numeric:true}));
+    }
+    function _scrumCatalog() {
+      let configured = [];
+      try { configured = JSON.parse(storage.get('gantt_sprints') || '[]'); } catch(e) {}
+      // Не вызываем _getSprints(): просмотр не должен создавать примерные спринты.
+      return scrumSprintCatalog((roadmapData||[]).filter(t=>t&&!t.hidden&&!t.isMilestone),configured);
+    }
+    function _scrumSetFilter(field,value) {
+      if (field==='release') _scrumRelease=value==='*'?null:value;
+      if (field==='section') _scrumSection=value==='*'?null:value;
+      renderScrum();
+      const el=document.getElementById('scrumFilter-'+field); if(el) el.focus({preventScroll:true});
+    }
+    function _scrumMoveTask(id,sprint) {
+      if (typeof READ_ONLY_MODE!=='undefined' && READ_ONLY_MODE) return false;
+      if (typeof requireUnlocked==='function' && !requireUnlocked()) return false;
+      const task=(roadmapData||[]).find(t=>t&&String(t.id)===String(id));
+      if (!task || task.hidden || task.isMilestone || typeof sprint!=='string') return false;
+      if (sprint && !_scrumCatalog().some(s=>s.name===sprint)) return false;
+      const old=String(task.sprint||'').trim(); if(old===sprint) return false;
+      const snap=captureUndoState();
+      task.sprint=sprint;
+      if (!Array.isArray(task.history)) task.history=[];
+      task.history.push({at:toYmdLocal(CURRENT_DATE||new Date()),time:_auditClock(),by:_authorName(),field:'Спринт',old,new:sprint});
+      task.updated=toYmdLocal(CURRENT_DATE||new Date());
+      persistProjectState(); scheduleAutoSaveFile(); renderRoadmap(true);
+      offerUndo('Спринт: '+(sprint||'Без спринта'),snap);
+      const row=[...document.querySelectorAll('[data-scrum-task]')].find(n=>n.dataset.scrumTask===String(id));
+      const select=row&&row.querySelector('select');
+      if(select) select.focus({preventScroll:true});
+      return true;
+    }
+    function _scrumDragStart(event,id) {
+      if (typeof READ_ONLY_MODE!=='undefined' && READ_ONLY_MODE) {event.preventDefault();return;}
+      event.dataTransfer.setData('application/x-roadmap-scrum-task',String(id));
+      event.dataTransfer.effectAllowed='move';
+    }
+    function _scrumDrop(event,target) {
+      event.preventDefault(); target.classList.remove('scrum-drop-active');
+      const id=event.dataTransfer.getData('application/x-roadmap-scrum-task');
+      if(id) _scrumMoveTask(id,target.dataset.scrumSprint);
+    }
+    function renderScrum() {
+      const kv=document.getElementById('kanbanView'); if(!kv)return;
+      const ro=typeof READ_ONLY_MODE!=='undefined'&&READ_ONLY_MODE;
+      const all=(roadmapData||[]).filter(t=>t&&!t.hidden&&!t.isMilestone&&taskPassesFilters(t));
+      const catalog=_scrumCatalog(),statuses=getDisplayStatuses();
+      const text=(t,field)=>String(t[field]||'').trim();
+      const facet=(field,selected,label,empty)=>{
+        const counts=new Map(); all.forEach(t=>{const v=text(t,field);counts.set(v,(counts.get(v)||0)+1);});
+        if(selected!==null&&!counts.has(selected))counts.set(selected,0);
+        return `<label class="scrum-facet"><span>${label}</span><select id="scrumFilter-${field}" onchange="_scrumSetFilter('${field}',this.value)" aria-label="${label}"><option value="*"${selected===null?' selected':''}>Все · ${all.length}</option>${[...counts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'ru')).map(([v,n])=>`<option value="${escAttr(v)}"${selected===v?' selected':''}>${escHtml(v||empty)} · ${n}</option>`).join('')}</select></label>`;
+      };
+      const tasks=all.filter(t=>(_scrumRelease===null||text(t,'release')===_scrumRelease)&&(_scrumSection===null||text(t,'section')===_scrumSection));
+      const groups=[...catalog,{name:'',from:'',to:''}],today=toYmdLocal(CURRENT_DATE||new Date());
+      const row=t=>{
+        const sprint=text(t,'sprint'),key=getTaskKey(t),status=statuses.find(s=>s.id===t.status);
+        return `<div class="scrum-task" data-scrum-task="${escAttr(t.id)}"${ro?'':` draggable="true" ondragstart="_scrumDragStart(event,this.dataset.scrumTask)"`}>
+          <button type="button" class="scrum-task-open" onclick="openTaskById(${Number(t.id)})" aria-label="Открыть задачу: ${escAttr(t.name||'Без названия')}"><span class="scrum-task-title">${key?`<span class="scrum-key">${escHtml(key)}</span> `:''}${escHtml(t.name||'Без названия')}</span><span class="scrum-task-meta">${escHtml(status?status.name:t.status||'Без статуса')}${t.resource?' · '+escHtml(t.resource):''}${t.section?' · '+escHtml(cleanSectionName(t.section)):''}${t.release?' · '+escHtml(t.release):''}</span></button>
+          ${ro?'':`<select aria-label="Спринт задачи: ${escAttr(t.name||'Без названия')}" data-current-sprint="${escAttr(sprint)}" onchange="if(!_scrumMoveTask(this.closest('[data-scrum-task]').dataset.scrumTask,this.value))this.value=this.dataset.currentSprint"><option value=""${!sprint?' selected':''}>Без спринта</option>${catalog.map(s=>`<option value="${escAttr(s.name)}"${sprint===s.name?' selected':''}>${escHtml(s.name)}</option>`).join('')}</select>`}
+        </div>`;
+      };
+      kv.innerHTML=`<div class="scrum-heading"><h2>Задачи по спринтам <span>${tasks.length}</span></h2><div class="kanban-view-actions flex items-center gap-2">${_boardModeButtons()}${ro?'':'<button type="button" class="rm-btn rm-btn-ghost" onclick="openSprintCfg()">Спринты</button>'}</div></div>
+        <div class="scrum-filters">${facet('release',_scrumRelease,'Релиз','Без релиза')}${facet('section',_scrumSection,'Раздел / эпик','Без раздела')}${_scrumRelease!==null||_scrumSection!==null?'<button type="button" class="rm-btn rm-btn-ghost" onclick="_scrumRelease=null;_scrumSection=null;renderScrum()">Сбросить</button>':''}</div>
+        <p class="scrum-hint">${ro?'План только для просмотра.':'Перетащите задачу в спринт или выберите его в строке. Изменения сохраняются только в Roadmap, не в Jira.'}</p>
+        <div class="scrum-groups">${groups.map(s=>{
+          const list=tasks.filter(t=>text(t,'sprint')===s.name),done=list.filter(t=>isFinalStatus(t.status)).length;
+          const dates=s.from&&s.to?formatDateString(s.from)+' – '+formatDateString(s.to):s.name?'Даты не заданы':'';
+          const active=s.from&&s.to&&s.from<=today&&s.to>=today;
+          return `<section class="scrum-sprint" data-scrum-sprint="${escAttr(s.name)}" aria-label="${escAttr(s.name||'Без спринта')}"${ro?'':` ondragover="if(Array.from(event.dataTransfer.types).includes('application/x-roadmap-scrum-task')){event.preventDefault();this.classList.add('scrum-drop-active')}" ondragleave="if(!this.contains(event.relatedTarget))this.classList.remove('scrum-drop-active')" ondrop="_scrumDrop(event,this)"`}><header><h3>${escHtml(s.name||'Без спринта')}</h3>${active?'<span class="scrum-active">Текущий</span>':''}<span>Задач: ${list.length} · завершено: ${done}</span>${dates?`<time>${escHtml(dates)}</time>`:''}</header>${list.map(row).join('')}${!list.length?`<p class="scrum-empty">${ro?'Нет задач':s.name?'Перенесите сюда задачи для этого спринта':'Здесь появятся задачи без спринта'}</p>`:''}</section>`;
+        }).join('')}</div>`;
+      if(typeof normalizeUiChrome==='function')normalizeUiChrome(kv);
+      mountViewContextControls('kanban');
+    }
     function renderKanban() {
       const kv = document.getElementById('kanbanView'); if (!kv) return;
+      if (_boardMode === 'scrum') { renderScrum(); return; }
       const _allSt = getDisplayStatuses();
       const _kbCfg = _kanbanColIds();
       const statuses = _kbCfg ? _kbCfg.map(id => _allSt.find(s => s && s.id === id)).filter(Boolean) : _allSt;
@@ -30890,7 +31149,7 @@ const m = document.getElementById('mineModeBtn');
         </div>` : '';
       kv.innerHTML = `<div class="flex items-center justify-between gap-3 flex-wrap px-4 py-2.5 border-b border-slate-200 bg-slate-50/80 shrink-0 no-print no-image-export">
         <span class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700"><svg aria-hidden="true" class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h4v14H4zM10 5h4v9h-4zM16 5h4v6h-4z"></path></svg>Доска задач по статусам <span class="font-normal text-slate-400">${tasks.length}</span><span id="kanbanMobilePosition" class="kanban-mobile-position min-h-8 items-center rounded-full bg-white border border-slate-200 px-2 text-xs tabular-nums text-slate-600"></span></span>
-        <div class="flex items-center gap-2">${ro ? '' : `<button type="button" onclick="toggleKanbanEmpty()" aria-pressed="${_kanbanShowEmpty?'true':'false'}" class="rm-btn rm-btn-secondary">${_kanbanShowEmpty?'Скрыть пустые':'Показать пустые'}</button><button type="button" onclick="openKanbanColsModal()" class="rm-btn rm-btn-secondary" title="Выбор и порядок столбцов" aria-label="Столбцы доски">Столбцы</button>`}${_viewSwitcherBtnHtml()}</div>
+        <div class="kanban-view-actions flex items-center gap-2">${_boardModeButtons()}${ro ? '' : `<button type="button" onclick="toggleKanbanEmpty()" aria-pressed="${_kanbanShowEmpty?'true':'false'}" class="rm-btn rm-btn-ghost">${_kanbanShowEmpty?'Скрыть пустые':'Показать пустые'}</button><button type="button" onclick="openKanbanColsModal()" class="rm-btn rm-btn-ghost" title="Выбор и порядок столбцов" aria-label="Столбцы доски">Столбцы</button>`}${_viewSwitcherBtnHtml()}</div>
       </div>
       ${hiddenByColumns ? `<div class="px-4 py-2 text-xs text-slate-600 bg-slate-50 border-b border-slate-200">В скрытых столбцах: ${hiddenByColumns} задач.${ro ? '' : ' <button type="button" onclick="openKanbanColsModal()" class="underline font-semibold">Настроить столбцы</button>'}</div>` : ''}
       <div id="kanbanTrack" class="kanban-track flex gap-3 px-4 pt-4 pb-2 overflow-x-auto grow items-start w-full" onscroll="_kanbanTrackScroll(this)">${cols}${orphanCol}${!cols && !orphanCol ? '<p class="w-full py-8 text-center text-sm text-slate-600">Нет задач для отображения</p>' : ''}</div>
@@ -30898,6 +31157,7 @@ const m = document.getElementById('mineModeBtn');
       requestAnimationFrame(function () { _kanbanTrackScroll(document.getElementById('kanbanTrack')); });
       try { if (!tasks.length && typeof anyTaskFilterActive === 'function' && anyTaskFilterActive()) { const _kbe = document.createElement('div'); _kbe.className = 'px-4 py-2 text-[11px] text-amber-800 bg-amber-50 border-b border-amber-200 flex items-center gap-2 shrink-0'; _kbe.innerHTML = 'Все задачи скрыты фильтрами. <button onclick="resetAllFilters()" class="underline font-semibold cursor-pointer">Сбросить фильтры</button>'; const _hd = kv.firstElementChild; if (_hd && _hd.nextSibling) kv.insertBefore(_kbe, _hd.nextSibling); else kv.appendChild(_kbe); } } catch (e) {}
       if (typeof _normalizeUiButton === 'function') kv.querySelectorAll('button').forEach(_normalizeUiButton);
+      mountViewContextControls('kanban');
     }
     function _kanbanDragStart(e, id) { try { e.dataTransfer.setData('text/plain', String(id)); e.dataTransfer.effectAllowed = 'move'; } catch (x) {} }
     function _kanbanDrop(e, statusId) {
@@ -31228,7 +31488,7 @@ const m = document.getElementById('mineModeBtn');
       } catch (e) {}
       return null;
     }
-    function renderRoadmap(skipSave = false) {
+    function renderRoadmap(skipSave = false, options = null) {
       // A render-local lazy snapshot: never reuse capacity after a plan/calendar change.
       let capacityForRender;
       const getCapacityForRender = () => capacityForRender || (capacityForRender = computeCapacityBuckets(typeof capacityGran !== 'undefined' ? capacityGran : 'week', 'days'));
@@ -31239,6 +31499,7 @@ const m = document.getElementById('mineModeBtn');
       recomputeTimelineRange();
       refreshCurrentProjectDate();
       var _tlSig = START_TIMELINE_DATE.getTime() + '/' + TOTAL_TIMELINE_DAYS + '/' + DAY_WIDTH;
+      const reuseTaskRows = options && options.reuseTaskRows === true && _tlSig === _tlHeaderSig;
       if (_tlSig !== _tlHeaderSig) {
         if (_tlHeaderSig === null || _prevLeftDate === null) { renderTimelineHeader(); }
         else { renderTimelineHeader(true); (function () { var _s2 = document.querySelector('.timeline-scroll'); if (_s2) { var _nx = Math.max(0, dateToDays(_prevLeftDate) * DAY_WIDTH); requestAnimationFrame(function () { _s2.scrollLeft = _nx; }); } })(); }
@@ -31269,6 +31530,15 @@ const m = document.getElementById('mineModeBtn');
         for (const name of names) result.push(..._tasksForSection(name));
         return result;
       };
+
+      // Только текущие пары DOM-строк, только для раскрытия секции. Правки,
+      // импорт, фильтры и undo используют обычный рендер без этого параметра.
+      const reusableRows = new Map();
+      if (reuseTaskRows) listContainer.querySelectorAll('.task-list-row').forEach(left => {
+        const id = left.id.slice('task-row-left-'.length);
+        const right = document.getElementById('task-row-right-' + id);
+        if (right && right.parentElement === barsContainer) reusableRows.set(id, { left, right });
+      });
 
       listContainer.innerHTML = ''; barsContainer.innerHTML = '';
       let _zebraIdx = 0;
@@ -31822,6 +32092,19 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         if (!isCollapsed) {
           let _onHoldPrevSection = null;
           sectionTasks.forEach(task => {
+            const previous = zoneKind !== 'onHoldTasks' && reusableRows.get(String(task.id));
+            if (previous) {
+              const odd = !!(_zebraIdx++ % 2);
+              previous.left.classList.toggle('bg-slate-50/40', odd);
+              previous.left.classList.toggle('hover:bg-slate-100', odd);
+              previous.left.classList.toggle('bg-white', !odd);
+              previous.left.classList.toggle('hover:bg-slate-50', !odd);
+              previous.right.classList.toggle('bg-slate-50/40', odd);
+              previous.right.classList.toggle('bg-transparent', !odd);
+              listContainer.appendChild(previous.left);
+              barsContainer.appendChild(previous.right);
+              return;
+            }
             // На холде: над каждой новой секцией , подзаголовок с ее названием (п.3)
             if (zoneKind === 'onHoldTasks' && task.section !== _onHoldPrevSection) {
               _onHoldPrevSection = task.section;
@@ -31875,6 +32158,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             rowLeft.setAttribute('role', 'button');
             rowLeft.setAttribute('tabindex', '0');
             rowLeft.setAttribute('aria-label', (task.name || 'Задача') + ' , открыть карточку');
+            if (selectedTaskIds.has(task.id)) rowLeft.classList.add('bg-indigo-50/60');
+            if (selectMode) rowLeft.setAttribute('aria-pressed', String(selectedTaskIds.has(task.id)));
             rowLeft.addEventListener('keydown', (e) => { if (e.target !== rowLeft) return; if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (selectMode) toggleBulkSelect(task.id); else openModal(task); } });
 
             // Проверяем наличие продуктовых заметок для вывода иконки-индикатора
@@ -31899,7 +32184,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
                       : '<span data-feat="jira" class="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300" title="Обновлено из Jira: ' + escAttr((task._jiraChange.fields || []).join(', ') || 'изменения') + '">обновлено</span>') : ''}
                     ${!task.isMilestone ? ((typeof _taskMineable === 'function' && _taskMineable(task) && !READ_ONLY_MODE) ? `<button type="button" onclick="event.stopPropagation(); toggleTaskExternal(${task.id})" class="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-medium truncate max-w-[120px] cursor-pointer hover:opacity-80 ${jiraTypeBadgeClass(taskTypeLabel(task))}" title="Тип: ${escAttr(taskTypeLabel(task))}. Клик , сменить Моя / Внешняя">${escHtml(taskTypeLabel(task))}</button>` : `<span class="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-medium truncate max-w-[120px] ${jiraTypeBadgeClass(taskTypeLabel(task))}" title="Тип элемента: ${escAttr(taskTypeLabel(task))}">${escHtml(taskTypeLabel(task))}</span>`) : ''}
                     ${!_compactRows && task.jira ? `<a data-feat="jira" href="${escHtml(jiraHref)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="inline-flex items-center gap-1 font-mono font-semibold text-slate-500 hover:text-blue-700 transition-colors shrink-0" title="Jira: ${escHtml(task.jira)} (${escAttr(task.issueType || 'задача')})"><svg aria-hidden="true" class="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="6" fill="${jiraTypeColor(task.issueType)}"/><text x="12" y="16.5" fill="white" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">J</text></svg>${escHtml(getTaskKey(task))}</a>` : `<a href="#" onclick="event.preventDefault(); event.stopPropagation(); openTaskById(${task.id})" class="inline-flex items-center font-mono font-semibold text-slate-400 hover:text-indigo-600 transition-colors shrink-0" title="Открыть карточку задачи">${escHtml(getTaskKey(task))}</a>`}
-                    ${(task.isMilestone ? task.start : (task.end || task.start)) ? `<span class="text-indigo-600/80 font-normal shrink-0 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200/60" title="${task.isMilestone ? 'Дата вехи' : 'Начало → конец'}">${(!task.isMilestone && task.start && task.end && task.start !== task.end) ? `<span data-adv>${escHtml(formatDateString(task.start))} → </span>` : ''}${escHtml(formatDateString(task.isMilestone ? task.start : (task.end || task.start)))}</span>${typeof _daysLeftChip === 'function' ? _daysLeftChip(task) : ''}` : `<span class="text-slate-500 font-normal shrink-0 bg-slate-50 px-1.5 py-0.5 rounded border border-dashed border-slate-300" title="Даты не заданы , задайте в карточке, и задача появится на диаграмме">без дат</span>`}
+                    ${(task.isMilestone ? task.start : (task.end || task.start)) ? `<span class="task-date-label font-normal shrink-0 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200/60" title="${task.isMilestone ? 'Дата вехи' : 'Начало → конец'}">${(!task.isMilestone && task.start && task.end && task.start !== task.end) ? `<span data-adv>${escHtml(formatDateString(task.start))} → </span>` : ''}${escHtml(formatDateString(task.isMilestone ? task.start : (task.end || task.start)))}</span>${typeof _daysLeftChip === 'function' ? _daysLeftChip(task) : ''}` : `<span class="text-slate-500 font-normal shrink-0 bg-slate-50 px-1.5 py-0.5 rounded border border-dashed border-slate-300" title="Даты не заданы , задайте в карточке, и задача появится на диаграмме">без дат</span>`}
                     <span class="${statusClass} text-[10px] px-1.5 py-0.5 rounded-sm shrink-0${(READ_ONLY_MODE || task.isMilestone) ? '' : ' cursor-pointer hover:opacity-80'}"${(READ_ONLY_MODE || task.isMilestone) ? '' : ` role="button" tabindex="0" aria-label="Статус ${escAttr(statusText)}; переключить на следующий" onclick="event.stopPropagation(); cycleTaskStatus(${task.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();cycleTaskStatus(${task.id})}" title="Клик , следующий статус"`}>${escHtml(statusText)}</span>
                     ${isOverdue ? `<span class="text-[10px] px-1.5 py-0.5 rounded-sm shrink-0 bg-rose-50 text-rose-700" title="Риск срока, не статус задачи">Просрочено</span>${task.updated ? `<span class="text-[10px] text-slate-500 shrink-0" title="Дата последнего обновления">обн. ${escHtml(formatDateString(task.updated) || task.updated)}</span>` : ''}` : ''}
                     ${task.resource ? `<span data-feat="resources" class="font-medium text-slate-500 px-1 text-[10px] truncate max-w-[100px] shrink-0" title="${escAttr(task.resource)}">${escHtml(formatResourceList(task.resource))}</span>` : ''}
@@ -33280,6 +33565,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (open && typeof closeAllPopovers === 'function') closeAllPopovers();
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (!open) {
+        closeAllFilterPanels(true); closePresetMenu();
         wrap.hidden = true;
         ['left','right','top','bottom','width','maxHeight'].forEach(prop => { wrap.style[prop] = ''; });
         return;
@@ -33407,7 +33693,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (open) { if (typeof closeAllPopovers === 'function') closeAllPopovers(); renderStatusCompactMenu(); menu.classList.remove('hidden'); const r = btn.getBoundingClientRect(); const w = Math.min(288, window.innerWidth - 16); menu.style.width = w + 'px'; menu.style.left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8)) + 'px'; menu.style.top = (r.bottom + 6) + 'px'; }
       else menu.classList.add('hidden');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if (open) focusChoiceMenu(menu);
+      if (open && e && e.detail === 0) focusChoiceMenu(menu);
     }
     document.addEventListener('click', function(e){ const m=document.getElementById('statusCompactMenu'),b=document.getElementById('statusCompactBtn'); if(m&&!m.classList.contains('hidden')&&b&&!b.contains(e.target)&&!m.contains(e.target)){m.classList.add('hidden');b.setAttribute('aria-expanded','false');} }, true);
     // Индикатор «есть еще статусы» , показывается, когда табы не помещаются и есть прокрутка вправо
@@ -34422,7 +34708,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
     function getPageMeta() {
       return {
-        poName: document.getElementById('poNameDisplay')?.innerText?.trim() || 'Фамилия Имя',
+        poName: document.getElementById('poNameDisplay')?.textContent?.trim() || 'Фамилия Имя',
         focusKeyDate: (storage.get('gantt_focus_keydate') || ''),
         focusKeyLabel: (storage.get('gantt_focus_keylabel') || ''),
         currency: { symbol: currencySymbol() }
@@ -39858,7 +40144,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v17.2 · 09.10.2026</span>
+     <span id="appVersionBadge">v17.3 · 09.10.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -39908,7 +40194,43 @@ function syncBodyScrollLock() {
 
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.2</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.3</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="product-areas" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 17h6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Канбан и Скрам</h5><span class="info-release-badge">Доска</span></div>
+      <p class="text-xs text-slate-600">В «Доске» доступны Канбан по статусам и Скрам по спринтам. В обоих видах используются одни и те же задачи.</p>
+     </article>
+     <article data-release-card="working-file-save" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21H5V3h11l5 5v13zM17 21v-8H7v8M7 3v5h8"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Перенос задач между спринтами</h5><span class="info-release-badge">Спринты</span></div>
+      <p class="text-xs text-slate-600">Переносите задачи между спринтами и отменяйте перенос. Даты и статус не меняются; в Jira изменения не отправляются.</p>
+     </article>
+     <article data-release-card="meeting-materials" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18v14H3zM8 22h8m-4-4v4M7 9h10M7 13h6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Исполнители с числом задач</h5><span class="info-release-badge">Фильтры</span></div>
+      <p class="text-xs text-slate-600">У исполнителей видно число задач с учетом остальных фильтров. В начале списка те, у кого задач больше.</p>
+     </article>
+     <article data-release-card="week-start" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16v15H4zM8 3v6m8-6v6M4 11h16M8 15h3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Одинаковые панели разделов</h5><span class="info-release-badge">Навигация</span></div>
+      <p class="text-xs text-slate-600">Кнопки каждого раздела находятся рядом с его вкладкой. Между кнопками оставлены промежутки.</p>
+     </article>
+     <article data-release-card="jira-import-memory" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h12l-3-3m3 3l-3 3M20 17H8l3 3m-3-3l3-3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Меню рядом с кнопкой</h5><span class="info-release-badge">Меню</span></div>
+      <p class="text-xs text-slate-600">Фильтры и наборы открываются возле кнопки без прыжков. Управление с клавиатуры сохранено.</p>
+     </article>
+     <article data-release-card="compact-working-file" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 3v5h5M5 3h9l5 5v13H5zM8 12h8M8 16h5"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Светлая и Темная темы</h5><span class="info-release-badge">Интерфейс</span></div>
+      <p class="text-xs text-slate-600">Фиолетовый акцент, отдельная строка статусов и ровные поля настроек. Светлая тема включена по умолчанию.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.2</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="product-areas" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 17h6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Четыре вкладки в одной панели</h5><span class="info-release-badge">НАВИГАЦИЯ</span></div>
@@ -39936,13 +40258,6 @@ function syncBodyScrollLock() {
      </article>
     </div>
    </div>
-
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.1</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -43861,7 +44176,7 @@ function syncBodyScrollLock() {
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 17.2</span>
+              <span id="appVersionStartup">версия 17.3</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
@@ -44890,8 +45205,12 @@ function mountCompactWorkspaceChrome() {
   var zoom = document.getElementById('zoomControl');
   var filters = document.getElementById('planFilterBar');
   var active = document.getElementById('activeFiltersBar');
-  if (filters) header.insertBefore(filters, zoom);
-  if (active) header.appendChild(active);
+  // Статусы и активные фильтры остаются в отдельной полосе над навигацией.
+  var deck = document.getElementById('planControlDeck');
+  if (deck && filters) deck.insertBefore(filters, deck.firstChild);
+  if (deck && active) deck.appendChild(active);
+  var statusButton = document.getElementById('statusCompactBtn');
+  if (statusButton) { statusButton.setAttribute('aria-label','Все статусы'); statusButton.title = 'Все статусы'; }
   var filterButton = document.getElementById('filterToolsBtn');
   if (filterButton) { filterButton.setAttribute('aria-label','Все фильтры'); filterButton.title = 'Все фильтры'; }
   var toolsButton = document.getElementById('moreMenuBtn');

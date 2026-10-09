@@ -117,7 +117,7 @@ const allowedFiles = new Set([
   'catalog-img/media-manifest.json', 'private/index.html', 'private/roadmap-package-manifest.json',
   ...privateNames.map(name => `private/${name}`),
 ]);
-for (let feature = 1; feature <= 43; feature += 1) {
+for (let feature = 1; feature <= 44; feature += 1) {
   for (const theme of ['light', 'dark']) allowedFiles.add(`catalog-img/f${String(feature).padStart(2, '0')}_${theme}.webp`);
 }
 const unexpectedFiles = allFiles.filter(path => !allowedFiles.has(path));
@@ -333,8 +333,9 @@ if (catalogManifest?.files && catalogManifest?.expected) {
   const catalogCards = [...catalog.matchAll(/<article class=card\b/g)].length;
   assert(catalogCards === featureIds.size, `В каталоге ${featureIds.size} карточки функций`);
   const catalogLead = catalog.match(/<p\b[^>]*class=(?:"lead"|'lead'|lead)[^>]*>([\s\S]*?)<\/p>/)?.[1] || '';
-  assert(catalogLead.includes(`<b>${featureIds.size} функции</b>`), `В вводном тексте указаны все ${featureIds.size} функции`);
-  assert(catalog.includes(`<div class=stat><div class=v>${featureIds.size}</div><div class=l>Функции в каталоге</div></div>`), `Счётчик каталога равен ${featureIds.size}`);
+  assert(['Roadmap', 'задачи', 'календарь', 'Канбан', 'Скрам'].every(word => catalogLead.includes(word)), 'Введение объясняет назначение и основные возможности продукта');
+  const cardIds = [...catalog.matchAll(/<article class=card\b[^>]*data-n="(\d+)"/g)].map(match => 'f' + match[1].padStart(2, '0'));
+  assert(cardIds.length === featureIds.size && new Set(cardIds).size === featureIds.size && cardIds.every(id => featureIds.has(id)), `Все ${featureIds.size} карточки соответствуют снимкам без пропусков и дублей`);
   for (const id of featureIds) {
     assert(catalogManifest.files[`${id}_light.webp`] && catalogManifest.files[`${id}_dark.webp`], `${id}: есть светлая и тёмная тема`);
   }
