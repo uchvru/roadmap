@@ -1,9 +1,9 @@
 {
-  "version": "17.3",
-  "generatedAt": "2026-10-09",
-  "renderedAt": "2026-10-09T11:36:29.068Z",
+  "version": "17.4",
+  "generatedAt": "2026-10-10",
+  "renderedAt": "2026-10-09T21:22:31.465Z",
   "source": "synthetic-demo-PAY-LK",
-  "appSha256": "1ecaa6a44e63f3907a651a7ba32c513ce5cbcbc7290b8e75e78925f4ef2a6ae2",
+  "appSha256": "622e45285bc0d9bbd20ac871002246664a79b7fafb1485a14a7316d8bb40978f",
   "renderer": "Remotion 4.0.529",
   "composition": "RoadmapFilm",
   "sources": {
@@ -25,15 +25,15 @@
     "src/scenes/Plan.tsx": "6321be3f395eb44595977366fd5bf3d3702f6ddb3d2a53907bab4ebe8a836ce7",
     "src/scenes/Risk.tsx": "0752f1c714a1afb914733f003f85860c558043fa4237cf8af7eb661b317052d7",
     "src/scenes/Start.tsx": "f403a0834d8679ff9e4f07a5a5c45599a5a8f968e4da8e9ed8f59af9b4e94867",
-    "public/f01_light.webp": "103873df6b75d1ed121ae66bf96d27a009dda65c7bd7d60dbeb20e2d64fef7a2",
-    "public/f04_light.webp": "2831c6a800433161214d80ed8f3209f584157471eb49007e8160dff9ef8962b9",
-    "public/f05_light.webp": "82846ae89dd4c3d97d132129e941ff5a7db5880a7b0c63786ef1507a74d3b07f",
-    "public/f44_light.webp": "6f994fb736a66db9d631bdd65887e3e8113ae7cf21df3dfb15fba4c729587fb6"
+    "public/f01_light.webp": "6f488f355aaeb2dbf725346d99e09e1ec93d5f82a34497f331dfe1522701213b",
+    "public/f04_light.webp": "2ca74876d5b13509a6fc98ab66da9af2ebb7036f8a3afd1e0c749529045aab62",
+    "public/f05_light.webp": "68d19252290f3e780ac88a032c223a87d2b471c9ba3855a45517fdaf196a79ec",
+    "public/f44_light.webp": "c7e7af02397f3743e33574aeba2e1de54be4c93ee786228e735f2b008d01bf1c"
   },
   "video": {
     "file": "roadmap-demo.mp4",
-    "sha256": "66888ef86c54da8c03f2710ca8233299ae7ec4236fc1412ca2de75eceb96eca9",
-    "bytes": 8493575,
+    "sha256": "c2b3ef1be61a407482d760af78918599a7e5433ecf53c975e0423738883b65bd",
+    "bytes": 8429539,
     "durationSeconds": 120,
     "width": 1440,
     "height": 810,

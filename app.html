@@ -7514,6 +7514,20 @@
 
    /* Предпросмотр Jira: сводка занимает собственную строку и никогда не
       перекрывает первую задачу, даже при длинных названиях. */
+   #jiraTab-import [hidden] { display:none !important; }
+   .jira-wizard-progress { display:flex; flex-direction:column; gap:.5rem; margin-bottom:1rem; }
+   .jira-wizard-steps { display:flex; flex-wrap:wrap; gap:.5rem 1.25rem; padding:0; margin:0; list-style:none; color:var(--rm-muted,#64748b); font-size:.8125rem; }
+   .jira-wizard-steps [aria-current="step"] { color:var(--rm-selected-text,#4338ca); font-weight:700; }
+   .jira-wizard-help summary { cursor:pointer; min-height:44px; padding:.75rem 0; font-weight:600; }
+   #jiraWizardFileStatus:empty { display:none; }
+   #jiraImportPreviewModal.jira-wizard-preview { position:static; padding:0; background:none; z-index:auto; }
+   #jiraImportPreviewModal.jira-wizard-preview > div { border:0; box-shadow:none; border-radius:0; width:100%; max-width:none; max-height:none; overflow:visible; }
+   #jiraImportPreviewModal.jira-wizard-preview .jira-import-preview-list { max-height:40dvh; flex:none; }
+   #jiraImportPreviewModal.jira-wizard-preview .jira-import-preview-header { padding:0 0 .75rem; }
+   #jiraImportPreviewModal.jira-wizard-preview .jira-import-preview-header h3 { font-size:1rem; }
+   #jiraImportPreviewModal.jira-wizard-preview .jira-import-preview-header button[aria-label="Закрыть"] { display:none; }
+   #jiraImportPreviewModal.jira-wizard-preview .jira-import-preview-footer { padding:.75rem 0 0; background:none; flex-wrap:wrap; }
+   #jiraImportPreviewModal.jira-wizard-preview .jira-import-preview-footer > span { flex:1 1 220px; }
    #jiraImportPreviewModal .jira-import-preview-header { display:block !important; height:auto !important; flex:none; }
    #jiraImportPreviewModal .jira-import-preview-summary { display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.5rem; margin-top:.75rem; }
    #jiraImportPreviewModal .jira-import-preview-list { min-height:0; overflow-y:auto; }
@@ -9165,7 +9179,7 @@ body[data-input-mode="pointer"] :is(button,[role="tab"],[role="button"]):focus{o
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.3</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.4</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -10050,7 +10064,7 @@ body[data-input-mode="pointer"] :is(button,[role="tab"],[role="button"]):focus{o
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v17.3">
+<script data-roadmap-modules="v17.4">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -14335,8 +14349,8 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '17.3';
-    const APP_VERSION_DATE = '09.10.2026';
+    const APP_VERSION = '17.4';
+    const APP_VERSION_DATE = '10.10.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'версия ' + APP_VERSION; } catch (e) {}
@@ -37544,7 +37558,19 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       modal.querySelectorAll('[data-jira-row]').forEach(row => {
         row.hidden = !jiraPreviewNeedsReview(_jiraPreviewRows[Number(row.dataset.jiraRow)]);
       });
-      document.body.appendChild(modal); if(typeof syncBodyScrollLock==='function')syncBodyScrollLock(); setTimeout(function(){const first=modal.querySelector('input:not([disabled]),button');if(first)first.focus();},40);
+      const wizard = document.getElementById('jiraSyncModal');
+      if (wizard && typeof mountJiraImportWizard === 'function') {
+        if (wizard.classList.contains('hidden')) openJiraSync();
+        modal.removeAttribute('role'); modal.removeAttribute('aria-modal'); modal.removeAttribute('data-modal-backdrop');
+        modal.className = 'jira-wizard-preview';
+        modal.dataset.jiraWizardPreview = 'true';
+        modal.querySelector('.jira-import-preview-header h3').textContent = 'Проверьте изменения';
+        const cancel = modal.querySelector('.jira-import-preview-footer button');
+        cancel.textContent = 'Назад к файлу';
+        document.getElementById('jiraTab-import').appendChild(modal);
+        jiraSyncTab('import'); jiraWizardSetStep(3, false);
+      } else document.body.appendChild(modal);
+      if(typeof syncBodyScrollLock==='function')syncBodyScrollLock(); setTimeout(function(){if(!modal.isConnected)return;const first=modal.querySelector('input:not([disabled]),button');if(first)first.focus();},40);
       setJiraPreviewScope('review');
     }
     function jiraPreviewNeedsReview(row) {
@@ -37560,7 +37586,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       modal.querySelectorAll('[data-jira-scope]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.jiraScope === (all?'all':'review'))));
       modal.querySelector('#jiraPreviewScopeStatus').textContent = visible ? 'Показано строк: '+visible+'. Выбор остальных строк сохранен.' : 'Спорных изменений нет. Новые задачи доступны в полном списке и уже выбраны для добавления.';
     }
-    function closeJiraImportPreview(){const m=document.getElementById('jiraImportPreviewModal');if(m)m.remove();if(typeof syncBodyScrollLock==='function')syncBodyScrollLock();}
+    function closeJiraImportPreview(){const m=document.getElementById('jiraImportPreviewModal');const embedded=!!m?.dataset?.jiraWizardPreview;if(m)m.remove();if(embedded)jiraWizardSetStep(2);if(typeof syncBodyScrollLock==='function')syncBodyScrollLock();}
     function applyJiraImportPreview(){
       return RoadmapModules.applyReviewedJiraImport({
         document, getRows: () => _jiraPreviewRows, _jiraPreviewKey, _jiraBuildImportPreviewRows,
@@ -37570,19 +37596,31 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     function importJiraCsv(event) {
       const file = event.target.files[0];
       if (!file) return;
+      const generation = typeof _jiraImportReadGeneration === 'number' ? ++_jiraImportReadGeneration : null;
+      const project = typeof projectStorageId === 'undefined' ? null : projectStorageId;
+      const transition = typeof _projectTransitionToken === 'undefined' ? null : _projectTransitionToken;
+      const current = () => (generation === null || generation === _jiraImportReadGeneration)
+        && (typeof projectStorageId === 'undefined' || projectStorageId === project)
+        && (typeof _projectTransitionToken === 'undefined' || _projectTransitionToken === transition);
+      const message = text => { if (typeof jiraWizardMessage === 'function') jiraWizardMessage(text); };
+      message('Читаем CSV…');
       const reader = new FileReader();
       reader.onload = function(e) {
+        if (!current()) { event.target.value = ''; return; }
         try {
           const issues = parseJiraCsv(e.target.result);
-          if (!issues || !issues.length) { showToast('В CSV нет задач , похоже, файл пустой или в нем только заголовки.', 'warn', 5000); event.target.value = ''; return; }
+          if (!issues || !issues.length) { message('В CSV нет задач. Выберите другой файл.'); showToast('В CSV нет задач , похоже, файл пустой или в нем только заголовки.', 'warn', 5000); event.target.value = ''; return; }
+          message('');
           openJiraImportPreview(issues);
         } catch (err) {
           // Не логируем полный объект ошибки, чтобы избежать утечки содержимого файла в консоль
           console.warn('Jira CSV import failed:', err && err.message ? err.message : 'parse error');
+          message(err && err.name === 'JiraCsvError' ? err.message : 'Не удалось прочитать CSV. Выберите файл еще раз.');
           showToast(err && err.name === 'JiraCsvError' ? err.message : 'Ошибка чтения Jira CSV.', 'error', 7000);
         }
         event.target.value = '';
       };
+      reader.onerror = function() { if (current()) message('Не удалось прочитать файл. Выберите CSV еще раз.'); event.target.value = ''; };
       reader.readAsText(file, 'utf-8');
     }
 
@@ -37898,9 +37936,62 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       else if (!head) head = '';
       el.value = (head + snippet + (tail ? ' ' + tail : '')).replace(/\s+/g, ' ').trim();
     }
+    var _jiraImportReadGeneration = 0;
+    function jiraWizardMessage(message) {
+      const status = document.getElementById('jiraWizardFileStatus');
+      if (status) status.textContent = message;
+    }
+    function mountJiraImportWizard() {
+      const panel = document.getElementById('jiraTab-import');
+      if (!panel || document.getElementById('jiraWizardSetup')) return;
+      const children = Array.from(panel.children);
+      const actions = panel.querySelector('button[onclick="jiraOpenCsvExport()"]').parentElement;
+      const uploadButton = panel.querySelector('button[onclick="jiraTriggerCsvUpload()"]');
+      const instructions = actions.nextElementSibling;
+      const setup = document.createElement('div'); setup.id = 'jiraWizardSetup'; setup.className = 'space-y-4';
+      const upload = document.createElement('div'); upload.id = 'jiraWizardUpload'; upload.className = 'space-y-4';
+      const progress = document.createElement('div'); progress.id = 'jiraWizardProgress'; progress.className = 'jira-wizard-progress';
+      progress.innerHTML = '<p id="jiraWizardStep" tabindex="-1" role="status" class="text-sm font-semibold text-slate-800"></p><ol aria-label="Шаги импорта" class="jira-wizard-steps"><li data-jira-step="1">1. Задачи</li><li data-jira-step="2">2. Файл CSV</li><li data-jira-step="3">3. Проверка</li></ol>';
+      const skip = document.createElement('button'); skip.id = 'jiraWizardHaveFile'; skip.type = 'button'; skip.className = 'rm-btn rm-btn-secondary';
+      skip.textContent = 'CSV уже скачан'; skip.onclick = () => jiraWizardSetStep(2);
+      uploadButton.id = 'jiraWizardChooseFile'; uploadButton.textContent = 'Выбрать CSV'; uploadButton.className = 'rm-btn rm-btn-primary';
+      upload.appendChild(uploadButton);
+      actions.appendChild(skip);
+      for (const child of children) if (child !== instructions) setup.appendChild(child);
+      upload.insertAdjacentHTML('afterbegin','<p class="text-sm text-slate-700">В Jira выберите «Экспорт → CSV (все поля)», затем загрузите файл сюда. Данные плана пока не изменятся.</p>');
+      const help = document.createElement('details'); help.className = 'jira-wizard-help';
+      help.innerHTML = '<summary>Какие поля нужны в CSV</summary>';
+      help.appendChild(instructions); upload.appendChild(help);
+      upload.insertAdjacentHTML('beforeend','<p id="jiraWizardFileStatus" role="status" class="text-sm text-slate-700"></p><button type="button" class="rm-btn rm-btn-secondary" onclick="jiraWizardSetStep(1)">Назад к выбору задач</button>');
+      panel.replaceChildren(progress,setup,upload);
+      panel.dataset.jiraWizardStep = '1';
+      jiraWizardSetStep(1,false);
+    }
+    function jiraWizardSetStep(step, focus) {
+      const panel = document.getElementById('jiraTab-import');
+      if (!panel || !document.getElementById('jiraWizardSetup')) return;
+      panel.dataset.jiraWizardStep = String(step);
+      document.getElementById('jiraWizardSetup').hidden = step !== 1;
+      document.getElementById('jiraWizardUpload').hidden = step !== 2;
+      const preview = document.getElementById('jiraImportPreviewModal');
+      if (preview?.dataset.jiraWizardPreview) preview.hidden = step !== 3;
+      const label = document.getElementById('jiraWizardStep');
+      label.textContent = 'Шаг '+step+' из 3: '+({1:'выберите задачи',2:'ожидается файл CSV',3:'проверьте изменения'}[step]);
+      panel.querySelectorAll('[data-jira-step]').forEach(el => {
+        if (Number(el.dataset.jiraStep) === step) el.setAttribute('aria-current','step');
+        else el.removeAttribute('aria-current');
+      });
+      if (focus !== false) { label.scrollIntoView({block:'nearest'}); label.focus({preventScroll:true}); }
+    }
     function openJiraSync() {
       const cfg = getJiraCfg();
       const m = jiraGetEl('jiraSyncModal'); if (!m) return;
+      if (typeof mountJiraImportWizard === 'function') {
+        mountJiraImportWizard();
+        document.getElementById('jiraImportPreviewModal')?.remove();
+        _jiraImportReadGeneration++;
+        jiraWizardMessage(''); jiraWizardSetStep(1,false);
+      }
       jiraGetEl('jiraBaseUrl').value = cfg.base || '';
       const be = jiraGetEl('jiraBaseUrlExport'); if (be) be.value = cfg.base || '';
       jiraGetEl('jiraProjectKey').value = cfg.proj || '';
@@ -37918,10 +38009,13 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
     }
     function closeJiraSync() {
+      _jiraImportReadGeneration++;
+      document.getElementById('jiraImportPreviewModal')?.remove();
       const m = jiraGetEl('jiraSyncModal'); if (m) m.classList.add('hidden');
       if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
     }
     function jiraSyncTab(which) {
+      const summary = jiraGetEl('jiraSyncSummary'); if (summary) summary.hidden = which === 'import';
       ['import', 'export'].forEach(t => {
         const panel = jiraGetEl('jiraTab-' + t); const btn = jiraGetEl('jiraTabBtn-' + t);
         if (panel) panel.classList.toggle('hidden', t !== which);
@@ -37979,6 +38073,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       });
       if (queries.length > 1) showToast('Ключи разделены на ' + queries.length + ' ' + pluralRu(queries.length, ['запрос', 'запроса', 'запросов']) + '. Разрешите открытие вкладок и в каждой выберите «Экспорт → CSV (все поля)». Затем загрузите файлы в Roadmap по очереди.', 'info', 10000);
       else showToast('В Jira выберите «Экспорт → CSV (все поля)», затем загрузите скачанный файл в Roadmap.', 'info', 7000);
+      if (typeof jiraWizardSetStep === 'function') jiraWizardSetStep(2);
     }
     function jiraTriggerCsvUpload() { const inp = jiraGetEl('jiraImportFile'); if (inp) inp.click(); }
     // ===== Авто-синхронизация с Jira (поверх REST). Токен держим только в памяти сессии, в файл не пишем. =====
@@ -40144,7 +40239,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v17.3 · 09.10.2026</span>
+     <span id="appVersionBadge">v17.4 · 10.10.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -40194,7 +40289,43 @@ function syncBodyScrollLock() {
 
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.3</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.4</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="product-areas" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 17h6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Импорт в три шага</h5><span class="info-release-badge">Jira</span></div>
+      <p class="text-xs text-slate-600">Выберите задачи, загрузите CSV и проверьте изменения в одном окне. Мастер показывает текущий шаг.</p>
+     </article>
+     <article data-release-card="working-file-save" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21H5V3h11l5 5v13zM17 21v-8H7v8M7 3v5h8"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">CSV уже скачан</h5><span class="info-release-badge">Загрузка</span></div>
+      <p class="text-xs text-slate-600">Сразу перейдите к выбору файла. При возврате назад заполненные поля сохраняются.</p>
+     </article>
+     <article data-release-card="meeting-materials" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18v14H3zM8 22h8m-4-4v4M7 9h10M7 13h6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Проверка перед применением</h5><span class="info-release-badge">Контроль</span></div>
+      <p class="text-xs text-slate-600">Сравните изменения и выберите нужные строки. Статусы, связи и проверки импорта сохранены.</p>
+     </article>
+     <article data-release-card="week-start" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16v15H4zM8 3v6m8-6v6M4 11h16M8 15h3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Главные действия сверху</h5><span class="info-release-badge">Данные</span></div>
+      <p class="text-xs text-slate-600">Импорт, сохранение и передача плана находятся в начале меню. Остальные действия доступны в «Дополнительно».</p>
+     </article>
+     <article data-release-card="jira-import-memory" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h12l-3-3m3 3l-3 3M20 17H8l3 3m-3-3l3-3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Клавиатура и небольшой экран</h5><span class="info-release-badge">Интерфейс</span></div>
+      <p class="text-xs text-slate-600">Меню учитывает раскрытые группы при переходах с клавиатуры. Список изменений прокручивается на небольшом экране.</p>
+     </article>
+     <article data-release-card="compact-working-file" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 3v5h5M5 3h9l5 5v13H5zM8 12h8M8 16h5"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Короткая инструкция</h5><span class="info-release-badge">Помощь</span></div>
+      <p class="text-xs text-slate-600">Руководство описывает текущие вкладки и действия. История выпусков вынесена отдельно.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.3</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="product-areas" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 17h6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Канбан и Скрам</h5><span class="info-release-badge">Доска</span></div>
@@ -40223,12 +40354,6 @@ function syncBodyScrollLock() {
     </div>
    </div>
 
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.2</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -44176,7 +44301,7 @@ function syncBodyScrollLock() {
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 17.3</span>
+              <span id="appVersionStartup">версия 17.4</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
@@ -45067,13 +45192,18 @@ function simplifyDataMenuInformationArchitecture() {
   frequent.setAttribute('data-data-menu-frequent', '');
   frequent.className = 'space-y-1.5';
   [
+    [actionButton('openJiraSync'), 'jira'],
     [saveCenterButton, 'save'],
-    [shareButton, 'share'],
-    [actionButton('openJiraSync'), 'jira']
+    [shareButton, 'share']
   ].forEach(function (entry) {
     var button = prepareButton(entry[0], 'primary');
     if (!button) return;
     button.setAttribute('data-data-primary', entry[1]);
+    if (entry[1] === 'jira') {
+      button.querySelector('.grow').textContent = 'Импорт из Jira';
+      button.setAttribute('aria-label','Импорт из Jira');
+      button.setAttribute('title','Выбрать задачи, загрузить CSV и проверить изменения');
+    }
     frequent.appendChild(button);
   });
 
@@ -45106,18 +45236,22 @@ function simplifyDataMenuInformationArchitecture() {
   menu.innerHTML = '';
   var intro = document.createElement('p');
   intro.className = 'px-2 pt-1 pb-2 text-[11px] leading-snug text-slate-500';
-  intro.textContent = 'Три частых действия — сохранить, поделиться копией или обновить данные из Jira. Остальное раскрывается при необходимости.';
+  intro.textContent = 'Загрузите задачи, сохраните план или подготовьте копию для передачи.';
   menu.appendChild(intro);
   if (jiraDate) {
     jiraDate.className = 'hidden px-2 pb-2 text-[10px] text-slate-500';
     menu.appendChild(jiraDate);
   }
   menu.appendChild(frequent);
-  var extra = document.createElement('div');
-  extra.className = 'px-2 pt-3 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400';
-  extra.textContent = 'Дополнительные действия';
+  var extra = document.createElement('details');
+  extra.setAttribute('data-data-menu-advanced','');
+  extra.className = 'mt-3';
+  var extraSummary = document.createElement('summary');
+  extraSummary.className = 'min-h-11 px-2 py-3 cursor-pointer text-sm font-semibold text-slate-700';
+  extraSummary.textContent = 'Дополнительно';
+  extra.appendChild(extraSummary);
+  extra.appendChild(groups);
   menu.appendChild(extra);
-  menu.appendChild(groups);
   menu.setAttribute('data-data-menu-ready', '1');
 }
 
@@ -45347,7 +45481,7 @@ document.addEventListener('keydown', function (event) {
   if (event.key !== 'Tab') return;
   var popup = _topVisibleDrawer();
   if (!popup) return;
-  var focusable = Array.prototype.filter.call(popup.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'), function (item) {
+  var focusable = Array.prototype.filter.call(popup.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),summary,[tabindex]:not([tabindex="-1"])'), function (item) {
     if (!item.isConnected || item.hidden || item.closest('[hidden], details:not([open]) > :not(summary)')) return false;
     var style = getComputedStyle(item);
     var rect = item.getBoundingClientRect();
