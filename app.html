@@ -9039,6 +9039,38 @@ body #planWorkspaceHeader .pres-pane-tabs{padding-left:8px;border-left:1px solid
 body #planWorkspaceHeader :is(.rm-btn,[role="tab"]){min-height:var(--rm-toolbar-h);flex:0 0 auto;width:auto;border-color:transparent !important;box-shadow:none !important}
 body #planWorkspaceHeader :is(.rm-btn,[role="tab"]):not([aria-pressed="true"]):not([aria-selected="true"]){background:transparent !important;color:var(--rm-muted) !important}
 body[data-input-mode="pointer"] :is(button,[role="tab"],[role="button"]):focus{outline:none !important;box-shadow:none !important}
+.wb-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 16px;border-bottom:1px solid var(--rm-border);background:var(--rm-surface)}
+.wb-heading{display:flex;align-items:center;gap:12px;min-width:0;margin-right:8px}.wb-toolbar h2{font-size:14px;font-weight:600;margin:0}.wb-layout{display:flex;min-width:0;position:relative;background:var(--rm-surface)}
+.wb-viewport{position:relative;flex:1;min-width:0;height:clamp(420px,65vh,900px);overflow:hidden;touch-action:none;background-color:var(--rm-surface-soft);background-image:radial-gradient(var(--rm-border) 1px,transparent 1px);background-size:24px 24px;cursor:default;isolation:isolate}
+.wb-viewport[data-tool="pan"]{cursor:grab}.wb-viewport[data-tool="connect"]{cursor:crosshair}.wb-world{position:absolute;left:0;top:0;transform-origin:0 0;width:1px;height:1px}
+.wb-node{position:absolute;box-sizing:border-box;border:1px solid var(--rm-border);border-radius:12px;background:var(--rm-surface);color:var(--rm-text);padding:16px;display:flex;flex-direction:column;gap:8px;user-select:none;cursor:move}
+.wb-node[data-selected="true"]{outline:2px solid var(--rm-selected-text);outline-offset:3px}.wb-node:focus-visible{outline:3px solid var(--rm-selected-text);outline-offset:5px}
+.wb-node,.wb-node p,.wb-node .wb-task-title{touch-action:none}
+.wb-node strong{font-size:14px;line-height:1.45;overflow-wrap:anywhere}.wb-node p{font-size:14px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;margin:0;overflow:auto;min-height:0;flex:1}.wb-node small{font-size:12px;line-height:1.4;overflow-wrap:anywhere;color:var(--rm-muted)}
+.wb-node .wb-task-title{overflow:auto;min-height:0;flex:1}.wb-node .rm-btn{align-self:flex-start;flex-shrink:0;min-height:32px}.wb-node[data-type="text"]{border-style:dashed}
+.wb-node[data-color="yellow"]{background:#fef3c7;color:#713f12;border-color:#d6b66b}.wb-node[data-color="yellow"] small{color:#713f12}
+.wb-node[data-color="violet"]{background:#ede9fe;color:#4c1d95;border-color:#b5a6df}.wb-node[data-color="blue"]{background:#dbeafe;color:#1e3a8a;border-color:#93b4dc}
+body.theme-dark .wb-node[data-color="yellow"]{background:#493b1b;color:#fef3c7;border-color:#8f7946}body.theme-dark .wb-node[data-color="yellow"] small{color:#fef3c7}
+body.theme-dark .wb-node[data-color="violet"]{background:#352957;color:#ede9fe;border-color:#81739c}body.theme-dark .wb-node[data-color="blue"]{background:#223855;color:#dbeafe;border-color:#6b89aa}
+.wb-edges{position:absolute;width:1px;height:1px;overflow:visible;pointer-events:none;color:var(--rm-muted)}.wb-edge{pointer-events:stroke;cursor:pointer;stroke:transparent;stroke-width:18;fill:none}.wb-edge-line{stroke:currentColor;stroke-width:2;fill:none}.wb-edge-selected .wb-edge-line{stroke:var(--rm-selected-text);stroke-width:3}.wb-edge-label{font-size:12px;fill:var(--rm-text);paint-order:stroke;stroke:var(--rm-surface-soft);stroke-width:5px;stroke-linejoin:round}
+.wb-panel{flex:0 0 300px;width:300px;min-width:0;border-left:1px solid var(--rm-border);padding:16px;display:flex;flex-direction:column;gap:12px;max-height:900px;overflow:auto;background:var(--rm-surface);color:var(--rm-text)}
+.wb-panel header{display:flex;align-items:center;gap:8px;justify-content:space-between}.wb-panel h3{font-size:14px;font-weight:600;margin:0}.wb-panel label{display:flex;flex-direction:column;gap:6px;font-size:13px}.wb-panel :is(input,textarea,select){width:100%;min-width:0;border:1px solid var(--rm-border);border-radius:8px;background:var(--rm-surface);color:var(--rm-text);padding:10px;font-size:14px;min-height:44px}.wb-panel textarea{min-height:140px;resize:vertical}.wb-panel p{font-size:12px;color:var(--rm-muted);margin:0;line-height:1.5}
+.wb-task-picker{display:flex;flex-direction:column;gap:8px;overflow:auto;max-height:400px;min-height:120px}.wb-task-picker button{display:flex;flex:0 0 auto;align-items:flex-start;flex-direction:column;gap:4px;text-align:left;white-space:normal;overflow-wrap:anywhere;height:auto;min-height:44px;padding:10px;border:1px solid var(--rm-border);border-radius:8px;color:var(--rm-text);background:var(--rm-surface);font-size:14px;line-height:1.45}.wb-task-picker button strong,.wb-task-picker button small{display:block;flex:none;width:100%;min-width:0}.wb-task-picker button small{color:var(--rm-muted);font-size:12px}
+.wb-footer{display:flex;align-items:center;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:8px 16px;border-top:1px solid var(--rm-border);background:var(--rm-surface)}.wb-footer p{font-size:12px;line-height:1.5;color:var(--rm-muted);margin:0;flex:1 1 280px}.wb-zoom{display:flex;align-items:center;gap:8px}.wb-zoom output{font-size:12px;min-width:44px;text-align:center;font-variant-numeric:tabular-nums}.wb-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;gap:12px;pointer-events:none}.wb-empty h3{font-size:18px;font-weight:600;margin:0}.wb-empty p{font-size:14px;color:var(--rm-muted);max-width:400px;margin:0;line-height:1.5}.wb-empty button{pointer-events:auto}
+.wb-zoom{flex-wrap:wrap}.wb-zoom-label{font-size:12px;color:var(--rm-muted)}
+.wb-tools{position:absolute;left:12px;top:12px;z-index:5;display:flex;flex-direction:column;gap:8px;padding:8px;border:1px solid var(--rm-border);border-radius:12px;background:var(--rm-surface);color:var(--rm-text);touch-action:manipulation}
+.wb-tools>.rm-btn,.wb-tools summary{display:flex;align-items:center;justify-content:center;width:44px;min-width:44px;height:44px;min-height:44px;padding:0;border-radius:8px;cursor:pointer}.wb-tools svg{width:20px;height:20px;pointer-events:none}.wb-tools summary{list-style:none;font-size:12px;font-variant-numeric:tabular-nums}.wb-tools summary::-webkit-details-marker{display:none}.wb-tools details{position:relative}.wb-tools details[open]>summary{color:var(--rm-selected-text);background:var(--rm-selected-bg)}
+.wb-zoom-popover{position:absolute;left:52px;top:0;width:216px;display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--rm-border);border-radius:12px;background:var(--rm-surface);color:var(--rm-text)}.wb-zoom-popover .wb-zoom{justify-content:space-between}.wb-zoom-popover .rm-btn{min-height:44px;min-width:44px}.wb-zoom-popover .wb-zoom-label{font-size:13px}
+.wb-tools summary output{pointer-events:none}
+.wb-membership{display:flex;gap:8px;flex-wrap:wrap}.wb-membership .rm-btn{flex:1 1 auto;min-height:44px;padding:0 8px;font-size:12px}
+.wb-viewport[data-tool="comment"]{cursor:crosshair}
+.wb-node[data-type="comment"]{padding:10px;border-radius:50% 50% 50% 4px;background:var(--rm-selected-bg);color:var(--rm-selected-text);transform:scale(var(--wb-inverse-zoom,1));transform-origin:0 0;z-index:2}
+.wb-node[data-type="comment"] svg{width:22px;height:22px;flex:none;pointer-events:none}
+.wb-comment-editor{position:absolute;z-index:6;display:flex;flex-direction:column;gap:8px;width:320px;max-width:calc(100% - 104px);padding:12px;border:1px solid var(--rm-border);border-radius:12px;background:var(--rm-surface);color:var(--rm-text);touch-action:manipulation}
+.wb-comment-editor label{font-size:13px;font-weight:600}.wb-comment-editor textarea{width:100%;min-height:96px;max-height:180px;resize:vertical;padding:8px;border:1px solid var(--rm-border);border-radius:8px;font-size:14px;line-height:1.5;background:var(--rm-surface);color:var(--rm-text)}
+.wb-comment-actions{display:flex;gap:8px;flex-wrap:wrap}.wb-comment-actions .rm-btn{min-height:44px}.wb-comment-editor [role="alert"]{font-size:12px;color:var(--rm-text)}
+.progress-trends{margin-top:24px;padding-top:20px;border-top:1px solid var(--rm-border);color:var(--rm-text)}.progress-trends h3{font-size:16px;font-weight:600;margin:0 0 8px}.progress-trends h3:not(:first-child){margin-top:24px}.progress-trends p{font-size:13px;line-height:1.6;color:var(--rm-muted);max-width:90ch;margin:8px 0}.progress-chart-scroll{overflow-x:auto;max-width:100%}.progress-chart{display:block;width:100%;min-width:712px;max-width:1000px;height:auto}.progress-chart text{font-size:12px;fill:var(--rm-muted)}.progress-grid path{stroke:var(--rm-border);stroke-width:1}.progress-done{stroke:var(--rm-selected-text);fill:var(--rm-selected-text)}.progress-scope{stroke:var(--rm-muted);fill:var(--rm-muted)}.progress-done path,.progress-scope path{stroke-width:2;fill:none}.progress-scope path{stroke-dasharray:6 4}.progress-legend{display:flex;gap:24px;flex-wrap:wrap;font-size:13px;margin:12px 0}.progress-legend span{display:flex;align-items:center;gap:8px}.progress-legend i{width:24px;display:inline-block;border-top:2px solid var(--rm-selected-text)}.progress-legend .progress-scope-swatch{border-top:2px dashed var(--rm-muted)}.progress-trends summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-size:13px;color:var(--rm-text);text-decoration:underline;text-underline-offset:4px}.progress-trends table{border-collapse:collapse;font-size:13px;min-width:420px;width:100%}.progress-trends th,.progress-trends td{padding:8px 12px;border-bottom:1px solid var(--rm-border);text-align:right}.progress-trends :is(th,td):nth-child(-n+2){text-align:left}.progress-dates{display:flex;gap:32px;flex-wrap:wrap;margin:12px 0}.progress-dates dt{font-size:13px;color:var(--rm-muted)}.progress-dates dd{font-size:20px;font-weight:600;margin:4px 0}
+@media(max-width:767px){.wb-toolbar{padding:8px;gap:8px}.wb-heading{gap:8px}.wb-toolbar h2{flex:1 1 100%}.wb-layout{flex-direction:column}.wb-panel{order:-1;width:auto;flex:auto;max-height:360px;border-left:0;border-bottom:1px solid var(--rm-border);padding:12px}.wb-viewport{height:480px;flex:auto}.wb-footer{padding:8px}.wb-toolbar .rm-btn,.wb-footer .rm-btn,.wb-panel .rm-btn,.wb-node .rm-btn{min-height:44px}}
 .scrum-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;border-bottom:1px solid var(--rm-border);flex-wrap:wrap}
 .scrum-heading h2{font-size:14px;font-weight:600;margin:0}.scrum-heading h2 span{color:var(--rm-muted);margin-left:8px;font-weight:400}
 .scrum-filters{display:flex;align-items:end;flex-wrap:wrap;gap:12px;padding:16px 16px 8px}
@@ -9179,7 +9211,7 @@ body[data-input-mode="pointer"] :is(button,[role="tab"],[role="button"]):focus{o
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.4</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.5</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9518,6 +9550,12 @@ body[data-input-mode="pointer"] :is(button,[role="tab"],[role="button"]):focus{o
           </button>
         </div>
         <!-- Группа: Ресурс (мультивыбор) -->
+        <fieldset id="boardTaskFilter" class="wb-membership" aria-label="Задачи на свободной доске">
+          <legend class="text-xs font-semibold mb-2">Холст</legend>
+          <button type="button" class="rm-btn rm-btn-ghost" data-board-membership="" onclick="setBoardTaskFilter('')">Все</button>
+          <button type="button" class="rm-btn rm-btn-ghost" data-board-membership="on" onclick="setBoardTaskFilter('on')">На доске</button>
+          <button type="button" class="rm-btn rm-btn-ghost" data-board-membership="off" onclick="setBoardTaskFilter('off')">Не на доске</button>
+        </fieldset>
         <div data-feat="resources" class="flex items-center bg-slate-50 border border-slate-200 rounded-xl p-0.5 transition-all">
           <div class="pl-2.5 pr-1 text-slate-500">
             <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
@@ -10064,7 +10102,7 @@ body[data-input-mode="pointer"] :is(button,[role="tab"],[role="button"]):focus{o
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v17.4">
+<script data-roadmap-modules="v17.5">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -13181,6 +13219,135 @@ if (typeof globalThis !== 'undefined') {
   globalThis.RoadmapModules = globalThis.RoadmapModules || {};
   Object.assign(globalThis.RoadmapModules, {createUiLayerController});
 }
+
+/* module:progress-trends sha256:5a05ed2070b8efb73e7cada25f15691caad72bc51f05d897a1d24dbc3eafecfc */
+// Observation-based progress and a conditional throughput simulation.
+// Pure functions: clocks, project scoping and history loading belong to the caller.
+const DAY=86400000,WEEK=7*DAY;
+const date=value=>{const s=String(value||'').slice(0,10);if(!/^\d{4}-\d{2}-\d{2}$/.test(s))return null;const n=Date.parse(s+'T00:00:00Z');return Number.isFinite(n)&&new Date(n).toISOString().slice(0,10)===s?n:null;};
+const ymd=n=>new Date(n).toISOString().slice(0,10);
+const monday=n=>n-((new Date(n).getUTCDay()+6)%7)*DAY;
+const done=(id,statuses)=>{const s=(statuses||[]).find(s=>s.id===id);if(typeof s?.isFinal==='boolean')return s.isFinal;if(s?.sourceStatus?.category)return s.sourceStatus.category==='done';return s?.group?s.group==='completed':id==='completed';};
+const tasks=s=>{
+ const byId=new Map();
+ for(const t of [...(s.archivedTasks||[]),...(s.roadmapData||[])])if(t&&t.id!=null&&!t.hidden&&!t.isMilestone)byId.set(String(t.id),t);
+ return [...byId.values()];
+};
+function buildProgressHistory({current,records=[],today,weeks=12}) {
+ const now=date(today);if(now===null)throw Error('Invalid observation date');
+ const count=Math.max(2,Math.min(52,Math.trunc(weeks)||12)),start=monday(now)-(count-1)*WEEK;
+ const snapshots=records.map(r=>({at:date(r.savedAt||r.data?.savedAt),stamp:Date.parse(r.savedAt||r.data?.savedAt),data:r.data})).filter(r=>r.at!==null&&r.at<=now&&r.data&&Array.isArray(r.data.roadmapData)).sort((a,b)=>a.at-b.at||(a.stamp||0)-(b.stamp||0));
+ snapshots.push({at:now,data:current});
+ const points=Array.from({length:count},(_,i)=>{
+  const from=start+i*WEEK,to=Math.min(now,from+WEEK-DAY),found=snapshots.filter(s=>s.at>=from&&s.at<=to).at(-1);
+  if(!found)return{week:ymd(from),at:null,scope:null,completed:null,partial:from===monday(now)};
+  const list=tasks(found.data);
+  return{week:ymd(from),at:ymd(found.at),scope:list.length,completed:list.filter(t=>done(t.status,found.data.projectStatuses)).length,partial:from===monday(now)};
+ });
+ const observations=new Map(),allStatuses=current.projectStatuses||[];
+ for(const snapshot of snapshots)for(const t of tasks(snapshot.data)){
+  const id=String(t.id),statuses=snapshot.data.projectStatuses||allStatuses;
+  const events=(Array.isArray(t.statusLog)?t.statusLog:[]).filter(e=>date(e.at)!==null&&done(e.to,statuses)&&!done(e.from,statuses)&&(e.source!=='jira'||date(t._jiraResolved)!==null));
+  if(done(t.status,statuses)&&date(t._jiraResolved)!==null)events.push({at:t._jiraResolved,to:t.status});
+  for(const e of events){const at=date(e.at);if(at<=now){const key=id+':'+ymd(monday(at));observations.set(key,{id,at,week:ymd(monday(at))});}}
+ }
+ // A missing observation is not a zero-throughput week. Only the consecutive
+ // tail of fully elapsed weeks bracketed by available snapshots is eligible.
+ const complete=points.filter(p=>!p.partial),samples=[];
+ for(let i=complete.length-1;i>=0;i--){
+  const p=complete[i],previous=points.find(q=>date(q.week)===date(p.week)-WEEK);
+  if(p.scope===null||!previous||previous.scope===null)break;
+  const entries=[...observations.values()].filter(e=>e.week===p.week);
+  // More completed work in a snapshot than known transitions exposes a gap.
+  if(Math.max(0,p.completed-previous.completed)>entries.length)break;
+  samples.unshift({week:p.week,count:entries.length});
+ }
+ const remaining=(current.roadmapData||[]).filter(t=>t&&!t.hidden&&!t.isMilestone&&!done(t.status,allStatuses)).length;
+ return{points,samples,remaining,today:ymd(now),knownWeeks:points.filter(p=>p.at).length,unit:'tasks'};
+}
+function simulateCompletion({samples,remaining,today,runs=4000,horizon=104,seed=174}) {
+ const now=date(today);if(now===null||!Number.isFinite(remaining)||remaining<0)throw Error('Invalid forecast input');
+ const n=Math.ceil(remaining),values=(samples||[]).map(s=>typeof s==='number'?s:s.count);
+ if(values.some(v=>!Number.isFinite(v)||v<0||!Number.isInteger(v)))throw Error('Invalid throughput sample');
+ if(n===0)return{status:'complete',p50:today,p85:today,weeks:values.length,remaining:0};
+ if(values.length<6||values.reduce((a,b)=>a+b,0)<10)return{status:'insufficient',weeks:values.length,closures:values.reduce((a,b)=>a+b,0),remaining:n};
+ const iterations=Math.max(100,Math.min(10000,Math.trunc(runs)||4000)),limit=Math.max(1,Math.min(260,Math.trunc(horizon)||104));
+ let state=(seed>>>0)||1;const random=()=>{state^=state<<13;state^=state>>>17;state^=state<<5;return(state>>>0)/4294967296;};
+ const finishes=[];
+ for(let i=0;i<iterations;i++){
+  let total=0,week=0;while(total<n&&week<limit){total+=values[Math.floor(random()*values.length)];week++;}
+  finishes.push(total>=n?week:Infinity);
+ }
+ finishes.sort((a,b)=>a-b);
+ const percentile=p=>{const w=finishes[Math.ceil(p*iterations)-1];return Number.isFinite(w)?ymd(now+w*WEEK):null;};
+ const half=Math.floor(values.length/2),mean=a=>a.reduce((s,v)=>s+v,0)/a.length,older=mean(values.slice(0,half)),recent=mean(values.slice(half));
+ return{status:'forecast',p50:percentile(.5),p85:percentile(.85),weeks:values.length,closures:values.reduce((a,b)=>a+b,0),remaining:n,runs:iterations,horizon:limit,censored:finishes.filter(v=>!Number.isFinite(v)).length,tempoChanged:older===0?recent>0:recent/older<.5||recent/older>2};
+}
+if(typeof globalThis!=='undefined'){
+ globalThis.RoadmapModules=globalThis.RoadmapModules||{};
+ Object.assign(globalThis.RoadmapModules,{buildProgressHistory,simulateCompletion});
+}
+
+/* module:whiteboard sha256:b03383d3f3efa0096695b6effab7c71e9b0f554cf4e662e4afd6d9058f0ae5df */
+// Free-board geometry and portable data. No DOM, storage, network or task edits.
+const wbFinite = (value, fallback) => typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+const wbBounded = (value, fallback, min, max) => Math.max(min, Math.min(max, wbFinite(value, fallback)));
+const wbText = value => typeof value === 'string' ? value : '';
+function normalizeWhiteboard(input) {
+  const source = input && typeof input === 'object' ? input : {};
+  const ids = new Set();
+  const nodes = (Array.isArray(source.nodes) ? source.nodes : []).filter(n => n && typeof n === 'object' && ['task','note','text','comment'].includes(n.type) && typeof n.id === 'string' && n.id && !ids.has(n.id) && (ids.add(n.id), true)).map(n => ({
+    id:n.id, type:n.type, x:wbBounded(n.x,0,-100000,100000), y:wbBounded(n.y,0,-100000,100000),
+    width:n.type==='comment'?44:wbBounded(n.width,260,180,640), height:n.type==='comment'?44:wbBounded(n.height,180,120,1200),
+    ...(n.type === 'task' ? {taskId:String(n.taskId ?? '')} : {text:wbText(n.text),color:['yellow','violet','blue','neutral'].includes(n.color)?n.color:'yellow'})
+  }));
+  const edges = [], edgeIds = new Set();
+  for (const e of Array.isArray(source.edges) ? source.edges : []) {
+    if (!e || typeof e.id !== 'string' || !e.id || ids.has(e.id) || edgeIds.has(e.id) || !ids.has(e.from) || !ids.has(e.to) || e.from === e.to) continue;
+    edgeIds.add(e.id); edges.push({id:e.id,from:e.from,to:e.to,label:wbText(e.label)});
+  }
+  return {version:1,nodes,edges};
+}
+function whiteboardBounds(nodes) {
+  if (!nodes.length) return {x:0,y:0,width:600,height:400};
+  let x=Infinity,y=Infinity,right=-Infinity,bottom=-Infinity;
+  for(const n of nodes){x=Math.min(x,n.x);y=Math.min(y,n.y);right=Math.max(right,n.x+n.width);bottom=Math.max(bottom,n.y+n.height);}
+  return {x,y,width:right-x,height:bottom-y};
+}
+function whiteboardFit(nodes, width, height) {
+  const b=whiteboardBounds(nodes), pad=48;
+  const zoom=Math.max(.2,Math.min(1,(Math.max(100,width)-pad*2)/Math.max(1,b.width),(Math.max(100,height)-pad*2)/Math.max(1,b.height)));
+  return {zoom,x:width/2-(b.x+b.width/2)*zoom,y:height/2-(b.y+b.height/2)*zoom};
+}
+function whiteboardZoomAt(camera, zoom, point) {
+  const z=wbBounded(zoom,1,.2,2);
+  return {zoom:z,x:point.x-(point.x-camera.x)/camera.zoom*z,y:point.y-(point.y-camera.y)/camera.zoom*z};
+}
+function whiteboardEdgeGeometry(a,b) {
+  const ac={x:a.x+a.width/2,y:a.y+a.height/2},bc={x:b.x+b.width/2,y:b.y+b.height/2};
+  const dx=bc.x-ac.x,dy=bc.y-ac.y;
+  const boundary=(n,c,tx,ty)=>{const k=1/Math.max(Math.abs(tx)/(n.width/2),Math.abs(ty)/(n.height/2),.00001);return{x:c.x+tx*k,y:c.y+ty*k};};
+  const start=boundary(a,ac,dx,dy),end=boundary(b,bc,-dx,-dy);
+  // Cubic connectors follow the dominant direction; aligned cards retain a
+  // small, gentle bow. Labels use the actual curve midpoint, not its chord.
+  const horizontal=Math.abs(dx)>=Math.abs(dy),axis=horizontal?'x':'y',cross=horizontal?'y':'x';
+  const sign=Math.sign(end[axis]-start[axis])||Math.sign(horizontal?dx:dy)||1;
+  const span=Math.hypot(end.x-start.x,end.y-start.y);
+  const handle=Math.min(240,Math.max(32,span*.4));
+  const bow=Math.abs(end[cross]-start[cross])<1?Math.min(48,Math.max(20,span*.14)):0;
+  const c1={...start,[axis]:start[axis]+sign*handle,[cross]:start[cross]-bow};
+  const c2={...end,[axis]:end[axis]-sign*handle,[cross]:end[cross]-bow};
+  const label={x:(start.x+3*c1.x+3*c2.x+end.x)/8,y:(start.y+3*c1.y+3*c2.y+end.y)/8};
+  return {start,end,label,path:`M ${start.x} ${start.y} C ${c1.x} ${c1.y} ${c2.x} ${c2.y} ${end.x} ${end.y}`};
+}
+function whiteboardRemove(board, ids) {
+  const removed=new Set(ids);
+  return normalizeWhiteboard({nodes:board.nodes.filter(n=>!removed.has(n.id)),edges:board.edges.filter(e=>!removed.has(e.id)&&!removed.has(e.from)&&!removed.has(e.to))});
+}
+if (typeof globalThis !== 'undefined') {
+  globalThis.RoadmapModules = globalThis.RoadmapModules || {};
+  Object.assign(globalThis.RoadmapModules, {normalizeWhiteboard,whiteboardBounds,whiteboardFit,whiteboardZoomAt,whiteboardEdgeGeometry,whiteboardRemove});
+}
 })();
 //# sourceURL=roadmap-inline-modules.mjs
 </script>
@@ -13516,7 +13683,7 @@ if (typeof globalThis !== 'undefined') {
         _undoBytes += metrics.bytes;
         _trimUndoStack();
       }
-      showUndoToast(message, durationMs);
+      if (durationMs !== 0) showUndoToast(message, durationMs);
     }
     function applyUndo() {
       if (!_undoStack.length) return;
@@ -14349,7 +14516,7 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '17.4';
+    const APP_VERSION = '17.5';
     const APP_VERSION_DATE = '10.10.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
@@ -14481,6 +14648,7 @@ if (typeof globalThis !== 'undefined') {
         _put('gantt_release_rag', _sd.releaseRag);
         _put('gantt_ui_profiles', _sd.uiProfiles); // профили вида (модули+фильтры+масштаб+режим) не чувствительны, полезны получателю
         _put('gantt_presentations', _sd.presentations); // наборы-презентации (состав+алиасы вида), безопасны
+        _put('gantt_whiteboard', _sd.whiteboard);
         _put('gantt_features', _sd.featureFlags); // выключенные модули применяются и у получателя файла для просмотра
         _put('gantt_baselines', _sd.baselines); // версии плана нужны получателю для отчета о сдвиге сроков и тени план/факт (только даты/статусы, без денег)
         if (_sd.chartBaselineId) memoryStore['gantt_chart_baseline'] = String(_sd.chartBaselineId);
@@ -14622,6 +14790,7 @@ if (typeof globalThis !== 'undefined') {
     }
     function _normPres(p) { if (!p || typeof p !== 'object' || Array.isArray(p)) return { sets: [], activeId: null }; if (!Array.isArray(p.sets)) p.sets = []; p.sets.forEach(function (s) { if (s && s.logo && String(s.logo).indexOf('data:image/') !== 0) s.logo = ''; if (s && s.head) s.head = _normPresHead(s.head); }); return p; }
     let presentations = _normPres(safeStorageGet('gantt_presentations', null));
+    let whiteboard = RoadmapModules.normalizeWhiteboard(safeStorageGet('gantt_whiteboard', null));
     // Переключатели модулей интерфейса (окно «Настройки»): false = модуль спрятан из интерфейса, данные не трогаем.
     // Часть файла проекта: зеркалится во все точки загрузки/сброса/слияния так же, как gantt_release_rag.
     // Неизвестные ключи игнорируются, отсутствующие = включено (совместимость со старыми и новыми файлами).
@@ -14805,6 +14974,7 @@ if (typeof globalThis !== 'undefined') {
     // === Мультивыбор фильтров (пустое множество = «Все») ===
     // resource: значения ресурсов; status: id статусов + спец-ключи 'overdue' и 'milestone'; project: префиксы Jira-проектов
     let resourceFilterSel = new Set();
+    let _boardTaskFilter = '';
     // R2: транзитные режимы-фильтры (вид, не данные). _goritMode , просрочено/скоро/блокеры; _mineMode , задачи автора.
     let _goritMode = false;
     let _critPathMode = false;
@@ -17130,6 +17300,8 @@ if (typeof globalThis !== 'undefined') {
       reportProfiles = {};
       uiProfiles = {};
       presentations = _normPres(null);
+      whiteboard = RoadmapModules.normalizeWhiteboard(null);
+      _wbResetInteraction();
       releaseRag = {};
       featureFlags = _newProjectFeatureFlags();
       try { applyFeatureFlags(); } catch (e) {}
@@ -17159,7 +17331,7 @@ if (typeof globalThis !== 'undefined') {
       memoryStore['gantt_sprints'] = '[]';
       _spCfg = _normalizeSnapshotSprintCfg(null);
       memoryStore['gantt_sprint_cfg'] = JSON.stringify(_spCfg);
-      try { statusFilterSel.clear(); resourceFilterSel.clear(); projectFilterSel.clear(); typeFilterSel.clear(); releaseFilterSel.clear(); labelFilterSel.clear(); componentFilterSel.clear(); customFieldFilterSel = {}; } catch (e) {}
+      try { statusFilterSel.clear(); resourceFilterSel.clear(); projectFilterSel.clear(); typeFilterSel.clear(); releaseFilterSel.clear(); labelFilterSel.clear(); componentFilterSel.clear(); customFieldFilterSel = {}; _boardTaskFilter = ''; } catch (e) {}
       try { if (typeof selectedTaskIds !== 'undefined' && selectedTaskIds.clear) selectedTaskIds.clear(); } catch (e) {}
     }
     // Записать текущее состояние проекта во все ключи хранилища (после сброса/загрузки)
@@ -17211,6 +17383,7 @@ if (typeof globalThis !== 'undefined') {
         'gantt_report_profiles': JSON.stringify(reportProfiles),
         'gantt_ui_profiles': JSON.stringify(uiProfiles),
         'gantt_presentations': JSON.stringify(presentations),
+        'gantt_whiteboard': JSON.stringify(whiteboard),
         'gantt_release_rag': JSON.stringify(releaseRag),
         'gantt_baselines': JSON.stringify((typeof getBaselines === 'function') ? getBaselines() : []),
         'gantt_chart_baseline': ((typeof chartBaselineId !== 'undefined') ? chartBaselineId : ''),
@@ -18154,7 +18327,8 @@ if (typeof globalThis !== 'undefined') {
     let _zoomResizeTimer = null;
     window.addEventListener('resize', () => {
       clearTimeout(_zoomResizeTimer);
-      _zoomResizeTimer = setTimeout(() => { const w = computeDayWidth(timelineZoom); if (Math.abs(w - DAY_WIDTH) > 0.5) { if (timelineZoom === 'currentWeek') { applyTimelinePreset('currentWeek'); return; } DAY_WIDTH = w; renderTimelineHeader(); renderRoadmap(true); } }, 280);
+      // Resizing the hidden timeline must not replace the canvas during a gesture.
+      _zoomResizeTimer = setTimeout(() => { const w = computeDayWidth(timelineZoom); if (Math.abs(w - DAY_WIDTH) > 0.5) { if (appView==='kanban' && _boardMode==='canvas') { DAY_WIDTH=w; renderTimelineHeader(); _wbPositionComment(); return; } if (timelineZoom === 'currentWeek') { applyTimelinePreset('currentWeek'); return; } DAY_WIDTH = w; renderTimelineHeader(); renderRoadmap(true); } }, 280);
     });
     // Прокрутка таймлайна к сегодняшней дате (по центру видимой части)
     function scrollToToday(instant) {
@@ -21392,6 +21566,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         .map(name => ({id:name,name}));
     }
     function taskPassesNonStatusFilters(t) {
+      if (typeof _boardTaskFilter === 'string' && _boardTaskFilter && !_taskMatchesBoardFilter(t, _boardTaskFilter)) return false;
       if (!taskMatchesTypeFilter(t)) return false;
       if (_forecastReasonFilter && !_taskMatchesForecastReason(t, _forecastReasonFilter)) return false;
       if (releaseFilterSel.size) { if (!t.release || !releaseFilterSel.has(String(t.release))) return false; }
@@ -21453,6 +21628,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       return true;
     }
     function taskPassesFilters(t, options = {}) {
+      if (!options.ignoreBoard && typeof _boardTaskFilter === 'string' && _boardTaskFilter && !_taskMatchesBoardFilter(t, _boardTaskFilter)) return false;
       if (!taskMatchesTypeFilter(t)) return false;
       // R2: режим «Горит» , задача горит (просрочена / срок в ближайшие 2 дня / блокер), кроме завершенных и вех.
       if (_goritMode && !_taskIsHot(t)) return false;
@@ -21514,7 +21690,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
     // Активен ли хоть один фильтр задач , для скрытия пустых секций под фильтром.
     function anyTaskFilterActive() {
       try {
-        return !!(_goritMode || _mineMode
+        return !!(_goritMode || _mineMode || (typeof _boardTaskFilter === 'string' && _boardTaskFilter)
           || _kindFilter === 'urgent' || _kindFilter === 'extdep' || _noGoalFilter
           || _forecastReasonFilter
           || (releaseFilterSel && releaseFilterSel.size)
@@ -21645,6 +21821,8 @@ const m = document.getElementById('mineModeBtn');
       return `${set.size} ${pluralRu(set.size, def.noun)}`;
     }
     function updateFilterLabels() {
+      const boardSelect = document.getElementById('boardTaskFilter');
+      if (boardSelect) boardSelect.querySelectorAll('[data-board-membership]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.boardMembership===_boardTaskFilter)));
       ['resource', 'status', 'project', 'type'].forEach(kind => {
         const lbl = document.getElementById(kind + 'FilterLabel');
         if (lbl) lbl.textContent = filterLabelText(kind);
@@ -21775,6 +21953,7 @@ const m = document.getElementById('mineModeBtn');
         storage.set('gantt_filters_active', JSON.stringify({
           status: [...statusFilterSel], resource: [...resourceFilterSel], project: [...projectFilterSel], type: [...typeFilterSel],
           release: [...releaseFilterSel], label: [...labelFilterSel], component: [...componentFilterSel],
+          board: _boardTaskFilter,
           customFields: Object.keys(customFieldFilterSel || {}).reduce((a, k) => { const s = customFieldFilterSel[k]; if (s && s.size) a[k] = [...s]; return a; }, {})
         }));
       } catch (e) {}
@@ -21785,6 +21964,7 @@ const m = document.getElementById('mineModeBtn');
         if (!raw) return;
         const f = safeJsonParse(raw);
         if (!f || typeof f !== 'object') return;
+        _boardTaskFilter = ['on','off'].includes(f.board) ? f.board : '';
         const fill = (set, arr) => { if (Array.isArray(arr)) { set.clear(); arr.forEach(x => set.add(x)); } };
         fill(statusFilterSel, f.status); fill(resourceFilterSel, f.resource); fill(projectFilterSel, f.project); fill(typeFilterSel, f.type || []);
         fill(releaseFilterSel, f.release); fill(labelFilterSel, f.label); fill(componentFilterSel, f.component);
@@ -21803,7 +21983,7 @@ const m = document.getElementById('mineModeBtn');
       labelFilterSel.clear();
       componentFilterSel.clear();
       customFieldFilterSel = {};
-      _goritMode = false; _critPathMode = false; _mineMode = false; _kindFilter = ''; _noGoalFilter = false; _forecastReasonFilter = '';
+      _boardTaskFilter = ''; _goritMode = false; _critPathMode = false; _mineMode = false; _kindFilter = ''; _noGoalFilter = false; _forecastReasonFilter = '';
       if (typeof _updateModeButtons === 'function') _updateModeButtons();
       closeAllFilterPanels();
       if (typeof closeReleaseFilterMenu === 'function') closeReleaseFilterMenu();
@@ -22567,6 +22747,7 @@ const m = document.getElementById('mineModeBtn');
       opts = opts || {};
       const next = (mode === 'leadership') ? mode : 'planning';
       const clearedForLeadership = next === 'leadership' && (
+        _boardTaskFilter ||
         resourceFilterSel.size || statusFilterSel.size || projectFilterSel.size || typeFilterSel.size || releaseFilterSel.size ||
         labelFilterSel.size || componentFilterSel.size || Object.keys(customFieldFilterSel || {}).length ||
         _goritMode || _mineMode || _kindFilter || _noGoalFilter || _forecastReasonFilter
@@ -22574,7 +22755,7 @@ const m = document.getElementById('mineModeBtn');
       if (clearedForLeadership) {
         resourceFilterSel.clear(); statusFilterSel.clear(); projectFilterSel.clear(); typeFilterSel.clear(); releaseFilterSel.clear();
         labelFilterSel.clear(); componentFilterSel.clear(); customFieldFilterSel = {};
-        _goritMode = false; _critPathMode = false; _mineMode = false; _kindFilter = ''; _noGoalFilter = false; _forecastReasonFilter = '';
+        _boardTaskFilter = ''; _goritMode = false; _critPathMode = false; _mineMode = false; _kindFilter = ''; _noGoalFilter = false; _forecastReasonFilter = '';
         if (typeof persistFilters === 'function') persistFilters();
         if (typeof updateFilterLabels === 'function') updateFilterLabels();
         if (typeof updateReleaseFilterBtn === 'function') updateReleaseFilterBtn();
@@ -23018,6 +23199,7 @@ const m = document.getElementById('mineModeBtn');
         const presets = getFilterPresets().filter(p => p.name !== name);
         presets.push({
           name, status: [...statusFilterSel], resource: [...resourceFilterSel], project: [...projectFilterSel], type: [...typeFilterSel],
+          board: _boardTaskFilter,
           release: [...releaseFilterSel], label: [...labelFilterSel], component: [...componentFilterSel],
           customFields: Object.keys(customFieldFilterSel || {}).reduce((out, key) => {
             const values = customFieldFilterSel[key];
@@ -23032,6 +23214,7 @@ const m = document.getElementById('mineModeBtn');
     }
     function applyFilterPreset(idx) {
       const p = getFilterPresets()[idx]; if (!p) return;
+      _boardTaskFilter = ['on','off'].includes(p.board) ? p.board : '';
       typeFilterSel = new Set(p.type || []);
       statusFilterSel = new Set(p.status || []); resourceFilterSel = new Set(p.resource || []); projectFilterSel = new Set(p.project || []);
       releaseFilterSel = new Set(p.release || []); labelFilterSel = new Set(p.label || []); componentFilterSel = new Set(p.component || []);
@@ -24218,6 +24401,9 @@ const m = document.getElementById('mineModeBtn');
           if (group) group.items = Array.from(unique.values());
         });
       });
+      if (typeof whiteboard !== 'undefined') whiteboard.nodes.forEach(function (node) {
+        if (node.type === 'task') node.taskId = String(targetOf(node.taskId));
+      });
       return stats;
     }
 
@@ -24271,6 +24457,7 @@ const m = document.getElementById('mineModeBtn');
         storage.set('gantt_archived_tasks', JSON.stringify(archivedTasks));
         storage.set('gantt_custom_cutoffs', JSON.stringify(customCutoffs));
         storage.set('gantt_presentations', JSON.stringify(presentations));
+        storage.set('gantt_whiteboard', JSON.stringify(whiteboard));
         updateArchiveBadge();
         renderArchiveList();
         renderRoadmap();
@@ -24492,6 +24679,7 @@ const m = document.getElementById('mineModeBtn');
       storage.set('gantt_epic_statuses', JSON.stringify(epicStatusByKey));
       storage.set('gantt_custom_cutoffs', JSON.stringify(customCutoffs));
       storage.set('gantt_presentations', JSON.stringify(presentations));
+      storage.set('gantt_whiteboard', JSON.stringify(whiteboard));
       if (typeof updateArchiveBadge === 'function') updateArchiveBadge();
       if (typeof updateSectionSelects === 'function') updateSectionSelects();
       if (typeof renderHeaderCutoffChips === 'function') renderHeaderCutoffChips();
@@ -30795,6 +30983,21 @@ const m = document.getElementById('mineModeBtn');
       var fb = function () { try { var ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); done(); } catch (e) { if (typeof showToast === 'function') showToast('Не удалось скопировать', 'error', 2500); } };
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(fb); else fb();
     }
+    function _progressTrendsHtml() {
+      const today=toYmdLocal(CURRENT_DATE),current={roadmapData,archivedTasks,projectStatuses};
+      const records=(Array.isArray(_fileVersions)?_fileVersions:[]).filter(r=>r.projectId===projectStorageId&&(!r.data?.projectId||r.data.projectId===projectStorageId));
+      const history=RoadmapModules.buildProgressHistory({current,records,today});
+      const forecast=RoadmapModules.simulateCompletion({...history,seed:174});
+      const points=history.points,max=Math.max(1,...points.map(p=>p.scope||0)),x=i=>48+i*56,y=value=>212-value/max*172;
+      const line=key=>{let path='',gap=true;points.forEach((p,i)=>{if(p[key]===null){gap=true;return;}path+=(gap?'M':'L')+x(i)+','+y(p[key])+' ';gap=false;});return path;};
+      const dots=key=>points.map((p,i)=>p[key]===null?'':`<circle cx="${x(i)}" cy="${y(p[key])}" r="3"><title>${escHtml(p.at)}: ${p[key]}</title></circle>`).join('');
+      const fmt=value=>value?String(value).slice(0,10).split('-').reverse().join('.'):'Позже горизонта расчета';
+      let prediction='';
+      if(forecast.status==='complete')prediction='<p>В текущем плане нет незавершенных задач.</p>';
+      else if(forecast.status==='insufficient')prediction=`<p>Пока недостаточно истории для двух дат. Доступно полных недель: <strong>${forecast.weeks}</strong>, зарегистрированных закрытий: <strong>${forecast.closures}</strong>.</p><p>Расчет появится после 6 последовательных недель с точками возврата и не менее 10 закрытий с известной датой. Пропуски истории не считаются простоем.</p>`;
+      else prediction=`<dl class="progress-dates"><div><dt>50% сценариев · p50</dt><dd>${escHtml(fmt(forecast.p50))}</dd></div><div><dt>85% сценариев · p85</dt><dd>${escHtml(fmt(forecast.p85))}</dd></div></dl><p>Осталось ${forecast.remaining} задач. Основа: ${forecast.weeks} полных недель, ${forecast.closures} зарегистрированных закрытий. ${forecast.runs} расчетных сценариев.</p>${forecast.tempoChanged?'<p><strong>Темп заметно изменился.</strong> Прошлая работа может плохо описывать будущую: не используйте эти даты как обязательство.</p>':''}${forecast.censored?`<p>В ${forecast.censored} сценариях работа не завершилась за ${forecast.horizon} недель; эти сценарии не исключены из расчета.</p>`:''}`;
+      return `<section class="progress-trends" aria-labelledby="progressTrendsTitle"><h3 id="progressTrendsTitle">Готовность по неделям</h3><p>Весь план, включая архив. Фильтры списка здесь не применяются. Последняя точка — ${escHtml(fmt(today))}; текущая неделя еще идет.</p><div class="progress-legend"><span><i class="progress-done-swatch"></i>Готово</span><span><i class="progress-scope-swatch"></i>Объем плана</span></div>${history.knownWeeks<2?'<p>Пока есть только текущий срез. После появления точек возврата здесь будет видна динамика.</p>':''}<div class="progress-chart-scroll"><svg class="progress-chart" viewBox="0 0 712 256" role="img" aria-label="Готовые задачи и объем плана по наблюдениям за 12 недель. Точные значения доступны в таблице ниже."><g class="progress-grid">${[0,.5,1].map(f=>`<path d="M48 ${y(max*f)}H680"/><text x="36" y="${y(max*f)+4}" text-anchor="end">${Math.round(max*f)}</text>`).join('')}</g><g class="progress-scope"><path d="${line('scope')}"/>${dots('scope')}</g><g class="progress-done"><path d="${line('completed')}"/>${dots('completed')}</g>${points.map((p,i)=>i%2===0||i===11?`<text class="progress-axis" x="${x(i)}" y="240" text-anchor="middle">${p.week.slice(8)}.${p.week.slice(5,7)}</text>`:'').join('')}<text class="progress-axis" x="48" y="20">Задачи</text></svg></div><p>Каждая точка — последний сохраненный срез за неделю, а не восстановленное состояние на воскресенье. Разрыв линии означает, что среза нет. Объем и готовность могут уменьшаться при изменении плана или повторном открытии задач.</p><details><summary>Точные значения и источник</summary><div class="progress-chart-scroll"><table><thead><tr><th>Неделя с</th><th>Дата среза</th><th>Готово</th><th>Объем</th></tr></thead><tbody>${points.map(p=>`<tr><td>${escHtml(fmt(p.week))}${p.partial?' · идет':''}</td><td>${p.at?escHtml(fmt(p.at)):'Нет среза'}</td><td>${p.completed??'—'}</td><td>${p.scope??'—'}</td></tr>`).join('')}</tbody></table></div><p>Источник: точки возврата текущего проекта и открытый план. Сохраняется до 20 точек; удаленная история не восстанавливается.</p></details><h3>Когда может быть готов текущий план</h3>${prediction}<details><summary>Как читать прогноз</summary><p>Две даты показывают долю расчетных сценариев, а не гарантию срока. Модель случайно повторяет наблюдавшееся число закрытых задач за полную неделю. Нулевые недели учитываются только при наличии срезов; текущая неполная неделя исключена.</p><p>Предполагается, что состав команды, характер задач и объем оставшейся работы не меняются. Новые задачи, зависимости и отпуска отдельно не моделируются. История импорта может быть неполной. Порог 6 недель и 10 закрытий — ограничение этой функции, а не доказательство точности.</p><p>Расчет идет в задачах, без смешивания оценок в днях и баллах. Прежний расчет по оценкам остается во вкладке «Прогноз».</p></details></section>`;
+    }
     function renderSummary() {
       var v = document.getElementById('summaryView'); if (!v) return;
       var esc = (typeof escHtml === 'function') ? escHtml : function (x) { return String(x == null ? '' : x); };
@@ -30907,7 +31110,7 @@ const m = document.getElementById('mineModeBtn');
         + ((typeof _viewSwitcherBtnHtml === 'function') ? _viewSwitcherBtnHtml() : '') + '</div>';
       var more = '<details id="summaryMoreMetrics" data-summary-more class="mt-4 rounded-2xl border border-slate-200 bg-white overflow-hidden"><summary class="min-h-11 px-4 py-3 flex items-center justify-between gap-3 cursor-pointer font-semibold text-slate-800"><span>Ещё показатели</span><span class="text-xs font-normal text-slate-500">' + extraTiles.length + '</span></summary><div class="border-t border-slate-200 p-3"><div class="flex justify-end mb-3"><button type="button" onclick="event.preventDefault();_sumTilesMenu()" class="px-3 rounded-xl border border-slate-200 bg-slate-50 font-medium text-slate-700">Настроить</button></div><section data-summary-extra class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 w-full">' + extraTiles.join('') + '</section></div></details>';
       var note = '<div class="text-xs text-slate-500 mt-3">' + (_fltOn ? 'Фильтры шапки применены к показателям с меткой «Текущий срез». <button onclick="resetAllFilters()" class="underline font-semibold cursor-pointer text-indigo-600">Сбросить фильтры</button>. ' : '') + 'Главные ответы всегда видны; дополнительные показатели можно настроить.</div>';
-      v.innerHTML = head + '<div class="p-4 grow overflow-auto"><section data-summary-primary aria-label="Главное о плане" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 w-full">' + primaryTiles.join('') + '</section>' + more + note + '</div>';
+      v.innerHTML = head + '<div class="p-4 grow overflow-auto"><section data-summary-primary aria-label="Главное о плане" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 w-full">' + primaryTiles.join('') + '</section>' + _progressTrendsHtml() + more + note + '</div>';
     }
     function applyAppView() {
       document.body.setAttribute('data-app-view', appView);
@@ -31029,14 +31232,338 @@ const m = document.getElementById('mineModeBtn');
       cols.forEach(function (col, i) { var c = col.offsetLeft + col.offsetWidth / 2; var d = Math.abs(c - center); if (d < best) { best = d; nearest = i; } });
       out.textContent = (nearest + 1) + ' / ' + cols.length;
     }
-    // Оба режима используют те же задачи; выбор спринта не меняет сроки и статус.
-    let _boardMode = storage.get('gantt_board_mode') === 'scrum' ? 'scrum' : 'kanban';
+    // Свободный холст: координаты и заметки отдельно от модели задач.
+    function _taskMatchesBoardFilter(task, mode, ids) {
+      if (!['on','off'].includes(mode)) return true;
+      const on = ids ? ids.has(String(task.id)) : whiteboard.nodes.some(n=>n.type==='task'&&String(n.taskId)===String(task.id));
+      return mode==='on' ? on : !on;
+    }
+    function setBoardTaskFilter(mode) {
+      _boardTaskFilter=['on','off'].includes(mode)?mode:'';
+      afterFilterChange();
+    }
+    function _wbSetTaskFilter(mode) {
+      _wbUi.taskFilter=['on','off'].includes(mode)?mode:'';
+      _wbRenderPickerList();
+    }
+    var _wbUi = {project:null,selected:null,tool:'select',panel:'',query:'',taskFilter:'',drafts:{},camera:{x:112,y:48,zoom:1},gesture:null};
+    function _wbResetInteraction() {
+      _wbUi={project:null,selected:null,tool:'select',panel:'',query:'',taskFilter:'',drafts:{},camera:{x:112,y:48,zoom:1},gesture:null};
+    }
+    function _wbWritable() { return !READ_ONLY_MODE && requireUnlocked(); }
+    function _wbId() { return 'wb-'+crypto.randomUUID(); }
+    function _wbTask(id) { return (roadmapData||[]).find(t=>t&&String(t.id)===String(id)&&!t.hidden); }
+    function _wbVisibleNodes() {
+      const tasks=new Map((roadmapData||[]).filter(t=>t&&!t.hidden).map(t=>[String(t.id),t]));
+      return whiteboard.nodes.filter(n=>n.type!=='task'||!tasks.has(n.taskId)||taskPassesFilters(tasks.get(n.taskId),{ignoreBoard:true}));
+    }
+    function _wbCommit(message,change) {
+      if(!_wbWritable())return false;
+      const before=captureUndoState(),serialized=JSON.stringify(whiteboard);
+      const interaction={selected:_wbUi.selected,panel:_wbUi.panel,tool:_wbUi.tool,drafts:{..._wbUi.drafts}};
+      change();whiteboard=RoadmapModules.normalizeWhiteboard(whiteboard);
+      if(JSON.stringify(whiteboard)===serialized){renderWhiteboard();return false;}
+      if(_persistProjectStateNow()!==true){whiteboard=RoadmapModules.normalizeWhiteboard(before.whiteboard);Object.assign(_wbUi,interaction);renderWhiteboard();showToast('Не удалось сохранить холст. Изменение отменено, черновик оставлен в редакторе.','error');return false;}
+      scheduleAutoSaveFile();offerUndo(message,before,0);
+      renderWhiteboard();const hint=document.getElementById('wbHint');if(hint)hint.textContent=message+'. Можно отменить.';return true;
+    }
+    function _wbHistory(redo) {if(!_wbWritable())return;if(redo)applyRedo();else applyUndo();renderWhiteboard();}
+    function _wbCenter() {
+      const v=document.getElementById('wbViewport'),c=_wbUi.camera;
+      return {x:Math.round(((v?.clientWidth||800)/2-c.x)/c.zoom-130),y:Math.round(((v?.clientHeight||500)/2-c.y)/c.zoom-90)};
+    }
+    function _wbAddNote(type) {
+      const id=_wbId(),position=_wbFreePosition(260,180);
+      if(_wbCommit(type==='text'?'Добавлен текст':'Добавлен стикер',()=>{
+        whiteboard.nodes.push({id,type:type==='text'?'text':'note',...position,width:260,height:180,text:'',color:type==='text'?'neutral':'yellow'});
+        _wbUi.selected=id;_wbUi.panel='edit';_wbUi.tool='select';
+      }))document.getElementById('wbText')?.focus();
+    }
+    function _wbAddTask(id) {
+      const t=_wbTask(id);if(!t||t.isMilestone)return;
+      const existing=whiteboard.nodes.find(n=>n.type==='task'&&n.taskId===String(id));
+      if(existing){_wbUi.selected=existing.id;_wbFocusNode(existing);_wbPaintCamera();_wbPaintSelection();return;}
+      const nodeId=_wbId(),p=_wbFreePosition(280,220);
+      _wbCommit('Задача добавлена на холст',()=>{whiteboard.nodes.push({id:nodeId,type:'task',taskId:String(id),...p,width:280,height:220});_wbUi.selected=nodeId;});
+    }
+    function _wbFreePosition(width,height) {
+      const origin=_wbCenter(),gap=24;
+      const free=p=>!whiteboard.nodes.some(n=>p.x<n.x+n.width+gap&&p.x+width+gap>n.x&&p.y<n.y+n.height+gap&&p.y+height+gap>n.y);
+      // Keep saved positions intact; only the new card searches nearby grid cells.
+      for(let ring=0;ring<=whiteboard.nodes.length+1;ring++){
+        for(let y=-ring;y<=ring;y++)for(let x=-ring;x<=ring;x++){
+          if(Math.max(Math.abs(x),Math.abs(y))!==ring)continue;
+          const p={x:origin.x+x*(width+gap),y:origin.y+y*(height+gap)};
+          if(Math.abs(p.x)<=100000&&Math.abs(p.y)<=100000&&free(p))return p;
+        }
+      }
+      return origin;
+    }
+    function _wbSetTool(tool) {
+      if(['connect','comment'].includes(tool)&&!_wbWritable())return;
+      _wbUi.tool=tool;_wbUi.selected=null;_wbUi.panel='';renderWhiteboard();
+      document.querySelector('[data-wb-tool="'+tool+'"]')?.focus({preventScroll:true});
+    }
+    function _wbOpenPicker() { if(!_wbWritable())return;_wbUi.panel='tasks';_wbRenderPanel();document.getElementById('wbSearch')?.focus({preventScroll:true}); }
+    function _wbSelect(id) {
+      if(_wbUi.tool==='connect'){
+        const from=_wbUi.selected;
+        if(from&&from!==id&&whiteboard.nodes.some(n=>n.id===from)&&whiteboard.nodes.some(n=>n.id===id)){
+          if(whiteboard.edges.some(e=>e.from===from&&e.to===id)){showToast('Эти элементы уже соединены','info');return;}
+          _wbCommit('Добавлена связь на холсте',()=>{whiteboard.edges.push({id:_wbId(),from,to:id,label:''});_wbUi.selected=null;});return;
+        }
+      }
+      _wbUi.selected=id;_wbPaintSelection();
+      if(_wbUi.panel==='edit')_wbRenderPanel();
+      const hint=document.getElementById('wbHint');if(hint&&_wbUi.tool==='connect')hint.textContent='Теперь выберите второй элемент. Escape — отменить.';
+    }
+    function _wbPaintSelection() {
+      document.querySelectorAll('[data-wb-node]').forEach(n=>n.dataset.selected=String(n.dataset.wbNode===_wbUi.selected));
+      document.querySelectorAll('[data-wb-edge]').forEach(n=>n.classList.toggle('wb-edge-selected',n.dataset.wbEdge===_wbUi.selected));
+      for(const id of ['wbEdit','wbRemove']){const b=document.getElementById(id);if(b)b.disabled=!_wbUi.selected;}
+    }
+    function _wbOpenTask(id) { const n=whiteboard.nodes.find(n=>n.id===id),t=n&&_wbTask(n.taskId);if(t)openTaskById(t.id); }
+    function _wbEdit() {
+      const n=whiteboard.nodes.find(n=>n.id===_wbUi.selected);
+      if(n?.type==='task'){_wbOpenTask(n.id);return;}
+      if(n?.type==='comment'){_wbOpenComment(n);return;}
+      if(!_wbWritable())return;_wbUi.panel='edit';_wbRenderPanel();document.getElementById('wbText')?.focus();
+    }
+    function _wbRemove() {
+      const id=_wbUi.selected;if(!id)return;
+      _wbCommit('Элемент убран с холста. Задачи плана сохранены',()=>{whiteboard=RoadmapModules.whiteboardRemove(whiteboard,[id]);_wbUi.selected=null;_wbUi.panel='';});
+    }
+    function _wbSaveEditor() {
+      const n=whiteboard.nodes.find(n=>n.id===_wbUi.selected)||whiteboard.edges.find(n=>n.id===_wbUi.selected);
+      if(!n)return;
+      const value=document.getElementById('wbText')?.value||'',color=document.getElementById('wbColor')?.value;
+      _wbKeepDraft();
+      _wbCommit('Изменения холста сохранены',()=>{if(n.type){n.text=value;if(color)n.color=color;}else n.label=value;delete _wbUi.drafts[n.id];_wbUi.panel='';});
+    }
+    function _wbKeepDraft() {
+      if(!_wbUi.selected)return;
+      _wbUi.drafts[_wbUi.selected]={text:document.getElementById('wbText')?.value||'',color:document.getElementById('wbColor')?.value};
+    }
+    function _wbClosePanel() {_wbUi.panel='';_wbRenderPanel();document.getElementById('wbViewport')?.focus({preventScroll:true});}
+    function _wbOpenComment(node,position) {
+      if(READ_ONLY_MODE?!node:!_wbWritable())return;
+      const key=node?.id||'new-comment',draft=_wbUi.drafts[key];
+      _wbUi.comment={id:node?.id||null,key,...(position||{x:node.x,y:node.y}),text:draft?.text??node?.text??''};
+      _wbUi.tool='select';_wbUi.selected=node?.id||null;_wbUi.panel='comment';renderWhiteboard();
+      document.getElementById('wbCommentText')?.focus({preventScroll:true});
+    }
+    function _wbCommentDraft(value) {
+      if(!_wbUi.comment)return;
+      _wbUi.comment.text=value;_wbUi.drafts[_wbUi.comment.key]={text:value};
+    }
+    function _wbSaveComment() {
+      const draft=_wbUi.comment;if(!draft)return;
+      const text=(document.getElementById('wbCommentText')?.value||'').trim();
+      if(!text){document.getElementById('wbCommentError').textContent='Введите текст комментария.';return;}
+      _wbCommentDraft(text);
+      const id=draft.id||_wbId();
+      if(_wbCommit('Комментарий сохранен',()=>{
+        const node=whiteboard.nodes.find(n=>n.id===id&&n.type==='comment');
+        if(node)node.text=text;
+        else whiteboard.nodes.push({id,type:'comment',x:draft.x,y:draft.y,width:44,height:44,text,color:'neutral'});
+        _wbUi.selected=id;_wbUi.panel='';delete _wbUi.drafts[draft.key];
+      }))document.getElementById('wbViewport')?.focus({preventScroll:true});
+    }
+    function _wbRenderComment() {
+      const v=document.getElementById('wbViewport');if(!v)return;
+      v.querySelector('.wb-comment-editor')?.remove();
+      if(_wbUi.panel!=='comment'||!_wbUi.comment)return;
+      const d=_wbUi.comment,form=document.createElement('form');form.className='wb-comment-editor';form.setAttribute('aria-label','Комментарий');
+      form.innerHTML=`<label for="wbCommentText">${d.id?'Комментарий':'Добавить комментарий'}</label><textarea id="wbCommentText" maxlength="10000"${READ_ONLY_MODE?' readonly':''} placeholder="Напишите комментарий">${escHtml(d.text)}</textarea><p id="wbCommentError" role="alert"></p><div class="wb-comment-actions">${READ_ONLY_MODE?'':'<button type="submit" class="rm-btn rm-btn-primary">Сохранить</button>'}<button type="button" class="rm-btn rm-btn-ghost" onclick="_wbClosePanel()">Закрыть</button></div>`;
+      form.onsubmit=e=>{e.preventDefault();_wbSaveComment();};
+      form.querySelector('textarea').oninput=e=>_wbCommentDraft(e.target.value);
+      form.onkeydown=e=>{e.stopPropagation();if(e.key==='Escape'){e.preventDefault();_wbClosePanel();}};
+      v.append(form);_wbPositionComment();
+    }
+    function _wbPositionComment() {
+      const v=document.getElementById('wbViewport'),form=v?.querySelector('.wb-comment-editor'),d=_wbUi.comment,c=_wbUi.camera;if(!form||!d)return;
+      const px=d.x*c.zoom+c.x,py=d.y*c.zoom+c.y,beside=px+52+form.offsetWidth<=v.clientWidth-12;
+      const top=beside?py:py+52+form.offsetHeight<=v.clientHeight-12?py+52:py-form.offsetHeight-12;
+      form.style.left=Math.max(88,Math.min(v.clientWidth-form.offsetWidth-12,beside?px+52:px))+'px';
+      form.style.top=Math.max(12,Math.min(v.clientHeight-form.offsetHeight-12,top))+'px';
+    }
+    function _wbOpenEdges() {_wbUi.panel='edges';_wbRenderPanel();document.querySelector('#wbPanel button')?.focus({preventScroll:true});}
+    function _wbFocusNode(n) {
+      const v=document.getElementById('wbViewport'),c=_wbUi.camera;
+      c.x=(v?.clientWidth||800)/2-(n.x+n.width/2)*c.zoom;c.y=(v?.clientHeight||500)/2-(n.y+n.height/2)*c.zoom;
+    }
+    function _wbFit() {
+      const v=document.getElementById('wbViewport');if(!v)return;
+      _wbUi.camera=RoadmapModules.whiteboardFit(_wbVisibleNodes(),v.clientWidth,v.clientHeight);_wbPaintCamera();
+    }
+    function _wbZoom(multiplier,point) {
+      const v=document.getElementById('wbViewport');if(!v)return;
+      _wbUi.camera=RoadmapModules.whiteboardZoomAt(_wbUi.camera,_wbUi.camera.zoom*multiplier,point||{x:v.clientWidth/2,y:v.clientHeight/2});_wbPaintCamera();
+    }
+    function _wbPaintCamera() {
+      const c=_wbUi.camera,w=document.getElementById('wbWorld'),v=document.getElementById('wbViewport');
+      if(w){w.style.transform=`translate(${c.x}px,${c.y}px) scale(${c.zoom})`;w.style.setProperty('--wb-inverse-zoom',1/c.zoom);}
+      if(v){v.style.backgroundPosition=`${c.x}px ${c.y}px`;v.style.backgroundSize=`${24*c.zoom}px ${24*c.zoom}px`;}
+      const out=document.getElementById('wbZoomValue');if(out)out.textContent=Math.round(c.zoom*100)+'%';
+      _wbPositionComment();
+    }
+    function _wbPaintEdges(override) {
+      const svg=document.getElementById('wbEdges');if(!svg)return;
+      // Per-render index: reset on every board render/filter/project change.
+      // During a drag, update only incident paths, without replacing SVG nodes.
+      if(override&&_wbUi.edgeIndex?.svg===svg){
+        for(const entry of _wbUi.edgeIndex.byNode.get(override.id)||[]){
+          const g=RoadmapModules.whiteboardEdgeGeometry(entry.from.id===override.id?override:entry.from,entry.to.id===override.id?override:entry.to);
+          for(const path of entry.paths)path.setAttribute('d',g.path);
+          entry.label.setAttribute('x',g.label.x);entry.label.setAttribute('y',g.label.y-8);
+        }
+        return;
+      }
+      const nodes=new Map(_wbVisibleNodes().map(n=>[n.id,n]));if(override)nodes.set(override.id,override);
+      const edges=whiteboard.edges.filter(e=>nodes.has(e.from)&&nodes.has(e.to));
+      svg.innerHTML='<defs><marker id="wbArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="currentColor"/></marker></defs>'+edges.map(e=>{
+        const g=RoadmapModules.whiteboardEdgeGeometry(nodes.get(e.from),nodes.get(e.to));
+        return `<g data-wb-edge="${escHtml(e.id)}" class="${e.id===_wbUi.selected?'wb-edge-selected':''}"><path class="wb-edge-line" d="${g.path}" marker-end="url(#wbArrow)"/><path class="wb-edge" d="${g.path}"/><text class="wb-edge-label" x="${g.label.x}" y="${g.label.y-8}" text-anchor="middle">${escHtml(e.label)}</text></g>`;
+      }).join('');
+      const byNode=new Map(),groups=svg.querySelectorAll('[data-wb-edge]');
+      edges.forEach((e,i)=>{
+        const entry={from:nodes.get(e.from),to:nodes.get(e.to),paths:groups[i].querySelectorAll('path'),label:groups[i].querySelector('text')};
+        for(const id of [e.from,e.to]){if(!byNode.has(id))byNode.set(id,[]);byNode.get(id).push(entry);}
+      });
+      _wbUi.edgeIndex={svg,byNode};
+    }
+    function _wbRenderPanel() {
+      const p=document.getElementById('wbPanel');if(!p)return;
+      _wbRenderComment();
+      if(_wbUi.panel==='comment'){p.hidden=true;p.style.display='none';return;}
+      p.hidden=!_wbUi.panel;p.style.display=_wbUi.panel?'':'none';if(!_wbUi.panel)return;
+      const close='<button type="button" class="rm-btn rm-btn-ghost" onclick="_wbClosePanel()" aria-label="Закрыть панель холста">Закрыть</button>';
+      if(_wbUi.panel==='edges'){
+        const label=id=>{const n=whiteboard.nodes.find(n=>n.id===id);return n?.type==='task'?(_wbTask(n.taskId)?.name||'Задача недоступна'):(n?.text||'Заметка');};
+        p.innerHTML=`<header><h3>Связи холста</h3>${close}</header><div class="wb-task-picker">${whiteboard.edges.map(e=>`<button type="button" data-wb-select-edge="${escHtml(e.id)}"><strong>${escHtml(e.label||'Без подписи')}</strong><small>${escHtml(label(e.from))} → ${escHtml(label(e.to))}</small></button>`).join('')||'<p>Связей пока нет. Нажмите «Связь» и выберите два элемента.</p>'}</div>`;
+        p.onclick=e=>{const b=e.target.closest('[data-wb-select-edge]');if(b){_wbSelect(b.dataset.wbSelectEdge);_wbEdit();}};
+      }else if(_wbUi.panel==='tasks'){
+        p.onclick=null;
+        p.innerHTML=`<header><h3>Задачи на холсте</h3>${close}</header><label>Найти задачу<input id="wbSearch" type="search" value="${escHtml(_wbUi.query)}" placeholder="Название или ключ" oninput="_wbUi.query=this.value;_wbRenderPickerList()"></label><div class="wb-membership" role="group" aria-label="Задачи на доске">${[['','Все'],['on','На доске'],['off','Не на доске']].map(([mode,label])=>`<button type="button" class="rm-btn rm-btn-ghost" data-wb-membership="${mode}" onclick="_wbSetTaskFilter('${mode}')">${label}</button>`).join('')}</div><p>Учитываются поиск и фильтры плана, кроме фильтра «Холст». Добавление не меняет задачу.</p><div id="wbPickerList" class="wb-task-picker"></div>`;_wbRenderPickerList();
+      }else{
+        p.onclick=null;
+        const n=whiteboard.nodes.find(n=>n.id===_wbUi.selected)||whiteboard.edges.find(n=>n.id===_wbUi.selected);
+        if(!n){p.innerHTML=`<header><h3>Свойства</h3>${close}</header><p>Выберите элемент на холсте.</p>`;return;}
+        if(n.type==='task'){p.innerHTML=`<header><h3>Карточка задачи</h3>${close}</header><p>Содержание и статус берутся из плана. Удаление с холста не удаляет задачу.</p><button type="button" class="rm-btn rm-btn-secondary" onclick="_wbOpenTask(_wbUi.selected)">Открыть задачу</button>`;return;}
+        const draft=_wbUi.drafts[n.id],value=draft?draft.text:(n.type?n.text:n.label),color=draft?.color||n.color;
+        p.innerHTML=`<header><h3>${n.type?'Текст заметки':'Подпись связи'}</h3>${close}</header><label>Текст<textarea id="wbText" oninput="_wbKeepDraft()">${escHtml(value)}</textarea></label>${n.type?`<label>Цвет<select id="wbColor" onchange="_wbKeepDraft()">${[['yellow','Желтый'],['violet','Фиолетовый'],['blue','Голубой'],['neutral','Без заливки']].map(([id,label])=>`<option value="${id}"${color===id?' selected':''}>${label}</option>`).join('')}</select></label>`:''}<button type="button" class="rm-btn rm-btn-primary" onclick="_wbSaveEditor()">Применить</button><p>Нажмите «Применить», чтобы сохранить текст в плане. Стрелки холста не меняют зависимости Ганта.</p>`;
+      }
+    }
+    function _wbRenderPickerList() {
+      const el=document.getElementById('wbPickerList');if(!el)return;
+      const q=_wbUi.query.trim().toLocaleLowerCase('ru'),added=new Set(whiteboard.nodes.filter(n=>n.type==='task').map(n=>n.taskId));
+      const candidates=(roadmapData||[]).filter(t=>t&&!t.hidden&&!t.isMilestone&&taskPassesFilters(t,{ignoreBoard:true})&&(!q||(String(t.name)+' '+getTaskKey(t)).toLocaleLowerCase('ru').includes(q)));
+      const tasks=candidates.filter(t=>_taskMatchesBoardFilter(t,_wbUi.taskFilter,added));
+      document.querySelectorAll('[data-wb-membership]').forEach(button=>{
+        const mode=button.dataset.wbMembership,label=mode==='on'?'На доске':mode==='off'?'Не на доске':'Все';
+        const count=candidates.filter(t=>_taskMatchesBoardFilter(t,mode,added)).length;
+        button.textContent=label+' · '+count;button.setAttribute('aria-pressed',String((_wbUi.taskFilter||'')===mode));
+      });
+      el.innerHTML=tasks.map(t=>`<button type="button" data-wb-add-task="${escHtml(String(t.id))}"><strong>${escHtml(t.name||'Без названия')}</strong><small>${escHtml(getTaskKey(t)||t.section||'Задача')} · ${added.has(String(t.id))?'Показать на холсте':'Добавить'}</small></button>`).join('')||'<p>Подходящих задач нет. Измените поиск или фильтры плана.</p>';
+      el.onclick=e=>{const b=e.target.closest('[data-wb-add-task]');if(b)_wbAddTask(b.dataset.wbAddTask);};
+    }
+    function _wbToolsHtml(ro) {
+      const icon=paths=>'<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+paths+'</svg>';
+      const button=(label,action,paths,mode)=>`<button type="button" class="rm-btn rm-btn-ghost" title="${label}" aria-label="${label}" onclick="${action}"${mode?` data-wb-tool="${mode}" aria-pressed="${_wbUi.tool===mode}"`:''}>${icon(paths)}</button>`;
+      return `<div class="wb-tools" role="group" aria-label="Инструменты холста"><details id="wbZoomMenu"><summary aria-label="Масштаб холста" title="Масштаб холста"><output id="wbZoomValue"></output></summary><div class="wb-zoom-popover"><div class="wb-zoom" role="group" aria-label="Изменить масштаб"><span class="wb-zoom-label">Масштаб</span><button type="button" class="rm-btn rm-btn-ghost" onclick="_wbZoom(1/1.2)" aria-label="Уменьшить масштаб холста">−</button><button type="button" class="rm-btn rm-btn-ghost" onclick="_wbZoom(1.2)" aria-label="Увеличить масштаб холста">+</button></div><button type="button" class="rm-btn rm-btn-secondary" onclick="_wbFit()">Показать всё</button></div></details>`
+        +button('Рука',"_wbSetTool('pan')",'<path d="M8 13V6a2 2 0 0 1 4 0v5-7a2 2 0 0 1 4 0v7-5a2 2 0 0 1 4 0v9c0 4-2 6-6 6h-1c-2 0-4-1-5-3l-4-5a2 2 0 0 1 3-3l1 1"/>','pan')
+        +button('Выбор',"_wbSetTool('select')",'<path d="m5 3 14 10-7 1-3 7z"/>','select')
+        +(ro?'':button('Стикер',"_wbAddNote('note')",'<path d="M4 4h16v10l-6 6H4zM14 20v-6h6"/>')
+          +button('Текст',"_wbAddNote('text')",'<path d="M4 6V4h16v2M12 4v16M8 20h8"/>')
+          +button('Связь',"_wbSetTool('connect')",'<path d="M4 18c0-8 16-4 16-12M16 6h4v4"/>','connect')
+          +button('Комментарий',"_wbSetTool('comment')",'<path d="M20 11a8 8 0 0 1-8 8H4v-8a8 8 0 0 1 16 0ZM8 11h8M12 7v8"/>','comment'))+'</div>';
+    }
+    function renderWhiteboard() {
+      const kv=document.getElementById('kanbanView');if(!kv)return;
+      const active=document.activeElement,restoreEditor=active?.id==='wbCommentText'?{start:active.selectionStart,end:active.selectionEnd}:null;
+      if(_wbUi.project!==projectStorageId){_wbResetInteraction();_wbUi.project=projectStorageId;}
+      _wbUi.gesture=null;
+      const ro=READ_ONLY_MODE,nodes=_wbVisibleNodes(),statuses=getDisplayStatuses();
+      kv.innerHTML=`<div class="wb-toolbar"><div class="wb-heading"><h2>Свободный холст</h2></div><div class="kanban-view-actions flex items-center gap-2">${_boardModeButtons()}</div>${ro?'':`<button type="button" class="rm-btn rm-btn-ghost" onclick="_wbHistory(false)"${!_undoStack.length?' disabled':''}>Отменить</button><button type="button" class="rm-btn rm-btn-ghost" onclick="_wbHistory(true)"${!_redoStack.length?' disabled':''}>Повторить</button><button type="button" class="rm-btn rm-btn-secondary" onclick="_wbOpenPicker()">Добавить задачи</button><button id="wbEdit" type="button" class="rm-btn rm-btn-ghost" onclick="_wbEdit()">Изменить</button><button id="wbRemove" type="button" class="rm-btn rm-btn-ghost" onclick="_wbRemove()">Убрать с холста</button>`}</div>
+        <div class="wb-layout"><div id="wbViewport" class="wb-viewport" role="region" aria-label="Холст. Стрелки перемещают выбранный элемент. Escape снимает выбор." tabindex="0" data-tool="${_wbUi.tool}">${_wbToolsHtml(ro)}<div id="wbWorld" class="wb-world"><svg id="wbEdges" class="wb-edges" aria-hidden="true"></svg>${nodes.map(n=>{
+          const t=n.type==='task'?_wbTask(n.taskId):null,status=t&&statuses.find(s=>s.id===t.status);
+          if(n.type==='comment')return `<article class="wb-node" data-wb-node="${escHtml(n.id)}" data-type="comment" tabindex="0" role="button" aria-label="Комментарий: ${escHtml(n.text)}" style="left:${n.x}px;top:${n.y}px;width:44px;height:44px"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 11a8 8 0 0 1-8 8H4v-8a8 8 0 0 1 16 0Z"/><path d="M8 9h8M8 13h5"/></svg></article>`;
+          return `<article class="wb-node" data-wb-node="${escHtml(n.id)}" data-type="${n.type}" data-color="${n.type==='task'?'neutral':n.color}" tabindex="0" aria-label="${escHtml(n.type==='task'?(t?.name||'Задача недоступна'):n.type==='note'?'Стикер':'Текст')}" style="left:${n.x}px;top:${n.y}px;width:${n.width}px;height:${n.height}px">${n.type==='task'?`<small>${escHtml(t?getTaskKey(t)||t.section||'Задача':'Нет в текущем плане')}</small><strong class="wb-task-title">${escHtml(t?.name||'Задача удалена или скрыта')}</strong>${t?`<small>${escHtml(status?.name||t.status||'Без статуса')}${t.resource?' · '+escHtml(t.resource):''}</small><button type="button" class="rm-btn rm-btn-ghost" data-wb-open="${escHtml(n.id)}">Открыть задачу</button>`:'<small>Карточка сохранена на холсте.</small>'}`:`<p>${escHtml(n.text||'Выберите «Изменить», чтобы добавить текст')}</p>`}</article>`;
+        }).join('')}</div>${!nodes.length?`<div class="wb-empty"><h3>${whiteboard.nodes.length?'Нет задач по этим фильтрам':'Соберите свою карту работы'}</h3><p>${whiteboard.nodes.length?'Расположение сохранено. Измените фильтры, чтобы увидеть карточки.':'Добавляйте задачи и стикеры, располагайте их свободно и соединяйте стрелками.'}</p>${ro?'':'<button type="button" class="rm-btn rm-btn-primary" onclick="_wbOpenPicker()">Добавить задачи</button>'}</div>`:''}</div><aside id="wbPanel" class="wb-panel" aria-label="Панель холста"></aside></div>
+        <div class="wb-footer"><p id="wbHint" role="status">${_wbUi.tool==='connect'?'Выберите первый элемент, затем второй. Стрелки не меняют сроки задач.':'Перетаскивайте карточки. Рука или пробел — перемещение поля. Ctrl / ⌘ + колесо — масштаб.'}</p><button type="button" class="rm-btn rm-btn-ghost" onclick="_wbOpenEdges()">Все связи</button></div>`;
+      _wbRenderPanel();_wbPaintEdges();_wbPaintCamera();_wbPaintSelection();_wbBindGestures();mountViewContextControls('kanban');
+      if(_wbUi.tool==='comment')document.getElementById('wbHint').textContent='Нажмите на холст, чтобы оставить комментарий. Enter — в центре поля. Escape — отменить.';
+      if(restoreEditor){const editor=document.getElementById('wbCommentText');if(editor){editor.focus({preventScroll:true});editor.setSelectionRange(restoreEditor.start,restoreEditor.end);}}
+    }
+    function _wbBindGestures() {
+      const v=document.getElementById('wbViewport');if(!v)return;let space=false,suppressClick=false;
+      const tools=v.querySelector('.wb-tools'),zoom=v.querySelector('#wbZoomMenu');
+      tools?.addEventListener('keydown',e=>{if(e.key==='Escape'&&zoom?.open){e.preventDefault();e.stopPropagation();zoom.open=false;zoom.querySelector('summary').focus({preventScroll:true});}});
+      v.addEventListener('click',e=>{if(!e.target.closest('.wb-tools')&&zoom)zoom.open=false;});
+      v.addEventListener('focusin',e=>{const n=e.target.closest('[data-wb-node]');if(n&&_wbUi.tool==='select')_wbSelect(n.dataset.wbNode);});
+      v.addEventListener('click',e=>{
+        if(suppressClick){suppressClick=false;return;}
+        if(e.target.closest('.wb-tools,.wb-comment-editor'))return;
+        if(_wbUi.tool==='comment'){const r=v.getBoundingClientRect(),c=_wbUi.camera;_wbOpenComment(null,{x:(e.clientX-r.left-c.x)/c.zoom,y:(e.clientY-r.top-c.y)/c.zoom});return;}
+        const open=e.target.closest('[data-wb-open]');if(open){_wbOpenTask(open.dataset.wbOpen);return;}
+        const edge=e.target.closest('[data-wb-edge]');if(edge){_wbSelect(edge.dataset.wbEdge);return;}
+        const node=e.target.closest('[data-wb-node]');if(node&&_wbUi.tool!=='pan'){_wbSelect(node.dataset.wbNode);if(node.dataset.type==='comment'&&_wbUi.tool==='select')_wbEdit();}
+      });
+      v.addEventListener('dblclick',e=>{const n=e.target.closest('[data-wb-node]');if(n){_wbSelect(n.dataset.wbNode);_wbEdit();}});
+      v.addEventListener('pointerdown',e=>{
+        if(e.button!==0||e.target.closest('button,.wb-edge,.wb-tools,.wb-comment-editor')||_wbUi.tool==='comment')return;
+        const el=e.target.closest('[data-wb-node]'),id=el?.dataset.wbNode;
+        const pan=space||_wbUi.tool==='pan'||!el;
+        if(!pan&&_wbUi.tool==='connect')return;
+        if(!pan&&!_wbWritable())return;
+        if(!pan){_wbSelect(id);el.focus({preventScroll:true});}
+        else v.focus({preventScroll:true});
+        _wbUi.gesture={id:pan?null:id,el,x:e.clientX,y:e.clientY,camera:{..._wbUi.camera},node:pan?null:{...whiteboard.nodes.find(n=>n.id===id)},moved:false,project:projectStorageId,pointerId:e.pointerId};
+        v.setPointerCapture(e.pointerId);e.preventDefault();
+      });
+      v.addEventListener('pointermove',e=>{
+        const g=_wbUi.gesture;if(!g||g.pointerId!==e.pointerId||g.project!==projectStorageId)return;
+        const dx=e.clientX-g.x,dy=e.clientY-g.y;if(Math.hypot(dx,dy)<4&&!g.moved)return;g.moved=true;
+        if(!g.id){_wbUi.camera={...g.camera,x:g.camera.x+dx,y:g.camera.y+dy};_wbPaintCamera();}
+        else{g.position={x:Math.max(-100000,Math.min(100000,g.node.x+dx/g.camera.zoom)),y:Math.max(-100000,Math.min(100000,g.node.y+dy/g.camera.zoom))};g.el.style.left=g.position.x+'px';g.el.style.top=g.position.y+'px';_wbPaintEdges({...g.node,...g.position});}
+      });
+      const finish=(e,cancel)=>{
+        const g=_wbUi.gesture;if(!g||g.pointerId!==e.pointerId)return;_wbUi.gesture=null;
+        if(v.hasPointerCapture(e.pointerId))v.releasePointerCapture(e.pointerId);
+        suppressClick=g.moved;
+        if(cancel){if(g.id){g.el.style.left=g.node.x+'px';g.el.style.top=g.node.y+'px';_wbPaintEdges();}else{_wbUi.camera=g.camera;_wbPaintCamera();}return;}
+        if(g.id&&g.moved&&g.project===projectStorageId)_wbCommit('Элемент перемещен',()=>{const n=whiteboard.nodes.find(n=>n.id===g.id);if(n)Object.assign(n,g.position);});
+        else if(g.id&&!g.moved&&g.node?.type==='comment'){suppressClick=true;_wbOpenComment(g.node);}
+        else if(!g.id&&!g.moved){_wbUi.selected=null;_wbPaintSelection();}
+      };
+      v.addEventListener('pointerup',e=>finish(e,false));v.addEventListener('pointercancel',e=>finish(e,true));
+      v.addEventListener('wheel',e=>{if(e.target.closest('.wb-comment-editor'))return;e.preventDefault();if(e.target.closest('.wb-tools'))return;const r=v.getBoundingClientRect();if(e.ctrlKey||e.metaKey)_wbZoom(Math.exp(-e.deltaY*.002),{x:e.clientX-r.left,y:e.clientY-r.top});else{_wbUi.camera.x-=e.deltaX;_wbUi.camera.y-=e.deltaY;_wbPaintCamera();}},{passive:false});
+      v.addEventListener('keydown',e=>{
+        if(e.target.closest('.wb-tools'))return;
+        if(e.target.closest('button,input,textarea,select'))return;
+        if(_wbUi.tool==='comment'&&e.key==='Enter'){e.preventDefault();e.stopPropagation();_wbOpenComment(null,_wbCenter());return;}
+        const focused=e.target.closest('[data-wb-node]');
+        if(_wbUi.tool==='connect'&&focused&&(e.key==='Enter'||e.code==='Space')){e.preventDefault();e.stopPropagation();_wbSelect(focused.dataset.wbNode);return;}
+        if(e.code==='Space'){space=true;e.preventDefault();e.stopPropagation();return;}
+        if(e.key==='Escape'){if(_wbUi.gesture)finish({pointerId:_wbUi.gesture.pointerId},true);_wbUi.selected=null;_wbUi.tool='select';_wbUi.panel='';renderWhiteboard();document.getElementById('wbViewport')?.focus();e.preventDefault();e.stopPropagation();return;}
+        if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();e.stopPropagation();_wbRemove();return;}
+        if(e.key==='Enter'&&_wbUi.selected){e.preventDefault();e.stopPropagation();_wbEdit();return;}
+        const dirs={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]},d=dirs[e.key];
+        if(d){e.preventDefault();e.stopPropagation();const n=whiteboard.nodes.find(n=>n.id===_wbUi.selected),step=e.shiftKey?40:10;
+          if(n){const id=n.id;_wbCommit('Элемент перемещен',()=>{n.x+=d[0]*step;n.y+=d[1]*step;});[...document.querySelectorAll('[data-wb-node]')].find(el=>el.dataset.wbNode===id)?.focus({preventScroll:true});}
+          else{_wbUi.camera.x-=d[0]*step;_wbUi.camera.y-=d[1]*step;_wbPaintCamera();}
+        }
+      });
+      v.addEventListener('keyup',e=>{if(e.code==='Space'&&!e.target.closest('.wb-tools')){space=false;e.preventDefault();}});v.addEventListener('focusout',()=>{space=false;});
+    }
+    // Все режимы ссылаются на одни задачи, не создавая вторую модель плана.
+    let _boardMode = ['scrum','canvas'].includes(storage.get('gantt_board_mode')) ? storage.get('gantt_board_mode') : 'kanban';
     let _scrumRelease = null, _scrumSection = null;
     function _boardModeButtons() {
-      return ['kanban','scrum'].map(mode => `<button type="button" class="rm-btn rm-btn-ghost" data-board-mode="${mode}" aria-pressed="${_boardMode===mode}" onclick="setBoardMode('${mode}')">${mode==='scrum'?'Скрам':'Канбан'}</button>`).join('');
+      return ['kanban','scrum','canvas'].map(mode => `<button type="button" class="rm-btn rm-btn-ghost" data-board-mode="${mode}" aria-pressed="${_boardMode===mode}" onclick="setBoardMode('${mode}')">${({kanban:'Канбан',scrum:'Скрам',canvas:'Холст'})[mode]}</button>`).join('');
     }
     function setBoardMode(mode) {
-      if (!['kanban','scrum'].includes(mode)) return;
+      if (!['kanban','scrum','canvas'].includes(mode)) return;
       _boardMode = mode; storage.set('gantt_board_mode',mode); renderKanban();
       const btn = document.querySelector('[data-board-mode="'+mode+'"]');
       if (btn) btn.focus({preventScroll:true});
@@ -31128,6 +31655,7 @@ const m = document.getElementById('mineModeBtn');
     }
     function renderKanban() {
       const kv = document.getElementById('kanbanView'); if (!kv) return;
+      if (_boardMode === 'canvas') { renderWhiteboard(); return; }
       if (_boardMode === 'scrum') { renderScrum(); return; }
       const _allSt = getDisplayStatuses();
       const _kbCfg = _kanbanColIds();
@@ -33481,6 +34009,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     }
     function activeFilterToolCount() {
       let n = 0;
+      if (_boardTaskFilter) n++;
       n += typeFilterSel.size;
       try { n += projectFilterSel.size + resourceFilterSel.size + releaseFilterSel.size + labelFilterSel.size + componentFilterSel.size; } catch (e) {}
       try { n += _cfActiveFieldCount(); } catch (e) {}
@@ -33494,6 +34023,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     }
     function activeFilterSummaries() {
       const items = [];
+      if (_boardTaskFilter) items.push('Холст: ' + (_boardTaskFilter === 'on' ? 'На доске' : 'Не на доске'));
       const addSelection = (label, set, labelId) => {
         if (!set || !set.size) return;
         const labelEl = labelId ? document.getElementById(labelId) : null;
@@ -33540,7 +34070,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         parts.push('<button type="button" class="active-filter-chip" data-clear-status="' + escAttr(id) + '" onclick="clearActiveFilter(\'status\',\'' + escJsArg(id) + '\')" aria-label="Снять фильтр: ' + escAttr(label) + '">' + escHtml(label) + ' <span aria-hidden="true">×</span></button>');
       });
       if (hasForecastReturn) parts.push('<button type="button" data-forecast-return class="active-filter-chip !border-indigo-200 !bg-indigo-50 !text-indigo-700" onclick="_fcReturnToForecast()" title="Снять срез причины и вернуться к прогнозу">← Вернуться в «Успеваем?»</button>');
-      const kinds = {'Проект':'project','Тип':'type','Исполнитель':'resource','Релиз':'release','Метка':'label','Компонент':'component','Свои поля':'custom','Горящее':'burning','Критический путь':'critical','Мои задачи':'mine','Инциденты и хотфиксы':'kind','Внешние зависимости':'kind','Тип задачи':'kind','Без цели':'goal'};
+      const kinds = {'Холст':'board','Проект':'project','Тип':'type','Исполнитель':'resource','Релиз':'release','Метка':'label','Компонент':'component','Свои поля':'custom','Горящее':'burning','Критический путь':'critical','Мои задачи':'mine','Инциденты и хотфиксы':'kind','Внешние зависимости':'kind','Тип задачи':'kind','Без цели':'goal'};
       regularItems.forEach(function (label) {
         const kind = kinds[label.split(':')[0]];
         parts.push('<button type="button" class="active-filter-chip" onclick="' + (kind ? 'clearActiveFilter(\'' + kind + '\')' : 'toggleFilterTools(true)') + '" aria-label="' + (kind ? 'Снять фильтр: ' : 'Изменить фильтр: ') + escAttr(label) + '">' + escHtml(label) + (kind ? ' <span aria-hidden="true">×</span>' : '') + '</button>');
@@ -33552,6 +34082,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const sets = {status:statusFilterSel,project:projectFilterSel,type:typeFilterSel,resource:resourceFilterSel,release:releaseFilterSel,label:labelFilterSel,component:componentFilterSel};
       if (sets[kind]) { if (value !== undefined) sets[kind].delete(value); else sets[kind].clear(); }
       else if (kind === 'custom') customFieldFilterSel = {};
+      else if (kind === 'board') _boardTaskFilter = '';
       else if (kind === 'burning') _goritMode = false;
       else if (kind === 'critical') _critPathMode = false;
       else if (kind === 'mine') _mineMode = false;
@@ -34818,6 +35349,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         reportProfiles: reportProfiles,
         uiProfiles: uiProfiles,
         presentations: presentations,
+        whiteboard: whiteboard,
         releaseRag: releaseRag,
         baselines: (typeof getBaselines === 'function') ? getBaselines() : [],
         chartBaselineId: (typeof chartBaselineId !== 'undefined') ? chartBaselineId : '',
@@ -35008,6 +35540,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         reportProfiles: _snapshotObject(source.reportProfiles),
         uiProfiles: _snapshotObject(source.uiProfiles),
         presentations: _normPres(_snapshotClone(source.presentations, { sets: [], activeId: null })),
+        whiteboard: RoadmapModules.normalizeWhiteboard(source.whiteboard),
         releaseRag: _snapshotObject(source.releaseRag),
         baselines: _snapshotArray(source.baselines),
         chartBaselineId: typeof source.chartBaselineId === 'string' ? source.chartBaselineId : '',
@@ -35091,6 +35624,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       reportProfiles = snap.reportProfiles;
       uiProfiles = snap.uiProfiles;
       presentations = snap.presentations;
+      whiteboard = snap.whiteboard;
+      _wbResetInteraction();
       releaseRag = snap.releaseRag;
       memoryStore['gantt_baselines'] = JSON.stringify(snap.baselines);
       chartBaselineId = snap.chartBaselineId;
@@ -40239,7 +40774,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v17.4 · 10.10.2026</span>
+     <span id="appVersionBadge">v17.5 · 10.10.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -40289,7 +40824,43 @@ function syncBodyScrollLock() {
 
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.4</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.5</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="product-areas" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 17h6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Свободный холст</h5><span class="info-release-badge">Доска</span></div>
+      <p class="text-xs text-slate-600">Разложите задачи, стикеры и текст на поле. Плавные стрелки помогают связать идеи, не меняя сроки задач.</p>
+     </article>
+     <article data-release-card="working-file-save" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21H5V3h11l5 5v13zM17 21v-8H7v8M7 3v5h8"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Комментарии на поле</h5><span class="info-release-badge">Комментарии</span></div>
+      <p class="text-xs text-slate-600">Оставляйте заметки в нужном месте холста. Они сохраняются в вашем плане, без отправки другим людям.</p>
+     </article>
+     <article data-release-card="meeting-materials" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18v14H3zM8 22h8m-4-4v4M7 9h10M7 13h6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">На доске или вне ее</h5><span class="info-release-badge">Фильтры</span></div>
+      <p class="text-xs text-slate-600">Отберите задачи на холсте и те, которые еще не добавлены. Фильтр есть в панели добавления и основном списке.</p>
+     </article>
+     <article data-release-card="week-start" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16v15H4zM8 3v6m8-6v6M4 11h16M8 15h3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Готовность по неделям</h5><span class="info-release-badge">Сводка</span></div>
+      <p class="text-xs text-slate-600">Сравните число завершенных задач с объемом плана за 12 недель. Пропуски сохраненной истории показаны явно.</p>
+     </article>
+     <article data-release-card="jira-import-memory" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h12l-3-3m3 3l-3 3M20 17H8l3 3m-3-3l3-3"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Две расчетные даты</h5><span class="info-release-badge">Прогноз</span></div>
+      <p class="text-xs text-slate-600">При достаточной истории смотрите p50 и p85 по прежнему темпу завершения. Это условный расчет, не гарантия срока.</p>
+     </article>
+     <article data-release-card="compact-working-file" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 3v5h5M5 3h9l5 5v13H5zM8 12h8M8 16h5"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Удобнее работать с холстом</h5><span class="info-release-badge">Интерфейс</span></div>
+      <p class="text-xs text-slate-600">Панель инструментов находится слева. Исправлены наложения длинных названий и лишние перерисовки при перемещении.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.4</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="product-areas" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 17h6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Импорт в три шага</h5><span class="info-release-badge">Jira</span></div>
@@ -40317,13 +40888,6 @@ function syncBodyScrollLock() {
      </article>
     </div>
    </div>
-
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.3</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -44301,7 +44865,7 @@ function syncBodyScrollLock() {
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 17.4</span>
+              <span id="appVersionStartup">версия 17.5</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>

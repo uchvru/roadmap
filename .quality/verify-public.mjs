@@ -117,7 +117,7 @@ const allowedFiles = new Set([
   'catalog-img/media-manifest.json', 'private/index.html', 'private/roadmap-package-manifest.json',
   ...privateNames.map(name => `private/${name}`),
 ]);
-for (let feature = 1; feature <= 44; feature += 1) {
+for (let feature = 1; feature <= 46; feature += 1) {
   for (const theme of ['light', 'dark']) allowedFiles.add(`catalog-img/f${String(feature).padStart(2, '0')}_${theme}.webp`);
 }
 const unexpectedFiles = allFiles.filter(path => !allowedFiles.has(path));
