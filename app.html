@@ -9135,6 +9135,13 @@ body.theme-dark .wb-node[data-color="violet"]{background:#352957;color:#ede9fe;b
 #shareCenterModal .share-extra summary{display:list-item;cursor:pointer;padding:12px 0;font-size:13px;font-weight:600;min-height:44px}
 #shareCenterModal .share-extra button{margin-top:12px;white-space:normal;text-align:left}
 #shareCenterModal #shareEditableNote{margin-top:6px}
+#materialPreparationModal .share-option{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--rm-border)}
+#materialPreparationModal .share-option h3{margin:0 0 4px;font-size:15px;font-weight:650;color:var(--rm-text)}
+#materialPreparationModal .share-option p{margin:0;font-size:13px;line-height:1.5;color:var(--rm-muted);overflow-wrap:anywhere}
+#materialPreparationModal .share-option button{min-height:44px}
+.startup-help-row[data-learning-ready]{display:flex;flex-wrap:wrap;gap:12px}
+.startup-help-row[data-learning-ready]>span,.startup-help-row[data-learning-ready]>p{flex-basis:100%}
+@media(max-width:520px){#materialPreparationModal .share-option{grid-template-columns:1fr;gap:8px}#materialPreparationModal .share-option button{justify-self:start}}
 @media(max-width:520px){#shareCenterModal .share-content{padding:0 16px 16px}#shareCenterModal .share-option{grid-template-columns:1fr;gap:10px}#shareCenterModal .share-option button{justify-self:start;min-height:44px}}
 </style>
   <style id="schedule-preview-styles">
@@ -9211,7 +9218,7 @@ body.theme-dark .wb-node[data-color="violet"]{background:#352957;color:#ede9fe;b
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.5</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.6</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9400,12 +9407,12 @@ body.theme-dark .wb-node[data-color="violet"]{background:#352957;color:#ede9fe;b
               <span class="w-7 h-7 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></span>
               <span class="grow">Экспорт с паролем</span>
             </button>
-            <button type="button" data-adv id="lockProjectBtn" onclick="closeDataMenu(); toggleProjectLock();" aria-label="Замок от случайных правок (не шифрование)" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-amber-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left" title="Замок от случайных правок: требует пароль для правок. Это не шифрование данных">
+            <button type="button" data-adv id="lockProjectBtn" onclick="closeDataMenu(); toggleProjectLock();" aria-label="Блокировка правок (не шифрование)" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-amber-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer text-left" title="Блокировка правок: требует пароль для правок. Это не шифрование данных">
               <span class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
                 <svg aria-hidden="true" id="lockIconOpen" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-9 4h10a2 2 0 012 2v5a2 2 0 01-2 2H7a2 2 0 01-2-2v-5a2 2 0 012-2z"></path></svg>
                 <svg aria-hidden="true" id="lockIconClosed" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
               </span>
-              <span class="grow">Замок от случайных правок</span>
+              <span class="grow">Блокировка правок</span>
               <span id="lockMenuState" class="text-[10px] text-slate-500 font-normal shrink-0"></span>
             </button>
             </div>
@@ -10102,7 +10109,7 @@ body.theme-dark .wb-node[data-color="violet"]{background:#352957;color:#ede9fe;b
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v17.5">
+<script data-roadmap-modules="v17.6">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -13587,7 +13594,7 @@ if (typeof globalThis !== 'undefined') {
       m.setAttribute('data-materials-ready', '1');
       if (typeof normalizeUiChrome === 'function') normalizeUiChrome(m);
     }
-    function openLeaderChooser(){ closeLeaderChooser(); setMeetingContent('status'); }
+    function openLeaderChooser(){ closeLeaderChooser(); openMaterialPreparation(); }
     function closeLeaderChooser(){ var m=document.getElementById('leaderChooserModal'); if(m)m.classList.add('hidden'); if(typeof syncBodyScrollLock==='function')syncBodyScrollLock(); }
     function openConfirm(opts) {
       opts = opts || {};
@@ -14516,7 +14523,7 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '17.5';
+    const APP_VERSION = '17.6';
     const APP_VERSION_DATE = '10.10.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
@@ -15939,7 +15946,7 @@ if (typeof globalThis !== 'undefined') {
       if (restore) restore.focus();
       else if (typeof showToast === 'function') showToast('Сначала создайте точку возврата', 'info', 3000);
     }
-    function openVersionsModal() { const m = document.getElementById('versionsModal'); if (m) { m.classList.remove('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); } if (_portableSession) _portableRenderState(_portableSession.getState()); renderVersionsList(); renderSaveRecoveryStatus(); renderStorageLocationStatus(); }
+    function openVersionsModal() { openPlanHistory('points'); }
     function closeVersionsModal() { const m = document.getElementById('versionsModal'); if (m) m.classList.add('hidden'); closeVersionRestorePreview(); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
     async function saveVersionNow() {
       const targetProjectId = projectStorageId;
@@ -16437,8 +16444,8 @@ if (typeof globalThis !== 'undefined') {
     }
 
     // ===== v13.6: bounded project action journal =====
-    function openProjectJournal() { const m = document.getElementById('projectJournalModal'); if (!m) return; m.classList.remove('hidden'); renderProjectJournal(); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
-    function closeProjectJournal() { const m = document.getElementById('projectJournalModal'); if (m) m.classList.add('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
+    function openProjectJournal() { openPlanHistory('journal'); }
+    function closeProjectJournal() { closeVersionsModal(); }
     function _auditActionName(a) { return ({ task_create:'Создание', task_update:'Изменение', task_delete:'Удаление', archive:'Архив', import:'Импорт', restore:'Восстановление', bulk:'Массовая операция', snapshot:'Снимок', project_reset:'Новый проект', undo:'Отмена' })[a] || a; }
     function renderProjectJournal() {
       const box = document.getElementById('projectJournalList'); if (!box) return;
@@ -17703,6 +17710,10 @@ if (typeof globalThis !== 'undefined') {
           onClose: function () { _roadmapLockerDialog = null; syncBodyScrollLock(); requestAnimationFrame(function(){ var btn=document.getElementById('dataMenuBtn'); if(btn && btn.getClientRects().length) btn.focus(); }); }
         });
         promoteModalLayer(_roadmapLockerDialog.node);
+        var protectionLink = document.createElement('div');
+        protectionLink.className = 'px-5 py-2'; protectionLink.innerHTML = protectionHelpLink();
+        var lockerSurface = _roadmapLockerDialog.node.firstElementChild;
+        if (lockerSurface) lockerSurface.insertBefore(protectionLink, lockerSurface.children[1] || null);
         syncBodyScrollLock();
       } catch (e) { showToast('Не удалось открыть защищенные копии: ' + (e.message || e), 'error', 5000); }
     }
@@ -28224,8 +28235,8 @@ const m = document.getElementById('mineModeBtn');
     function _baselineTaskSnapshot() {
       return (roadmapData || []).filter(t => !t.isMilestone).map(t => ({ id: t.id, name: t.name, start: t.start, end: t.end, status: t.status, section: t.section, release: t.release || '' }));
     }
-    function openBaselineModal() { renderBaselineList(); const m = document.getElementById('baselineModal'); if (m) { m.classList.remove('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); } }
-    function closeBaselineModal() { const m = document.getElementById('baselineModal'); if (m) m.classList.add('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
+    function openBaselineModal() { openPlanHistory('baseline'); }
+    function closeBaselineModal() { closeVersionsModal(); }
     function _pushBaseline(label) {
       const bls = getBaselines();
       const bl = { id: 'bl' + Date.now() + '_' + Math.floor(Math.random() * 1000), label, savedAt: toYmdLocal(CURRENT_DATE), tasks: _baselineTaskSnapshot() };
@@ -30349,7 +30360,7 @@ const m = document.getElementById('mineModeBtn');
         ? _meetingActionHtml('openReportBuilder','Настроить отчет на одной странице')
         : _meetingContent === 'plan'
           ? _meetingActionHtml('buildLeadershipSlide','Один слайд 16:9') + _meetingActionHtml('exportDeckPdf','Обзор всего плана (PDF)') : '';
-      return '<details class="meeting-formats no-print no-image-export" data-meeting-formats><summary>Другие форматы и выгрузка</summary><div class="meeting-format-list">'
+      return '<div class="my-3 no-print no-image-export"><button type="button" class="rm-btn rm-btn-secondary" onclick="openMaterialPreparation()">Подготовить материал</button></div><details class="meeting-formats no-print no-image-export" data-meeting-formats><summary>Другие форматы и выгрузка</summary><div class="meeting-format-list">'
         + specific + _meetingActionHtml('openExportSlice','Картинка и печать')
         + _meetingActionHtml('exportPlanToXlsx','Выгрузить план в XLSX')
         + _meetingActionHtml('exportSlackReportPdf','Запас времени по задачам (PDF)')
@@ -35170,7 +35181,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (ic) ic.classList.toggle('hidden', !hasPw);
       btn.classList.toggle('lock-on', locked);
       btn.classList.toggle('lock-set', hasPw && !locked);
-      const label = !hasPw ? 'Замок от случайных правок (выключен)'
+      const label = !hasPw ? 'Блокировка правок (выключена)'
         : locked ? 'Изменения заблокированы , нажмите, чтобы ввести пароль'
         : 'Изменения разблокированы , нажмите для управления';
       btn.setAttribute('aria-label', label);
@@ -35189,7 +35200,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     function promptUnlock(onSuccess) {
       openInputModal({
         title: 'Разблокировать изменения',
-        desc: 'Проект защищен паролем. Введите пароль, чтобы вносить изменения и сохранять в файл.',
+        desc: 'Правки заблокированы. Введите пароль, чтобы вносить изменения и сохранять в файл. Блокировка не защищает содержимое файла.',
         placeholder: 'Пароль',
         password: true,
         okText: 'Разблокировать',
@@ -35212,7 +35223,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         // Установить пароль
         openInputModal({
           title: 'Установить пароль',
-          desc: 'Это замок от случайных правок (не шифрование данных): правки и запись в файл будут требовать пароль. Кто угодно с доступом к браузеру может его обойти. Для настоящей защиты используйте зашифрованный экспорт JSON. Пароль не восстановить.',
+          desc: 'От случайных изменений, не защищает содержимое файла. Правки и запись потребуют пароль. Блокировку можно обойти при доступе к браузеру; это не шифрование. Пароль восстановить нельзя.',
           placeholder: 'Придумайте пароль (мин. 8 символов)',
           password: true,
           okText: 'Установить и заблокировать',
@@ -35224,7 +35235,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             storage.set('gantt_lock_hash', projectLockHash);
             if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile();
             updateLockBtn();
-            if (typeof showToast === 'function') showToast('Замок установлен. Проект заблокирован, для правок потребуется пароль.', 'ok', 4500);
+            if (typeof showToast === 'function') showToast('Блокировка включена. Для правок потребуется пароль.', 'ok', 4500);
           }
         });
         return;
@@ -35232,7 +35243,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (isLocked()) { promptUnlock(); return; }
       // Пароль есть и разблокировано , меню управления
       openConfirm({
-        title: 'Замок от случайных правок включен',
+        title: 'Блокировка правок включена',
         desc: 'Изменения разблокированы в этой сессии. Заблокировать сейчас, чтобы правки снова требовали пароль?',
         okText: 'Заблокировать сейчас',
         danger: false,
@@ -39557,6 +39568,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     // === Global UX-усиление модалок ===
     // Закрытие открытой модалки по Esc + блокировка скролла body, пока что-то открыто
     const MODAL_CLOSERS = {
+      protectionHelpModal: function(){ if(typeof closeProtectionHelp==='function')closeProtectionHelp(); },
+      materialPreparationModal: function(){ if(typeof closeMaterialPreparation==='function')closeMaterialPreparation(); },
       roadmapLockerModal: closeRoadmapLocker,
       planBuilderPanel: function(){ if (typeof closePlanBuilder === 'function') closePlanBuilder(); },
       planToolModal: closePlanTool,
@@ -39789,7 +39802,7 @@ function syncBodyScrollLock() {
     });
     // === Доступность модалок: ловушка Tab + возврат фокуса на источник ===
     (function modalFocusA11y() {
-      const MODAL_IDS = ['shareCenterModal','roadmapLockerModal','taskModal','cutoffModal','sectionColorModal','statusModal','taskKindsModal','resourceModal','infoModal','reportModal','releaseProgressModal','quickAddModal','baselineModal','archiveModal','headerCutoffModal','epicAuditModal','auditTeamsModal','jiraSyncModal','jiraChangesModal','jiraImportPreviewModal','backPlanModal','inputModal','startupModal','versionsModal','dataQualityModal','projectJournalModal','csvMapModal','resourceReplaceModal','mergeModal','duplicateModal','sectionNestModal','exportSliceModal','roExportModal','reportBuilderModal','moneyModal','customFieldsModal','settingsModal','epicCardModal','kanbanColsModal','goalsModal','raidModal','insightsModal','leaderChooserModal','ganttLegend','depsOverview','sprintCfgModal','sectionInitOverlay','planToolModal','planBuilderPanel'];
+      const MODAL_IDS = ['protectionHelpModal','materialPreparationModal','shareCenterModal','roadmapLockerModal','taskModal','cutoffModal','sectionColorModal','statusModal','taskKindsModal','resourceModal','infoModal','reportModal','releaseProgressModal','quickAddModal','archiveModal','headerCutoffModal','epicAuditModal','auditTeamsModal','jiraSyncModal','jiraChangesModal','jiraImportPreviewModal','backPlanModal','inputModal','startupModal','versionsModal','dataQualityModal','csvMapModal','resourceReplaceModal','mergeModal','duplicateModal','sectionNestModal','exportSliceModal','roExportModal','reportBuilderModal','moneyModal','customFieldsModal','settingsModal','epicCardModal','kanbanColsModal','goalsModal','raidModal','insightsModal','leaderChooserModal','ganttLegend','depsOverview','sprintCfgModal','sectionInitOverlay','planToolModal','planBuilderPanel'];
       let lastFocus = null;
       const anyOpen = () => MODAL_IDS.some(id => { const e = document.getElementById(id); return e && !e.classList.contains('hidden'); });
       function topModalEl() {
@@ -40774,7 +40787,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v17.5 · 10.10.2026</span>
+     <span id="appVersionBadge">v17.6 · 10.10.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -40824,7 +40837,43 @@ function syncBodyScrollLock() {
 
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.5</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.6</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="product-areas" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12a9 9 0 109-9 9 9 0 00-6.4 2.6L3 8m0-5v5h5m4-1v5l3 2"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">История плана</h5><span class="info-release-badge">История</span></div>
+      <p class="text-xs text-slate-600">Точки возврата, журнал изменений и план/факт в одном окне. Восстановление плана и возврат сроков разделены.</p>
+     </article>
+     <article data-release-card="working-file-save" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10h14v11H5zM8 10V7a4 4 0 018 0v3m-4 5v2"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Понятная защита</h5><span class="info-release-badge">Сохранность</span></div>
+      <p class="text-xs text-slate-600">Справка рядом с настройками объясняет назначение блокировки правок, PIN и паролей передаваемых копий.</p>
+     </article>
+     <article data-release-card="meeting-materials" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18v14H3zM8 22h8m-4-4v4M7 9h10M7 13h6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Подготовить материал</h5><span class="info-release-badge">Встреча</span></div>
+      <p class="text-xs text-slate-600">Выберите набор задач, слайд, отчет или презентацию. Затем настройте оформление и доступный формат.</p>
+     </article>
+     <article data-release-card="week-start" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h7l2 2 2-2h7v16h-7l-2 2-2-2H3zM12 6v16"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Знакомство с Roadmap</h5><span class="info-release-badge">Начало работы</span></div>
+      <p class="text-xs text-slate-600">Первый план, сценарии и учебный пример рядом. Пример открывается отдельно и не меняет рабочий план.</p>
+     </article>
+     <article data-release-card="jira-import-memory" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 3v7h7L11 21v-7H4z"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Быстрые действия на месте</h5><span class="info-release-badge">Навигация</span></div>
+      <p class="text-xs text-slate-600">Привычные команды материалов и истории сохранены. Общий выбор не заменяет короткие входы.</p>
+     </article>
+     <article data-release-card="compact-working-file" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 3v5h5M5 3h9l5 5v13H5zM8 12h8M8 16h5"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Состав виден до выгрузки</h5><span class="info-release-badge">Материалы</span></div>
+      <p class="text-xs text-slate-600">Выбранный набор и весь план обозначены отдельно. Перед созданием готового файла видны его состав и формат.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.5</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="product-areas" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 17h6"></path></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Свободный холст</h5><span class="info-release-badge">Доска</span></div>
@@ -40853,12 +40902,6 @@ function syncBodyScrollLock() {
     </div>
    </div>
 
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.4</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -42235,7 +42278,7 @@ function syncBodyScrollLock() {
        <h5 class="font-semibold text-slate-800 text-sm">Безопасность и защита от случайных правок</h5>
        <span class="ml-auto text-[10px] font-bold text-rose-700 bg-white border border-rose-200 rounded px-1.5 py-0.5">FIX</span>
       </div>
-      <p class="text-xs text-slate-600">Замок от случайных правок теперь надежно блокирует все изменения, включая быстрое добавление, перестановку и массовые операции. В файле «для просмотра» отключено добавление задач, а суммы актов и имя автора больше не утекают получателю. Закрыт класс уязвимости при подстановке имен с кавычками.</p>
+      <p class="text-xs text-slate-600">Блокировка правок теперь надежно блокирует все изменения, включая быстрое добавление, перестановку и массовые операции. В файле «для просмотра» отключено добавление задач, а суммы актов и имя автора больше не утекают получателю. Закрыт класс уязвимости при подстановке имен с кавычками.</p>
      </div>
     </div>
    </div>
@@ -42771,7 +42814,7 @@ function syncBodyScrollLock() {
        <h5 class="font-semibold text-slate-800 text-sm">Безопаснее делиться и надежнее замок</h5>
        <span class="ml-auto text-[10px] font-bold text-emerald-700 bg-white border border-emerald-200 rounded px-1.5 py-0.5">FIX</span>
       </div>
-      <p class="text-xs text-slate-600">Файл «только для просмотра» больше не отдает скрытые секции, скрытые задачи и архив , получатель видит только то, что вы показываете. «Замок от случайных правок» теперь действительно не дает менять и удалять задачи и двигать сроки, а не только защищает запись в файл.</p>
+      <p class="text-xs text-slate-600">Файл «только для просмотра» больше не отдает скрытые секции, скрытые задачи и архив , получатель видит только то, что вы показываете. «Блокировка правок» теперь действительно не дает менять и удалять задачи и двигать сроки, а не только защищает запись в файл.</p>
      </div>
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm">
       <div class="flex items-center gap-2 mb-2 text-indigo-700">
@@ -43206,7 +43249,7 @@ function syncBodyScrollLock() {
        <h5 class="font-semibold text-slate-800 text-sm">Честный замок</h5>
        <span class="ml-auto text-[10px] font-bold text-slate-700 bg-white border border-slate-200 rounded px-1.5 py-0.5">UX</span>
       </div>
-      <p class="text-xs text-slate-600">«Защита паролем» переименована в «Замок от случайных правок»: честно, что это не шифрование и его можно обойти. Для настоящей защиты , зашифрованный экспорт (на подходе).</p>
+      <p class="text-xs text-slate-600">«Защита паролем» переименована в «Блокировка правок»: честно, что это не шифрование и его можно обойти. Для настоящей защиты , зашифрованный экспорт (на подходе).</p>
      </div>
 
      <div class="bg-gradient-to-br from-indigo-50 to-white p-4 rounded-xl border border-indigo-200 shadow-sm md:col-span-3">
@@ -44865,7 +44908,7 @@ function syncBodyScrollLock() {
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 17.5</span>
+              <span id="appVersionStartup">версия 17.6</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
@@ -46432,6 +46475,176 @@ try {
   var _initialPlanViewTabs = document.getElementById('planViewTabs');
   if (_initialPlanViewTabs && typeof _viewTabsHtml === 'function') _initialPlanViewTabs.innerHTML = _viewTabsHtml();
 } catch (e) {}
+
+// Справка меняет только интерфейс, не состояние защиты или пароль.
+function protectionHelpLink() {
+  return '<button type="button" class="rm-btn rm-btn-ghost" onclick="openProtectionHelp()">Чем отличаются способы защиты?</button>';
+}
+function openProtectionHelp() {
+  closeDataMenu(true);
+  if (document.getElementById('protectionHelpModal')) return;
+  var m = document.createElement('div');
+  m.id = 'protectionHelpModal'; m.className = 'fixed inset-0 bg-slate-900/50 z-[1250] flex items-center justify-center p-4';
+  m.setAttribute('role','dialog'); m.setAttribute('aria-modal','true'); m.setAttribute('aria-labelledby','protectionHelpTitle');
+  m.innerHTML = '<div class="rm-panel w-full max-w-3xl max-h-[90vh] overflow-y-auto p-5"><div class="flex items-center justify-between gap-3"><h2 id="protectionHelpTitle" class="text-lg font-semibold">Способы защиты</h2><button type="button" class="rm-btn rm-btn-ghost rm-btn-icon rm-dialog-close" aria-label="Закрыть" onclick="closeProtectionHelp()"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg></button></div>'
+    + '<p class="my-3">У каждого способа своя задача. Они не заменяют друг друга.</p>'
+    + '<table class="w-full text-sm"><thead><tr><th scope="col" class="p-2 text-left">Способ</th><th scope="col" class="p-2 text-left">Для чего нужен</th></tr></thead><tbody>'
+    + [['PIN рабочего HTML','Шифрует сохраненную защищенную копию с планом и историей, а также ее черновик. Не защищает отдельные выгрузки. Короткий PIN можно подобрать; личный файл нельзя публиковать.'],
+       ['Пароль копии для просмотра','Шифрует отдельный HTML для получателя. Сначала выберите разделы и проверьте содержание; пароль не убирает лишние сведения сам.'],
+       ['Блокировка правок','От случайных изменений, не защищает содержимое файла. Просмотр остается доступным; блокировку в браузере можно обойти.'],
+       ['Пароли защищенных копий','Отдельный пароль для каждого файла пакета. Состав и возможность редактирования зависят от выбранной копии. Передавайте пароли отдельно.']]
+      .map(function(r){return '<tr><th scope="row" class="p-2 text-left align-top">'+r[0]+'</th><td class="p-2 align-top">'+r[1]+'</td></tr>';}).join('')
+    + '</tbody></table><p class="mt-3 text-sm">Забытые PIN и пароли восстановить нельзя. Шифрование не означает, что файл можно размещать публично.</p></div>';
+  m.addEventListener('click',function(e){if(e.target===m)closeProtectionHelp();});
+  document.body.appendChild(m); syncBodyScrollLock();
+}
+function closeProtectionHelp() {
+  document.getElementById('protectionHelpModal')?.remove(); syncBodyScrollLock();
+}
+function mountProtectionHelp() {
+  var lock=document.getElementById('lockProjectBtn');
+  if(lock && !document.getElementById('lockPurpose')) {
+    var note=document.createElement('div'); note.id='lockPurpose'; note.className='px-3 py-2 text-sm';
+    note.innerHTML='<p>От случайных изменений, не защищает содержимое файла</p>'+protectionHelpLink();
+    lock.after(note); lock.setAttribute('aria-describedby','lockPurpose');
+  }
+  ['portableSavePanel','roExportPasswordFields'].forEach(function(id){
+    var host=document.getElementById(id);
+    if(host && !host.querySelector('[data-protection-help]')) {
+      var row=document.createElement('div'); row.dataset.protectionHelp=''; row.className='mt-3';
+      row.innerHTML=protectionHelpLink(); host.appendChild(row);
+    }
+  });
+}
+mountProtectionHelp();
+
+function openLearningExample() {
+  if (READ_ONLY_MODE) return;
+  var url=new URL(location.href); url.hash='learn=prepare';
+  url.searchParams.set('learnTheme',document.body.classList.contains('theme-dark')?'dark':'studio');
+  var link=document.createElement('a'); link.href=url.href; link.target='_blank'; link.rel='noopener noreferrer';
+  document.body.appendChild(link); link.click(); link.remove();
+}
+function mountLearningEntries() {
+  var block=document.querySelector('.startup-help-row');
+  if(block && !block.dataset.learningReady) {
+    block.dataset.learningReady='1'; block.setAttribute('role','group'); block.setAttribute('aria-label','Знакомство с Roadmap');
+    block.querySelector('span').textContent='Знакомство с Roadmap';
+    var example=document.querySelector('#startupModal button[onclick="startDemo()"]');
+    if(example) {
+      example.parentElement.classList.replace('sm:grid-cols-3','sm:grid-cols-2');
+      example.setAttribute('onclick','openLearningExample()');
+      example.className='rm-btn rm-btn-secondary'; example.textContent='Учебный пример ↗';
+      example.title='Открыть в отдельной вкладке, не меняя рабочий план'; block.appendChild(example);
+    }
+    var note=document.createElement('p'); note.className='w-full text-sm';
+    note.textContent='Первый план — с подсказками по шагам. Сценарии — для отдельных задач. Пример — в отдельной вкладке, без изменения вашего плана.';
+    block.appendChild(note);
+  }
+  var help=document.querySelector('#infoModal button[onclick="closeInfoModal(); openOnboarding(\'plan\');"]');
+  if(help && !document.getElementById('helpLearningEntries')) {
+    var group=document.createElement('div'); group.id='helpLearningEntries'; group.className='flex flex-wrap gap-2 mt-3';
+    group.setAttribute('role','group'); group.setAttribute('aria-label','Знакомство с Roadmap');
+    group.innerHTML='<button type="button" class="rm-btn rm-btn-secondary" onclick="startTourFromStartup()">Обучающие сценарии</button><button type="button" class="rm-btn rm-btn-secondary" onclick="openLearningExample()">Учебный пример ↗</button>';
+    help.parentElement.after(group);
+  }
+}
+mountLearningEntries();
+
+// Общий выбор ведет в прежние редакторы и генераторы. Выбранный набор
+// никогда не подменяется всем планом, формат не меняет источник содержания.
+function materialPreparationOptions(group) {
+  var groups={
+    status:[
+      ['status','Короткий статус','Готовность, риски и решения по плану. Готовая страница; PDF через печать или текст.'],
+      ['report','Настраиваемый отчет','Блоки, свой текст и оформление. Настройте отчет, затем выберите печать / PDF.'],
+      ['slack','Запас времени','Отчет о резервах времени по задачам. Готовый PDF.']],
+    plan:[
+      ['selected','Выбранный набор задач','Только задачи выбранного набора встречи. Содержание и шапка настраиваются; HTML / PDF.'],
+      ['slide','Один слайд 16:9','Обзор плана по секциям и эпикам, без технических полей. Готовое оформление; PNG.'],
+      ['deck','Презентация всего плана','Многостраничный обзор: план, релизы, цели и риски. Готовое оформление; PDF.'],
+      ['image','Фрагмент плана','Выберите разделы и период, настройте вид. PNG или печать.'],
+      ['xlsx','Таблица задач','Выгрузка плана и сводных листов для расчетов. XLSX.'],
+      ['readonly','Копия для просмотра','Выбранные разделы без внутренних задач и истории. Настройте состав и пароль; HTML.']],
+    period:[
+      ['period','Итоги периода','Что сделано, что в работе и что запланировано. Выберите даты и состав; скопируйте текст или Markdown.'],
+      ['release','Прогресс релизов','Готовность релизов и задачи по статусам. Откройте нужные задачи или скопируйте сводку как текст.']]
+  };
+  return groups[group]||[];
+}
+function openMaterialPreparation() {
+  closeDataMenu(true);
+  if(document.getElementById('materialPreparationModal')) return;
+  var m=document.createElement('div'); m.id='materialPreparationModal';
+  m.className='fixed inset-0 bg-slate-900/50 z-[1250] flex items-center justify-center p-4';
+  m.setAttribute('role','dialog'); m.setAttribute('aria-modal','true'); m.setAttribute('aria-labelledby','materialPreparationTitle');
+  m.innerHTML='<div class="rm-panel w-full max-w-3xl max-h-[90vh] flex flex-col"><div class="p-5 flex items-center justify-between gap-3"><h2 id="materialPreparationTitle" class="text-lg font-semibold">Подготовить материал</h2><button type="button" class="rm-btn rm-btn-ghost rm-btn-icon rm-dialog-close" aria-label="Закрыть" onclick="closeMaterialPreparation()"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg></button></div><div class="p-5 pt-0 overflow-y-auto min-h-0"><p class="mb-3">Содержание → оформление → доступный формат. Сначала выберите, что нужно передать.</p><div class="flex flex-wrap gap-2 mb-3" role="group" aria-label="Содержание материала">'
+    + [['status','Статус'],['plan','План'],['period','Итоги периода']].map(function(p){return '<button type="button" class="rm-btn rm-btn-secondary" data-material-group="'+p[0]+'" aria-pressed="false" onclick="selectMaterialGroup(\''+p[0]+'\')">'+p[1]+'</button>';}).join('')
+    + '</div><div id="materialPreparationOptions" class="grid gap-3"></div><p class="mt-3 text-sm">Далее можно проверить состав и оформление. Для готового варианта — подтвердить создание файла. Ничего не отправляется автоматически.</p></div></div>';
+  m.addEventListener('click',function(e){if(e.target===m)closeMaterialPreparation();});
+  document.body.appendChild(m); selectMaterialGroup(_meetingContent||'plan'); syncBodyScrollLock();
+}
+function selectMaterialGroup(group) {
+  var host=document.getElementById('materialPreparationOptions'); if(!host)return;
+  document.querySelectorAll('[data-material-group]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.materialGroup===group));});
+  host.innerHTML=materialPreparationOptions(group).map(function(r){return '<section class="share-option"><div><h3>'+r[1]+'</h3><p>'+r[2]+'</p></div><button type="button" class="rm-btn rm-btn-secondary" data-material-result="'+r[0]+'" onclick="prepareMaterialResult(\''+r[0]+'\')">Выбрать</button></section>';}).join('');
+}
+function closeMaterialPreparation() {
+  document.getElementById('materialPreparationModal')?.remove(); syncBodyScrollLock();
+}
+function prepareMaterialResult(kind) {
+  var editors={status:openStatusOnePager,report:openReportBuilder,image:openExportSlice,readonly:openRoExport,period:openReportModal,release:openReleaseProgressModal};
+  var ready={slide:{title:'Один слайд 16:9',format:'PNG',run:buildLeadershipSlide},deck:{title:'Презентация всего плана',format:'PDF',run:exportDeckPdf},xlsx:{title:'Таблица задач',format:'XLSX',run:exportPlanToXlsx},slack:{title:'Запас времени',format:'PDF',run:exportSlackReportPdf}};
+  if(!editors[kind]&&!ready[kind]&&kind!=='selected')return;
+  closeMaterialPreparation();
+  if(kind==='selected'){setMeetingContent('plan');_presSetMobilePane('compose');_presToggleActions(true);return;}
+  if(editors[kind]){editors[kind]();return;}
+  var result=ready[kind];
+  openConfirm({title:result.title,desc:'Готовое оформление. Формат: '+result.format+'. Содержание берется из плана, не из выбранного набора встречи. Создать файл?',okText:'Создать '+result.format,onOk:result.run});
+}
+
+function mountPlanHistory() {
+  var modal=document.getElementById('versionsModal'); if(!modal||modal.dataset.historyReady)return;
+  modal.dataset.historyReady='1'; modal.setAttribute('aria-label','История плана');
+  var surface=modal.firstElementChild, title=surface.querySelector('h3');
+  title.textContent='История плана';
+  var subtitle=title.nextElementSibling;
+  if(subtitle)subtitle.textContent='Точки возврата, журнал изменений и сравнение сроков — разные действия';
+  var nav=document.createElement('div'); nav.id='planHistoryNav'; nav.className='px-5 py-3 flex flex-wrap gap-2 shrink-0';
+  nav.setAttribute('role','group'); nav.setAttribute('aria-label','Разделы истории плана');
+  nav.innerHTML=[['points','Точки возврата'],['journal','Журнал изменений'],['baseline','План/факт']].map(function(r){return '<button type="button" class="rm-btn rm-btn-secondary" data-history-tab="'+r[0]+'" aria-pressed="false" onclick="selectPlanHistory(\''+r[0]+'\')">'+r[1]+'</button>';}).join('');
+  var points=document.getElementById('versionsContent'); surface.insertBefore(nav,points); points.dataset.historyPanel='points';
+  [['projectJournalModal','journal'],['baselineModal','baseline']].forEach(function(r){
+    var panel=document.getElementById(r[0]); if(!panel)return;
+    delete MODAL_CLOSERS[r[0]];
+    var original=panel.firstElementChild;
+    panel.removeAttribute('aria-modal'); panel.removeAttribute('data-modal-backdrop'); panel.removeAttribute('data-rm-surface');
+    panel.removeAttribute('aria-labelledby'); panel.setAttribute('role','region');
+    panel.setAttribute('aria-label',r[1]==='journal'?'Журнал изменений':'План/факт');
+    panel.className='hidden overflow-y-auto min-h-0 flex-1'; panel.dataset.historyPanel=r[1];
+    original.className='min-w-0';
+    original.querySelectorAll('button[onclick="closeProjectJournal()"],button[onclick="closeBaselineModal()"]').forEach(function(b){b.remove();});
+    var heading=original.querySelector('h3'); if(heading)heading.textContent=r[1]==='journal'?'Журнал изменений':'План/факт';
+    var note=document.createElement('p'); note.className='px-5 py-3 text-sm';
+    note.textContent=r[1]==='journal'?'Записи о действиях. Просмотр журнала ничего не восстанавливает. История отдельных полей доступна в карточке задачи.':'Сравнение с базовым планом. Возврат меняет сроки и статусы существующих задач, но не восстанавливает полный проект.';
+    panel.prepend(note); surface.appendChild(panel);
+  });
+}
+function selectPlanHistory(tab) {
+  if(!['points','journal','baseline'].includes(tab))tab='points';
+  var modal=document.getElementById('versionsModal'); if(!modal)return;
+  modal.querySelectorAll('[data-history-panel]').forEach(function(p){p.classList.toggle('hidden',p.dataset.historyPanel!==tab);});
+  modal.querySelectorAll('[data-history-tab]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.historyTab===tab));});
+  if(tab==='points') {
+    if(_portableSession)_portableRenderState(_portableSession.getState());
+    renderVersionsList(); renderSaveRecoveryStatus(); renderStorageLocationStatus();
+  } else if(tab==='journal')renderProjectJournal(); else renderBaselineList();
+}
+function openPlanHistory(tab) {
+  mountPlanHistory(); selectPlanHistory(tab);
+  var modal=document.getElementById('versionsModal'); if(modal)modal.classList.remove('hidden');
+  syncBodyScrollLock();
+}
 
 // v13.6: браузер пропускает отрисовку невидимых пар строк в больших планах.
 // DOM не сокращается, поэтому поиск, связи, экспорт и редактирование сохраняют прежнее поведение.
