@@ -7836,6 +7836,8 @@
      flex:none; white-space:nowrap;
    }
    #goalsModal input.grow { min-width:0; max-width:100%; flex:1 1 0%; }
+   #goalsModal input.goal-initiative-name { flex-basis:200px; }
+   @media(max-width:640px) { #goalsModal input.goal-initiative-name { flex-basis:calc(100% - 16px); } }
    #taskDetailsToggle > span:first-child,#taskAdvancedToggle > span:first-child,
    #taskTalkToggle > span:first-child,#taskLinksToggle > span:first-child {
      min-width:0; text-align:left;
@@ -8683,6 +8685,28 @@ body.theme-dark .wb-node[data-color="violet"]{background:#352957;color:#ede9fe;b
 .candidate-surface{width:min(640px,100%);max-height:calc(100dvh - 32px);display:flex;flex-direction:column;background:var(--rm-surface);color:var(--rm-text);border:1px solid var(--rm-border);border-radius:16px;min-width:0}
 .candidate-body{padding:0 24px 24px;overflow-y:auto;min-height:0;display:grid;gap:16px;font-size:14px;line-height:1.5}
 .candidate-body p{margin:0;color:var(--rm-muted)}
+.overview-search{display:grid;gap:8px;font-weight:600}
+.overview-search input{width:100%;min-width:0;min-height:44px;padding:8px 12px;border:1px solid var(--rm-border);border-radius:9px;background:var(--rm-surface);color:var(--rm-text);font:inherit}
+.overview-check{display:flex;align-items:center;gap:12px;min-height:44px}
+.overview-check input{width:20px;height:20px}
+.overview-list{display:grid;gap:16px}
+.overview-item{min-width:0;border-bottom:1px solid var(--rm-border);padding-bottom:16px}
+body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,1fr);justify-items:start;gap:4px;text-align:left;width:100%;min-height:44px;padding:8px;border-radius:9px;color:var(--rm-text);overflow-wrap:anywhere;background:transparent;cursor:pointer;line-height:1.4}
+#jiraDifferencesModal .rm-dialog-close,#planDigestModal .rm-dialog-close{--rm-icon-control-h:44px;--rm-hit-target:44px}
+#jiraSyncSummary>div>div:first-child{flex-wrap:wrap}
+.overview-task:hover{background:var(--rm-selected-bg)}
+.overview-task:focus-visible,.overview-search input:focus-visible{outline:2px solid var(--rm-focus);outline-offset:2px}
+.overview-task small{font-size:12px;color:var(--rm-muted);font-weight:400}
+.overview-diff{margin:8px 0 0;display:grid;gap:8px}
+.overview-diff>div{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;padding:8px;background:var(--rm-bg);border-radius:9px;overflow-wrap:anywhere}
+.overview-diff dt{grid-column:1/-1;font-weight:600}.overview-diff dd{margin:0;min-width:0}
+.overview-diff dd span{display:block;font-size:12px;color:var(--rm-muted)}
+.overview-group>summary,.support-section>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:8px 0;cursor:pointer;font-weight:600;color:var(--rm-text)}
+.overview-group>summary::after,.support-section>summary::after{content:'⌄';margin-left:auto}.overview-group[open]>summary::after,.support-section[open]>summary::after{content:'⌃'}
+.overview-group>summary strong{font-variant-numeric:tabular-nums}.overview-group{border-top:1px solid var(--rm-border)}
+.overview-group .overview-task{margin-block:4px}.overview-more{margin-top:8px}
+.support-section{border-top:1px solid var(--rm-border);padding-top:8px}.support-section>summary small{font-size:12px;font-weight:400;color:var(--rm-muted)}
+.support-section>div{padding-block:8px}
 .candidate-field{display:grid;gap:8px;min-width:0;font-size:14px}
 .candidate-field .rm-control{width:100%;min-width:0}
 .candidate-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -8787,7 +8811,7 @@ body.theme-dark .wb-node[data-color="violet"]{background:#352957;color:#ede9fe;b
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.7</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.8</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -8877,7 +8901,7 @@ body.theme-dark .wb-node[data-color="violet"]{background:#352957;color:#ede9fe;b
               <button type="button" data-workspace-choice="leadership" onclick="closeMoreMenu();setWorkspaceMode('leadership')" class="h-8 rounded-lg border border-slate-200 text-[10px] font-semibold text-slate-600 hover:bg-indigo-50">Руководство</button>
             </div>
             <div class="grid grid-cols-2 gap-1 px-1 pb-1.5">
-              <button type="button" onclick="closeMoreMenu();openPlanBuilder()" class="min-h-12 px-2 py-2 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-semibold text-left hover:bg-indigo-100"><span class="block">Собрать план</span><span class="block text-[10px] font-normal text-indigo-500">7 шагов от цели до версии</span></button>
+              <button type="button" onclick="closeMoreMenu();openPlanBuilder()" class="min-h-12 px-2 py-2 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-semibold text-left hover:bg-indigo-100"><span class="block">Собрать план</span><span class="block text-[10px] font-normal text-indigo-500">Задачи, проверка сроков и сохранение</span></button>
               <button type="button" onclick="closeMoreMenu();openPlanHealthCenter()" class="min-h-12 px-2 py-2 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-semibold text-left hover:bg-emerald-100"><span class="flex items-center gap-1">Проверки плана <span id="planningMenuHealth" class="text-[10px] bg-rose-600 text-white rounded-full px-1.5"></span></span><span class="block text-[10px] font-normal text-emerald-600">ошибки и риски</span></button>
             </div>
             <button type="button" id="planningJiraChanges" data-feat="jira" onclick="closeMoreMenu();openJiraChangesModal()" class="hidden w-full items-center justify-between px-2.5 py-2 mb-1 rounded-lg bg-amber-50 text-amber-800 text-xs font-semibold hover:bg-amber-100"><span>Изменения из Jira</span><span id="planningJiraFreshDate" class="text-[10px] tabular-nums"></span></button>
@@ -9214,9 +9238,10 @@ body.theme-dark .wb-node[data-color="violet"]{background:#352957;color:#ede9fe;b
           <button id="mobileListPaneListBtn" type="button" onclick="setMobileListPane('list')" aria-pressed="true" data-active="true" class="min-h-11 px-3 rounded-lg text-xs font-semibold text-slate-600">Список</button>
           <button id="mobileListPaneTimelineBtn" type="button" onclick="setMobileListPane('timeline')" aria-pressed="false" data-active="false" class="min-h-11 px-3 rounded-lg text-xs font-semibold text-slate-600">Таймлайн</button>
         </div>
+        <button id="mobileDigestBtn" type="button" onclick="openPlanDigest()" class="rm-btn rm-btn-secondary">Дайджест</button>
         <button type="button" data-mobile-timeline-control onclick="scrollToToday()" class="mobile-timeline-control inline-flex items-center min-h-11 px-3 rounded-lg border border-slate-200 bg-slate-50 text-xs font-medium text-slate-700 cursor-pointer">Сегодня</button>
         <select id="zoomMobileSel" data-mobile-timeline-control onchange="applyTimelinePreset(this.value)" aria-label="Масштаб шкалы времени" class="mobile-timeline-control min-h-11 px-2 grow bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-700 cursor-pointer">
-          <option value="day">По дням</option><option value="currentWeek">Неделя</option><option value="month">Месяц</option>
+          <option value="day">По дням</option><option value="currentWeek">Неделя</option><option value="month">Месяц</option><option value="fit">Весь план</option>
         </select>
         <button type="button" data-mobile-timeline-control onclick="showGanttLegend()" aria-label="Как читать таймлайн" title="Как читать таймлайн" class="mobile-timeline-control rm-btn rm-btn-secondary rm-btn-icon">?</button>
         <button type="button" data-mobile-timeline-control data-feat="deps" onclick="openDepsOverview()" aria-label="Связи и зависимости" class="mobile-timeline-control rm-btn rm-btn-secondary">Связи</button>
@@ -9358,6 +9383,7 @@ body.theme-dark .wb-node[data-color="violet"]{background:#352957;color:#ede9fe;b
             <span id="taskDetailsHint" class="min-w-0 text-[10px] font-medium text-indigo-500 normal-case tracking-normal">оценка, приоритет, цель, связи, метрики, метки, описание</span>
           </button>
           <div id="taskDetailsBody" class="hidden space-y-4 mt-4">
+            <button type="button" data-task-planning-action class="rm-btn rm-btn-secondary" onclick="showTaskCutImpact()" title="Анализ по сохраненным данным. Задача не будет удалена.">Что изменится, если убрать задачу</button>
             <div>
               <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Описание</label>
               <textarea id="taskNotes" maxlength="4000" rows="3" placeholder="Опишите задачу: что нужно сделать, контекст, ссылки на детали…" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all resize-y min-h-[80px]"></textarea>
@@ -9661,11 +9687,63 @@ body.theme-dark .wb-node[data-color="violet"]{background:#352957;color:#ede9fe;b
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v17.7">
+<script data-roadmap-modules="v17.8">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
+/* module:plan-overview sha256:dfe9c36eba3ede6d04a1576c4081df44ebb954ffa035641f018669f52f117bf4 */
+// Read-only models. Callers provide today's local date and status semantics.
+const OVERVIEW_JIRA_FIELDS = ['status', 'start', 'end', 'resource', 'storyPoints'];
+const overviewValue = v => v == null ? '' : String(v);
+const overviewDate = v => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(overviewValue(v))) return '';
+  const d = new Date(v + 'T00:00:00Z');
+  return Number.isFinite(d.getTime()) && d.toISOString().slice(0, 10) === v ? v : '';
+};
+const overviewByDate = (a, b) => overviewValue(a.end || '9999').localeCompare(overviewValue(b.end || '9999')) || overviewValue(a.name).localeCompare(overviewValue(b.name), 'ru') || overviewValue(a.id).localeCompare(overviewValue(b.id));
+
+function buildJiraDifferenceOverview(tasks, {includeHidden = false, query = ''} = {}) {
+  const eligible = (Array.isArray(tasks) ? tasks : []).filter(t => t && !t.isMilestone && overviewValue(t.jira).trim());
+  const scoped = eligible.filter(t => includeHidden || !t.hidden);
+  const needle = overviewValue(query).trim().toLocaleLowerCase('ru');
+  const rows = [], unknown = [];
+  let unchanged = 0, compared = 0;
+  for (const task of scoped) {
+    const base = task._jiraSync;
+    const known = OVERVIEW_JIRA_FIELDS.filter(f => base && typeof base === 'object' && Object.hasOwn(base, f));
+    const changes = known.filter(f => overviewValue(task[f]) !== overviewValue(base[f])).map(field => ({field, before:overviewValue(base[field]), after:overviewValue(task[field])}));
+    const matches = !needle || [task.jira, task.name, task.resource].some(v => overviewValue(v).toLocaleLowerCase('ru').includes(needle));
+    if (known.length) compared++;
+    if (known.length !== OVERVIEW_JIRA_FIELDS.length && matches) unknown.push({id:task.id, name:overviewValue(task.name), jira:overviewValue(task.jira), missing:OVERVIEW_JIRA_FIELDS.filter(f => !known.includes(f))});
+    if (changes.length && matches) rows.push({id:task.id, name:overviewValue(task.name), jira:overviewValue(task.jira), hidden:!!task.hidden, changes});
+    if (!changes.length && known.length === OVERVIEW_JIRA_FIELDS.length) unchanged++;
+  }
+  return {rows, unknown, compared, unchanged, total:scoped.length, hidden:eligible.length-scoped.length, fields:OVERVIEW_JIRA_FIELDS.slice()};
+}
+
+function buildPlanDigest(tasks, {today, isFinal = () => false, isActive = () => false, isHeld = () => false} = {}) {
+  if (!overviewDate(today)) throw new Error('Дайджесту нужна корректная дата YYYY-MM-DD');
+  const until = new Date(today + 'T00:00:00Z'); until.setUTCDate(until.getUTCDate()+6);
+  const horizon = until.toISOString().slice(0,10);
+  const visible = (Array.isArray(tasks) ? tasks : []).filter(t => t && !t.hidden);
+  const work = visible.filter(t => !t.isMilestone);
+  const unfinished = work.filter(t => !isFinal(t.status));
+  const toRow = t => ({id:t.id, name:overviewValue(t.name), jira:overviewValue(t.jira), status:overviewValue(t.status), resource:overviewValue(t.resource), end:overviewDate(t.end), start:overviewDate(t.start)});
+  const rows = list => list.map(toRow).sort(overviewByDate);
+  return {
+    today, horizon, total:work.length, done:work.length-unfinished.length,
+    groups: [
+      {key:'overdue', title:'Просрочено', tasks:rows(unfinished.filter(t => !isHeld(t.status) && overviewDate(t.end) && t.end < today))},
+      {key:'upcoming', title:'Сроки в ближайшие 7 дней', tasks:rows(unfinished.filter(t => overviewDate(t.end) && t.end >= today && t.end <= horizon))},
+      {key:'active', title:'В работе', tasks:rows(unfinished.filter(t => isActive(t.status)))},
+      {key:'undated', title:'Без даты окончания', tasks:rows(unfinished.filter(t => !overviewDate(t.end)))},
+      {key:'milestones', title:'Ближайшие вехи', tasks:rows(visible.filter(t => t.isMilestone && !isFinal(t.status) && overviewDate(t.end || t.start) && (t.end || t.start) >= today && (t.end || t.start) <= horizon).map(t => ({...t,end:t.end || t.start})))}
+    ]
+  };
+}
+if(typeof globalThis!=='undefined')Object.assign(globalThis.RoadmapModules||(globalThis.RoadmapModules={}),{buildJiraDifferenceOverview,buildPlanDigest});
+
 /* module:release-version sha256:e1ed05edf7d9d2e9275b1c4be49c56d3899978ef480b796027bce3a817f4ff6c */
 // The public response carries a version only. URLs and transport belong to the UI.
 function releaseVersionParts(value) {
@@ -12488,7 +12566,7 @@ if (typeof globalThis !== 'undefined') {
   ns.createSchedulePreview = createSchedulePreview;
 }
 
-/* module:jira-import-actions sha256:1e51b8c72b6302b2ff453f576591bb0a052a55f10952541159cfacd1393e43e7 */
+/* module:jira-import-actions sha256:e27657ee60d92c0af7f20b65afd4466d97535c90f9920fd798a4911453511bfe */
 // Extracted from the tested v17.0 implementation. Side effects are explicit dependencies.
 function portableJiraConnection(value) {
   try {
@@ -12533,8 +12611,8 @@ function applyReviewedJiraImport({document, getRows, _jiraPreviewKey, _jiraBuild
     showToast('Изменились условия импорта. Проверьте обновленный список и подтвердите загрузку еще раз.','warn',5000);
     return;
   }
-  closeJiraImportPreview();
-  mergeJiraTasks(selected,{nameMatches,hierarchyIssues:getRows().map(row=>row.issue)});
+  const applied = mergeJiraTasks(selected,{nameMatches,hierarchyIssues:getRows().map(row=>row.issue)});
+  if (applied === true) closeJiraImportPreview(true);
 
 }
 
@@ -13662,7 +13740,7 @@ if (typeof globalThis !== 'undefined') {
       // Задачи и вехи
       roadmapData.forEach(t => {
         const key = (typeof getTaskKey === 'function') ? getTaskKey(t) : ('#' + String(t.id).slice(-4));
-        const hay = [key, t.name, t.section, t.resource, t.dor, t.dod, t.notes, t.metrics, t.jira, t.epicLink, t.conf, t.figma, (Array.isArray(t.labels) ? t.labels.join(' ') : ''), (Array.isArray(t.components) ? t.components.join(' ') : ''), t.release, _kindLabel(t.kind), t.extParty].filter(Boolean).join(' ');
+        const hay = [key, t.name, t.section, t.resource, t.sprint, t.dor, t.dod, t.notes, t.metrics, t.jira, t.epicLink, t.conf, t.figma, (Array.isArray(t.labels) ? t.labels.join(' ') : ''), (Array.isArray(t.components) ? t.components.join(' ') : ''), t.release, _kindLabel(t.kind), t.extParty].filter(Boolean).join(' ');
         items.push({
           kind: t.isMilestone ? 'milestone' : 'task',
           id: t.id,
@@ -14197,7 +14275,7 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '17.7';
+    const APP_VERSION = '17.8';
     const APP_VERSION_DATE = '11.10.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
@@ -15461,6 +15539,11 @@ if (typeof globalThis !== 'undefined') {
       if (search) search.value = '';
       openPlanHealthCenter(category === 'readiness' ? 'readiness' : 'all');
     }
+    function _compareQualityIssues(a, b) {
+      const severity = {error:0,warning:1,info:2};
+      const impact = {dependencies:0,schedule:1,dates:2,readiness:3,capacity:4,status:5,structure:6,required:7};
+      return (severity[a.severity]??9)-(severity[b.severity]??9) || (impact[a.category]??9)-(impact[b.category]??9) || (b.items?.length||b.count||1)-(a.items?.length||a.count||1) || String(a.title||'').localeCompare(String(b.title||''),'ru');
+    }
     function renderDataQualityCenter() {
       const list = document.getElementById('dataQualityList'), sum = document.getElementById('dataQualitySummary'); if (!list || !sum) return;
       const readiness = _forecastReadinessModel(_dqIssues);
@@ -15470,15 +15553,14 @@ if (typeof globalThis !== 'undefined') {
       const q = String(((document.getElementById('dataQualitySearch') || {}).value || '')).trim().toLowerCase();
       const sevCount = s => _dqIssues.filter(x => x.severity === s).length;
       sum.innerHTML = `<div class="rm-panel p-3"><div class="text-2xl font-bold ${readiness.score >= 80 ? 'text-emerald-600' : (readiness.score >= 60 ? 'text-amber-600' : 'text-rose-600')}">${readiness.score}%</div><div class="text-[10px] text-slate-500">полнота входных данных</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-rose-600">${sevCount('error')}</div><div class="text-[10px] text-slate-500">ошибки</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-amber-600">${sevCount('warning')}</div><div class="text-[10px] text-slate-500">предупреждения</div></div><div class="rm-panel p-3"><div class="text-2xl font-bold text-sky-600">${sevCount('info')}</div><div class="text-[10px] text-slate-500">нужно заполнить</div></div><div data-readiness-decision class="rm-panel p-3 col-span-full ${readiness.canForecast ? 'border-emerald-200 bg-emerald-50/60' : 'border-amber-200 bg-amber-50/60'}"><div class="text-sm font-semibold ${readiness.canForecast ? 'text-emerald-800' : 'text-amber-900'}">${escHtml(_readinessGuidance(readiness).title)}</div><div class="mt-1 text-[10px] text-slate-500">Порог готовности: 80% и отсутствие критичных ошибок.</div></div>`;
-      const severityRank = { error: 0, warning: 1, info: 2 };
       const filtered = _dqIssues
         .filter(x => _dqMatchesCategory(x, cat) && (!q || (x.title + ' ' + x.detail + ' ' + ((x.entity || {}).label || '') + ' ' + _dqCategoryName(x.category)).toLowerCase().includes(q)))
-        .sort((a, b) => (severityRank[a.severity] ?? 9) - (severityRank[b.severity] ?? 9) || String(a.title).localeCompare(String(b.title), 'ru'));
+        .sort(_compareQualityIssues);
       if (!filtered.length) { list.innerHTML = `<div class="rm-panel p-8 text-center"><div class="text-sm font-semibold text-emerald-700">${_dqIssues.length ? 'По выбранному фильтру проблем нет' : 'Критичных проблем не найдено'}</div><div class="text-xs text-slate-500 mt-1">Проверка ничего не исправляет автоматически.</div></div>`; return; }
       const tone = { error:'bg-rose-100 text-rose-700', warning:'bg-amber-100 text-amber-700', info:'bg-sky-100 text-sky-700' };
       const grouped = new Map();
       filtered.forEach(function(x){ const key=[x.severity,x.category,x.title].join('|'); if(!grouped.has(key)) grouped.set(key,{key:key,severity:x.severity,category:x.category,title:x.title,items:[]}); grouped.get(key).items.push(x); });
-      _dqGroupedView = Array.from(grouped.values());
+      _dqGroupedView = Array.from(grouped.values()).sort(_compareQualityIssues);
       const first = _dqGroupedView.slice(0,3);
       const priority = first.length ? `<section class="rounded-2xl border border-indigo-200 bg-indigo-50/70 p-3"><div class="text-[10px] uppercase tracking-wider font-bold text-indigo-600 mb-2">Что исправить первым</div><div class="grid sm:grid-cols-3 gap-2">${first.map(function(g,i){return `<button type="button" onclick="toggleDataQualityGroup(${i})" class="text-left bg-white border border-indigo-100 rounded-xl p-2.5 hover:border-indigo-300"><span class="block text-xs font-semibold text-slate-800 line-clamp-2">${escHtml(g.title)}</span><span class="block mt-1 text-[10px] text-slate-500">${g.items.length} ${pluralRu(g.items.length,['запись','записи','записей'])}</span></button>`;}).join('')}</div></section>` : '';
       const cards = _dqGroupedView.map(function(g,idx){
@@ -16852,9 +16934,9 @@ if (typeof globalThis !== 'undefined') {
     function renderCalendarPreview() {
       const modal=document.getElementById('calendarExportModal');if(!modal||!_calendarPlan)return;
       const options={};modal.querySelectorAll('[data-calendar-kind]').forEach(c=>options[c.dataset.calendarKind]=c.checked);
-      const preview=RoadmapModules.createCalendarPreview(_calendarPlan,options);_calendarEvents=preview.events;
+      const preview=RoadmapModules.createCalendarPreview(_calendarPlan,options);_calendarEvents=preview.events.slice().sort((a,b)=>a.date.localeCompare(b.date)||a.name.localeCompare(b.name,'ru'));
       modal.querySelector('#calendarComposition').textContent='Событий: '+preview.events.length+(preview.skipped?'. Пропущено без корректной даты: '+preview.skipped:'');
-      modal.querySelector('#calendarEventList').innerHTML=preview.events.map(e=>'<li><strong>'+escHtml(e.name)+'</strong><small>'+escHtml(e.date)+'</small></li>').join('');
+      modal.querySelector('#calendarEventList').innerHTML=_calendarEvents.map(e=>'<li><strong>'+escHtml(e.name)+'</strong><small>'+escHtml(formatDateString(e.date))+'</small></li>').join('');
       modal.querySelector('#calendarDownload').disabled=!preview.events.length;
     }
     function downloadCalendarExport() {
@@ -16865,6 +16947,72 @@ if (typeof globalThis !== 'undefined') {
       closeCalendarExport();showToast('Календарь подготовлен. Откройте скачанный ICS в приложении календаря.','ok');
     }
     function closeCalendarExport(){_calendarPlan=null;_calendarEvents=[];_closeCandidateDialog('calendarExportModal');}
+    function openJiraDifferences() {
+      if (featureFlags.jira === false) return;
+      closeDataMenu();
+      _openCandidateDialog('jiraDifferencesModal','Отличается от Jira',
+        '<p>Сравнение с последним импортом, не с текущим состоянием Jira. Активный план, без архива; фильтры списка не применяются. Просмотр ничего не отправляет и не меняет.</p>'
+        +'<p>Поля: статус, начало, окончание, исполнитель, Story Points. Остальные поля, в том числе спринт, здесь не сравниваются.</p>'
+        +'<label class="overview-search">Найти задачу<input id="jiraDifferenceSearch" type="search" placeholder="Название, ключ или исполнитель" oninput="renderJiraDifferences()"></label>'
+        +'<label class="overview-check"><input id="jiraDifferenceHidden" type="checkbox" onchange="renderJiraDifferences()">Включить скрытые задачи</label>'
+        +'<p id="jiraDifferenceCount" role="status" aria-live="polite" tabindex="-1"></p><div id="jiraDifferenceList" class="overview-list"></div>', 'closeJiraDifferences');
+      renderJiraDifferences();
+    }
+    function closeJiraDifferences(){_closeCandidateDialog('jiraDifferencesModal');}
+    function _overviewTaskButton(task, origin, caption) {
+      return '<button type="button" class="overview-task rm-btn-ghost" data-overview-task="'+escAttr(task.id)+'" data-overview-origin="'+origin+'" onclick="openOverviewTask(this)"><strong>'+escHtml(task.name || 'Без названия')+'</strong><small>'+escHtml([task.jira,caption].filter(Boolean).join(' · '))+'</small></button>';
+    }
+    function openOverviewTask(button) {
+      const task=(roadmapData || []).find(t=>String(t.id)===button.dataset.overviewTask);
+      if(!task){showToast('Задача больше не находится в активном плане','info');return;}
+      if(button.dataset.overviewOrigin==='jira')closeJiraDifferences();else closePlanDigest();
+      openModal(task);
+    }
+    var _jiraDifferenceLimits={rows:50,unknown:50};
+    function showMoreJiraDifferences(key) {
+      if(!['rows','unknown'].includes(key))return;
+      _jiraDifferenceLimits[key]+=50;renderJiraDifferences(true);
+      (document.querySelector('[data-jira-more="'+key+'"]')||document.getElementById('jiraDifferenceCount'))?.focus({preventScroll:true});
+    }
+    function renderJiraDifferences(keepLimits) {
+      const host=document.getElementById('jiraDifferenceList');if(!host)return;
+      const unknownOpen=!!host.querySelector('details[open]');
+      if(!keepLimits)_jiraDifferenceLimits={rows:50,unknown:50};
+      const m=RoadmapModules.buildJiraDifferenceOverview(roadmapData,{includeHidden:document.getElementById('jiraDifferenceHidden').checked,query:document.getElementById('jiraDifferenceSearch').value});
+      const labels={status:'Статус',start:'Начало',end:'Окончание',resource:'Исполнитель',storyPoints:'Story Points'};
+      const fmt=(field,v)=>!v?'Не задано':field==='status'?statusNameById(v):['start','end'].includes(field)?formatDateString(v):v;
+      document.getElementById('jiraDifferenceCount').textContent='Найдено с отличиями: '+m.rows.length+'. В области сравнения: '+m.total+' задач с Jira-ключом.'+(m.hidden?' Скрытых исключено: '+m.hidden+'.':'');
+      const info=_jiraLastImportInfo();
+      host.innerHTML='<p>'+(info?'Последний импорт: '+escHtml(info.full)+'.':'Дата последнего импорта неизвестна.')+'</p>'
+        +(m.rows.length?m.rows.slice(0,_jiraDifferenceLimits.rows).map(t=>'<article class="overview-item">'+_overviewTaskButton(t,'jira',t.hidden?'Скрытая задача':'Открыть карточку')+'<dl class="overview-diff">'+t.changes.map(c=>'<div><dt>'+labels[c.field]+'</dt><dd><span>Последний импорт</span>'+escHtml(fmt(c.field,c.before))+'</dd><dd><span>Сейчас в плане</span>'+escHtml(fmt(c.field,c.after))+'</dd></div>').join('')+'</dl></article>').join(''):'<p>Для выбранных условий отличий в известных полях нет.</p>')
+        +(m.rows.length>_jiraDifferenceLimits.rows?'<button type="button" class="rm-btn rm-btn-secondary overview-more" data-jira-more="rows" onclick="showMoreJiraDifferences(this.dataset.jiraMore)">Показать ещё '+Math.min(50,m.rows.length-_jiraDifferenceLimits.rows)+'</button>':'')
+        +(m.unknown.length?'<details class="overview-group"'+(unknownOpen?' open':'')+'><summary>Неполное сравнение <strong>'+m.unknown.length+'</strong></summary><p>Нет исходных значений для части полей. Эти задачи нельзя считать полностью совпавшими. Загрузите актуальную выгрузку Jira для обновления исходных значений.</p>'+m.unknown.slice(0,_jiraDifferenceLimits.unknown).map(t=>_overviewTaskButton(t,'jira','Нет исходных значений: '+t.missing.map(k=>labels[k]).join(', '))).join('')+(m.unknown.length>_jiraDifferenceLimits.unknown?'<button type="button" class="rm-btn rm-btn-secondary overview-more" data-jira-more="unknown" onclick="showMoreJiraDifferences(this.dataset.jiraMore)">Показать ещё '+Math.min(50,m.unknown.length-_jiraDifferenceLimits.unknown)+'</button>':'')+'</details>':'');
+    }
+    var _digestLimits={};
+    function openPlanDigest() {
+      _digestLimits={};
+      _openCandidateDialog('planDigestModal','Дайджест плана',
+        '<p>Весь активный план без скрытых задач и архива. Фильтры списка не применяются. Сохранение, отправка и обновление Jira не запускаются.</p>'
+        +'<p id="digestSummary"></p><div id="digestGroups"></div>', 'closePlanDigest');
+      renderPlanDigest();
+    }
+    function closePlanDigest(){_closeCandidateDialog('planDigestModal');_digestLimits={};}
+    function showMoreDigest(key) {_digestLimits[key]=(_digestLimits[key]||5)+20;renderPlanDigest(key);}
+    function renderPlanDigest(focusKey) {
+      const host=document.getElementById('digestGroups');if(!host)return;
+      const opened=new Set(Array.from(host.querySelectorAll('details[open]')).map(n=>n.dataset.digestGroup));
+      const first=!host.children.length;
+      const m=RoadmapModules.buildPlanDigest(roadmapData,{today:toYmdLocal(CURRENT_DATE),isFinal:isFinalStatus,isActive:isActiveStatus,isHeld:isHeldStatus});
+      document.getElementById('digestSummary').textContent=formatDateString(m.today)+' · Готово '+m.done+' из '+m.total+'. Ближайшие 7 дней: '+formatDateString(m.today)+' — '+formatDateString(m.horizon)+'. Задача может входить в несколько групп.';
+      host.innerHTML=m.groups.map(g=>{
+        const limit=_digestLimits[g.key]||5;
+        return '<details class="overview-group" data-digest-group="'+g.key+'"'+(opened.has(g.key)||(first&&['overdue','upcoming'].includes(g.key))?' open':'')+'><summary>'+g.title+' <strong>'+g.tasks.length+'</strong></summary>'
+          +(g.key==='overdue'?'<p>Задачи на паузе (Hold) сюда не входят.</p>':'')
+          +(g.tasks.length?g.tasks.slice(0,limit).map(t=>_overviewTaskButton(t,'digest',[statusNameById(t.status),t.end?formatDateString(t.end):'Без даты',t.resource].filter(Boolean).join(' · '))).join(''):'<p>Таких задач нет.</p>')
+          +(g.tasks.length>limit?'<button type="button" class="rm-btn rm-btn-secondary overview-more" data-digest-more="'+g.key+'" onclick="showMoreDigest(this.dataset.digestMore)">Показать ещё '+Math.min(20,g.tasks.length-limit)+'</button>':'')+'</details>';
+      }).join('');
+      if(focusKey){const group=host.querySelector('[data-digest-group="'+focusKey+'"]');(group?.querySelector('[data-digest-more]')||group?.querySelector('summary'))?.focus({preventScroll:true});}
+    }
     var _workTemplateContext=null;
     function openWorkTemplates(section) {
       closeMoreMenu(true);
@@ -17450,8 +17598,8 @@ if (typeof globalThis !== 'undefined') {
       const el = document.querySelector('.timeline-scroll');
       if (el) el.scrollBy({ left: dir * Math.max(240, el.clientWidth * 0.7), behavior: rmScrollBehavior() });
     }
-    // Три пользовательских масштаба; при открытии плана выбрана текущая неделя.
-    var _ZOOM_OPTS = [['day', 'По дням'], ['currentWeek', 'Неделя'], ['month', 'Месяц']];
+    // Четыре пользовательских масштаба; при открытии плана выбрана текущая неделя.
+    var _ZOOM_OPTS = [['day', 'По дням'], ['currentWeek', 'Неделя'], ['month', 'Месяц'], ['fit', 'Весь план']];
     // Рамка нужна клавиатуре, но не служебному восстановлению фокуса после клика.
     document.addEventListener('pointerdown', () => { document.body.dataset.inputMode = 'pointer'; }, true);
     document.addEventListener('keydown', event => {
@@ -17657,7 +17805,8 @@ if (typeof globalThis !== 'undefined') {
     // Слайд для руководства в один клик: временно скрываем технические модули, включаем презентацию и обзор,
     // режем кадр под 16:9 и отдаем PNG. featureFlags и пользовательские настройки не меняем; togglePresentationMode
     // временно пишет gantt_collapsed_sections, но в finally восстанавливает исходное значение. Только вид, через try/finally.
-    async function buildLeadershipSlide() {
+    async function buildLeadershipSlide(consent) {
+      if (!_confirmWorkingExport('slide', consent, buildLeadershipSlide)) return;
       const wasPres = isPresentationMode();
       const wasCompact = isCompactOverview();
       const _added = [];
@@ -18544,7 +18693,7 @@ if (typeof globalThis !== 'undefined') {
       const current = select.value;
       if (!taskTargetSections().length) ensureTaskRootSection();
       const targets = taskTargetSections();
-      select.innerHTML = targets.map(s => `<option value="${escAttr(s)}">${escHtml(s)}</option>`).join('');
+      select.innerHTML = targets.map(s => `<option value="${escAttr(s)}">${escHtml(cleanSectionName(s))}</option>`).join('');
       select.value = targets.includes(current) ? current : (targets[0] || '');
     }
 
@@ -19127,7 +19276,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (!minD || !maxD) return '';
       let days = Math.round((maxD - minD) / MS) + 1;
       if (days < 1) days = 1;
-      if (days > 220) { days = 220; maxD = new Date(minD.getTime() + 219 * MS); }
+      const truncated = days > 220;
+      if (truncated) { days = 220; maxD = new Date(minD.getTime() + 219 * MS); }
       const dayList = [];
       for (let i = 0; i < days; i++) dayList.push(new Date(minD.getTime() + i * MS));
       const cellW = 16;
@@ -19152,7 +19302,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const innerW = dayList.length * cellW + 112;
       return `<div class="mb-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
         <div class="flex items-center justify-between mb-2 gap-2 flex-wrap">
-          <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Выравнивание загрузки: активных задач в день</div>
+          <div><div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Выравнивание загрузки: активных задач в день</div><p class="text-xs text-slate-500 mt-1">${truncated?'Показаны первые 220 дней: ':'Период: '}${escHtml(formatDateString(toYmdLocal(minD)))} — ${escHtml(formatDateString(toYmdLocal(maxD)))}</p></div>
           <div class="flex items-center gap-2 text-[10px] text-slate-500"><span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 bg-slate-100 border border-slate-200"></span>0</span><span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 bg-emerald-400"></span>1</span><span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 bg-amber-400"></span>2</span><span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 bg-rose-500"></span>3 и больше</span></div>
         </div>
         <div class="flex items-center gap-1 flex-wrap mb-2" role="group" aria-label="Кого показать на карте загрузки">
@@ -19191,20 +19341,21 @@ let resourceView = 'roles'; // 'roles' | 'load'
             return dateToDays(a.start) - dateToDays(b.start) || dateToDays(a.end) - dateToDays(b.end);
           });
         let freeFrom = -Infinity; // календарный индекс, раньше которого следующая задача начаться не может
-        let first = true;
         arr.forEach(t => {
           const estD = (typeof parseEstimateDays === 'function') ? parseEstimateDays(t.estimate) : null;
-          const anchor = first && getStatusGroup(t.status) === 'in_progress'; // активную задачу по старту не трогаем
+          const anchor = getStatusGroup(t.status) === 'in_progress';
           let s = dateToDays(t.start), startYmd = t.start;
-          if (!anchor) {
-            const minS = Math.max(freeFrom, _todayDays);
-            if (s < minS) { s = minS; startYmd = daysToDate(s); }
+          if (anchor) {
+            freeFrom = Math.max(freeFrom, dateToDays(_spSpan(daysToDate(dateToDays(t.end) + 1), 1, person).start));
+            return;
           }
-          const endYmd = (estD && estD > 0)
-            ? shiftYmdByWorkdays(startYmd, estD - 1)
-            : daysToDate(s + (dateToDays(t.end) - dateToDays(t.start)));
-          freeFrom = dateToDays(shiftYmdByWorkdays(endYmd, 1));
-          first = false;
+          s = Math.max(s, freeFrom, _todayDays);
+          const span = _spSpan(daysToDate(s), estD > 0 ? Math.ceil(estD) : 1, person);
+          startYmd = span.start;
+          s = dateToDays(startYmd);
+          // Без оценки сохраняется календарная длительность; окончание не ставится в отпуск.
+          const endYmd = estD > 0 ? span.end : _spSpan(daysToDate(s + Math.max(0, dateToDays(t.end) - dateToDays(t.start))), 1, person).start;
+          freeFrom = dateToDays(_spSpan(daysToDate(dateToDays(endYmd) + 1), 1, person).start);
           if ((startYmd !== t.start || endYmd !== t.end) && !seen.has(t.id)) {
             seen.add(t.id);
             sugg.push({ id: t.id, person, name: t.name, fromStart: t.start, fromEnd: t.end, toStart: startYmd, toEnd: endYmd, shiftDays: s - dateToDays(t.start) });
@@ -19695,7 +19846,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         return `<span data-adv data-feat="custom" class="font-medium text-slate-600 bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded text-[10px] shrink-0 truncate max-w-[110px]" title="${escAttr(d.name + ': ' + v)}">${escHtml(d.name)}: ${escHtml(v)}</span>`;
       } catch (e) { return ''; }
     }
-    function openMoneyModal() { if (typeof featureFlags !== 'undefined' && featureFlags.money === false) { if (typeof showToast === 'function') showToast('Модуль «Деньги» выключен в Настройках', 'info', 3500); return; } const m = document.getElementById('moneyModal'); if (m) { m.classList.remove('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); } renderMoneyModal(); }
+    function openMoneyModal() { if (typeof featureFlags !== 'undefined' && featureFlags.money === false) { if (typeof showToast === 'function') showToast('Модуль «Деньги» выключен. Включить: Настройки → Функции', 'info', 3500); return; } const m = document.getElementById('moneyModal'); if (m) { m.classList.remove('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); } renderMoneyModal(); }
     function closeMoneyModal() { const m = document.getElementById('moneyModal'); if (m) m.classList.add('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
     function setReleaseBudget(rel, val) {
       if (READ_ONLY_MODE) return;
@@ -19737,8 +19888,19 @@ let resourceView = 'roles'; // 'roles' | 'load'
       });
       return { rows: rows, totHours: totH, totCost: totC, totBudget: totB, totDelta: totD };
     }
+    function _groupSupportBlock(block, key, title, detail, open) {
+      if(!block)return;
+      const wrapper=document.createElement('details');wrapper.className='support-section';wrapper.dataset.supportSection=key;wrapper.open=!!open;
+      const summary=document.createElement('summary');const label=document.createElement('span');label.textContent=title;summary.appendChild(label);
+      const count=document.createElement('small');count.textContent=detail;summary.appendChild(count);wrapper.appendChild(summary);
+      block.before(wrapper);wrapper.appendChild(block);
+      // Only a redundant title is removed; controls, fields and tables remain intact.
+      const titleNode=block.querySelector('.font-semibold');
+      if(titleNode && !titleNode.querySelector('button,input,select') && !titleNode.matches('button'))titleNode.remove();
+    }
     function renderMoneyModal() {
       const box = document.getElementById('moneyBody'); if (!box) return;
+      const supportOpen=new Set(Array.from(box.querySelectorAll('details[open][data-support-section]')).map(n=>n.dataset.supportSection));
       const _roMode = (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE);
       const tasks = (roadmapData || []).filter(t => t && !t.isMilestone && !t.hidden);
       const _mtbl = (head, rows) => `<div class="overflow-auto border border-slate-200 rounded-xl max-h-[360px]"><table class="w-full text-[10px] border-collapse"><thead><tr class="bg-slate-50 text-left sticky top-0 z-10">${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
@@ -19788,6 +19950,9 @@ let resourceView = 'roles'; // 'roles' | 'load'
         <div><div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Этапы и акты</div>${stages.length ? _mtbl(_th('Этап') + _th('Дата', 1) + _th('Сумма', 1) + '<th class="px-2.5 py-2 font-semibold text-slate-500 bg-slate-50 border-b border-slate-200 text-center">Согласовано</th>', stRows) : '<div class="text-[10px] text-slate-500 bg-slate-50 border border-slate-100 rounded-xl px-3 py-2.5">Этапов пока нет. Откройте отсечку на таймлайне и заполните поля «Этап / акт» и «Сумма акта».</div>'}</div>
         <div><div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Табель</div>${_wlFotHtml ? `<div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1">ФОТ по исполнителям</div>${_wlFotHtml}` : ''}${_wlRecent.length ? `<div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Последние записи</div>` : ''}${_wlListHtml}<div class="flex items-center gap-2 flex-wrap"><button type="button" onclick="exportWorkLogCsv()" class="inline-flex items-center gap-1.5 h-8 px-3 bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50 text-xs font-semibold rounded-lg cursor-pointer transition-colors"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>Выгрузить табель CSV</button>${(!_roMode && wlN) ? `<button type="button" onclick="repeatLastWorkLogPeriod(\'week\')" title="Скопировать записи прошлой недели в следующую с нулевыми часами — останется заполнить факт" class="inline-flex items-center gap-1.5 h-8 px-3 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold rounded-lg cursor-pointer transition-colors">Повторить неделю</button><button type="button" onclick="repeatLastWorkLogPeriod(\'day\')" title="Скопировать записи последнего дня на следующий день с нулевыми часами" class="inline-flex items-center gap-1.5 h-8 px-3 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold rounded-lg cursor-pointer transition-colors">Повторить день</button>` : ''}<span class="text-[10px] text-slate-500">${wlN ? `записей: ${wlN}, часов: ${wlH % 1 === 0 ? wlH : wlH.toFixed(1)}` : 'факт-часы вносятся в карточке задачи, блок «Факт-часы»'}</span></div></div>
       </div>`;
+      const extraBlocks=Array.from(box.firstElementChild.children).slice(-2);
+      _groupSupportBlock(extraBlocks[0],'acts','Этапы и акты','Этапов: '+stages.length,supportOpen.has('acts'));
+      _groupSupportBlock(extraBlocks[1],'worklog','Табель и фактические часы',wlN+' записей · '+(wlH % 1 === 0 ? wlH : wlH.toFixed(1))+' ч',supportOpen.has('worklog'));
     }
     function _wlRate(by) {
       const tk = String(by || '').trim(); if (!tk) return 0;
@@ -20238,10 +20403,10 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function _goalsSave(){ try{ storage.set('gantt_project_goals', JSON.stringify(projectGoals)); storage.set('gantt_project_initiatives', JSON.stringify(projectInitiatives)); }catch(e){} if(typeof persistProjectState==='function')persistProjectState(); if(typeof scheduleAutoSaveFile==='function')scheduleAutoSaveFile(); }
     function _goalsNewId(p){ return p+'_'+Date.now().toString(36)+'_'+Math.floor(Math.random()*100000).toString(36); }
     function _goalsRO(){ if(typeof READ_ONLY_MODE!=='undefined'&&READ_ONLY_MODE){ if(typeof showToast==='function')showToast('Только просмотр','info',2000); return true; } if(typeof requireUnlocked==='function'&&!requireUnlocked())return true; return false; }
-    function openGoalsModal(){ if (typeof featureFlags !== 'undefined' && featureFlags.goals === false) { if (typeof showToast === 'function') showToast('Модуль «Цели» выключен в настройках', 'info', 3000); return; } const m=document.getElementById('goalsModal'); if(m){ m.classList.remove('hidden'); if(typeof syncBodyScrollLock==='function')syncBodyScrollLock(); } if(typeof READ_ONLY_MODE!=='undefined'){ try{ var _gf=document.getElementById('goalsFooter'); if(_gf) _gf.classList.toggle('hidden', !!READ_ONLY_MODE); }catch(e){} } if(typeof renderGoalsList==='function')renderGoalsList(); }
+    function openGoalsModal(){ if (typeof featureFlags !== 'undefined' && featureFlags.goals === false) { if (typeof showToast === 'function') showToast('Модуль «Цели» выключен. Включить: Настройки → Функции', 'info', 3000); return; } const m=document.getElementById('goalsModal'); if(m){ m.classList.remove('hidden'); if(typeof syncBodyScrollLock==='function')syncBodyScrollLock(); } if(typeof READ_ONLY_MODE!=='undefined'){ try{ var _gf=document.getElementById('goalsFooter'); if(_gf) _gf.classList.toggle('hidden', !!READ_ONLY_MODE); }catch(e){} } if(typeof renderGoalsList==='function')renderGoalsList(); }
     function closeGoalsModal(){ const m=document.getElementById('goalsModal'); if(m)m.classList.add('hidden'); if(typeof syncBodyScrollLock==='function')syncBodyScrollLock(); }
     function _raidSave(){ try{ storage.set('gantt_project_raid', JSON.stringify(projectRaid)); }catch(e){} if(typeof persistProjectState==='function')persistProjectState(); if(typeof scheduleAutoSaveFile==='function')scheduleAutoSaveFile(); }
-    function openRaidModal(){ if (typeof featureFlags !== 'undefined' && featureFlags.raid === false) { if (typeof showToast === 'function') showToast('Модуль «Риски» выключен в настройках', 'info', 3000); return; } const m=document.getElementById('raidModal'); if(m){ m.classList.remove('hidden'); if(typeof syncBodyScrollLock==='function')syncBodyScrollLock(); } renderRaidList(); }
+    function openRaidModal(){ if (typeof featureFlags !== 'undefined' && featureFlags.raid === false) { if (typeof showToast === 'function') showToast('Модуль «Риски» выключен. Включить: Настройки → Функции', 'info', 3000); return; } const m=document.getElementById('raidModal'); if(m){ m.classList.remove('hidden'); if(typeof syncBodyScrollLock==='function')syncBodyScrollLock(); } renderRaidList(); }
     function closeRaidModal(){ try{ var _canClean = !(typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE); if(_canClean){ var _b=(projectRaid||[]).length; projectRaid=(projectRaid||[]).filter(function(x){return x&&(x.title||'').trim();}); if((projectRaid||[]).length!==_b && typeof _raidSave==='function')_raidSave(); } }catch(e){} const m=document.getElementById('raidModal'); if(m)m.classList.add('hidden'); if(typeof syncBodyScrollLock==='function')syncBodyScrollLock(); }
     function _feedbackSave(){ try{ storage.set('gantt_project_feedback', JSON.stringify(projectFeedback)); }catch(e){} if(typeof persistProjectState==='function')persistProjectState(); if(typeof scheduleAutoSaveFile==='function')scheduleAutoSaveFile(); }
     function importFeedbackCsv(){ if(_goalsRO())return; const inp=document.createElement('input'); inp.type='file'; inp.accept='.csv,text/csv,text/plain'; inp.onchange=function(){ const f=inp.files&&inp.files[0]; if(!f)return; const rd=new FileReader(); rd.onload=function(){ try{ _parseFeedbackCsv(String(rd.result||'')); }catch(e){ if(typeof showToast==='function')showToast('Не удалось разобрать CSV','error',3000); } }; rd.readAsText(f); }; inp.click(); }
@@ -20261,6 +20426,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function _copyInsights(){ var t=window.__insightsText||''; if(!t)return; var done=function(){ if(typeof showToast==='function') showToast('Инсайты скопированы','ok'); }; try{ if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done).catch(function(){ if(typeof fallbackCopy==='function')fallbackCopy(t,done); }); else if(typeof fallbackCopy==='function') fallbackCopy(t,done); }catch(e){} }
     function renderInsights(){
       const box=document.getElementById('insightsModalBody'); if(!box)return;
+      const feedbackOpen=!!box.querySelector('[data-support-section="feedback"][open]');
       const esc=(typeof escHtml==='function')?escHtml:(x=>String(x==null?'':x));
       const tasks=(typeof roadmapData!=='undefined'?roadmapData:[]).filter(t=>t&&!t.isMilestone);
       const total=tasks.length;
@@ -20319,6 +20485,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       window.__insightsText=_insL.join('\n');
       const _insCopyBtn='<div class="pt-2 flex justify-end no-image-export"><button type="button" onclick="_copyInsights()" class="inline-flex items-center gap-1.5 h-8 px-3 bg-white hover:bg-slate-100 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 cursor-pointer transition-colors"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>Скопировать как текст</button></div>';
       box.innerHTML = kpi + (mix?('<div class="pt-1">'+mix+'</div>'):'') + (strat?('<div class="pt-1">'+strat+'</div>'):'') + (risk?('<div class="pt-1">'+risk+'</div>'):'') + '<div class="pt-1">'+sigHtml+'</div>' + '<div class="pt-1">'+fbHtml+'</div>' + _insCopyBtn;
+      _groupSupportBlock(box.lastElementChild.previousElementSibling,'feedback','Фидбэк пользователей','Тем: '+fb.length,feedbackOpen);
     }
     function addRaid(type){ if(_goalsRO())return; const at=(typeof toYmdLocal==='function'&&typeof CURRENT_DATE!=='undefined'&&CURRENT_DATE)?toYmdLocal(CURRENT_DATE):''; const id=_goalsNewId('r'); projectRaid.push({id:id, type:type, title:'', sev:'med', status:'open', owner:'', note:'', initiativeId:'', at:at}); _raidSave(); renderRaidList(); const inp=document.getElementById('raidTitle_'+id); if(inp){ try{ inp.focus(); }catch(e){} } }
     function deleteRaid(id){ if(_goalsRO())return; const snap=(typeof captureUndoState==='function')?captureUndoState():null; projectRaid=projectRaid.filter(x=>x&&x.id!==id); _raidSave(); renderRaidList(); if(snap&&typeof offerUndo==='function')offerUndo('Запись риска удалена',snap); }
@@ -20374,6 +20541,17 @@ let resourceView = 'roles'; // 'roles' | 'load'
     function renameGoal(id,field,val){ if(_goalsRO())return; const g=projectGoals.find(x=>x.id===id); if(g){ g[field]=String(val||'').trim(); _goalsSave(); } }
     function addInitiative(goalId){ if(_goalsRO())return; const inp=document.getElementById('newInit_'+goalId); const v=((inp&&inp.value)||'').trim(); if(!v)return; projectInitiatives.push({id:_goalsNewId('i'),name:v,goalId:goalId}); _goalsSave(); renderGoalsList(); const ni=document.getElementById('newInit_'+goalId); if(ni)ni.focus(); }
     function deleteInitiative(id){ if(_goalsRO())return; const snap=(typeof captureUndoState==='function')?captureUndoState():null; (roadmapData||[]).forEach(t=>{ if(t&&t.initiativeId===id) t.initiativeId=''; }); projectInitiatives=projectInitiatives.filter(i=>i.id!==id); _goalsSave(); renderGoalsList(); if(snap&&typeof offerUndo==='function')offerUndo('Инициатива удалена',snap); }
+    function setInitiativeHorizon(id, value) {
+      if (_goalsRO() || !['', 'now', 'next', 'later'].includes(value)) return;
+      const item = projectInitiatives.find(it => it && it.id === id);
+      if (!item || (item.nnl || '') === value) return;
+      const snapshot = captureUndoState();
+      item.nnl = value;
+      _goalsSave();
+      renderGoalsList();
+      renderRoadmap();
+      offerUndo('Горизонт инициативы изменен', snapshot);
+    }
     function renameInitiative(id,val){ if(_goalsRO())return; const it=projectInitiatives.find(x=>x.id===id); if(it){ it.name=String(val||'').trim(); _goalsSave(); } }
     function _gnum(v){ const n=parseFloat(String(v==null?'':v).replace(',','.')); return isFinite(n)?n:null; }
     function goalCur(g){ const cs=(g&&g.checkins)||[]; if(cs.length) return _gnum(cs[cs.length-1].value); return _gnum(g&&g.base); }
@@ -20570,7 +20748,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         const metric = ro
           ? ((_mb!=null&&_mt!=null)?`<div class="mt-2 rounded-lg bg-slate-50 border border-slate-200 p-2 flex items-center gap-2 flex-wrap">${metricInfo}</div>`:'')
           : `<div class="mt-2 rounded-lg bg-slate-50 border border-slate-200 p-2"><div class="flex items-center gap-1.5 flex-wrap"><span class="text-[10px] uppercase tracking-wider text-slate-400 shrink-0">Метрика</span><span class="text-[10px] text-slate-400 shrink-0">с</span><input type="text" value="${escAttr(g.base!=null?g.base:'')}" onchange="renameGoal('${g.id}','base',this.value)" placeholder="база" aria-label="База метрики" title="Базовое значение" class="w-16 h-8 px-2 bg-white border border-slate-200 rounded-lg text-xs text-right tabular-nums focus:outline-none focus:border-indigo-500"><span class="text-slate-400 text-xs">до</span><input type="text" value="${escAttr(g.target!=null?g.target:'')}" onchange="renameGoal('${g.id}','target',this.value)" placeholder="цель" aria-label="Целевое значение метрики" title="Целевое значение" class="w-16 h-8 px-2 bg-white border border-slate-200 rounded-lg text-xs text-right tabular-nums focus:outline-none focus:border-indigo-500"><input type="text" value="${escAttr(g.unit||'')}" onchange="renameGoal('${g.id}','unit',this.value)" placeholder="ед." aria-label="Единица измерения" title="Единица: %, руб, шт" class="w-14 h-8 px-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500"><select onchange="renameGoal('${g.id}','dir',this.value)" title="Направление роста метрики" class="h-8 px-1.5 bg-white border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none focus:border-indigo-500 cursor-pointer"><option value="up"${_dirUp?' selected':''}>растет</option><option value="down"${!_dirUp?' selected':''}>падает</option></select><button type="button" onclick="addCheckin('${g.id}')" class="h-8 px-2.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-indigo-600 hover:bg-indigo-50 cursor-pointer shrink-0" title="Записать текущее значение метрики на сегодня — построится динамика">Записать замер</button></div><div class="flex items-center gap-2 flex-wrap mt-1.5">${metricInfo}</div></div>`;
-        const initRows = inits.map(it=>`<div class="flex items-center gap-2 mt-1.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0"></span><input type="text" value="${escAttr(it.name)}" ${ro?'disabled':`onchange="renameInitiative('${it.id}',this.value)"`} class="grow h-8 px-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500">${(function(){const st=_stat(it.id);return st.n?`<span class="shrink-0 inline-flex items-center gap-1 text-[10px] tabular-nums text-slate-500 whitespace-nowrap" title="${st.n} задач, ${st.pct}% готово"><span class="w-10 h-1.5 rounded-full bg-slate-100 overflow-hidden inline-block"><span class="block h-full bg-emerald-500" style="width:${st.pct}%"></span></span>${st.n} зд</span>`:'<span class="shrink-0 text-[10px] text-slate-400 whitespace-nowrap">нет задач</span>';})()}${ro?'':`<button type="button" onclick="deleteInitiative('${it.id}')" aria-label="Удалить инициативу" class="text-slate-400 hover:text-rose-600 p-1 cursor-pointer shrink-0"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>`}</div>`).join('');
+        const initRows = inits.map(it=>`<div class="goal-initiative-row flex flex-wrap items-center gap-2 mt-1.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0"></span><input type="text" value="${escAttr(it.name)}" aria-label="Название инициативы" ${ro?'disabled':`onchange="renameInitiative('${it.id}',this.value)"`} class="goal-initiative-name grow min-w-0 h-8 px-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500"><select class="rm-input" aria-label="Горизонт инициативы: ${escAttr(it.name)}" ${ro?'disabled':`onchange="setInitiativeHorizon('${it.id}',this.value)"`}>${[['','Без горизонта'],['now','Сейчас'],['next','Далее'],['later','Потом']].map(([value,label])=>`<option value="${value}"${(it.nnl||'')===value?' selected':''}>${label}</option>`).join('')}</select>${(function(){const st=_stat(it.id);return st.n?`<span class="shrink-0 inline-flex items-center gap-1 text-[10px] tabular-nums text-slate-500 whitespace-nowrap" title="${st.n} задач, ${st.pct}% готово"><span class="w-10 h-1.5 rounded-full bg-slate-100 overflow-hidden inline-block"><span class="block h-full bg-emerald-500" style="width:${st.pct}%"></span></span>${st.n} зд</span>`:'<span class="shrink-0 text-[10px] text-slate-400 whitespace-nowrap">нет задач</span>';})()}${ro?'':`<button type="button" onclick="deleteInitiative('${it.id}')" aria-label="Удалить инициативу" class="text-slate-400 hover:text-rose-600 p-1 cursor-pointer shrink-0"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>`}</div>`).join('');
         const addInit = ro?'':`<div class="flex items-center gap-2 mt-2"><input type="text" id="newInit_${g.id}" placeholder="Добавить инициативу" onkeydown="if(event.key==='Enter')addInitiative('${g.id}')" class="grow h-8 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500"><button type="button" onclick="addInitiative('${g.id}')" class="h-8 px-2.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 cursor-pointer shrink-0">Добавить</button></div>`;
         return `<div class="bg-white rounded-xl border border-slate-200 shadow-sm p-3"><div class="flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v16l7-4 7 4V3z"></path></svg></span><input type="text" value="${escAttr(g.name)}" ${ro?'disabled':`onchange="renameGoal('${g.id}','name',this.value)"`} placeholder="Цель (бизнес-результат)" class="grow h-9 px-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-800 focus:outline-none focus:border-indigo-500">${goalRoll}${ro?'':`<button type="button" onclick="deleteGoal('${g.id}')" aria-label="Удалить цель" class="text-slate-400 hover:text-rose-600 p-1.5 cursor-pointer shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>`}</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2"><input type="text" value="${escAttr(g.owner||'')}" ${ro?'disabled':`onchange="renameGoal('${g.id}','owner',this.value)"`} placeholder="Владелец цели" class="h-8 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none focus:border-indigo-500"><input type="text" value="${escAttr(g.horizon||'')}" ${ro?'disabled':`onchange="renameGoal('${g.id}','horizon',this.value)"`} placeholder="Период, напр. 2026 Q3" class="h-8 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none focus:border-indigo-500"></div>${metric}<div class="mt-2.5 pl-2 border-l-2 border-indigo-100">${inits.length?'<div class="text-[10px] text-slate-400 uppercase tracking-wider mb-0.5">Инициативы</div>':''}${initRows}${addInit}</div></div>`;
       }).join('');
@@ -21258,7 +21436,7 @@ const m = document.getElementById('mineModeBtn');
       const n = selectedTaskIds.size;
       if (selectMode && n > 0) {
         document.getElementById('bulkCount').textContent = n;
-        document.getElementById('bulkStatusSel').innerHTML = '<option value="">Статус…</option>' + projectStatuses.map(s => `<option value="${escAttr(s.id)}">${escHtml(s.name)}</option>`).join('');
+        document.getElementById('bulkStatusSel').innerHTML = '<option value="">Статус…</option>' + getDisplayStatuses().map(s => `<option value="${escAttr(s.id)}">${escHtml(s.name)}</option>`).join('');
         document.getElementById('bulkSectionSel').innerHTML = '<option value="">В секцию…</option>' + taskTargetSections().map(s => `<option value="${escAttr(s)}">${escHtml(s)}</option>`).join('');
         bar.classList.remove('hidden');
       } else { bar.classList.add('hidden'); if (typeof closeBulkPopover === 'function') closeBulkPopover(); }
@@ -21743,9 +21921,9 @@ const m = document.getElementById('mineModeBtn');
       const log = (task && task.history) || [];
       if (!log.length) { el.innerHTML = `<div class="text-[10px] text-slate-500 italic mb-1.5">Изменений полей пока нет</div>${_auditAuthorBar()}`; return; }
       el.innerHTML = log.slice().reverse().slice(0, 30).map(e => {
-        const ov = e.old ? escHtml(String(e.old).slice(0, 30)) : 'пусто';
-        const nv = e.new ? escHtml(String(e.new).slice(0, 30)) : 'пусто';
-        const meta = escHtml(e.at) + (e.time ? ' ' + escHtml(e.time) : '');
+        const value = v => v == null || v === '' ? 'пусто' : escHtml(/^\d{4}-\d{2}-\d{2}$/.test(String(v)) ? formatDateString(v) : String(v).slice(0, 30));
+        const ov = value(e.old), nv = value(e.new);
+        const meta = escHtml(formatDateString(e.at)) + (e.time ? ' ' + escHtml(e.time) : '');
         const by = e.by ? `<span class="text-slate-400 shrink-0 ml-auto pl-1.5" title="Автор">${escHtml(String(e.by).slice(0, 24))}</span>` : '';
         return `<div class="flex items-start gap-1.5 text-[10px]"><span class="text-slate-500 tabular-nums shrink-0">${meta}</span><span class="font-medium text-slate-600 shrink-0">${escHtml(e.field)}:</span><span class="text-slate-500 min-w-0">${ov} → <span class="text-slate-700">${nv}</span></span>${by}</div>`;
       }).join('') + (log.length > 30 ? '<div class="text-[10px] text-slate-400 italic mt-1">Показаны последние 30 из ' + log.length + '. Полная история — в выгрузке CSV.</div>' : '') + `<div class="mt-1.5 pt-1.5 border-t border-slate-100">${_auditAuthorBar()}</div>`;
@@ -24341,6 +24519,8 @@ const m = document.getElementById('mineModeBtn');
       try { storage.set('gantt_report_apply_filters', _reportApplyFilters ? '1' : '0'); } catch (e) {}
       try { const _pc = document.getElementById('periodCompareBlock'); if (_pc) _pc.innerHTML = buildPeriodCompareHtml(); } catch (e) {}
       if (typeof renderReleaseProgress === 'function') { try { renderReleaseProgress(); } catch (e) {} }
+      const report = document.getElementById('reportModal');
+      if (report && !report.classList.contains('hidden') && document.getElementById('reportFrom')?.value && document.getElementById('reportTo')?.value) generateReport();
     }
     function _reportFilterToggleHtml() {
       return '<label class="flex items-center gap-2 mb-3 text-xs text-slate-600 cursor-pointer select-none"><input type="checkbox" ' + (_reportApplyFilters ? 'checked' : '') + ' onchange="_setReportApplyFilters(this.checked)" class="accent-indigo-600 rounded"><span>Учитывать активные фильтры списка (секция, исполнитель, метка и другие)</span></label>';
@@ -24570,6 +24750,7 @@ const m = document.getElementById('mineModeBtn');
       let tasks = pool.filter(t => !t.isMilestone && (projectVal === 'all' || extractProjectKey(t.jira) === projectVal));
       // S1: дополнительно сужаем по выбранным секциям и исполнителю (по умолчанию , все)
       tasks = _applyReportScope(tasks, scope);
+      if (typeof _reportApplyFilters !== 'undefined' && _reportApplyFilters) tasks = tasks.filter(t => taskPassesFilters(t));
       const srcTag = t => t._src === 'archive' ? ' · из архива' : (t.hidden ? ' · скрыта' : '');
       // Каждая задача попадает только в одну группу. Приоритет: Сделали -> Эскалация -> Следующая неделя -> В работе.
       const uid = t => t.jira ? ('J:' + String(t.jira).trim().toLowerCase()) : ('#' + t.id);
@@ -24665,7 +24846,7 @@ const m = document.getElementById('mineModeBtn');
 
       // Сборка текста , все 4 группы показываем всегда, пустую помечаем «нет изменений»
       const lines = [];
-      lines.push(`Итоги недели ${formatRuDateRange(fromStr, toStr)} по ${title}.`);
+      lines.push(`Итоги периода ${formatRuDateRange(fromStr, toStr)} по ${title}.`);
       lines.push('');
       const noChange = '- нет изменений';
 
@@ -25618,6 +25799,12 @@ const m = document.getElementById('mineModeBtn');
         else if (typeof fallbackCopy === 'function') fallbackCopy(text, done); else done();
       } catch (e) { if (typeof fallbackCopy === 'function') fallbackCopy(text, done); }
     }
+    function showEpicTasksOnPlan() {
+      const name = _epicCardCtx && _epicCardCtx.name; if (!name) return;
+      closeEpicCard();
+      _globalSearchTasksInSectionTree(name).filter(t=>!t.hidden).forEach(t=>_globalSearchExpandSectionPath(t.section));
+      _globalSearchRevealSection(name);
+    }
     function openEpicCard(sectionName) {
       const name = String(sectionName || '');
       if (!planSections.includes(name) && !(hiddenSections || []).includes(name)) return;
@@ -25652,6 +25839,7 @@ const m = document.getElementById('mineModeBtn');
       if (est > 0) { const _r = Math.round(est * 10) / 10; sumHtml += `<span data-feat="estimates">${chip('Сумма оценок', (_r % 1 === 0 ? String(Math.round(_r)) : _r.toFixed(1)) + ' дн', 'Сумма оценок задач секции в днях')}</span>`; }
       sumHtml += chip('Сроки', (minS || maxE) ? (formatDateString(minS || maxE) + ' → ' + formatDateString(maxE || minS)) : 'без дат', 'Самый ранний старт и самое позднее окончание задач секции');
       if (cost > 0) sumHtml += `<span data-feat="money">${chip('Стоимость', fmtMoney(cost), 'Сумма стоимости задач секции (по ставкам и фикс-стоимости)')}</span>`;
+      sumHtml += '<button type="button" class="rm-btn rm-btn-secondary" onclick="showEpicTasksOnPlan()">Показать на плане, включая вложенные разделы</button>';
       const sw = document.getElementById('epicCardSummary'); if (sw) sw.innerHTML = sumHtml;
       // Связи эпика: что блокирует, что блокирует он, вложенность , кликабельно
       (function () {
@@ -26298,7 +26486,15 @@ const m = document.getElementById('mineModeBtn');
       var m = document.getElementById('planToolModal'); if (m) { m.classList.remove('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
     }
     function closePlanTool() { _schedulePreview = null; var m = document.getElementById('planToolModal'); if (m) m.classList.add('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
-    function _ptGoTask(id) { closePlanTool(); if (typeof openTaskById === 'function') openTaskById(id); else if (typeof scrollToTask === 'function') scrollToTask(id); }
+    function _ptGoTask(id) {
+      const go = () => { closePlanTool(); if (typeof openTaskById === 'function') openTaskById(id); else if (typeof scrollToTask === 'function') scrollToTask(id); };
+      const card = document.getElementById('taskModal');
+      if (card && !card.classList.contains('hidden') && _taskDirty && !READ_ONLY_MODE) {
+        openConfirm({title:'Несохраненные изменения',desc:'В карточке есть несохраненные изменения. Перейти к другой задаче без сохранения?',onOk:()=>{_taskDirty=false;go();}});
+        return;
+      }
+      go();
+    }
 
     // ===================== Пункт 7: Проверка правдоподобности плана =====================
     function _pcName(t) { return (t && t.name) ? t.name : '(без названия)'; }
@@ -26496,6 +26692,12 @@ const m = document.getElementById('mineModeBtn');
     }
 
     // ===================== Пункт 5: Что потянет за собой отрез =====================
+    function showTaskCutImpact() {
+      const id = String(document.getElementById('taskId')?.value || '');
+      const task = (roadmapData||[]).find(t=>String(t.id)===id && !t.isMilestone);
+      if (!task) { showToast('Анализ доступен для сохраненной задачи активного плана', 'info'); return; }
+      showCutImpact(task.id);
+    }
     function showCutImpact(id) {
       var t = (roadmapData || []).find(function (x) { return x.id === id; }); if (!t) return;
       var deps = _cutDependents(id);
@@ -26562,7 +26764,7 @@ const m = document.getElementById('mineModeBtn');
       var tasks = (roadmapData || []).filter(function (t) { return t && !t.isMilestone; });
       var total = tasks.length;
       var done = tasks.filter(function (t) { return isFinalStatus(t.status); }).length;
-      var working = tasks.filter(function (t) { return ['in_progress', 'review', 'testing', 'ready_release'].indexOf(t.status) >= 0; }).length;
+      var working = tasks.filter(function (t) { return isActiveStatus(t.status); }).length;
       var queued = Math.max(0, total - done - working);
       var pct = total ? Math.round(done / total * 100) : 0;
       var today = toYmdLocal(CURRENT_DATE || new Date());
@@ -26772,6 +26974,10 @@ const m = document.getElementById('mineModeBtn');
 
     function _workingExportScope(kind) {
       const all = (roadmapData || []).filter(Boolean);
+      if (kind === 'slide') {
+        const candidates = all.filter(t => !t.hidden && taskPassesFilters(t));
+        return 'PNG 16:9: компактный снимок видимой области плана, не выбранного набора встречи. Активные фильтры и положение таймлайна сохраняются. Под фильтры попадает задач: '+candidates.filter(t=>!t.isMilestone).length+', вех: '+candidates.filter(t=>t.isMilestone).length+'. В кадр войдет только видимая область. Имена исполнителей и внутренние задачи не обезличиваются. Перед отправкой проверьте изображение.';
+      }
       const excludesHidden = kind === 'xlsx' || kind === 'deck';
       const tasks = all.filter(t => !t.isMilestone && (!excludesHidden || !t.hidden));
       const hidden = tasks.filter(t => t.hidden).length;
@@ -26785,11 +26991,11 @@ const m = document.getElementById('mineModeBtn');
         + (kind === 'deck' ? ' Слайд «Загрузка команды» содержит имена исполнителей; состав других слайдов зависит от раздела плана.' : '');
     }
     function _confirmWorkingExport(kind, consent, proceed) {
-      const signature = _versionSig(captureUndoState());
+      const signature = _versionSig(captureUndoState()) + (kind === 'slide' ? '|' + JSON.stringify([(roadmapData||[]).filter(t=>!t.hidden&&taskPassesFilters(t)).map(t=>t.id),document.querySelector('.timeline-scroll')?.scrollLeft,document.querySelector('.timeline-scroll')?.clientWidth]) : '');
       if (consent === signature) return true;
       openConfirm({title:'Проверьте состав материала',
         desc:_workingExportScope(kind) + (kind === 'print' || kind === 'deck' ? ' Откроется окно печати: выберите «Сохранить как PDF».' : ''),
-        okText:kind === 'copy' ? 'Скопировать' : kind === 'xlsx' ? 'Скачать XLSX' : 'Открыть печать',
+        okText:kind === 'copy' ? 'Скопировать' : kind === 'xlsx' ? 'Скачать XLSX' : kind === 'slide' ? 'Создать PNG' : 'Открыть печать',
         onOk:() => proceed(signature)});
       return false;
     }
@@ -29558,7 +29764,7 @@ const m = document.getElementById('mineModeBtn');
     function renderPresent() {
       var v = document.getElementById('presentView'); if (!v) return;
       var ro = _presRo();
-      var head = '<div class="px-4 py-3 border-b border-slate-200 bg-white shrink-0"><h2 class="text-base font-semibold text-slate-800">Для встречи</h2></div>';
+      var head = '<div class="px-4 py-3 border-b border-slate-200 bg-white shrink-0"><h2 class="text-base font-semibold text-slate-800">Встреча</h2></div>';
       var choices = _meetingChoicesHtml();
       var formats = _meetingOtherFormatsHtml();
       if (_meetingContent !== 'plan') {
@@ -30327,10 +30533,11 @@ const m = document.getElementById('mineModeBtn');
       var extraTiles = _tcfg.order.filter(function (key) { return _tcfg.hidden.indexOf(key) < 0 && tileMap[key]; }).map(function (key) { return tileMap[key]; });
       var head = '<div class="px-4 py-3 border-b border-slate-200 bg-white shrink-0 flex items-center justify-between gap-3 flex-wrap no-print no-image-export"><span class="inline-flex items-center gap-2 text-base font-semibold text-slate-800"><svg aria-hidden="true" class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h7v7H4zM13 5h7v4h-7zM13 11h7v8h-7zM4 14h7v5H4z"></path></svg>Сводка</span>'
         + '<span class="inline-flex items-center gap-1.5 shrink-0 ml-auto"><button onclick="printSummaryPage()" title="Собрать сводку на одну страницу A4" class="inline-flex items-center px-3 rounded-xl border border-slate-200 bg-white font-medium text-slate-700 hover:bg-slate-100 cursor-pointer">PDF</button><button onclick="copySummaryText()" title="Скопировать сводку для чата или письма" class="inline-flex items-center px-3 rounded-xl border border-slate-200 bg-white font-medium text-slate-700 hover:bg-slate-100 cursor-pointer">Копировать</button></span>'
+        + '<button type="button" id="summaryDigestBtn" class="rm-btn rm-btn-secondary" onclick="openPlanDigest()">Дайджест</button>'
         + ((typeof _viewSwitcherBtnHtml === 'function') ? _viewSwitcherBtnHtml() : '') + '</div>';
       var more = '<details id="summaryMoreMetrics" data-summary-more class="mt-4 rounded-2xl border border-slate-200 bg-white overflow-hidden"><summary class="min-h-11 px-4 py-3 flex items-center justify-between gap-3 cursor-pointer font-semibold text-slate-800"><span>Ещё показатели</span><span class="text-xs font-normal text-slate-500">' + extraTiles.length + '</span></summary><div class="border-t border-slate-200 p-3"><div class="flex justify-end mb-3"><button type="button" onclick="event.preventDefault();_sumTilesMenu()" class="px-3 rounded-xl border border-slate-200 bg-slate-50 font-medium text-slate-700">Настроить</button></div><section data-summary-extra class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 w-full">' + extraTiles.join('') + '</section></div></details>';
       var note = '<div class="text-xs text-slate-500 mt-3">' + (_fltOn ? 'Фильтры шапки применены к показателям с меткой «Текущий срез». <button onclick="resetAllFilters()" class="underline font-semibold cursor-pointer text-indigo-600">Сбросить фильтры</button>. ' : '') + 'Главные ответы всегда видны; дополнительные показатели можно настроить.</div>';
-      v.innerHTML = head + '<div class="p-4 grow overflow-auto"><section data-summary-primary aria-label="Главное о плане" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 w-full">' + primaryTiles.join('') + '</section>' + _progressTrendsHtml() + more + note + '</div>';
+      v.innerHTML = head + '<div class="p-4 grow overflow-auto"><section data-summary-primary aria-label="Главное о плане" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 w-full">' + primaryTiles.join('') + '</section>' + '<p class="text-xs text-slate-500 mt-3">Состав PDF и текста: готовность, просрочка, перегруз, полнота данных, недельная готовность и прогноз по темпу. Дополнительные плитки не выгружаются.</p>' + _progressTrendsHtml() + more + note + '</div>';
     }
     function applyAppView() {
       document.body.setAttribute('data-app-view', appView);
@@ -30369,13 +30576,14 @@ const m = document.getElementById('mineModeBtn');
       if (typeof requireUnlocked === 'function' && !requireUnlocked()) return;
       const t = (roadmapData || []).find(x => x && x.id === id); if (!t || t.status === statusId) return;
       const snap = (typeof captureUndoState === 'function') ? captureUndoState() : null;
-      const oldStatus = t.status;
+      const focusInline = typeof document !== 'undefined' && document.activeElement?.dataset?.kanbanStatus === String(id);
       if (typeof logStatusChange === 'function') { try { logStatusChange(t, statusId); } catch (x) {} }
       t.status = statusId;
       t.updated = toYmdLocal(CURRENT_DATE || new Date());
       if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile();
       if (typeof persistProjectState === 'function') persistProjectState();
       if (typeof renderRoadmap === 'function') renderRoadmap(true); else renderKanban();
+      if (focusInline) requestAnimationFrame(() => { const control = Array.from(document.querySelectorAll('[data-kanban-status]')).find(el => el.dataset.kanbanStatus === String(id)); control?.focus(); });
       const stName = ((projectStatuses || []).find(x => x.id === statusId) || {}).name || statusId;
       if (snap && typeof offerUndo === 'function') offerUndo('Статус: ' + (t.name || '').slice(0, 28) + ' → ' + stName, snap);
       else if (typeof showToast === 'function') showToast('Статус изменен на «' + stName + '»', 'ok', 2500);
@@ -30417,12 +30625,14 @@ const m = document.getElementById('mineModeBtn');
       try { if (typeof _parViolIds !== 'undefined' && _parViolIds && _parViolIds.has && _parViolIds.has(t.id)) _risk.push('<span title="Перегруз: у исполнителя больше параллельных задач, чем разрешено" class="inline-block w-2 h-2 rounded-full bg-pink-500 shrink-0 mt-1.5"></span>'); } catch (e) {}
       try { if (typeof _taskLeaveConflict === 'function' && _taskLeaveConflict(t)) _risk.push('<span title="Пересекается с отпуском исполнителя" class="inline-block w-2 h-2 rounded-full bg-amber-500 shrink-0 mt-1.5"></span>'); } catch (e) {}
       const riskHtml = _risk.length ? `<span class="inline-flex items-center gap-1 shrink-0 mt-0.5">${_risk.join('')}</span>` : '';
+      const statusControl = ro ? '' : `<select data-kanban-status="${t.id}" aria-label="Статус задачи: ${escAttr(t.name||'Без названия')}" class="mt-2 w-full rm-input" onclick="event.stopPropagation()" onpointerdown="event.stopPropagation()" onkeydown="event.stopPropagation()" onchange="event.stopPropagation();_kanbanSetStatus(${t.id},this.value)">${(displayStatuses||getDisplayStatuses()).map(s=>`<option value="${escAttr(s.id)}"${s.id===t.status?' selected':''}>${escHtml(s.name)}</option>`).join('')}</select>`;
       return `<div aria-label="${escAttr((t.name || 'Без названия') + '. Статус: ' + statusName)}" ${dragAttrs} onclick="openTaskById(${t.id})" tabindex="0" role="button" onkeydown="if(event.target!==event.currentTarget)return;if(event.key==='Enter'||event.key===' '){event.preventDefault();openTaskById(${t.id});}" class="kanban-card bg-white rounded-lg border border-slate-200 ${blocked ? 'border-l-2 border-l-rose-400' : ''} p-2.5 shadow-2xs hover:border-indigo-300 hover:shadow-sm cursor-pointer transition-all ${ro ? '' : 'active:cursor-grabbing'}">
         <div class="flex items-start gap-1.5">${kd}<div class="text-xs font-medium text-slate-800 leading-snug grow min-w-0">${escHtml(t.name || 'Без названия')}</div>${riskHtml}${blockBadge}</div>
         ${sec}
         <div class="mt-1"><span class="inline-flex px-1.5 py-0.5 rounded text-[10px] font-medium ${jiraTypeBadgeClass(taskTypeLabel(t))}">${escHtml(taskTypeLabel(t))}</span></div>
         <div class="flex items-center justify-between gap-2 mt-1.5">${res}<span class="text-[10px] tabular-nums ${overdue ? 'text-rose-600 font-semibold' : 'text-slate-500'}">${escHtml(dt)}</span></div>
         ${key ? `<div class="text-[10px] font-mono text-slate-400 mt-1">${escHtml(key)}</div>` : ''}
+        ${statusControl}
       </div>`;
     }
     function _kanbanUrgencySort(a, b) {
@@ -30676,7 +30886,7 @@ const m = document.getElementById('mineModeBtn');
     function _wbRenderPickerList() {
       const el=document.getElementById('wbPickerList');if(!el)return;
       const q=_wbUi.query.trim().toLocaleLowerCase('ru'),added=new Set(whiteboard.nodes.filter(n=>n.type==='task').map(n=>n.taskId));
-      const candidates=(roadmapData||[]).filter(t=>t&&!t.hidden&&!t.isMilestone&&taskPassesFilters(t,{ignoreBoard:true})&&(!q||(String(t.name)+' '+getTaskKey(t)).toLocaleLowerCase('ru').includes(q)));
+      const candidates=(roadmapData||[]).filter(t=>t&&!t.hidden&&!t.isMilestone&&taskPassesFilters(t,{ignoreBoard:true})&&(!q||[t.name,getTaskKey(t),t.resource,t.section,t.sprint,t.release,...(Array.isArray(t.labels)?t.labels:[])].filter(Boolean).join(' ').toLocaleLowerCase('ru').includes(q)));
       const tasks=candidates.filter(t=>_taskMatchesBoardFilter(t,_wbUi.taskFilter,added));
       document.querySelectorAll('[data-wb-membership]').forEach(button=>{
         const mode=button.dataset.wbMembership,label=mode==='on'?'На доске':mode==='off'?'Не на доске':'Все';
@@ -36541,6 +36751,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (typeof renderJiraSyncChip === 'function') renderJiraSyncChip();
       if (typeof renderJiraChangesChip === 'function') renderJiraChangesChip();
       if (typeof renderDataMenuJiraDate === 'function') renderDataMenuJiraDate();
+      return true;
     }
 
     // ===== Импорт из любого CSV (не Jira) с сопоставлением колонок (п.5) =====
@@ -37137,7 +37348,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       modal.querySelectorAll('[data-jira-scope]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.jiraScope === (all?'all':'review'))));
       modal.querySelector('#jiraPreviewScopeStatus').textContent = visible ? 'Показано строк: '+visible+'. Выбор остальных строк сохранен.' : 'Спорных изменений нет. Новые задачи доступны в полном списке и уже выбраны для добавления.';
     }
-    function closeJiraImportPreview(){const m=document.getElementById('jiraImportPreviewModal');const embedded=!!m?.dataset?.jiraWizardPreview;if(m)m.remove();if(embedded)jiraWizardSetStep(2);if(typeof syncBodyScrollLock==='function')syncBodyScrollLock();}
+    function closeJiraImportPreview(applied){const m=document.getElementById('jiraImportPreviewModal');const embedded=!!m?.dataset?.jiraWizardPreview;if(m)m.remove();if(embedded){if(applied===true)closeJiraSync();else jiraWizardSetStep(2);}if(typeof syncBodyScrollLock==='function')syncBodyScrollLock();}
     function applyJiraImportPreview(){
       return RoadmapModules.applyReviewedJiraImport({
         document, getRows: () => _jiraPreviewRows, _jiraPreviewKey, _jiraBuildImportPreviewRows,
@@ -38431,6 +38642,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     // Закрытие открытой модалки по Esc + блокировка скролла body, пока что-то открыто
     const MODAL_CLOSERS = {
       calendarExportModal: closeCalendarExport,
+      jiraDifferencesModal: closeJiraDifferences,
+      planDigestModal: closePlanDigest,
       workTemplatesModal: closeWorkTemplates,
       protectionHelpModal: function(){ if(typeof closeProtectionHelp==='function')closeProtectionHelp(); },
       materialPreparationModal: function(){ if(typeof closeMaterialPreparation==='function')closeMaterialPreparation(); },
@@ -38665,6 +38878,7 @@ function syncBodyScrollLock() {
     // === Доступность модалок: ловушка Tab + возврат фокуса на источник ===
     (function modalFocusA11y() {
       const MODAL_IDS = ['calendarExportModal', 'workTemplatesModal', 'protectionHelpModal','materialPreparationModal','shareCenterModal','roadmapLockerModal','taskModal','cutoffModal','sectionColorModal','statusModal','taskKindsModal','resourceModal','infoModal','reportModal','releaseProgressModal','quickAddModal','archiveModal','headerCutoffModal','jiraSyncModal','jiraChangesModal','jiraImportPreviewModal','backPlanModal','inputModal','startupModal','versionsModal','dataQualityModal','csvMapModal','resourceReplaceModal','duplicateModal','sectionNestModal','reportBuilderModal','moneyModal','customFieldsModal','settingsModal','epicCardModal','kanbanColsModal','goalsModal','raidModal','insightsModal','ganttLegend','depsOverview','sprintCfgModal','sectionInitOverlay','planToolModal','planBuilderPanel'];
+      MODAL_IDS.push('jiraDifferencesModal','planDigestModal');
       let lastFocus = null;
       const anyOpen = () => MODAL_IDS.some(id => { const e = document.getElementById(id); return e && !e.classList.contains('hidden'); });
       function topModalEl() {
@@ -38814,7 +39028,7 @@ function syncBodyScrollLock() {
   <div id="sectionColorModal" role="dialog" aria-modal="true" aria-label="Выбор цвета секции" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1000] flex items-center justify-center hidden p-4" data-modal-backdrop>
     <div class="bg-white rounded-2xl shadow-2xl border border-slate-200/60 w-full max-w-sm flex flex-col p-5 max-h-[80vh]">
       <div class="flex items-start justify-between gap-2 mb-4">
-        <h3 class="text-lg font-semibold text-slate-800" id="colorModalTitle"><span id="colorModalName">Цвет секции</span> <button type="button" tabindex="-1" class="ml-1 align-middle inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-help shrink-0" aria-label="Об этом окне" title="Цвет секции — им красятся бар задачи и полоса заголовка секции на диаграмме. Выберите готовый цвет или задайте свой, чтобы визуально разделить направления."><svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></button></h3>
+        <h3 class="text-lg font-semibold text-slate-800" id="colorModalTitle"><span id="colorModalName">Цвет секции</span> <button type="button" tabindex="-1" class="ml-1 align-middle inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-help shrink-0" aria-label="Об этом окне" title="Выберите цвет секции из палитры. Цвет полос задач зависит от переключателя «Цвет полосок по статусу»: выключен — цвет секции, включен — цвет статуса."><svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></button></h3>
         <button type="button" onclick="closeSectionColorModal()" aria-label="Закрыть" title="Закрыть" class="text-slate-500 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
       <div class="grid grid-cols-5 gap-2 mb-4" id="colorGrid">
@@ -39037,10 +39251,10 @@ function syncBodyScrollLock() {
       <div class="min-w-0">
         <div class="flex items-center gap-2">
           <span class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 012-2h2a2 2 0 012 2m-5 8l2 2 4-4"></path></svg></span>
-          <div><h2 id="planBuilderTitle" class="text-lg font-semibold text-slate-800 leading-tight">Собрать план</h2><p class="text-[11px] text-slate-500 mt-0.5">Семь шагов от цели до зафиксированной версии</p></div>
+          <div><h2 id="planBuilderTitle" class="text-lg font-semibold text-slate-800 leading-tight">Детали плана</h2><p class="text-[11px] text-slate-500 mt-0.5">Семь шагов от цели до зафиксированной версии</p></div>
         </div>
       </div>
-      <button type="button" onclick="closePlanBuilder()" class="rm-action rm-btn rm-btn-ghost rm-btn-icon w-9 h-9 text-slate-500 hover:bg-slate-100 shrink-0" aria-label="Закрыть мастер сборки плана"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+      <button type="button" onclick="closePlanBuilder()" class="rm-action rm-btn rm-btn-ghost rm-btn-icon w-9 h-9 text-slate-500 hover:bg-slate-100 shrink-0" aria-label="Закрыть детали плана"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
     </div>
     <div id="planBuilderProgress" class="px-4 py-3 border-b border-slate-100 flex gap-1.5 overflow-x-auto no-scrollbar shrink-0" role="list" aria-label="Шаги сборки плана"></div>
     <div id="planBuilderBody" class="p-5 overflow-y-auto grow min-h-0" aria-live="polite"></div>
@@ -39116,7 +39330,7 @@ function syncBodyScrollLock() {
     <div id="versionsContent" class="p-6 overflow-y-auto flex-1 min-h-0">
     <section id="portableSavePanel" class="hidden pb-4 mb-4 border-b border-slate-200" aria-labelledby="portableSaveTitle">
       <h4 id="portableSaveTitle" class="text-base font-semibold text-slate-800">Рабочий файл</h4>
-      <p class="mt-2 text-sm text-slate-600">Один HTML содержит программу, план, архив задач и статистику готовности. После правок сохраните его и переносите на другой компьютер именно эту копию.</p>
+      <p class="mt-2 text-sm text-slate-600">Один HTML содержит программу, план, архив задач, библиотеку шаблонов и статистику готовности. После правок сохраните его и переносите на другой компьютер именно эту копию.</p>
       <div class="flex flex-wrap gap-2 mt-3">
         <button type="button" data-portable-save onclick="saveWorkingHtml()" class="min-h-10 px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold">Сохранить рабочий файл</button>
         <button type="button" data-portable-save onclick="saveWorkingHtml(true)" class="min-h-10 px-4 py-2 rounded-lg border border-slate-200 bg-white text-slate-700 text-sm font-semibold">Скачать копию</button>
@@ -39165,7 +39379,7 @@ function syncBodyScrollLock() {
       <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
         <div class="flex items-center gap-2.5 min-w-0">
           <span class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v16l7-4 7 4V3z"></path></svg></span>
-          <div class="min-w-0 flex items-center gap-2"><span class="inline-flex items-center bg-slate-100 rounded-lg p-0.5"><button type="button" class="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-white text-indigo-700 shadow-sm cursor-default">Цели</button><button type="button" onclick="if(typeof featureFlags!=='undefined'&&featureFlags.raid===false){if(typeof showToast==='function')showToast('Модуль «Риски» выключен в Настройках','info',2500);return;} closeGoalsModal(); openRaidModal();" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-500 hover:text-slate-900 cursor-pointer">Риски</button></span><h3 class="text-lg font-semibold text-slate-800 leading-tight">Цели и инициативы</h3><p class="text-[10px] text-slate-500">Цель — бизнес-результат. Инициатива — крупный блок работ под цель. Задачи привязываются к инициативе в своей карточке (поле «Инициатива»).</p></div>
+          <div class="min-w-0 flex items-center gap-2"><span class="inline-flex items-center bg-slate-100 rounded-lg p-0.5"><button type="button" class="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-white text-indigo-700 shadow-sm cursor-default">Цели</button><button type="button" onclick="if(typeof featureFlags!=='undefined'&&featureFlags.raid===false){if(typeof showToast==='function')showToast('Модуль «Риски» выключен. Включить: Настройки → Функции','info',2500);return;} closeGoalsModal(); openRaidModal();" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-500 hover:text-slate-900 cursor-pointer">Риски</button></span><h3 class="text-lg font-semibold text-slate-800 leading-tight">Цели и инициативы</h3><p class="text-[10px] text-slate-500">Цель — бизнес-результат. Инициатива — крупный блок работ под цель. Задачи привязываются к инициативе в своей карточке (поле «Инициатива»).</p></div>
         </div>
         <button type="button" onclick="closeGoalsModal()" aria-label="Закрыть" title="Закрыть" class="text-slate-500 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
@@ -39181,7 +39395,7 @@ function syncBodyScrollLock() {
       <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
         <div class="flex items-center gap-2.5 min-w-0">
           <span class="w-9 h-9 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path></svg></span>
-          <div class="min-w-0 flex items-center gap-2"><span class="inline-flex items-center bg-slate-100 rounded-lg p-0.5"><button type="button" onclick="if(typeof featureFlags!=='undefined'&&featureFlags.goals===false){if(typeof showToast==='function')showToast('Модуль «Цели и инициативы» выключен в Настройках','info',2500);return;} closeRaidModal(); openGoalsModal();" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-500 hover:text-slate-900 cursor-pointer">Цели</button><button type="button" class="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-white text-indigo-700 shadow-sm cursor-default">Риски</button></span><h3 class="text-lg font-semibold text-slate-800 leading-tight">Риски</h3><p class="text-[10px] text-slate-500">Риски, Допущения, Проблемы, Зависимости: что может повлиять на цели и сроки.</p></div>
+          <div class="min-w-0 flex items-center gap-2"><span class="inline-flex items-center bg-slate-100 rounded-lg p-0.5"><button type="button" onclick="if(typeof featureFlags!=='undefined'&&featureFlags.goals===false){if(typeof showToast==='function')showToast('Модуль «Цели и инициативы» выключен. Включить: Настройки → Функции','info',2500);return;} closeRaidModal(); openGoalsModal();" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-500 hover:text-slate-900 cursor-pointer">Цели</button><button type="button" class="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-white text-indigo-700 shadow-sm cursor-default">Риски</button></span><h3 class="text-lg font-semibold text-slate-800 leading-tight">Риски</h3><p class="text-[10px] text-slate-500">Риски, Допущения, Проблемы, Зависимости: что может повлиять на цели и сроки.</p></div>
         </div>
         <button type="button" onclick="closeRaidModal()" aria-label="Закрыть" title="Закрыть" class="text-slate-500 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
@@ -39558,7 +39772,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v17.7 · 11.10.2026</span>
+     <span id="appVersionBadge">v17.8 · 11.10.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -39601,14 +39815,50 @@ function syncBodyScrollLock() {
      </button>
      <button type="button" onclick="closeInfoModal(); openOnboarding('plan');" class="flex items-start gap-2.5 bg-indigo-600 hover:bg-indigo-700 border border-indigo-600 rounded-xl px-3 py-2.5 text-left transition-colors cursor-pointer">
       <span class="w-8 h-8 rounded-lg bg-white/15 text-white flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></span>
-      <span class="min-w-0"><span class="block text-xs font-semibold text-white">Первый рабочий план</span><span class="block text-[10px] text-white leading-snug">Подготовить план, проверить сроки и собрать показ</span></span>
+      <span class="min-w-0"><span class="block text-xs font-semibold text-white">Первый рабочий план</span><span class="block text-[10px] text-white leading-snug">Подготовить план и проверить сроки</span></span>
      </button>
     </div>
    </div>
 
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.7</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.8</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="plan-digest" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 6h14M5 12h14M5 18h9"/></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Ближайшие дела одним списком</h5><span class="info-release-badge">Дайджест</span></div>
+      <p class="text-xs text-slate-600">Ближайшие задачи, просрочка, работа без дат и вехи. Откройте дайджест в сводке или рядом с нижней навигацией телефона.</p>
+     </article>
+     <article data-release-card="jira-differences" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 4L4 8l4 4M4 8h13M16 20l4-4-4-4M20 16H7"/></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Что изменилось после импорта</h5><span class="info-release-badge">Jira</span></div>
+      <p class="text-xs text-slate-600">Сравните статус, даты, исполнителя и Story Points с последним импортом Jira. Без отправки изменений на сервер.</p>
+     </article>
+     <article data-release-card="kanban-status" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5h14v14H5zM8 12l3 3 5-6"/></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Статус прямо в карточке</h5><span class="info-release-badge">Канбан</span></div>
+      <p class="text-xs text-slate-600">Выбирайте статус без перетаскивания. Массовая смена статуса тоже учитывает названия, загруженные из Jira.</p>
+     </article>
+     <article data-release-card="initiative-horizon" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h11M4 18h6"/></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Сейчас, далее или потом</h5><span class="info-release-badge">План</span></div>
+      <p class="text-xs text-slate-600">Выбирайте горизонт инициативы. В меню масштаба доступен весь план, а поиск задач учитывает спринт.</p>
+     </article>
+     <article data-release-card="working-materials" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 3h7l4 4v14H7zM14 3v5h5M10 12h5M10 16h5"/></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Понятный состав материала</h5><span class="info-release-badge">Выгрузки</span></div>
+      <p class="text-xs text-slate-600">Одно подтверждение перед готовым PDF, XLSX или обзорным PNG. Фильтры отчета за период учитываются и в тексте.</p>
+     </article>
+     <article data-release-card="leveling-calendar" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5h14v15H5zM8 3v4M16 3v4M5 10h14M8 14h3"/></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Переносы с учетом отпусков</h5><span class="info-release-badge">Команда</span></div>
+      <p class="text-xs text-slate-600">Выравнивание использует календарь исполнителя. Перед применением показывает итоговые даты, зависимости и риски.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.7</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="work-templates" class="info-release-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5h14v14H5zM8 9h8M8 13h5"/></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Шаблоны задач и секций</h5><span class="info-release-badge">Повторяемая работа</span></div>
@@ -39636,13 +39886,6 @@ function syncBodyScrollLock() {
      </article>
     </div>
    </div>
-
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.6</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -43282,6 +43525,7 @@ function syncBodyScrollLock() {
       <div class="flex items-center justify-between gap-3 mb-2">
        <h4 class="text-xs font-semibold text-slate-800">Состояние обмена</h4>
        <span id="jiraSummaryFreshness" class="text-[10px] font-medium text-slate-500">Еще не загружалось</span>
+       <button type="button" id="jiraDifferencesBtn" onclick="openJiraDifferences()" class="rm-btn rm-btn-secondary">Отличается от Jira</button>
       </div>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
        <div class="rounded-lg bg-white border border-slate-100 px-2.5 py-2"><div class="text-[10px] text-slate-500">Подключение</div><div id="jiraSummarySession" class="text-xs font-semibold text-slate-800 mt-0.5">Не настроено</div></div>
@@ -43338,7 +43582,7 @@ function syncBodyScrollLock() {
       <div class="flex flex-col sm:flex-row gap-2 pt-1">
        <button type="button" onclick="jiraOpenCsvExport()" class="grow inline-flex items-center justify-center gap-2 h-10 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition-all shadow-xs cursor-pointer">
         <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-        1) Открыть задачи в Jira
+        Открыть задачи в Jira
        </button>
        <button type="button" onclick="jiraTriggerCsvUpload()" class="inline-flex items-center justify-center gap-2 h-10 px-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl transition-all cursor-pointer">
         <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
@@ -43581,7 +43825,7 @@ function syncBodyScrollLock() {
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
             <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-600 bg-white border border-indigo-100 px-2 py-1 rounded-lg shadow-xs">
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-              <span id="appVersionStartup">версия 17.7</span>
+              <span id="appVersionStartup">версия 17.8</span>
             </span>
           </div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
@@ -43860,6 +44104,7 @@ function simplifyDataMenuInformationArchitecture() {
     menu.appendChild(jiraDate);
   }
   menu.appendChild(frequent);
+  var differences=document.createElement('button');differences.type='button';differences.className='rm-btn rm-btn-ghost w-full mt-2';differences.dataset.feat='jira';differences.textContent='Отличается от Jira';differences.setAttribute('onclick','openJiraDifferences()');menu.appendChild(differences);
   var extra = document.createElement('details');
   extra.setAttribute('data-data-menu-advanced','');
   extra.className = 'mt-3';
@@ -43916,7 +44161,7 @@ function simplifyPlanningInformationArchitecture() {
   var health = menu.querySelector('button[onclick*="openPlanHealthCenter"]');
   var jira = document.getElementById('planningJiraChanges');
   var find = function(name) { return buttons.find(function(b) { return (b.getAttribute('onclick') || '').indexOf(name) >= 0; }); };
-  var builder = find('openPlanBuilder'), team = find('openResourceModal'), refs = find('openStatusModal');
+  var builder = find('openPlanBuilder'), templates = find('openWorkTemplates'), team = find('openResourceModal'), refs = find('openStatusModal');
   var advanced = ['openMoneyModal','openGoalsModal'].map(find).filter(Boolean);
   var overviewHost = document.getElementById('planOverviewHost');
   menu.innerHTML = '';
@@ -43924,7 +44169,7 @@ function simplifyPlanningInformationArchitecture() {
   var intro = document.createElement('p'); intro.className = 'px-2 py-2 text-xs text-slate-500';
   intro.textContent = 'Настройка плана и команды. Проверки и сценарии собраны в разделе «Сроки и риски».';
   menu.appendChild(intro);
-  [builder,team,refs,jira].filter(Boolean).forEach(function(b) { menu.appendChild(b); });
+  [builder,templates,team,refs,jira].filter(Boolean).forEach(function(b) { menu.appendChild(b); });
   // Preserve the existing health counter for its renderer, but use one destination for diagnostics.
   if (health) {
     health.setAttribute('onclick', "closeMoreMenu();setAppView('forecast')");
@@ -44601,7 +44846,8 @@ function prepareMaterialResult(kind) {
   if(kind==='selected'){setMeetingContent('plan');_presSetMobilePane('compose');_presToggleActions(true);return;}
   if(editors[kind]){editors[kind]();return;}
   var result=ready[kind];
-  openConfirm({title:result.title,desc:'Готовое оформление. Формат: '+result.format+'. Содержание берется из плана, не из выбранного набора встречи. Создать файл?',okText:'Создать '+result.format,onOk:result.run});
+  if(kind==='slack')openConfirm({title:result.title,desc:'Запас времени по задачам всего плана, не выбранного набора встречи. Откроется окно печати: выберите «Сохранить как PDF».',okText:'Открыть печать',onOk:result.run});
+  else result.run();
 }
 
 function mountPlanHistory() {
