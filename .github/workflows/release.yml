@@ -46,7 +46,7 @@ jobs:
       - name: Build reproducible public ZIP from an explicit allowlist
         run: >-
           git archive --format=zip --output=roadmap-site-public.zip HEAD
-          README.md RELEASE_NOTES.md LICENSE app.html avatar.jpg catalog-img catalog.html index.html
+          README.md RELEASE_NOTES.md LICENSE app.html avatar.jpg catalog-img catalog.html index.html release.json
           media robots.txt schemas Инструкция_Roadmap.md Локер-роадмапов.html
       - name: Verify the release ZIP excludes private material
         run: |

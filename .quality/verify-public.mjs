@@ -111,16 +111,23 @@ const privateNames = ['roadmap-mpv0.html', 'roadmap-online.html', 'roadmap-onlin
 const allowedFiles = new Set([
   '.gitignore', '.githooks/pre-commit', '.quality/README.md', '.quality/verify-public.mjs', '.quality/verify-sync.mjs', '.quality/bump-version.py',
   '.github/workflows/README.md', '.github/workflows/quality.yml', '.github/workflows/release.yml',
-  'index.html', 'app.html', 'catalog.html', 'README.md', 'RELEASE_NOTES.md', 'LICENSE', 'avatar.jpg', 'robots.txt',
+  'index.html', 'app.html', 'catalog.html', 'release.json', 'README.md', 'RELEASE_NOTES.md', 'LICENSE', 'avatar.jpg', 'robots.txt',
   'Инструкция_Roadmap.md', 'Локер-роадмапов.html', 'schemas/roadmap-data.schema.json',
   'media/media-manifest.json', 'media/roadmap-demo.mp4', 'media/roadmap-demo-poster.jpg',
   'catalog-img/media-manifest.json', 'private/index.html', 'private/roadmap-package-manifest.json',
   ...privateNames.map(name => `private/${name}`),
 ]);
-for (let feature = 1; feature <= 46; feature += 1) {
+for (let feature = 1; feature <= 47; feature += 1) {
+  if (feature === 24) continue;
   for (const theme of ['light', 'dark']) allowedFiles.add(`catalog-img/f${String(feature).padStart(2, '0')}_${theme}.webp`);
 }
 const unexpectedFiles = allFiles.filter(path => !allowedFiles.has(path));
+const publicRelease = parseJson('release.json');
+assert(publicRelease && Object.keys(publicRelease).length === 1
+  && typeof publicRelease.version === 'string'
+  && /^\d+\.\d+(?:\.\d+)?$/.test(publicRelease.version)
+  && text('app.html').includes("const APP_VERSION = '" + publicRelease.version + "'"),
+  'release.json содержит только актуальный публичный номер версии');
 assert(unexpectedFiles.length === 0, unexpectedFiles.length
   ? `Файлы вне разрешенного состава публичного сайта: ${unexpectedFiles.join(', ')}`
   : 'Все файлы входят в разрешенный состав публичного сайта');

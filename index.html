@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="roadmap-build-date" content="2026-10-10">
-  <meta name="roadmap-publication-date" content="2026-10-10">
+  <meta name="roadmap-build-date" content="2026-10-11">
+  <meta name="roadmap-publication-date" content="2026-10-11">
   <meta name="description" content="Roadmap: планировщик задач и проектов. Список с календарем, Канбан, Скрам, задачи из Jira и настройка под вашу команду. Работает в браузере.">
   <title>Roadmap: планировщик задач и проектов</title>
   <style>
@@ -64,22 +64,21 @@
     <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">Roadmap</span></div>
     <div class="herogrid">
       <div>
-        <h1>Roadmap: планировщик задач и проектов</h1>
-        <p class="lead">Собирайте задачи в проекты, назначайте исполнителей и сроки, планируйте спринты и следите за выполнением. Открывайте один план списком с календарем, на Канбане, в Скраме или на свободном холсте.</p>
+        <h1>Дорожная карта — Roadmap v17.7</h1>
+        <p class="lead">Собирайте задачи в проекты, назначайте исполнителей, ставьте сроки, планируйте спринты и следите за выполнением. Открывайте один и тот же план списком с календарем, на доске, в спринтах или на холсте.</p>
         <p class="lead">Добавляйте задачи вручную или загружайте из Jira. Настраивайте поля и статусы под свою команду. Roadmap работает в браузере без установки, а план можно сохранить в один файл.</p>
         <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a><a class="btn ghost" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a></div>
       </div>
-      <aside class="heroright" id="author" aria-label="Связаться с автором"><div class="vhero"><div class="hd">Автор проекта</div><div class="rw"><div class="vava">ВУ<img src="avatar.jpg" alt="Владимир Учинин" width="64" height="64" onerror="this.remove()"></div><div><div class="nm">Владимир Учинин</div><div class="rl">Владелец продукта / Product Owner</div></div></div><div class="lk"><a href="mailto:uchv@ya.ru">uchv@ya.ru</a><button class="btn primary purchase-open" id="purchase-open" type="button" aria-haspopup="dialog" aria-controls="purchase-dialog">Запросить рабочую версию</button></div><p class="author-note">Расскажите, для какой команды нужен план. Цена и условия уточняются у автора. Кнопка подготовит письмо, оплаты на сайте нет.</p></div></aside>
+      <aside class="heroright" id="author" aria-label="Связаться с автором"><div class="vhero"><div class="hd">Автор проекта</div><div class="rw"><div class="vava">ВУ<img src="avatar.jpg" alt="Владимир Учинин" width="64" height="64" onerror="this.remove()"></div><div><div class="nm">Владимир Учинин</div><div class="rl">Владелец продукта / Product Owner</div></div></div><div class="lk"><a href="mailto:uchv@ya.ru">uchv@ya.ru</a><button class="btn primary purchase-open" id="purchase-open" type="button" aria-haspopup="dialog" aria-controls="purchase-dialog">Запросить рабочую версию</button></div><p class="author-note">Расскажите, для какой команды нужен план.</p></div></aside>
     </div>
   </div></header>
 
   <div class="shotwrap"><div class="wrap">
     <div class="video" id="demo-player">
-      <video id="demo-video" controls playsinline preload="metadata" width="1440" height="810" poster="media/roadmap-demo-poster.jpg" aria-label="Демонстрация возможностей Roadmap" aria-describedby="demo-video-note"><source src="media/roadmap-demo.mp4" type="video/mp4">Ваш браузер не воспроизводит MP4. <a href="media/roadmap-demo.mp4" download>Скачать демо-ролик</a>.</video>
+      <video id="demo-video" controls playsinline preload="metadata" width="1440" height="810" poster="media/roadmap-demo-poster.jpg" aria-label="Демонстрация возможностей Roadmap"><source src="media/roadmap-demo.mp4" type="video/mp4">Ваш браузер не воспроизводит MP4. <a href="media/roadmap-demo.mp4" download>Скачать демо-ролик</a>.</video>
       <div class="video-cover" id="demo-cover" hidden><img id="demo-poster" src="media/roadmap-demo-poster.jpg" width="1440" height="810" alt="" decoding="sync"><button class="btn primary video-start" id="demo-play" type="button" aria-controls="demo-video"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l14-8z"/></svg><span>Смотреть ролик · 2 минуты</span></button></div>
     </div>
-    <div class="vidnote" id="demo-video-note">Знакомство с Roadmap за две минуты: задачи, календарь, холст и готовность по неделям. Видео без звука, на примере вымышленной команды.</div>
-    <div class="video-help"><span id="demo-video-status" class="video-status" role="status" aria-live="polite"></span><a href="media/roadmap-demo.mp4" target="_blank" rel="noopener">Открыть MP4 отдельно</a><a href="media/roadmap-demo.mp4" download>Скачать ролик</a></div>
+    <div id="demo-video-status" class="video-help video-status" role="status" aria-live="polite"></div>
   </div></div>
 
 
@@ -89,15 +88,15 @@
       <li><h3>Список и календарь</h3><p>Слева задачи, справа их сроки на календаре. Меняйте даты перетаскиванием, отмечайте важные события и выбирайте удобный масштаб: по дням, на неделю или на месяц.</p></li>
       <li><h3>Канбан и Скрам</h3><p>На Канбане перемещайте карточки между статусами. В Скраме смотрите состав спринтов и переносите между ними задачи. Изменения спринтов сохраняются в Roadmap, не в Jira.</p></li>
       <li><h3>Свободный холст</h3><p>Разложите задачи, стикеры и идеи на поле. Соединяйте их стрелками, оставляйте комментарии и меняйте масштаб. Карточка на холсте открывает ту же задачу, что и в списке.</p></li>
-      <li><h3>Готовность по неделям</h3><p>Сравните завершенные задачи с объемом плана за последние недели. При достаточной сохраненной истории посмотрите две расчетные даты по прежнему темпу работы.</p></li>
+      <li><h3>Готовность по неделям</h3><p>Сравните завершенные задачи с объемом плана за последние недели. Когда накопится история, приложение покажет две расчетные даты — по нынешнему темпу работы.</p></li>
       <li><h3>Работа с Jira</h3><p>Загружайте существующие задачи, чтобы не создавать план заново. Сохраняйте их ключи, статусы и связи. По ключу можно перейти к исходной задаче в Jira, если указан адрес сервера.</p></li>
       <li><h3>Настройка под команду</h3><p>Создавайте свои статусы и поля, выбирайте видимые данные карточек и подключайте нужные функции. Ненужные поля можно скрыть, не теряя их значения.</p></li>
-      <li><h3>Сохранение и обмен</h3><p>Сохраняйте план, возвращайтесь к прежним состояниям и убирайте задачи в архив. Передавайте выбранную часть плана для просмотра или полную копию для продолжения работы.</p></li>
+      <li><h3>Сохранение и обмен</h3><p>Сохраняйте рабочий план и убирайте ненужные сейчас задачи в архив. Передавайте отчет, презентацию или полную рабочую копию для продолжения работы.</p></li>
     </ol></div></section>
 
-    <section class="alt" aria-labelledby="difference-title"><div class="wrap"><div class="sechead"><h2 id="difference-title">Чем удобен такой формат</h2></div><div class="difference"><p><strong>Несколько видов, одни и те же задачи.</strong> Переключайтесь между списком, календарем, Канбаном и Скрамом. Не нужно переносить задачи из одного вида в другой или вести несколько планов.</p><p><strong>От короткого списка до подробного проекта.</strong> Начните с задач и сроков. По мере необходимости добавляйте связи, спринты, сведения о команде и собственные поля.</p><p><strong>Рабочий план остается у вас.</strong> Сохраненную копию можно открыть без интернета или взять на другой компьютер. Это личный рабочий файл, а не общий документ с одновременным редактированием.</p></div></div></section>
+    <section class="alt" aria-labelledby="difference-title"><div class="wrap"><div class="sechead"><h2 id="difference-title">Чем удобен такой формат</h2></div><div class="difference"><p><strong>Несколько видов, одни и те же задачи.</strong> Переключайтесь между списком, календарем, Канбаном и Скрамом. Не нужно переносить задачи из одного вида в другой или вести несколько планов.</p><p><strong>От короткого списка до подробного проекта.</strong> Начните с задач и сроков. Когда понадобится — добавьте связи, спринты, сведения о команде и свои поля.</p><p><strong>Рабочий план остается у вас.</strong> Сохраненную копию можно открыть без интернета или взять на другой компьютер. Это личный рабочий файл, а не общий документ с одновременным редактированием.</p></div></div></section>
 
-    <section aria-labelledby="more-title"><div class="wrap"><div class="sechead"><h2 id="more-title">Когда нужно больше, чем список задач</h2></div><div class="difference"><p>В Roadmap также можно проверить загрузку команды, оценить сроки с учетом связей между задачами и сравнить варианты плана. Прогноз опирается на ваши оценки и доступность исполнителей, а не гарантирует дату.</p><p>Для обсуждения результатов есть сводки, отчеты и выбранные фрагменты плана. Дополнительные инструменты помогают связать работу с целями, вести риски и сопоставлять расходы с бюджетом.</p></div></div></section>
+    <section aria-labelledby="more-title"><div class="wrap"><div class="sechead"><h2 id="more-title">Когда нужно больше, чем список задач</h2></div><div class="difference"><p>Проверьте загрузку команды, оцените сроки с учетом связей и сравните варианты плана. Прогноз опирается на ваши оценки и доступность исполнителей, а не гарантирует дату.</p><p>Для обсуждения результатов есть сводки, отчеты и выбранные фрагменты плана. Дополнительные инструменты помогают связать работу с целями, вести риски и сопоставлять расходы с бюджетом.</p></div></div></section>
 
     <section><div class="wrap"><div class="sechead"><h2>Как начать</h2><p>Познакомьтесь с приложением, затем соберите свой первый план.</p></div><div class="how">
       <article class="card"><h3>1. Посмотрите пример</h3><p>В демо откройте карточку задачи, календарь, Канбан и Скрам. Выберите вид, с которым вам удобнее работать.</p></article>
@@ -106,10 +105,10 @@
     </div></div></section>
 
     <section aria-labelledby="faq-title"><div class="wrap"><div class="sechead"><h2 id="faq-title">Перед началом работы</h2></div><div class="faq">
-      <details><summary>Можно работать вместе с командой?</summary><p>Можно передать отчет, копию для просмотра или рабочий файл для редактирования. Одновременного редактирования и автоматической синхронизации между компьютерами нет: передавайте последнюю сохраненную копию.</p></details>
+      <details><summary>Можно работать вместе с командой?</summary><p>Можно передать отчет, презентацию или рабочий файл для редактирования. Одновременного редактирования и автоматической синхронизации между компьютерами нет: передавайте последнюю сохраненную копию.</p></details>
       <details><summary>Нужна ли Jira?</summary><p>Нет, задачи можно добавлять вручную. Если они уже есть в Jira, начните с выгрузки CSV. Прямой обмен с Jira требует настройки; автоматический обмен работает, только если вы его включили. Переносы между спринтами в Roadmap не отправляются в Jira.</p></details>
-      <details><summary>Как не потерять изменения?</summary><p>Сохраняйте рабочий файл после правок. Он содержит программу, план, архив задач и точки возврата. Если браузер скачал новую копию, продолжайте работу с ней. Перед очисткой проекта сохраните резервную копию: отчет и обычный экспорт JSON не заменяют рабочий HTML с историей.</p></details>
-      <details><summary>Что увидит человек, которому я отправлю план?</summary><p>Для просмотра можно выбрать отдельные разделы. Перед отправкой проверьте состав копии: названия задач, ключи Jira и метки могут содержать внутреннюю информацию. Не публикуйте личный рабочий файл, даже с PIN. Защищенная копия шифруется при сохранении, но четырехзначный PIN можно подобрать; обычный HTML и отдельные выгрузки не защищены.</p></details>
+      <details><summary>Как не потерять изменения?</summary><p>Сохраняйте рабочий файл после правок. Он содержит программу, план, архив задач, шаблоны и статистику готовности. Если браузер скачал новую копию, продолжайте работу с ней. Перед очисткой проекта сохраните резервную копию: отчет не заменяет рабочий HTML, а JSON не содержит само приложение.</p></details>
+      <details><summary>Что увидит человек, которому я отправлю план?</summary><p>Можно отправить отчет, презентацию с выбранными задачами или полный рабочий файл. Перед отправкой проверьте состав: названия задач, ключи Jira и метки могут содержать внутреннюю информацию. Не публикуйте личный рабочий файл, даже с PIN. Защищенная копия шифруется при сохранении, но четырехзначный PIN можно подобрать; обычный HTML и отдельные выгрузки не защищены.</p></details>
       <details><summary>Можно работать без интернета?</summary><p>Да, с сохраненным рабочим файлом. Интернет нужен для сайта, видео и обмена с Jira.</p></details>
       <details><summary>Чем демо отличается от моего плана?</summary><p>В демо вымышленные задачи для знакомства. Оно не записывает изменения в ваш рабочий файл. Свой план ведите в рабочей версии; цену, обновления и поддержку можно <a href="#author">обсудить с автором</a>.</p></details>
     </div></div></section>
@@ -117,7 +116,7 @@
     <section><div class="wrap"><div class="catcta"><h2>Посмотрите, подойдет ли вам Roadmap</h2><p>Попробуйте план на примере команды или найдите в каталоге то, что поможет в вашей работе.</p><div class="cta"><a class="btn primary" href="app.html">Попробовать демо</a><a class="btn ghost" href="catalog.html">Посмотреть возможности</a></div></div></div></section>
   </main>
 
-  <footer class="foot"><div class="wrap">Roadmap v17.6 · Владимир Учинин</div></footer>
+  <footer class="foot"><div class="wrap">Roadmap v17.7 · Владимир Учинин</div></footer>
   <dialog class="purchase-dialog" id="purchase-dialog" aria-labelledby="purchase-title" aria-describedby="purchase-note">
     <div class="purchase-head"><h2 id="purchase-title">Запросить рабочую версию</h2><button class="btn ghost purchase-close" id="purchase-close" type="button" aria-label="Закрыть форму">&times;</button></div>
     <p class="purchase-note" id="purchase-note">Форма подготовит письмо автору для обсуждения цены и условий. Оно откроется в вашей почтовой программе, отправить его нужно самостоятельно. Это не заказ и не оплата. Сайт не отправляет и не сохраняет данные формы.</p>
@@ -167,12 +166,12 @@
         loadingTimer = setTimeout(() => {
           if (currentAttempt !== attempt) return;
           video.pause();
-          failed('Загрузка занимает больше времени. Повторите запуск или откройте MP4 отдельно.');
+          failed('Загрузка занимает больше времени. Повторите запуск.');
         }, 12000);
         try { await video.play(); }
         catch (error) {
           if (currentAttempt !== attempt) return;
-          failed(error.name === 'NotAllowedError' ? 'Браузер заблокировал запуск. Нажмите еще раз или откройте MP4 отдельно.' : 'Не удалось воспроизвести ролик. Откройте MP4 отдельно или скачайте файл.');
+          failed(error.name === 'NotAllowedError' ? 'Браузер заблокировал запуск. Нажмите еще раз.' : 'Не удалось воспроизвести ролик. Повторите запуск.');
         }
       });
       video.addEventListener('playing', () => {
@@ -182,8 +181,8 @@
       video.addEventListener('ended', () => {
         clearLoading(); cover.hidden = false; label.textContent = 'Посмотреть еще раз';
       });
-      video.addEventListener('error', () => failed('Не удалось загрузить ролик. Откройте MP4 отдельно или скачайте файл.'));
-      video.querySelector('source').addEventListener('error', () => failed('Не удалось загрузить ролик. Откройте MP4 отдельно или скачайте файл.'));
+      video.addEventListener('error', () => failed('Не удалось загрузить ролик. Повторите запуск.'));
+      video.querySelector('source').addEventListener('error', () => failed('Не удалось загрузить ролик. Повторите запуск.'));
       video.tabIndex = 0;
     })();
   </script>
