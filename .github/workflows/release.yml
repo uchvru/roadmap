@@ -48,6 +48,7 @@ jobs:
           git archive --format=zip --output=roadmap-site-public.zip HEAD
           README.md RELEASE_NOTES.md LICENSE app.html avatar.jpg catalog-img catalog.html index.html release.json
           media robots.txt schemas Инструкция_Roadmap.md Локер-роадмапов.html
+          updates
       - name: Verify the release ZIP excludes private material
         run: |
           if unzip -Z1 roadmap-site-public.zip | grep -Eq '(^|/)private/|(^|/)roadmap-data\.json$|(^|/)roadmap\.html$'; then
@@ -73,7 +74,7 @@ jobs:
     steps:
       - name: Stop without changing tags or release assets
         run: |
-          echo "::error::Старый путь публикации отключен: он не проверял совпадение тега и архива. Создайте новый тег на проверенном commit и отдельный Release только с Roadmap-vX.Y.Z-public.zip и его SHA-256. См. README.md."
+          echo "::error::Старый путь публикации отключен: он не проверял совпадение тега и архива. Создайте новый тег на проверенном commit и отдельный Release с публичным ZIP, его SHA-256 и разрешенным подписанным обновлением. См. README.md."
           exit 1
   pages:
     name: Deploy GitHub Pages

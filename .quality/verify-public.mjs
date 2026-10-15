@@ -9,6 +9,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, lstatSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, extname, join, relative, resolve } from 'node:path';
+import {publicUpdatePath,verifyUpdateAsset} from './verify-update-asset.mjs';
 
 const root = resolve(process.argv[2] || process.cwd());
 const failures = [];
@@ -109,7 +110,7 @@ const allFiles = walk();
 // renamed exports and access notes cannot bypass filename or content heuristics.
 const privateNames = ['roadmap-mpv0.html', 'roadmap-online.html', 'roadmap-online-r.html', 'roadmap-online-n.html'];
 const allowedFiles = new Set([
-  '.gitignore', '.githooks/pre-commit', '.quality/README.md', '.quality/verify-public.mjs', '.quality/verify-sync.mjs', '.quality/bump-version.py',
+  '.gitignore', '.githooks/pre-commit', '.quality/README.md', '.quality/verify-public.mjs', '.quality/verify-update-asset.mjs', '.quality/verify-sync.mjs', '.quality/bump-version.py',
   '.github/workflows/README.md', '.github/workflows/quality.yml', '.github/workflows/release.yml',
   'index.html', 'app.html', 'catalog.html', 'release.json', 'README.md', 'RELEASE_NOTES.md', 'LICENSE', 'avatar.jpg', 'robots.txt',
   'Инструкция_Roadmap.md', 'Локер-роадмапов.html', 'schemas/roadmap-data.schema.json',
@@ -121,8 +122,16 @@ for (let feature = 1; feature <= 47; feature += 1) {
   if (feature === 24) continue;
   for (const theme of ['light', 'dark']) allowedFiles.add(`catalog-img/f${String(feature).padStart(2, '0')}_${theme}.webp`);
 }
-const unexpectedFiles = allFiles.filter(path => !allowedFiles.has(path));
 const publicRelease = parseJson('release.json');
+try {
+  const updatePath=publicUpdatePath(publicRelease?.version);
+  if(updatePath){
+    allowedFiles.add(updatePath);
+    verifyUpdateAsset(text(updatePath),text('app.html'));
+    pass('Подписанное обновление совпадает с чистым кодом app.html; личных данных в пакете нет');
+  }
+} catch(error) { fail('Публичное обновление отсутствует или не прошло проверку: '+error.message); }
+const unexpectedFiles = allFiles.filter(path => !allowedFiles.has(path));
 assert(publicRelease && Object.keys(publicRelease).length === 1
   && typeof publicRelease.version === 'string'
   && /^\d+\.\d+(?:\.\d+)?$/.test(publicRelease.version)
@@ -284,6 +293,7 @@ if (existsSync(file(privateManifestPath))) {
 
 // 3. Демо-видео и постер должны совпадать с манифестом и использоваться лендингом.
 const mediaManifest = parseJson('media/media-manifest.json');
+assert(Boolean(mediaManifest?.video && mediaManifest?.poster), 'Медиа-манифест содержит обязательные video и poster');
 if (mediaManifest?.video && mediaManifest?.poster) {
   const landing = text('index.html');
   for (const [kind, item] of [['video', mediaManifest.video], ['poster', mediaManifest.poster]]) {
@@ -311,6 +321,8 @@ for (const legacy of ['demo.mp4', 'demo.webm', 'media/demo.mp4', 'media/demo.web
 
 // 4. Каталог: ровно две темы на каждую функцию, каждый WebP проверен по hash и размеру.
 const catalogManifest = parseJson('catalog-img/media-manifest.json');
+assert(Boolean(catalogManifest?.files && typeof catalogManifest.files === 'object' && !Array.isArray(catalogManifest.files)
+  && Object.keys(catalogManifest.files).length && Number.isInteger(catalogManifest?.expected?.files) && catalogManifest.expected.files > 0), 'Манифест каталога содержит обязательные files и expected.files');
 if (catalogManifest?.files && catalogManifest?.expected) {
   const catalog = text('catalog.html');
   const entries = Object.entries(catalogManifest.files);
@@ -350,6 +362,7 @@ if (catalogManifest?.files && catalogManifest?.expected) {
 
 // 5. Схема данных должна оставаться валидным JSON Schema и не быть рабочим проектом.
 const schema = parseJson('schemas/roadmap-data.schema.json');
+assert(Boolean(schema && schema.$schema && schema.type && schema.properties?.roadmapData), 'Схема содержит обязательные $schema, type и properties.roadmapData');
 if (schema) {
   assert(typeof schema.$schema === 'string' && schema.$schema.includes('json-schema.org'), 'Указана версия JSON Schema');
   assert(schema.type === 'object' && schema.properties?.roadmapData, 'Схема описывает roadmapData');
