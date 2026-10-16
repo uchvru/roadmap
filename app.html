@@ -5417,9 +5417,6 @@
       outline: 2px solid var(--color-indigo-500);
       outline-offset: 2px;
     }
-    button:focus-visible, a:focus-visible {
-      outline-offset: 3px;
-    }
     input:focus-visible, select:focus-visible, textarea:focus-visible {
       outline: none;
     }
@@ -5951,7 +5948,6 @@
    body.theme-dark { --rm-surface:#1a2332; --rm-text:#e2e8f0; --rm-muted:#94a3b8; }
    .rm-panel { background:var(--rm-surface); color:var(--rm-text); border:1px solid var(--rm-border); border-radius:var(--rm-radius-lg); }
    .rm-control { min-height:var(--rm-control-h); border:1px solid var(--rm-border); border-radius:var(--rm-radius-md); background:var(--rm-surface); color:var(--rm-text); }
-   .rm-control:focus-visible, .rm-action:focus-visible { outline:3px solid rgba(99,102,241,.28); outline-color:color-mix(in srgb,var(--rm-focus) 28%,transparent); outline-offset:2px; }
    .rm-action { min-height:var(--rm-control-h); border-radius:var(--rm-radius-md); display:inline-flex; align-items:center; justify-content:center; gap:var(--rm-space-2); cursor:pointer; }
    .rm-operational-list { scrollbar-gutter:stable; }
    @media (max-width:640px) { .rm-operational-toolbar > * { width:100%; } .rm-operational-toolbar .rm-action { width:100%; } }
@@ -6014,9 +6010,6 @@
      width:max-content; max-width:min(28rem,calc(100vw - 2rem)); min-height:2.75rem;
      padding:.625rem .875rem !important; border-radius:var(--rm-radius-md) !important;
      box-shadow:var(--rm-popover-shadow) !important; line-height:1.4;
-   }
-   .rm-dialog-close:focus-visible, .rm-dialog-action:focus-visible, .rm-popover button:focus-visible {
-     outline:3px solid rgba(99,102,241,.28); outline-offset:2px;
    }
    @keyframes rm-popover-in { from { opacity:.65; transform:translateY(-2px); } to { opacity:1; transform:none; } }
    @media (prefers-reduced-motion:reduce) { .rm-popover { animation:none; } }
@@ -6235,9 +6228,6 @@
    .rm-btn[aria-busy="true"]::after { content:""; width:.875rem; height:.875rem; border:2px solid currentColor; border-right-color:transparent; border-radius:50%; animation:rm-spin .7s linear infinite; }
    @keyframes rm-spin { to { transform:rotate(360deg); } }
    button { touch-action:manipulation; }
-   button:focus-visible,[role="button"]:focus-visible,a:focus-visible {
-     outline:3px solid rgba(99,102,241,.24); outline-offset:2px;
-   }
    #appHeader .app-header-toolbar button,#appHeader .app-header-toolbar select,#planFilterBar button,#planFilterBar select,
    #planViewNav button,#timeline-header button { min-height:var(--rm-toolbar-h); }
 
@@ -6365,7 +6355,7 @@
      padding:0 0 0 3.25rem; border:0;
    }
    #planOverviewHost { margin-left:auto; min-width:0; }
-   #planOverviewHost .app-header-insight-row { padding:0; }
+   #planOverviewHost .app-header-insight-row { padding:0; flex-wrap:wrap; }
    .header-summary-btn {
      min-height:2rem; padding:.35rem .625rem; border:1px solid var(--rm-border);
      border-radius:.625rem; background:var(--rm-surface-soft); color:var(--rm-text);
@@ -6387,7 +6377,10 @@
    #headerInsightsDates { margin-top:.75rem; padding-top:.75rem; border-top:1px solid var(--rm-border); }
    #headerInsightsPanel #stateDashboard { padding-left:0 !important; overflow:visible; }
    #headerInsightsPanel #headerCutoffsSep { align-items:center; }
-   #autosaveStatus { display:none !important; }
+   #autosaveStatus { display:inline-flex; max-width:100%; min-width:0; color:var(--rm-muted); font-size:11px; line-height:1.5; overflow-wrap:anywhere; }
+   #autosaveStatus:empty { display:none; }
+   #autosaveStatus[data-tone="error"] { color:var(--rm-danger-text,#b91c1c); font-weight:600; }
+   body.theme-dark #autosaveStatus[data-tone="error"] { color:#fda4af; }
 
    .settings-tab-list { scrollbar-width:none; }
    .settings-tab-list::-webkit-scrollbar { display:none; }
@@ -6408,6 +6401,22 @@
    #depsOverview .deps-map-node { display:flex; flex-direction:column; align-items:stretch; justify-content:center; gap:3px; padding:8px; white-space:normal; text-align:left; }
    #depsOverview .deps-node-name { font-size:12px; line-height:16px; font-weight:500; overflow-wrap:anywhere; }
    #depsOverview .deps-node-key { font-size:11px; line-height:14px; color:var(--rm-muted); }
+   @media (max-width:767px), (pointer:coarse) {
+     #depsOverview button { min-width:44px !important; min-height:44px !important; }
+     #depsOverview .deps-chain-head { flex-wrap:wrap; row-gap:8px; }
+     #depsOverview .deps-chain-head > button { flex:1 1 12rem; }
+     #depsOverview .deps-chain-actions { gap:4px; }
+     #bars-container .link-handle {
+       width:44px !important; height:44px !important; margin-left:-17px;
+       background:transparent !important; border:0 !important; box-shadow:none !important;
+       opacity:1 !important; touch-action:none; transition:none !important;
+     }
+     /* Let the connector's z-30 escape its z-10 wrapper above cutoff labels
+        (z-20), while the bar itself stays z-10. Inline drag z-index still wins. */
+     #bars-container .task-timeline-row > :has(> .link-handle) { z-index:auto; }
+     #bars-container .link-handle:hover { scale:1 !important; }
+     #bars-container .link-handle::after { inset:17px; border-radius:50%; background:var(--rm-surface); border:1px solid var(--rm-focus); pointer-events:none; }
+   }
    .gantt-legend-groups { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }
    .gantt-legend-group { border:1px solid var(--rm-border); border-radius:var(--rm-radius-sm); padding:.75rem; }
    .gantt-legend-group h4 { font-size:13px; font-weight:700; margin:0 0 .5rem; }
@@ -6740,10 +6749,6 @@
    .rm-btn-ghost { color:var(--rm-muted) !important; }
    .rm-btn-icon { width:var(--rm-control-h); min-width:var(--rm-control-h); padding:0 !important; }
    .rm-btn svg,.rm-action svg { width:1rem; height:1rem; flex:none; stroke-width:2; }
-   .rm-btn:focus-visible,.rm-action:focus-visible,
-   .rm-control:focus-visible,button:focus-visible,[role="button"]:focus-visible,a:focus-visible {
-     outline:2px solid var(--rm-focus); outline-offset:2px; box-shadow:var(--rm-ring);
-   }
    #appHeader .app-header-toolbar button,#appHeader .app-header-toolbar select,#planFilterBar button,#planFilterBar select,
    #planViewNav button,#timeline-header button { min-height:var(--rm-toolbar-h); border-radius:var(--rm-radius-md); }
    #appHeader .app-header-toolbar > button:first-child { border-radius:var(--rm-radius-md); }
@@ -8792,10 +8797,10 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
 #inputModal .rm-dialog-body-part,#inputModal .rm-dialog-content{flex:none}
 #inputModal .rm-dialog-footer{flex:none;flex-wrap:wrap}
 #inputModal .rm-dialog-footer button{flex:1 1 7rem;min-width:0;min-height:44px;height:auto;white-space:normal;overflow-wrap:anywhere;line-height:1.4}
-#unsavedFileStatus{display:inline-flex;flex:1 0 136px;gap:6px;align-items:center;justify-content:center;min-width:136px;min-height:20px;white-space:nowrap;font-size:12px;color:var(--rm-muted)}
+#unsavedFileStatus{display:inline-flex;flex:1 0 136px;gap:6px;align-items:center;justify-content:center;min-width:136px;min-height:20px;white-space:nowrap;font-size:12px;font-weight:600;color:var(--rm-text)}
 #unsavedFileStatus[data-dirty="false"]{visibility:hidden}
 #unsavedFileStatus[data-active="false"]{display:none}
-#unsavedFileStatus::before{content:"";width:7px;height:7px;flex:none;border-radius:50%;background:#f59e0b}
+#unsavedFileStatus::before{content:"";width:10px;height:10px;flex:none;border-radius:50%;background:#f59e0b;border:1px solid #92400e;box-shadow:0 0 0 2px var(--rm-surface)}
 #taskListHeader{flex-direction:column;align-items:stretch;justify-content:center;gap:0}
 #taskListToolbar{align-self:flex-end}
 #taskListHeader:has(>#taskListCaption){justify-content:space-between;padding-block:8px;height:88px;min-height:88px}
@@ -8882,7 +8887,7 @@ body:has(#taskListHeader>#taskListCaption) :is(#timeline-header,.gantt-pinned-vi
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.11</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.12</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9120,7 +9125,7 @@ body:has(#taskListHeader>#taskListCaption) :is(#timeline-header,.gantt-pinned-vi
             <span>Сводка плана</span>
             <span id="headerStateSummary" class="header-summary-value" hidden></span>
           </button>
-          <span id="autosaveStatus" role="status" aria-live="polite" class="hidden"></span>
+          <span id="autosaveStatus" role="status" aria-live="polite"></span>
         </div>
         <div id="headerInsightsPanel" hidden>
           <div id="headerInsightsState" class="header-insight-block">
@@ -9300,11 +9305,11 @@ body:has(#taskListHeader>#taskListCaption) :is(#timeline-header,.gantt-pinned-vi
       </div>
     </div>
     <main id="ganttMain" tabindex="-1" class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col md:flex-row relative focus:outline-none">
-      <div id="mobileKanbanHint" class="lg:hidden order-first w-full bg-sky-50 border-b border-sky-200 text-sky-900 text-xs px-4 py-2 flex items-start gap-2 no-print no-image-export">
+      <div id="mobileKanbanHint" class="order-first w-full bg-sky-50 border-b border-sky-200 text-sky-900 text-xs px-4 py-2 flex items-start gap-2 no-print no-image-export">
         <svg aria-hidden="true" class="w-4 h-4 shrink-0 mt-px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         <span>Даты и полосы Ганта — во вкладке «Таймлайн».</span>
       </div>
-      <div id="zoomControlMobile" data-app-context="list" class="lg:hidden order-first w-full bg-white border-b border-slate-200 px-3 py-1.5 flex items-center gap-2 no-print no-image-export">
+      <div id="zoomControlMobile" data-app-context="list" class="order-first w-full bg-white border-b border-slate-200 px-3 py-1.5 flex items-center gap-2 no-print no-image-export">
         <div id="mobileListPaneSwitch" role="group" aria-label="Режим списка задач" class="grow p-1 rounded-xl bg-slate-100 border border-slate-200">
           <button id="mobileListPaneListBtn" type="button" onclick="setMobileListPane('list')" aria-pressed="true" data-active="true" class="min-h-11 px-3 rounded-lg text-xs font-semibold text-slate-600">Список</button>
           <button id="mobileListPaneTimelineBtn" type="button" onclick="setMobileListPane('timeline')" aria-pressed="false" data-active="false" class="min-h-11 px-3 rounded-lg text-xs font-semibold text-slate-600">Таймлайн</button>
@@ -9758,7 +9763,7 @@ body:has(#taskListHeader>#taskListCaption) :is(#timeline-header,.gantt-pinned-vi
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v17.11">
+<script data-roadmap-modules="v17.12">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -10381,7 +10386,7 @@ if (typeof globalThis !== 'undefined') {
   });
 }
 
-/* module:portable-save-controller sha256:68a2e3e8f6eb783d44b8864bedce4e81acb2e77138bad3ab3b3d524b0ce69260 */
+/* module:portable-save-controller sha256:a4ebe3708ee242a69a142f07c5980f8d420a533a4ada6429fe2effd44623f04f */
 /** Управление сохранением. Файловый выбор, скачивание и модель задает приложение. */
 /* bundled internal import: ./portable-document.mjs */
 function portableSaveError(code, message) {
@@ -10517,6 +10522,12 @@ async function createPortableSaveController(options) {
 
   return {
     save,
+    async verifyUpdateTarget(html) {
+      if(busy||!current||typeof html!=='string'||!html)throw portableSaveError('UPDATE_TARGET','Рабочий файл недоступен для обновления.');
+      const handle={getFile:async()=>({size:new TextEncoder().encode(html).length,text:async()=>html})};
+      await checkNewTarget(handle,current);
+      return true;
+    },
     getDocument() { return current ? JSON.parse(portableCanonicalJson(current)) : null; },
     getState() {
       return { busy, bound: !!binding, boundName: binding?.handle?.name || '', lastOutcome,
@@ -10581,7 +10592,7 @@ if (typeof globalThis !== 'undefined') {
   snapshotNamespace.createPortableSnapshotPreserver = createPortableSnapshotPreserver;
 }
 
-/* module:portable-app-runtime sha256:f90aca26149132b9bda091c6a1d6db8363cdac06c816a557e5ab9b5844051929 */
+/* module:portable-app-runtime sha256:9f0a0b56eb02e42eb22a08fc989c02c5f0dcf2fed7356961642dc703a73d80c1 */
 /* bundled internal import: ./portable-document.mjs */
 /* bundled internal import: ./portable-save-controller.mjs */
 /* bundled internal import: ./portable-snapshot.mjs */
@@ -10779,7 +10790,11 @@ async function createPortableAppRuntime(host) {
     const previous=controller.getDocument();
     return {...captured,previous:previous?.projectId===captured.snapshot.projectId?previous:null};
   }
-  return { save, changed, writeDraft, getState:state, captureSnapshot, captureForUpdate,
+  async function verifyUpdateTarget(html) {
+    if(!ready||saving||host.isEphemeral()||host.getSnapshot().projectId!==controller.getState().projectId)throw new Error('Открыт другой проект или идет сохранение. Обновление остановлено.');
+    return controller.verifyUpdateTarget(html);
+  }
+  return { save, changed, writeDraft, getState:state, captureSnapshot, captureForUpdate, verifyUpdateTarget,
     dispose() { ready = false; clearTimeout(draftTimer); ++draftGeneration; controller.disconnect(); } };
 }
 
@@ -10850,6 +10865,91 @@ async function prepareProtectedUpdate(update,input,{pinSession,savedAt,cryptoApi
   return {html,filename:'roadmap-protected-v'+update.version+'.html',version:update.version,tasks:check.snapshot.roadmapData.length,historyRecords:check.history.records.length};
 }
 if(typeof globalThis!=='undefined')Object.assign(globalThis.RoadmapModules||(globalThis.RoadmapModules={}),{PROTECTED_UPDATE_KEYS,PROTECTED_UPDATE_MAX_BYTES,verifyProtectedUpdate,prepareProtectedUpdate,protectedUpdateFingerprint});
+
+/* module:protected-update-file sha256:0a313ebb10851034fe71fac8a5ae595eedb902662df56ec3d1dd360b490c8784 */
+/* bundled internal import: ./protected-update.mjs */
+/* bundled internal import: ./portable-document.mjs */
+// Filesystem and live model are explicit capabilities. No network, DOM,
+// credentials, clocks or persistent handles are accessed by this transaction.
+function protectedUpdateFileName(value){
+  let url,name;try{url=new URL(value);name=decodeURIComponent(url.pathname.split('/').at(-1)||'');}catch{throw Error('Откройте рабочий HTML с диска.');}
+  if(url.protocol!=='file:'||!name||name.length>180||!/^.+\.html$/i.test(name)||/[\\/\x00-\x1f]/.test(name))throw Error('Обновление на месте доступно только для локального HTML.');
+  return name;
+}
+async function installProtectedUpdateInPlace(update,options){
+  const {directory,filename,pinSession,capture,verifyTarget,expectedFingerprint,backupId,savedAt,cryptoApi,onCommitted}=options||{};
+  if(!directory?.getFileHandle||!directory?.getDirectoryHandle||!pinSession?.protected||typeof capture!=='function'||typeof verifyTarget!=='function')throw Error('Не подключен безопасный доступ к рабочему файлу.');
+  if(typeof filename!=='string'||filename.length>180||!/^.+\.html$/i.test(filename)||/[\\/\x00-\x1f]/.test(filename)||!/^[A-Za-z0-9-]{1,70}$/.test(backupId||''))throw Error('Некорректное имя файла или резервной копии.');
+  let writer,target,original,candidateHtml='',commitAttempted=false,committed=false,backupName='',recoveryName='';
+  const guard=async()=>{
+    const input=await capture();
+    if(protectedUpdateFingerprint(input)!==expectedFingerprint)throw Error('План изменился. Подготовьте обновление заново.');
+    return input;
+  };
+  const read=async handle=>{
+    const file=await handle.getFile();if(!Number.isSafeInteger(file.size)||file.size<0||file.size>128*1024*1024)throw Error('Файл слишком большой или недоступен.');
+    const bytes=new Uint8Array(await file.arrayBuffer());
+    if(bytes.byteLength!==file.size)throw Error('Размер файла изменился во время чтения.');
+    let html;try{html=new TextDecoder('utf-8',{fatal:true,ignoreBOM:true}).decode(bytes);}
+    catch{throw Error('Кодировка рабочего HTML не UTF-8. Исходник не заменен; скачайте отдельную копию.');}
+    return{html,sha256:await portableSha256(html,cryptoApi)};
+  };
+  try{
+    const input=await guard();
+    if(!input.previous?.documentId)throw Error('Сначала откройте сохраненный рабочий HTML.');
+    const prepared=await prepareProtectedUpdate(update,input,{pinSession,savedAt,cryptoApi});
+    candidateHtml=prepared.html;
+    await guard();
+    // The directory was chosen by the user; no arbitrary file is created here.
+    target=await directory.getFileHandle(filename,{create:false});original=await read(target);
+    if(await verifyTarget(original.html)!==true)throw Error('Рабочий файл не подтвержден. Обновление остановлено.');
+    const old=await readPortableDocument(await pinSession.decodeHtml(original.html),{required:true,cryptoApi});
+    if(old.documentId!==input.previous.documentId||old.projectId!==input.snapshot.projectId)throw Error('Выбран другой рабочий план.');
+    const expectedDocument=await readPortableDocument(await pinSession.decodeHtml(prepared.html),{required:true,cryptoApi});
+    if(portableCanonicalJson(expectedDocument.snapshot)!==portableCanonicalJson(input.snapshot)||portableCanonicalJson(expectedDocument.history.records)!==portableCanonicalJson(input.historyRecords))throw Error('Полный план или история не совпали.');
+    await guard();
+    const backups=await directory.getDirectoryHandle('Roadmap-backups',{create:true});
+    const stem=filename.replace(/\.html$/i,'').slice(0,100);
+    backupName=stem+'.before-'+backupId+'.html';recoveryName=stem+'.ready-'+backupId+'.html';
+    async function backup(name,html){
+      try{await backups.getFileHandle(name);throw Error('Резервная копия уже существует. Она не будет заменена.');}
+      catch(error){if(error.name!=='NotFoundError')throw error;}
+      const handle=await backups.getFileHandle(name,{create:true});
+      if((await read(handle)).html!=='')throw Error('Резервный файл уже занят.');
+      await guard();let stream,closed=false;
+      try{
+        stream=await handle.createWritable();
+        if((await read(handle)).html!=='')throw Error('Резервный файл изменился.');
+        await stream.write(html);await stream.close();closed=true;
+        if((await read(handle)).html!==html)throw Error('Проверка резервной копии не прошла.');
+      }finally{if(stream&&!closed)try{await stream.abort();}catch{}}
+      await guard();
+    }
+    // The second copy preserves even unsaved edits if commit/read-back fails.
+    await backup(backupName,original.html);await backup(recoveryName,prepared.html);
+    if((await read(target)).sha256!==original.sha256)throw Error('Рабочий файл изменился вне вкладки. Обновление остановлено.');
+    await guard();writer=await target.createWritable();
+    if((await read(target)).sha256!==original.sha256)throw Error('Рабочий файл изменился перед записью.');
+    await guard();await writer.write(prepared.html);await guard();
+    if((await read(target)).sha256!==original.sha256)throw Error('Рабочий файл изменился во время записи. Обновление остановлено.');
+    await guard();commitAttempted=true;await writer.close();committed=true;
+    onCommitted?.();
+    const actual=await read(target);
+    if(actual.html!==prepared.html||actual.sha256!==await portableSha256(prepared.html,cryptoApi))throw Error('Проверка записанного файла не прошла. Не закрывайте вкладку; сохраните текущий план отдельной копией.');
+    const opened=await readPortableDocument(await pinSession.decodeHtml(actual.html),{required:true,cryptoApi});
+    if(portableCanonicalJson(opened)!==portableCanonicalJson(expectedDocument))throw Error('Проверка записанного плана и истории не прошла.');
+    await guard();
+    return{status:'installed',version:prepared.version,filename,backupDirectory:'Roadmap-backups',backupName,recoveryName,sha256:actual.sha256,tasks:prepared.tasks,historyRecords:prepared.historyRecords};
+  }catch(error){
+    if(writer&&!committed)try{await writer.abort();}catch{}
+    // A rejected close does not prove that nothing reached disk. Fail closed
+    // if read-back cannot establish the original bytes; never announce success.
+    if(commitAttempted&&!committed){try{const actual=await read(target);committed=actual.html===candidateHtml||actual.sha256!==original.sha256;}catch{committed=true;}}
+    if(committed){error.updateCommitted=true;error.backupName=backupName;error.recoveryName=recoveryName;}
+    throw error;
+  }
+}
+if(typeof globalThis!=='undefined')Object.assign(globalThis.RoadmapModules||(globalThis.RoadmapModules={}),{installProtectedUpdateInPlace,protectedUpdateFileName});
 
 /* module:portable-session-database sha256:f4a2c4b40a12b2db34e9f00f47227ae2330b2892b66dc95db1ef3a5d47467a78 */
 // Ограниченный адаптер транзакций для защищенной вкладки. Открытые версии и
@@ -11655,7 +11755,7 @@ if (typeof globalThis !== 'undefined') {
   namespace.createRowVirtualizationController = createRowVirtualizationController;
 }
 
-/* module:locker-runtime sha256:f8dc55fc24d96575d8f5668b9e2ba64517374f5dedadf7e3db7af2beb39121e7 */
+/* module:locker-runtime sha256:0f9295e8e881ea7e125f01bc61c9955e1436a4dacb42145acc60f30f86a40f69 */
 /** Private packages are prepared locally. This module never uploads or stores passwords. */
 const lockerRuntime = (() => {
   const profiles = Object.freeze([
@@ -11922,7 +12022,10 @@ const lockerRuntime = (() => {
     let html = appHtml.replace(/(["'])gantt_/g, (_, quote) => quote + namespace + 'gantt_')
       .replace(/(["'])RoadmapDB\1/g, (_, quote) => quote + namespace + 'RoadmapDB' + quote);
     html = html.replace(/<head\b[^>]*>/i, head => head + '<script>' + (editable ? '' : 'window.__READ_ONLY__=true;') + runtime + '<\/script>');
-    const dataSafe = dataText.replace(/<\//g, '<\\/');
+    // JSON script is still HTML raw text: comment/script openers can change
+    // the tokenizer state even without an unescaped closing tag. Escape every
+    // less-than sign; JSON.parse restores the original task/history text.
+    const dataSafe = dataText.replace(/</g, '\\u003c');
     const boot = '<script type="application/json" id="__embedded_project__">' + dataSafe + '<\/script><script>(' + embeddedBoot.toString() + ')(' + JSON.stringify(editable) + ');<\/script>';
     return html.replace(/<\/body\s*>\s*<\/html\s*>\s*$/i, ending => boot + ending);
   }
@@ -14012,10 +14115,10 @@ if (typeof globalThis !== 'undefined') {
       const index = buildSearchIndex();
       const commandMode = globalSearchMode === 'command' || q.charAt(0) === '/';
       const normalizedQuery = commandMode ? (q.charAt(0) === '/' ? q.slice(1).trim() : q) : q;
-      const results = !q
-        ? _globalSearchDefaultTasks(index)
-        : commandMode
-          ? index.filter(function (i) { return i.kind === 'command' && (!normalizedQuery || i.hay.includes(normalizedQuery)); })
+      const results = commandMode
+        ? index.filter(function (i) { return i.kind === 'command' && (!normalizedQuery || i.hay.includes(normalizedQuery)); })
+        : !q
+          ? _globalSearchDefaultTasks(index)
           : index.filter(function (i) { return i.kind !== 'command' && i.hay.includes(normalizedQuery); });
 
       if (results.length === 0) {
@@ -14084,7 +14187,7 @@ if (typeof globalThis !== 'undefined') {
       }).join('');
 
       const _taskCount = index.filter(function (i) { return i.kind === 'task' || i.kind === 'milestone'; }).length;
-      const _searchTrunc = (!q && _taskCount > results.length) ? `<div class="px-4 py-2 text-[10px] text-slate-500 bg-slate-50 border-b border-slate-100">Недавние и часто открываемые задачи · показано ${results.length} из ${_taskCount}. Начните вводить название или ключ, чтобы найти остальные.</div>` : '';
+      const _searchTrunc = (!commandMode && !q && _taskCount > results.length) ? `<div class="px-4 py-2 text-[10px] text-slate-500 bg-slate-50 border-b border-slate-100">Недавние и часто открываемые задачи · показано ${results.length} из ${_taskCount}. Начните вводить название или ключ, чтобы найти остальные.</div>` : '';
       out.innerHTML = _searchTrunc + html;
       out.querySelectorAll('.search-result').forEach(function (el) { const idx = el.getAttribute('data-idx'); el.setAttribute('role', 'option'); el.setAttribute('id', 'global-search-option-' + idx); el.setAttribute('aria-selected', String(Number(idx) === globalSearchHighlightIdx)); el.setAttribute('tabindex', '-1'); });
       const status = document.getElementById('globalSearchStatus'); if (status) status.textContent = commandMode ? ('Команды: ' + results.length) : (q ? ('Найдено задач и объектов: ' + results.length) : ('Недавние и частые задачи: ' + results.length));
@@ -14485,7 +14588,7 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '17.11';
+    const APP_VERSION = '17.12';
     const APP_VERSION_DATE = '16.10.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) b.textContent = 'v' + APP_VERSION + ' · ' + APP_VERSION_DATE; } catch (e) {}
@@ -16152,8 +16255,9 @@ if (typeof globalThis !== 'undefined') {
       } finally { _portableOpening = false; }
     }
     function saveWorkingHtml(downloadOnly) {
+      if(typeof _protectedUpdateInstalling!=='undefined'&&(_protectedUpdateInstalling||(_protectedUpdateInstalled&&!downloadOnly)))return false;
       if (!_portableSession || DEMO_MODE || READ_ONLY_MODE || LEARNING_SCENARIO) return false;
-      if (typeof requireUnlocked === 'function' && !requireUnlocked()) return false;
+      if (!(downloadOnly&&typeof _protectedUpdateInstalled!=='undefined'&&_protectedUpdateInstalled) && typeof requireUnlocked === 'function' && !requireUnlocked()) return false;
       return _portableSession.save({mode:downloadOnly || typeof window.showSaveFilePicker !== 'function' ? 'download' : 'file'});
     }
     function showWorkingDownloadReceipt(filename) {
@@ -16166,7 +16270,7 @@ if (typeof globalThis !== 'undefined') {
       receipt.hidden=false;
     }
     window.addEventListener('beforeunload', function (event) {
-      if (_portableSession?.getState().dirty && !DEMO_MODE && !READ_ONLY_MODE) { event.preventDefault(); event.returnValue = ''; }
+      if (!_protectedUpdateRestartReady && ((_protectedUpdateInstalled || _portableSession?.getState().dirty) && !DEMO_MODE && !READ_ONLY_MODE)) { event.preventDefault(); event.returnValue = ''; }
     });
     window.addEventListener('pagehide', function () { _portableSession?.writeDraft(); });
 
@@ -17096,6 +17200,25 @@ if (typeof globalThis !== 'undefined') {
       } catch (e) { showToast('Не удалось открыть защищенные копии: ' + (e.message || e), 'error', 5000); }
     }
     var _protectedUpdateGeneration=0,_protectedUpdatePrepared=null,_protectedUpdateAvailable=null,_protectedUpdateRequest=null;
+    var _protectedUpdateInstalling=false,_protectedUpdateInstalled=false,_protectedUpdateRestartReady=false;
+    var _protectedUpdateInertNodes=[],_protectedUpdateDisabledButtons=[];
+    function _protectedUpdateKeyBlocker(event){
+      if(_protectedUpdateInstalling||(_protectedUpdateInstalled&&(!event.target.closest?.('#protectedUpdateModal')||event.ctrlKey||event.metaKey||!['Tab','Enter',' '].includes(event.key)))){event.preventDefault();event.stopImmediatePropagation();}
+    }
+    function _lockProtectedUpdateInput(locked){
+      const modal=document.getElementById('protectedUpdateModal');
+      if(locked){
+        _protectedUpdateInertNodes=[...document.body.children].filter(n=>n!==modal).map(n=>[n,n.inert]);
+        _protectedUpdateInertNodes.forEach(([n])=>{n.inert=true;});
+        _protectedUpdateDisabledButtons=[...modal.querySelectorAll('button')].map(n=>[n,n.disabled]);
+        _protectedUpdateDisabledButtons.forEach(([n])=>{n.disabled=true;});
+        window.addEventListener('keydown',_protectedUpdateKeyBlocker,true);modal.setAttribute('aria-busy','true');
+      }else{
+        _protectedUpdateInertNodes.forEach(([n,value])=>{n.inert=value;});_protectedUpdateInertNodes=[];
+        _protectedUpdateDisabledButtons.forEach(([n,value])=>{n.disabled=value;});_protectedUpdateDisabledButtons=[];
+        window.removeEventListener('keydown',_protectedUpdateKeyBlocker,true);modal?.removeAttribute('aria-busy');
+      }
+    }
     function openProtectedUpdate() {
       if(!window.__roadmapPinSession?.protected||!_portableSession?.captureForUpdate){showToast('Откройте защищенный рабочий HTML с PIN.','info');return;}
       if(document.getElementById('protectedUpdateModal')?.isConnected)return;
@@ -17105,12 +17228,14 @@ if (typeof globalThis !== 'undefined') {
         +'<p id="protectedUpdateStatus" role="status" aria-live="polite">Проверяем обновления…</p>'
         +'<div class="candidate-actions"><button id="protectedUpdateFetch" type="button" class="rm-btn rm-btn-primary" hidden disabled onclick="fetchProtectedUpdate()">Обновить</button>'
         +'<button id="protectedUpdateDownload" type="button" class="rm-btn rm-btn-primary" hidden disabled onclick="downloadProtectedUpdate()">Скачать новую версию</button>'
+        +'<button id="protectedUpdateInstall" type="button" class="rm-btn rm-btn-primary" hidden disabled onclick="installCurrentProtectedUpdate()">Обновить этот файл</button>'
         +'<button id="protectedUpdateRetry" type="button" class="rm-btn rm-btn-secondary" onclick="checkProtectedUpdate()">Проверить снова</button>'
         +'<button type="button" class="rm-btn rm-btn-secondary" onclick="closeProtectedUpdate()">Закрыть</button></div>'
-        +'<p>Скачается отдельный зашифрованный файл с прежним PIN. Старый не заменяется. Планы между компьютерами не синхронизируются.</p>', 'closeProtectedUpdate');
+        +'<p>Выберите папку этого HTML. Другие вкладки плана должны быть закрыты. Сначала создадим резерв и проверим план. Без доступа к папке скачайте отдельную копию. План и PIN не отправляются.</p>', 'closeProtectedUpdate');
       return checkProtectedUpdate();
     }
     function closeProtectedUpdate(){
+      if(_protectedUpdateInstalling||_protectedUpdateInstalled)return;
       ++_protectedUpdateGeneration;_protectedUpdateRequest?.abort();_protectedUpdateRequest=null;
       _protectedUpdatePrepared=null;_protectedUpdateAvailable=null;_closeCandidateDialog('protectedUpdateModal');
     }
@@ -17166,6 +17291,8 @@ if (typeof globalThis !== 'undefined') {
       const generation=++_protectedUpdateGeneration,epoch=_projectTransitionToken,controller=new AbortController();
       _protectedUpdateRequest=controller;_protectedUpdatePrepared=null;_protectedUpdateAvailable=null;
       button.disabled=true;button.hidden=true;download.disabled=true;download.hidden=true;retry.disabled=true;
+      const install=document.getElementById('protectedUpdateInstall');if(install){install.hidden=true;install.disabled=true;}
+      download.classList.add('rm-btn-primary');download.classList.remove('rm-btn-secondary');
       const current=()=>generation===_protectedUpdateGeneration&&epoch===_projectTransitionToken&&result.isConnected;
       result.textContent='Проверяем обновления…';
       try{
@@ -17188,6 +17315,7 @@ if (typeof globalThis !== 'undefined') {
       const version=_protectedUpdateAvailable,generation=++_protectedUpdateGeneration,epoch=_projectTransitionToken,controller=new AbortController();
       _protectedUpdateRequest=controller;_protectedUpdatePrepared=null;
       button.disabled=true;button.hidden=true;fetchButton.disabled=true;retry.disabled=true;
+      const install=document.getElementById('protectedUpdateInstall');if(install){install.hidden=true;install.disabled=true;}
       const current=()=>generation===_protectedUpdateGeneration&&epoch===_projectTransitionToken&&result.isConnected;
       result.textContent='Загрузка и проверка подписи…';
       try{
@@ -17205,12 +17333,15 @@ if (typeof globalThis !== 'undefined') {
         if(!current())return;
         if(fingerprint!==RoadmapModules.protectedUpdateFingerprint(await _portableSession.captureForUpdate()))throw Error('План изменился во время подготовки. Нажмите «Обновить» еще раз.');
         if(!current())return;
-        _protectedUpdatePrepared={...prepared,fingerprint,epoch,generation};button.disabled=false;button.hidden=false;fetchButton.hidden=true;
+        _protectedUpdatePrepared={...prepared,update,fingerprint,epoch,generation};button.disabled=false;button.hidden=false;fetchButton.hidden=true;
+        const install=document.getElementById('protectedUpdateInstall');
+        if(install){let local=false;try{local=!!RoadmapModules.protectedUpdateFileName(location.href);}catch{}install.hidden=!(local&&typeof window.showDirectoryPicker==='function');install.disabled=install.hidden;if(!install.hidden){button.classList.remove('rm-btn-primary');button.classList.add('rm-btn-secondary');}}
         result.textContent='Подпись проверена. Версия '+prepared.version+': задач — '+prepared.tasks+', записей истории — '+prepared.historyRecords+'.';
       }catch(error){if(current())result.textContent=(error.message||'Не удалось подготовить обновление.')+' Исходный файл и текущий план не изменены.';}
       finally{_finishProtectedUpdate(controller,generation,epoch,result);}
     }
     async function downloadProtectedUpdate(){
+      if(_protectedUpdateInstalling||_protectedUpdateInstalled)return;
       const prepared=_protectedUpdatePrepared,result=document.getElementById('protectedUpdateStatus'),button=document.getElementById('protectedUpdateDownload');
       if(!prepared||!result||!button||button.disabled)return;button.disabled=true;
       try{
@@ -17228,6 +17359,41 @@ if (typeof globalThis !== 'undefined') {
         _protectedUpdatePrepared=null;
       }
     }
+    async function installCurrentProtectedUpdate(){
+      if(_protectedUpdateInstalling||_protectedUpdateInstalled||!_protectedUpdatePrepared)return;
+      const prepared=_protectedUpdatePrepared,result=document.getElementById('protectedUpdateStatus'),modal=document.getElementById('protectedUpdateModal');
+      if(!modal||!result||typeof window.showDirectoryPicker!=='function')return;
+      let filename;try{filename=RoadmapModules.protectedUpdateFileName(location.href);}catch(error){result.textContent=error.message;return;}
+      _protectedUpdateInstalling=true;_lockProtectedUpdateInput(true);
+      result.textContent='Выберите папку, в которой находится '+filename+'.';
+      try{
+        // The picker is the first await: retain the real user activation.
+        const directory=await window.showDirectoryPicker({id:'roadmap-current-update',mode:'readwrite'});
+        const capture=async()=>{
+          if(prepared!==_protectedUpdatePrepared||prepared.epoch!==_projectTransitionToken||!modal.isConnected)throw Error('Открыт другой проект или закрыто обновление.');
+          return _portableSession.captureForUpdate();
+        };
+        result.textContent='Создаем резервные копии и проверяем полный план…';
+        const installed=await RoadmapModules.installProtectedUpdateInPlace(prepared.update,{directory,filename,pinSession:window.__roadmapPinSession,capture,verifyTarget:html=>_portableSession.verifyUpdateTarget(html),expectedFingerprint:prepared.fingerprint,backupId:new Date().toISOString().replace(/[^0-9]/g,'')+'-'+crypto.randomUUID(),savedAt:new Date().toISOString(),cryptoApi:crypto,onCommitted:()=>{_protectedUpdateInstalled=true;}});
+        _protectedUpdateRestartReady=true;_portableSession.dispose();clearTimeout(autoSavePending);autoSaveFileHandle=null;
+        _protectedUpdatePrepared=null;modal.removeAttribute('aria-busy');
+        modal.querySelector('.rm-dialog-close').hidden=true;
+        result.textContent='Версия '+installed.version+' записана в '+filename+'. Полный план и история проверены. Закройте эту вкладку и откройте тот же файл заново.';
+        modal.querySelector('.candidate-actions').innerHTML='<button id="protectedUpdateReload" type="button" class="rm-btn rm-btn-primary" onclick="reloadAfterProtectedUpdate()">Перезагрузить файл</button>';
+        const note=modal.querySelector('.candidate-actions').nextElementSibling;
+        note.textContent='Зашифрованные резервные копии находятся рядом, в '+installed.backupDirectory+'. Старая вкладка больше не записывает файл.';
+        document.getElementById('protectedUpdateReload').focus();
+      }catch(error){
+        if(error.updateCommitted||_protectedUpdateInstalled){
+          _protectedUpdateInstalled=true;modal.removeAttribute('aria-busy');modal.querySelector('.rm-dialog-close').hidden=true;
+          result.textContent=(error.message||'Проверка записи не завершена.')+' Не закрывайте вкладку. Резерв и готовая копия — в Roadmap-backups. Сохраните текущие правки отдельно.';
+          modal.querySelector('.candidate-actions').innerHTML='<button id="protectedUpdateRecover" type="button" class="rm-btn rm-btn-primary" onclick="saveWorkingHtml(true)">Скачать план из этой вкладки</button>';
+          document.getElementById('protectedUpdateRecover').focus();
+        }else if(error.name==='AbortError')result.textContent='Выбор папки отменен. Рабочий файл не заменен.';
+        else{result.textContent=(error.message||'Не удалось обновить файл.')+' Обновление не записано.';_protectedUpdatePrepared=null;document.getElementById('protectedUpdateFetch').hidden=false;document.getElementById('protectedUpdateDownload').hidden=true;document.getElementById('protectedUpdateInstall').hidden=true;}
+      }finally{_protectedUpdateInstalling=false;if(!_protectedUpdateInstalled)_lockProtectedUpdateInput(false);}
+    }
+    function reloadAfterProtectedUpdate(){if(_protectedUpdateRestartReady)location.reload();}
     var _releaseCheckBusy = false;
     async function checkPublicUpdate(origin) {
       if(window.__roadmapPinSession?.protected)return openProtectedUpdate();
@@ -18573,11 +18739,11 @@ if (typeof globalThis !== 'undefined') {
         var col = !!_depsMapCollapsed[c.key];
         var oi = ci;
         var upDis = oi === 0, dnDis = oi === compList.length - 1;
-        var head = '<div class="flex items-center gap-2 py-1 select-none">'
+        var head = '<div class="deps-chain-head flex items-center gap-2 py-1 select-none">'
           + '<button type="button" onclick="_depsMapToggleChain(\'' + c.key + '\')" aria-expanded="' + (col ? 'false' : 'true') + '" title="' + (col ? 'Развернуть цепочку' : 'Свернуть цепочку') + '" class="inline-flex items-center gap-1.5 text-left cursor-pointer hover:text-indigo-700 min-w-0">'
           + '<svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0 text-slate-400" style="' + (col ? '' : 'transform:rotate(90deg)') + '" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>'
           + '<span class="text-[11px] font-semibold text-slate-700 truncate">Цепочка ' + (ci + 1) + ' <span class="text-slate-400 font-normal">, ' + c.ids.length + ' ' + _presNZad(c.ids.length) + ', от «' + esc(rootName) + '»</span></span></button>'
-          + '<span class="ml-auto inline-flex items-center gap-0.5 shrink-0">'
+          + '<span class="deps-chain-actions ml-auto inline-flex items-center gap-0.5 shrink-0">'
           + '<button type="button"' + (upDis ? ' disabled' : '') + ' onclick="_depsMapMoveChain(\'' + c.key + '\',-1)" title="Выше" class="w-6 h-6 rounded ' + (upDis ? 'text-slate-200 cursor-default' : 'text-slate-400 hover:text-indigo-600 cursor-pointer') + '">&#8593;</button>'
           + '<button type="button"' + (dnDis ? ' disabled' : '') + ' onclick="_depsMapMoveChain(\'' + c.key + '\',1)" title="Ниже" class="w-6 h-6 rounded ' + (dnDis ? 'text-slate-200 cursor-default' : 'text-slate-400 hover:text-indigo-600 cursor-pointer') + '">&#8595;</button>'
           + '<button type="button" onclick="_depsMapHideChain(\'' + c.key + '\')" title="Скрыть цепочку с карты (связи не трогаются)" aria-label="Скрыть цепочку" class="w-6 h-6 rounded text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5 mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411"></path></svg></button>'
@@ -22227,7 +22393,21 @@ const m = document.getElementById('mineModeBtn');
     let _lastSavedAt = '', _lastSavedBy = '';
     function _relTimeRu(iso) { try { if (!iso) return ''; var t = new Date(iso).getTime(); if (!t) return ''; var diff = Date.now() - t; if (diff < 0) diff = 0; var m = Math.round(diff/60000); if (m < 1) return 'только что'; if (m < 60) return m + ' мин назад'; var h = Math.round(m/60); if (h < 24) return h + ' ч назад'; var d = Math.round(h/24); if (d < 30) return d + ' дн назад'; return new Date(iso).toLocaleDateString('ru-RU'); } catch (e) { return ''; } }
     function _setSaveMeta(by, at) { _lastSavedBy = (by == null ? '' : String(by)); _lastSavedAt = (at == null ? '' : String(at)); if (typeof _renderSaveBadge === 'function') _renderSaveBadge(); }
-    function _renderSaveBadge() { var el = document.getElementById('autosaveStatus'); if (!el) return; if (typeof autoSaveFileHandle !== 'undefined' && autoSaveFileHandle) return; if (!_lastSavedAt && !_lastSavedBy) return; var rel = _relTimeRu(_lastSavedAt); var shortText = 'Сохранил: ' + (_lastSavedBy || 'не указан') + (rel ? ' · ' + rel : ''); var fullText = 'Кто и когда последний раз сохранял этот файл' + (_lastSavedAt ? ': ' + new Date(_lastSavedAt).toLocaleString('ru-RU') : ''); el.className = 'hidden'; el.textContent = shortText; el.title = fullText; var btn = document.getElementById('autoSaveBtn'); if (btn && !(typeof autoSaveFileHandle !== 'undefined' && autoSaveFileHandle)) { btn.title = shortText; btn.setAttribute('aria-label', shortText); } }
+    function _renderSaveBadge() {
+      const el = document.getElementById('autosaveStatus');
+      if (!el || (typeof autoSaveFileHandle !== 'undefined' && autoSaveFileHandle)) return;
+      if (!_lastSavedAt && !_lastSavedBy) { el.textContent = ''; return; }
+      const rel = _relTimeRu(_lastSavedAt);
+      const shortText = 'Сохранил: ' + (_lastSavedBy || 'не указан') + (rel ? ' · ' + rel : '');
+      el.className = ''; el.dataset.tone = 'muted'; el.textContent = shortText;
+      el.title = 'Кто и когда последний раз сохранял этот файл' + (_lastSavedAt ? ': ' + new Date(_lastSavedAt).toLocaleString('ru-RU') : '');
+      const btn = document.getElementById('autoSaveBtn');
+      if (btn) {
+        if (btn.hasAttribute('data-tip')) btn.setAttribute('data-tip', shortText); else btn.title = shortText;
+        // Keep the action name for assistive technology; metadata is additional.
+        btn.setAttribute('aria-label', 'Сохранить рабочий файл. ' + shortText);
+      }
+    }
     function _auditClock() { try { const d = new Date(); const p = n => (n < 10 ? '0' : '') + n; return p(d.getHours()) + ':' + p(d.getMinutes()); } catch (e) { return ''; } }
     function _dateChangeStamp(source) {
       const d = new Date(), pad = (n, len = 2) => String(n).padStart(len, '0');
@@ -25110,8 +25290,10 @@ const m = document.getElementById('mineModeBtn');
       if (isNaN(f.getTime()) || isNaN(t.getTime())) return (fromStr || '') + ' → ' + (toStr || '');
       const fd = f.getDate(), td = t.getDate();
       const fm = months[f.getMonth()], tm = months[t.getMonth()];
-      if (f.getMonth() === t.getMonth() && f.getFullYear() === t.getFullYear()) return `${fd} → ${td} ${tm}`;
-      return `${fd} ${fm} → ${td} ${tm}`;
+      const fy = f.getFullYear(), ty = t.getFullYear();
+      if (fy !== ty) return `${fd} ${fm} ${fy} → ${td} ${tm} ${ty}`;
+      if (f.getMonth() === t.getMonth()) return `${fd} → ${td} ${tm} ${ty}`;
+      return `${fd} ${fm} → ${td} ${tm} ${ty}`;
     }
     // Общий отбор задач для отчета за период: пул (активные + архив без дублей) и группы
     // «сделали / эскалация / следующая неделя / в работе». Используется текстовым отчетом и копированием таблицей.
@@ -26856,45 +27038,6 @@ const m = document.getElementById('mineModeBtn');
         canvas.toBlob((blob) => { if (!blob) { if (typeof showToast === 'function') showToast('Не удалось создать PNG', 'error'); return; } const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'svodka-sekcii-' + _stampYmd() + '.png'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 1000); if (typeof showToast === 'function') showToast('PNG сохранен', 'ok'); }, 'image/png');
       } catch (e) { if (typeof showToast === 'function') showToast('Не удалось создать PNG', 'error', 4000); }
     }
-    // Мини-постер для шаринга: компактная картинка , готовность, прогресс по релизам, ближайшие вехи. БЕЗ строк задач.
-    function _sharePosterHtml() {
-      const esc = (typeof escHtml === 'function') ? escHtml : (s => String(s == null ? '' : s));
-      const tasks = (roadmapData || []).filter(t => t && !t.isMilestone && !t.hidden);
-      const total = tasks.length, done = tasks.filter(t => isFinalStatus(t.status)).length;
-      const pct = total ? Math.round(done / total * 100) : 0;
-      const today = (typeof CURRENT_DATE !== 'undefined' && CURRENT_DATE) ? CURRENT_DATE : new Date();
-      const todayYmd = toYmdLocal(today);
-      const overdue = tasks.filter(t => isAttentionActiveTask(t) && t.end && t.end < todayYmd).length;
-      const milestones = (roadmapData || []).filter(t => t && t.isMilestone && !t.hidden).length;
-      const ra = (typeof _releaseProgressAgg === 'function') ? _releaseProgressAgg() : { agg: {}, relDate: {}, rels: [] };
-      const relRows = (ra.rels || []).slice(0, 6).map(r => { const a = ra.agg[r] || { done: 0, total: 0 }; const p = a.total ? Math.round(a.done / a.total * 100) : 0; const dt = ra.relDate[r] ? formatDateString(ra.relDate[r]) : ''; return '<tr><td style="padding:5px 0;font-size:13px;color:#334155;">' + esc(r) + (dt ? ' <span style="color:#94a3b8">' + esc(dt) + '</span>' : '') + '</td><td style="padding:5px 0;width:130px;"><div style="height:7px;background:#eef2f7;border-radius:4px;overflow:hidden;"><div style="height:100%;width:' + p + '%;background:#4f46e5;border-radius:4px;"></div></div></td><td style="padding:5px 0 5px 10px;text-align:right;font-size:13px;font-weight:700;color:#1e293b;width:44px;">' + p + '%</td></tr>'; }).join('');
-      const up = [];
-      (roadmapData || []).forEach(t => { if (t.isMilestone && !t.hidden && t.start && t.start >= todayYmd) up.push({ n: t.name, d: t.start }); });
-      (customCutoffs || []).forEach(c => { if (c && c.date && c.date >= todayYmd) up.push({ n: c.name, d: c.date }); });
-      up.sort((a, b) => String(a.d).localeCompare(b.d));
-      const upRows = up.slice(0, 5).map(x => '<tr><td style="padding:4px 0;font-size:13px;color:#334155;">' + esc(x.n) + '</td><td style="padding:4px 0;text-align:right;font-size:12px;color:#64748b;white-space:nowrap;">' + esc(formatDateString(x.d)) + '</td></tr>').join('') || '<tr><td style="padding:4px 0;font-size:13px;color:#64748b;">Запланированных вех нет</td></tr>';
-      const brand = (typeof reportBrand === 'object' && reportBrand) ? reportBrand : {};
-      const title = (brand.org && String(brand.org).trim()) || roadmapTitleText || 'Дорожная карта';
-      let po = ((document.getElementById('poNameDisplay') || {}).innerText || '').trim();
-      if (po === 'Фамилия Имя') po = '';
-      const stamp = String(brand.stamp || '').trim();
-      const genDate = formatDateString(todayYmd);
-      const kpi = (v, l, bad) => '<div style="flex:1;border:1px solid ' + (bad ? '#fecdd3' : '#e2e8f0') + ';background:' + (bad ? '#fff1f2' : '#fff') + ';border-radius:10px;padding:10px 12px;"><div style="font-size:20px;font-weight:800;color:' + (bad ? '#be123c' : '#1e293b') + ';line-height:1.1;">' + v + '</div><div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:0.04em;font-weight:700;margin-top:3px;">' + l + '</div></div>';
-      const sectionH = (t) => '<div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin:0 0 8px;border-bottom:1px solid #e2e8f0;padding-bottom:4px;">' + t + '</div>';
-      return '<div style="width:720px;background:#fff;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#0f172a;border:1px solid #e8edf4;border-radius:18px;overflow:hidden;">'
-        + '<div style="background:linear-gradient(135deg,#eef2ff,#f8fafc);padding:22px 28px;border-bottom:2px solid #4f46e5;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">'
-        + '<div><div style="font-size:21px;font-weight:800;letter-spacing:-0.3px;line-height:1.12;">' + esc(title) + '</div>'
-        + '<div style="font-size:12px;color:#64748b;margin-top:6px;">Дорожная карта' + (po ? ' &middot; РО: ' + esc(po) : '') + ' &middot; на ' + esc(genDate) + '</div></div>'
-        + '<div style="text-align:right;flex-shrink:0;"><div style="font-size:34px;font-weight:800;color:#4f46e5;line-height:1;">' + pct + '%</div><div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;margin-top:3px;">готовность</div></div>'
-        + '</div>'
-        + '<div style="padding:18px 28px 20px;">'
-        + '<div style="display:flex;gap:12px;margin-bottom:18px;">' + kpi('Задач', total) + kpi('Готово', done) + (overdue ? kpi('Просрочено', overdue, true) : kpi('Вех', milestones)) + '</div>'
-        + sectionH('Прогресс по релизам') + '<table style="width:100%;border-collapse:collapse;margin-bottom:16px;">' + (relRows || '<tr><td style="padding:4px 0;font-size:13px;color:#64748b;">Релизы не заданы</td></tr>') + '</table>'
-        + sectionH('Ближайшие вехи и отсечки') + '<table style="width:100%;border-collapse:collapse;">' + upRows + '</table>'
-        + '</div>'
-        + '<div style="padding:11px 28px;border-top:1px solid #e2e8f0;color:#64748b;font-size:11px;text-align:center;">' + (stamp ? esc(stamp) + ' &middot; ' : '') + (brand.footer && String(brand.footer).trim() ? esc(brand.footer) + ' &middot; ' : '') + 'Сформировано в Roadmap &middot; ' + esc(genDate) + '</div>'
-        + '</div>';
-    }
     // таблица CRC32 для zip-контейнера xlsx (потерялась при старой чистке , Excel не собирался)
     const _XLCRC = (function () { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); t[n] = c >>> 0; } return t; })();
     function _xlCrc32(u8){ let c=0xFFFFFFFF; for(let i=0;i<u8.length;i++) c=_XLCRC[(c^u8[i])&0xFF]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }
@@ -27552,8 +27695,6 @@ const m = document.getElementById('mineModeBtn');
         var srows=skeys.map(function(nm){ var a=secAgg[nm]; var p=a.total?Math.round(a.done/a.total*100):0; return '<div class="row"><div class="row-name"><span class="rn-name">'+esc(nm)+'</span></div>'+_deckBar(p,'#10b981')+'<div class="row-num">'+p+'%</div><div class="row-sub">'+a.done+'/'+a.total+'</div></div>'; }).join('');
         parts.push({badge:'Прогресс по секциям', body:skeys.length?('<h2>Прогресс по секциям</h2><div class="rows">'+srows+'</div>'):'<h2>Прогресс</h2><div class="empty">Задач пока нет — добавьте задачи на план, и здесь появится готовность.</div>'});
       }
-      // 3) NOW / NEXT / LATER (если есть инициативы)
-      var inits=(typeof projectInitiatives!=='undefined'?projectInitiatives:[]).filter(Boolean);
       // 3.5) ЗАГРУЗКА КОМАНДЫ (емкость и перегрузки)
       try {
         if (typeof computeCapacityBuckets === 'function') {
@@ -29097,7 +29238,6 @@ const m = document.getElementById('mineModeBtn');
       (roadmapData || []).forEach(function (t) { if (!t || !t.resource) return; var toks = (typeof splitResourceTokens === 'function') ? splitResourceTokens(t.resource) : [t.resource]; toks.forEach(function (tok) { var nm = (typeof parseResourceToken === 'function') ? parseResourceToken(tok).name : tok; add(nm); }); });
       return out;
     }
-    function _wiWord(s) { return s === 'green' ? 'в срок' : (s === 'amber' ? 'под вопросом' : (s === 'red' ? 'под угрозой' : (s === 'info' ? 'инфо' : 'без прогноза'))); }
     function _wiCount(rws) { var g = 0, a = 0, r = 0; (rws || []).forEach(function (o) { if (o.status === 'green') g++; else if (o.status === 'amber') a++; else if (o.status === 'red') r++; }); return { g: g, a: a, r: r }; }
     // Дельта строки прогноза сценарий против базы (раньше/позже на N дней, смена светофора). Пусто вне режима или без пары в базе.
     function _wiSummaryHtml() {
@@ -35152,6 +35292,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     }
     // Shared edit guard also protects legacy read-only HTML; no password lock.
     function requireUnlocked() {
+      if(typeof _protectedUpdateInstalled!=='undefined'&&_protectedUpdateInstalled)return false;
       if (READ_ONLY_MODE) { showToast('Только просмотр', 'info', 2500); return false; }
       return true;
     }
@@ -35619,7 +35760,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const el = document.getElementById('autosaveStatus');
       if (!el) return;
       if (!text && (typeof autoSaveFileHandle === 'undefined' || !autoSaveFileHandle) && (typeof _lastSavedBy !== 'undefined') && (_lastSavedBy || _lastSavedAt)) { if (typeof _renderSaveBadge === 'function') _renderSaveBadge(); return; }
-      el.className = 'hidden';
+      el.className = '';
+      el.dataset.tone = tone;
       { let _d = String(text || '').replace(/^Автосохранение:\s*/, ''); const _tm = _d.match(/(\d{1,2}:\d{2})/); if (/сохранено/i.test(_d) && _tm) { _d = 'автосохранено в ' + _tm[1]; if (typeof _lastSavedBy !== 'undefined' && _lastSavedBy) _d = 'Сохранил: ' + _lastSavedBy + ' · ' + _d; } el.textContent = _d; }
       if (text) el.title = String(text);
       // Дублируем время сохранения в подсказку дискеты , индикатор тихий, детали по наведению
@@ -40298,7 +40440,7 @@ function syncBodyScrollLock() {
    <div class="flex items-center gap-3">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
     <span class="info-version-meta inline-flex items-center">
-     <span id="appVersionBadge">v17.11 · 16.10.2026</span>
+     <span id="appVersionBadge">v17.12 · 16.10.2026</span>
     </span>
    </div>
    <div class="flex items-center gap-2 shrink-0">
@@ -40348,7 +40490,43 @@ function syncBodyScrollLock() {
 
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.11</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.12</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="safe-protected-copy" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12l4 4L19 6M5 21h14"/></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Надежнее защищенные копии</h5><span class="info-release-badge">ФАЙЛ</span></div>
+      <p class="text-xs text-slate-600">Редкие символы в названиях и истории больше не мешают открыть новую защищенную копию.</p>
+     </article>
+     <article data-release-card="empty-command-search" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12l4 4L19 6M5 21h14"/></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Команды без ввода</h5><span class="info-release-badge">ПОИСК</span></div>
+      <p class="text-xs text-slate-600">Пустой ⌘K показывает действия приложения. Обычный поиск сохраняет список недавних задач.</p>
+     </article>
+     <article data-release-card="report-years" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12l4 4L19 6M5 21h14"/></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Годы в диапазоне отчета</h5><span class="info-release-badge">ОТЧЕТ</span></div>
+      <p class="text-xs text-slate-600">При переходе через Новый год видны оба года. Состав задач и расчеты отчета не меняются.</p>
+     </article>
+     <article data-release-card="visible-save-state" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12l4 4L19 6M5 21h14"/></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Сохранение без догадок</h5><span class="info-release-badge">СОХРАНЕНИЕ</span></div>
+      <p class="text-xs text-slate-600">Индикатор правок заметнее, а сведения о сохранении доступны без наведения.</p>
+     </article>
+     <article data-release-card="touch-dependencies" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12l4 4L19 6M5 21h14"/></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Связи удобнее на телефоне</h5><span class="info-release-badge">СВЯЗИ</span></div>
+      <p class="text-xs text-slate-600">Кнопки карты и ручки связей получили область нажатия 44 пикселя на сенсорном экране.</p>
+     </article>
+     <article data-release-card="inplace-update" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12l4 4L19 6M5 21h14"/></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Обновление в том же файле</h5><span class="info-release-badge">ОБНОВЛЕНИЕ</span></div>
+      <p class="text-xs text-slate-600">Выберите папку рабочего HTML. Сначала создадим резерв и проверим план, затем предложим переоткрыть файл.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.11</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="portable-selection" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12l4 4L19 6M5 21h14"/></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Фильтры вместе с файлом</h5><span class="info-release-badge">ВЫБОР</span></div>
@@ -40376,13 +40554,6 @@ function syncBodyScrollLock() {
      </article>
     </div>
    </div>
-
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.10</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -44438,7 +44609,7 @@ function syncBodyScrollLock() {
         <div class="startup-heading">
           <div class="flex items-center gap-2 flex-wrap">
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
-            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">версия 17.11</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7v5h-5M4 17v-5h5M6.1 7a7 7 0 0111.6-2L20 8M4 16l2.3 3A7 7 0 0018 17"/></svg><span>Обновления</span></button>
+            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">версия 17.12</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7v5h-5M4 17v-5h5M6.1 7a7 7 0 0111.6-2L20 8M4 16l2.3 3A7 7 0 0018 17"/></svg><span>Обновления</span></button>
           </div>
           <div id="startupUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>

@@ -45,7 +45,9 @@
     .catcta{max-width:960px;margin:0 auto;background:var(--hero-wash);border:1px solid #dbe3f4;border-radius:20px;padding:32px 28px;box-shadow:0 20px 50px rgba(15,23,42,.08);text-align:center}.catcta p{color:var(--mut);margin:8px auto 0;max-width:680px}.catcta .cta{justify-content:center}
     .foot{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:var(--mut);font-size:13px}
     @media(max-width:900px){.herogrid{grid-template-columns:1fr;gap:26px}.heroright{justify-content:flex-start}}
-    @media(max-width:720px){.how,.outcomes{grid-template-columns:1fr}.outcomes{gap:24px}}
+    @media(max-width:860px){.outcomes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:720px){.how{grid-template-columns:1fr}.outcomes{gap:24px}}
+    @media(max-width:560px){.outcomes{grid-template-columns:1fr}}
     @media(max-width:560px){.cta .btn{width:100%}.vhero{max-width:none}section{padding:48px 0}}
     .vhero .lk{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.btn.purchase-open{height:auto;min-height:44px;padding:10px 14px;font-size:14px;line-height:1.4;border:0;text-align:center;max-width:100%}
     .purchase-dialog{margin:auto;width:calc(100% - 32px);max-width:560px;max-height:calc(100dvh - 32px);padding:24px;border:1px solid #d6ddec;border-radius:18px;background:#fff;color:var(--ink);box-shadow:0 24px 72px rgba(15,23,42,.24);overflow:auto}
@@ -68,7 +70,7 @@
     <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">Roadmap</span></div>
     <div class="herogrid">
       <div>
-        <h1>Дорожная карта — Roadmap v17.11</h1>
+        <h1>Дорожная карта — Roadmap v17.12</h1>
         <p class="lead">Собирайте задачи в проекты, назначайте исполнителей, ставьте сроки, планируйте спринты и следите за выполнением. Открывайте один и тот же план списком с календарем, на доске, в спринтах или на холсте.</p>
         <p class="lead">Добавляйте задачи вручную или загружайте из Jira. Настраивайте поля и статусы под свою команду. Roadmap работает в браузере без установки, а план можно сохранить в один файл.</p>
         <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a><a class="btn ghost" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a></div>
@@ -120,7 +122,7 @@
     <section><div class="wrap"><div class="catcta"><h2>Посмотрите, подойдет ли вам Roadmap</h2><p>Попробуйте план на примере команды или найдите в каталоге то, что поможет в вашей работе.</p><div class="cta"><a class="btn primary" href="app.html">Попробовать демо</a><a class="btn ghost" href="catalog.html">Посмотреть возможности</a></div></div></div></section>
   </main>
 
-  <footer class="foot"><div class="wrap">Roadmap v17.11 · Владимир Учинин</div></footer>
+  <footer class="foot"><div class="wrap">Roadmap v17.12 · Владимир Учинин</div></footer>
   <dialog class="purchase-dialog" id="purchase-dialog" aria-labelledby="purchase-title" aria-describedby="purchase-note">
     <div class="purchase-head"><h2 id="purchase-title">Запросить рабочую версию</h2><button class="btn ghost purchase-close" id="purchase-close" type="button" aria-label="Закрыть форму">&times;</button></div>
     <p class="purchase-note" id="purchase-note">Форма подготовит письмо автору для обсуждения цены и условий. Оно откроется в вашей почтовой программе, отправить его нужно самостоятельно. Это не заказ и не оплата. Сайт не отправляет и не сохраняет данные формы.</p>
