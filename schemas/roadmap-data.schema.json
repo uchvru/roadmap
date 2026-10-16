@@ -19,6 +19,24 @@
     "savedBy": { "type": "string" },
     "title": { "type": "string" },
     "pageMeta": { "type": "object" },
+    "viewFilters": {
+      "type": "object",
+      "description": "Optional local view selection and named filter sets; not task data.",
+      "properties": {
+        "status": { "type": "array", "items": { "type": "string" } },
+        "resource": { "type": "array", "items": { "type": "string" } },
+        "project": { "type": "array", "items": { "type": "string" } },
+        "type": { "type": "array", "items": { "type": "string" } },
+        "release": { "type": "array", "items": { "type": "string" } },
+        "label": { "type": "array", "items": { "type": "string" } },
+        "component": { "type": "array", "items": { "type": "string" } },
+        "board": { "enum": ["", "on", "off"] },
+        "modes": { "type": "object" },
+        "customFields": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "string" } } },
+        "presets": { "type": "array", "items": { "type": "object" } }
+      },
+      "additionalProperties": true
+    },
     "sections": {
       "type": "array",
       "items": { "type": "string", "minLength": 1 },

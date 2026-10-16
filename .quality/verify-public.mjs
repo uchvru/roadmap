@@ -9,7 +9,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, lstatSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, extname, join, relative, resolve } from 'node:path';
-import {publicUpdatePath,verifyUpdateAsset} from './verify-update-asset.mjs';
+import {publicUpdatePath,verifyUpdateAsset,historicalUpdateAssets,verifyHistoricalUpdateAsset} from './verify-update-asset.mjs';
 
 const root = resolve(process.argv[2] || process.cwd());
 const failures = [];
@@ -131,6 +131,14 @@ try {
     pass('Подписанное обновление совпадает с чистым кодом app.html; личных данных в пакете нет');
   }
 } catch(error) { fail('Публичное обновление отсутствует или не прошло проверку: '+error.message); }
+for(const path of Object.keys(historicalUpdateAssets)){
+  if(!allFiles.includes(path)||path===`updates/roadmap-v${publicRelease?.version}.roadmap-update`)continue;
+  try{
+    if(!lstatSync(file(path)).isFile())throw Error('Historical update is not a regular file');
+    verifyHistoricalUpdateAsset(path,text(path));allowedFiles.add(path);
+    pass('Прежний публичный пакет сохранен без изменения, подпись проверена: '+path);
+  }catch(error){fail('Прежний публичный пакет не прошел проверку: '+error.message);}
+}
 const unexpectedFiles = allFiles.filter(path => !allowedFiles.has(path));
 assert(publicRelease && Object.keys(publicRelease).length === 1
   && typeof publicRelease.version === 'string'

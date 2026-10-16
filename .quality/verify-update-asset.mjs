@@ -5,6 +5,20 @@ import {createHash,createPublicKey,verify} from 'node:crypto';
 export const updatePublicKeys=Object.freeze({
   'roadmap-updates-2026-10':'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAERyOeAnrhopvbgfhRPDC0B5Qz3eDbI5u+8fKT71jHFtU5axVsU2QsFUQrhdOuUMs7pUlCsI66m9uj+4BP0rW/mA=='
 });
+// Exact released bytes, not a wildcard for old signed/private exports.
+export const historicalUpdateAssets=Object.freeze({
+  'updates/roadmap-v17.10.roadmap-update':'e8908d46f5458f1c4a9cef4ca48b1bd1ca4857cc8aa3f24b515154eb4d4188a0'
+});
+export function verifyHistoricalUpdateAsset(path,text){
+  if(!Object.hasOwn(historicalUpdateAssets,path)||typeof text!=='string'||Buffer.byteLength(text)>16*1024*1024
+    ||createHash('sha256').update(text).digest('hex')!==historicalUpdateAssets[path])throw Error('Unknown or changed historical update');
+  // The pinned hash is already a publication contract. Verify its signature and
+  // internal release metadata too, without comparing it to the newer app.
+  const template=JSON.parse(JSON.parse(text).payload).template;
+  const proof=verifyUpdateAsset(text,template);
+  if(publicUpdatePath(proof.version)!==path)throw Error('Historical update path mismatch');
+  return proof;
+}
 export function publicUpdatePath(version){
   if(typeof version!=='string'||!/^\d+\.\d+(?:\.\d+)?$/.test(version))throw Error('Invalid release version');
   const [major,minor]=version.split('.').map(Number);

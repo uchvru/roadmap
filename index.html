@@ -3,10 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="roadmap-build-date" content="2026-10-13">
-  <meta name="roadmap-publication-date" content="2026-10-13">
+  <meta name="roadmap-build-date" content="2026-10-16">
+  <meta name="roadmap-publication-date" content="2026-10-16">
   <meta name="description" content="Roadmap: планировщик задач и проектов. Список с календарем, Канбан, Скрам, задачи из Jira и настройка под вашу команду. Работает в браузере.">
   <title>Roadmap: планировщик задач и проектов</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Cpath d='M9 10h14M9 16h10M9 22h6' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Roadmap: планировщик задач и проектов">
+  <meta property="og:description" content="Задачи, календарь, Канбан, Скрам и планирование команды в одном файле.">
+  <meta property="og:url" content="https://uchvru.github.io/roadmap/">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     :root{--ink:#0f172a;--mut:#5b6c85;--brand:#4f46e5;--line:#e6eaf1;--page-wash:linear-gradient(145deg,#f8f9fd,#f2f5fb);--hero-wash:linear-gradient(160deg,#f0f3ff 0%,#edf3fd 42%,#f6f8fc 100%);--button-primary:linear-gradient(135deg,#5148e4,#4941d6);--button-primary-hover:linear-gradient(135deg,#4740cc,#4038ba);--button-secondary:linear-gradient(135deg,#fff,#f4f5fd);--button-secondary-hover:linear-gradient(135deg,#fafaff,#eef0fc)}
@@ -34,8 +39,7 @@
     section{padding:56px 0}.alt{background:linear-gradient(145deg,#fff,#f8f9fe);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.sechead{text-align:center;max-width:760px;margin:0 auto 34px}.sechead h2{font-size:clamp(24px,3.5vw,34px);font-weight:800;letter-spacing:-.4px}.sechead p{color:var(--mut);font-size:16px;margin-top:10px}
     .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 6px 18px rgba(15,23,42,.05);transition:transform .16s,box-shadow .16s}.card:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(15,23,42,.1)}
     .card h3{font-size:17px;font-weight:800}.card p{font-size:14px;color:#52607a;margin-top:6px}
-    .outcomes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px;list-style:none}.outcomes li{min-width:0;padding-top:18px;border-top:1px solid #c7d2fe}.outcomes h3{font-size:21px;line-height:1.3;letter-spacing:-.2px}.outcomes p{margin-top:10px;font-size:15px;color:#475569}.outcomes .detail{font-size:13px;color:var(--mut)}
-    .edition-note{max-width:900px;margin:26px auto 0;font-size:14px;color:var(--mut);text-align:center}
+    .outcomes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px;list-style:none}.outcomes li{min-width:0;padding-top:18px;border-top:1px solid #c7d2fe}.outcomes h3{font-size:21px;line-height:1.3;letter-spacing:-.2px}.outcomes p{margin-top:10px;font-size:15px;color:#475569}
     .how{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:900px;margin:0 auto}.how .card{text-align:center}
     .faq{max-width:760px;margin:0 auto}.faq details{border-bottom:1px solid var(--line);padding:8px 0}.faq summary{cursor:pointer;padding:12px 0;font-size:17px;font-weight:700;line-height:1.5}.faq summary:focus-visible{outline:3px solid #4338ca;outline-offset:3px}.faq p{margin:0 0 16px;font-size:15px;color:#475569;line-height:1.65}.faq a{color:#4338ca;text-decoration:underline;text-underline-offset:3px}.difference{max-width:760px;margin:0 auto}.difference p{font-size:17px;line-height:1.65;color:#475569}.difference p+p{margin-top:16px}.difference strong{color:var(--ink)}
     .catcta{max-width:960px;margin:0 auto;background:var(--hero-wash);border:1px solid #dbe3f4;border-radius:20px;padding:32px 28px;box-shadow:0 20px 50px rgba(15,23,42,.08);text-align:center}.catcta p{color:var(--mut);margin:8px auto 0;max-width:680px}.catcta .cta{justify-content:center}
@@ -64,7 +68,7 @@
     <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">Roadmap</span></div>
     <div class="herogrid">
       <div>
-        <h1>Дорожная карта — Roadmap v17.10</h1>
+        <h1>Дорожная карта — Roadmap v17.11</h1>
         <p class="lead">Собирайте задачи в проекты, назначайте исполнителей, ставьте сроки, планируйте спринты и следите за выполнением. Открывайте один и тот же план списком с календарем, на доске, в спринтах или на холсте.</p>
         <p class="lead">Добавляйте задачи вручную или загружайте из Jira. Настраивайте поля и статусы под свою команду. Roadmap работает в браузере без установки, а план можно сохранить в один файл.</p>
         <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a><a class="btn ghost" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a></div>
@@ -116,7 +120,7 @@
     <section><div class="wrap"><div class="catcta"><h2>Посмотрите, подойдет ли вам Roadmap</h2><p>Попробуйте план на примере команды или найдите в каталоге то, что поможет в вашей работе.</p><div class="cta"><a class="btn primary" href="app.html">Попробовать демо</a><a class="btn ghost" href="catalog.html">Посмотреть возможности</a></div></div></div></section>
   </main>
 
-  <footer class="foot"><div class="wrap">Roadmap v17.10 · Владимир Учинин</div></footer>
+  <footer class="foot"><div class="wrap">Roadmap v17.11 · Владимир Учинин</div></footer>
   <dialog class="purchase-dialog" id="purchase-dialog" aria-labelledby="purchase-title" aria-describedby="purchase-note">
     <div class="purchase-head"><h2 id="purchase-title">Запросить рабочую версию</h2><button class="btn ghost purchase-close" id="purchase-close" type="button" aria-label="Закрыть форму">&times;</button></div>
     <p class="purchase-note" id="purchase-note">Форма подготовит письмо автору для обсуждения цены и условий. Оно откроется в вашей почтовой программе, отправить его нужно самостоятельно. Это не заказ и не оплата. Сайт не отправляет и не сохраняет данные формы.</p>
