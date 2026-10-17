@@ -8,7 +8,8 @@ export const updatePublicKeys=Object.freeze({
 // Exact released bytes, not a wildcard for old signed/private exports.
 export const historicalUpdateAssets=Object.freeze({
   'updates/roadmap-v17.10.roadmap-update':'e8908d46f5458f1c4a9cef4ca48b1bd1ca4857cc8aa3f24b515154eb4d4188a0',
-  'updates/roadmap-v17.11.roadmap-update':'ed42b3f6e159f678ddddf69f71730d554adbc4f0f401dc040a1a5f3a0722ee06'
+  'updates/roadmap-v17.11.roadmap-update':'ed42b3f6e159f678ddddf69f71730d554adbc4f0f401dc040a1a5f3a0722ee06',
+  'updates/roadmap-v17.12.roadmap-update':'0e95ae3df690dca5dc4dbfe8372c09ac356fd9f853e5f8e63b7d0b412dae96f0'
 });
 export function verifyHistoricalUpdateAsset(path,text){
   if(!Object.hasOwn(historicalUpdateAssets,path)||typeof text!=='string'||Buffer.byteLength(text)>16*1024*1024
