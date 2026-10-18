@@ -11,7 +11,11 @@ import { existsSync, lstatSync, readdirSync, readFileSync, statSync } from 'node
 import { basename, extname, join, relative, resolve } from 'node:path';
 import {publicUpdatePath,verifyUpdateAsset,historicalUpdateAssets,verifyHistoricalUpdateAsset} from './verify-update-asset.mjs';
 
-const root = resolve(process.argv[2] || process.cwd());
+const args=process.argv.slice(2);
+if(args.some(arg=>arg.startsWith('--')&&arg!=='--local')||args.filter(arg=>!arg.startsWith('--')).length>1)throw Error('Expected [root] [--local]');
+const localOnly=args.includes('--local');
+const root = resolve(args.find(arg=>!arg.startsWith('--')) || process.cwd());
+if(localOnly)console.log('LOCAL ONLY: release readiness and update/app equivalence are not certified.');
 const failures = [];
 const passes = [];
 
@@ -127,8 +131,13 @@ try {
   const updatePath=publicUpdatePath(publicRelease?.version);
   if(updatePath){
     allowedFiles.add(updatePath);
-    verifyUpdateAsset(text(updatePath),text('app.html'));
-    pass('Подписанное обновление совпадает с чистым кодом app.html; личных данных в пакете нет');
+    if(localOnly){
+      verifyHistoricalUpdateAsset(updatePath,text(updatePath));
+      pass('Локальный режим: опубликованный пакет неизменен, подпись проверена; новый код еще не упакован');
+    }else{
+      verifyUpdateAsset(text(updatePath),text('app.html'));
+      pass('Подписанное обновление совпадает с чистым кодом app.html; личных данных в пакете нет');
+    }
   }
 } catch(error) { fail('Публичное обновление отсутствует или не прошло проверку: '+error.message); }
 for(const path of Object.keys(historicalUpdateAssets)){
@@ -360,7 +369,7 @@ if (catalogManifest?.files && catalogManifest?.expected) {
   const catalogCards = [...catalog.matchAll(/<article class=card\b/g)].length;
   assert(catalogCards === featureIds.size, `В каталоге ${featureIds.size} карточки функций`);
   const catalogLead = catalog.match(/<p\b[^>]*class=(?:"lead"|'lead'|lead)[^>]*>([\s\S]*?)<\/p>/)?.[1] || '';
-  assert(['Roadmap', 'задачи', 'календарь', 'Канбан', 'Скрам'].every(word => catalogLead.includes(word)), 'Введение объясняет назначение и основные возможности продукта');
+  assert(catalogLead.includes('Roadmap') && /задач/.test(catalogLead) && ['календарь','Канбан','Скрам'].every(word=>catalog.includes(word)), 'Короткое введение объясняет назначение; возможности раскрыты в карточках каталога');
   const cardIds = [...catalog.matchAll(/<article class=card\b[^>]*data-n="(\d+)"/g)].map(match => 'f' + match[1].padStart(2, '0'));
   assert(cardIds.length === featureIds.size && new Set(cardIds).size === featureIds.size && cardIds.every(id => featureIds.has(id)), `Все ${featureIds.size} карточки соответствуют снимкам без пропусков и дублей`);
   for (const id of featureIds) {

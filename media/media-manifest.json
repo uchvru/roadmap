@@ -1,9 +1,9 @@
 {
-  "version": "17.14",
+  "version": "17.15",
   "generatedAt": "2026-10-18",
-  "renderedAt": "2026-10-18T09:33:47.917Z",
+  "renderedAt": "2026-10-18T16:18:14.775Z",
   "source": "synthetic-demo-PAY-LK",
-  "appSha256": "00600ccd513f0d583c2774c951aa97ed6646a7f060932cbf1c9824937131d5f0",
+  "appSha256": "7d5ce96ba95166e90baba1b752d4f027412f8ed8ef5e4eae88f4f08070912f6f",
   "renderer": "Remotion 4.0.529",
   "composition": "RoadmapFilm",
   "sources": {
@@ -25,14 +25,14 @@
     "src/scenes/Plan.tsx": "6321be3f395eb44595977366fd5bf3d3702f6ddb3d2a53907bab4ebe8a836ce7",
     "src/scenes/Risk.tsx": "848695e0be446fe29788d28a008b53f3eb73457ea72557abe0516160b3fabbe3",
     "src/scenes/Start.tsx": "f403a0834d8679ff9e4f07a5a5c45599a5a8f968e4da8e9ed8f59af9b4e94867",
-    "public/f01_light.webp": "f601559383ccb85c46d3d74cfdf7436000bd25fee0c3d38dab43db12a1bb800e",
-    "public/f04_light.webp": "2dbe114a7ce77bd2c60370356397b770aa3b29d9a615320e6b26b9aaee57203c",
-    "public/f05_light.webp": "f5992776b4a864e20333e73e448b29c9e1326a825a8e7bc66ec2cd4d8c3c2ac7",
-    "public/f09_light.webp": "65fbb71f9f618bb0b10db4e66ce4ca1cc1a0b88f79a5125efa72ab1cc38a058f",
-    "public/f44_light.webp": "cf1ca77b72cb5b9ecc714fb037a4c6143cc5fd3b8341f1d6f84ac526f3f54b42",
-    "public/f45_light.webp": "2c93982dc78822d37229234aafd32e037a49c55cd171e220632114dc4a64a41b",
+    "public/f01_light.webp": "726eb10f305ca00223b111f96f622d0b3b282c81c2f215d63d90b79f0904b441",
+    "public/f04_light.webp": "d5797c06cbaa4f68f4b43d3ebe086102f32c6771cdf45c8b56bcadfbdcef97f2",
+    "public/f05_light.webp": "ed831c62f63fc9e49b70d3673f6d2038785f663c6740a90caa97552c636c3f97",
+    "public/f09_light.webp": "7becaa00321e8d01049229ceca1d8d6951fc353bff87c124d515e83658baa279",
+    "public/f44_light.webp": "7847dddeada9811f0362151bb1156c4db9beca4d8cf9ebb063ef6955cebec5f7",
+    "public/f45_light.webp": "24aadf60d9926c170968e70e1f1f7f2a4596c34414b14922c55fac6cd1b8e465",
     "public/f46_light.webp": "f045697eddbaada0772e4fca024020e4b705d8e62452c6b5cd04f8e6dd413583",
-    "public/f47_light.webp": "a93f70c8cc480f01b38a85cf28c4141e5e053f228bce10639495ce1abc0979d0"
+    "public/f47_light.webp": "81f4eabc3c7cd5187be568f50c13b8d1f2906589283f98bac7a79825656c92b7"
   },
   "buildSources": {
     "tools/build-remotion-video.mjs": "6e49b4f9999eaf804f784e4adb7ca5a6c7a1625783f3c6ad8bc8ad724eede6e4",
@@ -40,8 +40,8 @@
   },
   "video": {
     "file": "roadmap-demo.mp4",
-    "sha256": "316009ec718ecc64ef99e524f0aa96473f15258bfab068b4f091c870ab5a112b",
-    "bytes": 4934395,
+    "sha256": "8f7f17251727537280cc7b78d52b9ebe9b90a95ac005fa03c31d5da4076eaa9f",
+    "bytes": 4915642,
     "durationSeconds": 120,
     "width": 1440,
     "height": 810,
@@ -69,8 +69,8 @@
   },
   "poster": {
     "file": "roadmap-demo-poster.jpg",
-    "sha256": "ca21c7983093c13832f2739e39dab40cb8f81788aa919e358a448fa22f192504",
-    "bytes": 53490,
+    "sha256": "ce407de706dc20eb95c9bdf9708667895a390c36b5db120f9961ddb05e7169ee",
+    "bytes": 53509,
     "width": 1440,
     "height": 810,
     "quality": 3,

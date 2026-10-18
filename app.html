@@ -8803,7 +8803,27 @@ body.compact-workspace #planWorkspaceHeader .plan-history-controls{max-width:100
 .overview-item{min-width:0;border-bottom:1px solid var(--rm-border);padding-bottom:16px}
 body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,1fr);justify-items:start;gap:4px;text-align:left;width:100%;min-height:44px;padding:8px;border-radius:9px;color:var(--rm-text);overflow-wrap:anywhere;background:transparent;cursor:pointer;line-height:1.4}
 #jiraDifferencesModal .rm-dialog-close,#planDigestModal .rm-dialog-close{--rm-icon-control-h:44px;--rm-hit-target:44px}
-#jiraSyncSummary>div>div:first-child{flex-wrap:wrap}
+#jiraSyncSummary .jira-summary-body>div:first-child{flex-wrap:wrap}
+#jiraSyncSummary summary{cursor:pointer;min-height:44px;padding:8px 12px;color:var(--rm-text);font-size:13px;font-weight:600}
+#jiraSyncSummary .jira-summary-body{padding:0 12px 12px}
+#archiveModal .archive-service-menu{position:relative;justify-self:start}
+#archiveModal .archive-service-menu>summary{list-style:none;cursor:pointer;min-height:44px;display:flex;align-items:center;justify-content:center;padding:8px 12px;border:1px solid var(--rm-border);border-radius:var(--rm-radius-md);color:var(--rm-text);background:var(--rm-surface)}
+#archiveModal .archive-service-menu>summary::-webkit-details-marker{display:none}
+#archiveModal .archive-service-menu[open]>.archive-footer-actions{position:absolute;bottom:calc(100% + 8px);left:0;width:min(280px,calc(100vw - 64px));max-height:50dvh;overflow-y:auto;padding:8px;display:grid;background:var(--rm-surface);border:1px solid var(--rm-border);border-radius:var(--rm-radius-md);box-shadow:var(--rm-shadow-sm);z-index:5}
+#archiveModal .archive-service-menu .archive-footer-actions>button{width:100%;justify-content:flex-start;min-height:44px}
+@media(max-width:767px){
+ body.compact-workspace #appHeader #dataMenuBtn{width:44px;min-width:44px;padding:0;justify-content:center}
+ body.compact-workspace #appHeader #dataMenuBtn>svg:first-child{display:block}
+ body.compact-workspace #appHeader #dataMenuBtn .rm-header-action-label,body.compact-workspace #appHeader #dataMenuBtn>svg:last-child{display:none}
+ body.compact-workspace #appHeader .app-header-meta{flex-wrap:nowrap;font-size:12px}
+ body.compact-workspace #appHeader .app-header-po-chip{max-width:50%;min-width:0}
+ body.compact-workspace #appHeader .app-header-date{min-width:0;flex-shrink:1;white-space:nowrap}
+ body.compact-workspace #appHeader .header-today-label{display:none}
+ #archiveModal .archive-footer{display:flex;flex-wrap:wrap;padding:12px;gap:8px}
+ #archiveModal .archive-footer-primary{flex:1;order:0}
+ #archiveModal .archive-service-menu{order:1;flex:none}
+ #archiveModal .archive-service-menu[open]>.archive-footer-actions{left:auto;right:0}
+}
 .overview-task:hover{background:var(--rm-selected-bg)}
 .overview-task small{font-size:12px;color:var(--rm-muted);font-weight:400}
 .overview-diff{margin:8px 0 0;display:grid;gap:8px}
@@ -9012,7 +9032,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.14</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.15</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9035,7 +9055,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
           </button>
           <span class="app-header-meta-chip app-header-date shrink-0 inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-slate-600" title="Текущая дата проекта">
             <svg aria-hidden="true" class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-c2b76789950a"></use></svg>
-            Сегодня <span id="currentProjectDate" class="font-medium text-slate-600"></span>
+            <span class="header-today-label">Сегодня</span> <span id="currentProjectDate" class="font-medium text-slate-600"></span>
           </span>
         </div>
         </div>
@@ -9907,7 +9927,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v17.14">
+<script data-roadmap-modules="v17.15">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -12242,7 +12262,7 @@ function styleExportDocument(html,choice,kind){
 }
 if(typeof globalThis!=='undefined')Object.assign(globalThis.RoadmapModules||(globalThis.RoadmapModules={}),{createExportTheme,isExportTheme,styleExportDocument});
 
-/* module:work-calendar sha256:f9afd201a4365e662b1e077fff5e14bb8cf823e9b59b35555c3ae10ae8a1d179 */
+/* module:work-calendar sha256:59fd4b6a6bacce275f448ce38ea8e891a66a85fb20c056d3a1270eb07fa83f2d */
 // Frozen working-calendar arithmetic. No DOM, storage, network or system clock.
 // Existing holiday/transfer assumptions are preserved, not a revised official calendar.
 const RU_HOLIDAYS = new Set([
@@ -12335,8 +12355,10 @@ function spanWorkingDays(startYmd, n, person, context) {
   const {parseLocalDate,toYmdLocal} = context;
   var d = parseLocalDate(startYmd), guard = 0;
   while (!personWorksOnDay(person, d, context) && guard < 800) { d.setDate(d.getDate() + 1); guard++; }
+  if (!personWorksOnDay(person, d, context)) return null;
   var start = toYmdLocal(d), done = 1;
   while (done < n && guard < 4000) { d.setDate(d.getDate() + 1); guard++; if (personWorksOnDay(person, d, context)) done++; }
+  if (done < n) return null;
   return { start: start, end: toYmdLocal(d) };
 }
 
@@ -12344,8 +12366,10 @@ function startForWorkingEnd(endYmd, n, person, context) {
   const {parseLocalDate,toYmdLocal} = context;
   var d = parseLocalDate(endYmd), guard = 0;
   while (!personWorksOnDay(person, d, context) && guard < 800) { d.setDate(d.getDate() - 1); guard++; }
+  if (!personWorksOnDay(person, d, context)) return null;
   var end = toYmdLocal(d), done = 1;
   while (done < n && guard < 4000) { d.setDate(d.getDate() - 1); guard++; if (personWorksOnDay(person, d, context)) done++; }
+  if (done < n) return null;
   return { start: toYmdLocal(d), end: end };
 }
 
@@ -16380,9 +16404,9 @@ if (typeof globalThis !== 'undefined') {
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', applyCoreControlLabels, { once: true });
     else applyCoreControlLabels();
-    // Экранирование строки внутри одинарных кавычек в onclick="fn('${val}')".
+    // HTML-атрибут. Для JS-аргументов обработчика использовать escJsArg.
     function escAttr(v) {
-      return escHtml(v).replace(/\\/g, '\\\\');
+      return escHtml(v);
     }
     // Безопасная подстановка ПРОИЗВОЛЬНОГО имени как JS-строки внутри inline-обработчика
     // onclick="fn('${escJsArg(name)}')". Одинарная кавычка из имени (после HTML-декода)
@@ -16395,6 +16419,7 @@ if (typeof globalThis !== 'undefined') {
         .replace(/'/g, '\\x27')
         .replace(/"/g, '\\x22')
         .replace(/`/g, '\\x60')
+        .replace(/[\u0000-\u001f\u007f\u2028\u2029]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'))
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
@@ -17584,7 +17609,7 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '17.14';
+    const APP_VERSION = '17.15';
     const APP_VERSION_DATE = '18.10.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) { b.textContent = 'v' + APP_VERSION; b.title = APP_VERSION_DATE; } } catch (e) {}
@@ -18857,7 +18882,7 @@ if (typeof globalThis !== 'undefined') {
       const priority = first.length ? `<section class="rounded-2xl border border-indigo-200 bg-indigo-50/70 p-3"><div class="text-[10px] uppercase tracking-wider font-bold text-indigo-600 mb-2">Что исправить первым</div><div class="grid sm:grid-cols-3 gap-2">${first.map(function(g,i){return `<button type="button" onclick="toggleDataQualityGroup(${i})" class="text-left bg-white border border-indigo-100 rounded-xl p-2.5 hover:border-indigo-300"><span class="block text-xs font-semibold text-slate-800 line-clamp-2">${escHtml(g.title)}</span><span class="block mt-1 text-[10px] text-slate-500">${g.items.length} ${pluralRu(g.items.length,['запись','записи','записей'])}</span></button>`;}).join('')}</div></section>` : '';
       const cards = _dqGroupedView.map(function(g,idx){
         const open=_dqExpandedGroups.has(g.key), sample=g.items.slice(0,3).map(x=>x.entity&&x.entity.label?x.entity.label:'').filter(Boolean);
-        const details=open?`<div class="mt-3 pt-3 border-t border-slate-100 space-y-2">${g.items.map(function(x){return `<div class="flex items-start gap-2 rounded-lg bg-slate-50 p-2"><div class="grow min-w-0"><div class="text-xs text-slate-600">${escHtml(x.detail)}</div>${x.entity&&x.entity.label?`<div class="text-[10px] text-slate-400 mt-1 truncate">${escHtml(x.entity.label)}</div>`:''}</div>${x.entity&&x.entity.type==='task'?`<button type="button" onclick="jumpFromDataQuality('${escAttr(x.id)}')" class="shrink-0 h-8 px-2.5 rounded-lg border border-indigo-200 text-indigo-700 text-[10px] font-semibold hover:bg-indigo-50">Открыть</button>`:''}</div>`;}).join('')}</div>`:'';
+        const details=open?`<div class="mt-3 pt-3 border-t border-slate-100 space-y-2">${g.items.map(function(x){return `<div class="flex items-start gap-2 rounded-lg bg-slate-50 p-2"><div class="grow min-w-0"><div class="text-xs text-slate-600">${escHtml(x.detail)}</div>${x.entity&&x.entity.label?`<div class="text-[10px] text-slate-400 mt-1 truncate">${escHtml(x.entity.label)}</div>`:''}</div>${x.entity&&x.entity.type==='task'?`<button type="button" onclick="jumpFromDataQuality('${escJsArg(x.id)}')" class="shrink-0 h-8 px-2.5 rounded-lg border border-indigo-200 text-indigo-700 text-[10px] font-semibold hover:bg-indigo-50">Открыть</button>`:''}</div>`;}).join('')}</div>`:'';
         return `<article class="rm-panel p-3"><div class="flex items-start gap-3"><span class="mt-0.5 shrink-0 px-2 py-1 rounded-lg text-[10px] font-bold ${tone[g.severity]}">${g.severity==='error'?'ОШИБКА':(g.severity==='warning'?'ВНИМАНИЕ':'ЗАПОЛНИТЬ')}</span><div class="grow min-w-0"><div class="flex items-center gap-2 flex-wrap"><div class="text-sm font-semibold text-slate-800">${escHtml(g.title)}</div><span class="text-[10px] font-bold text-slate-500 bg-slate-100 rounded-full px-2 py-0.5">${g.items.length}</span><span class="text-[9px] font-semibold text-slate-400 uppercase tracking-wide">${escHtml(_dqCategoryName(g.category))}</span></div>${sample.length?`<div class="text-[10px] text-slate-400 mt-1 truncate">${escHtml(sample.join(' · '))}${g.items.length>sample.length?' · еще '+(g.items.length-sample.length):''}</div>`:''}</div><button type="button" onclick="toggleDataQualityGroup(${idx})" class="shrink-0 h-9 px-3 rounded-lg border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50">${open?'Свернуть':'Показать'}</button></div>${details}</article>`;
       }).join('');
       list.innerHTML = priority + cards;
@@ -18936,7 +18961,7 @@ if (typeof globalThis !== 'undefined') {
     }
     function _pbAction(label, action, primary, editing) {
       const locked = !!editing && typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE;
-      return `<button type="button" onclick="${locked ? '' : `planBuilderAction('${escAttr(action)}')`}" ${locked ? 'disabled title="Недоступно в режиме просмотра"' : ''} class="rm-action rm-btn rm-plan-builder-action ${primary ? 'rm-btn-primary' : 'rm-btn-secondary'} h-10 px-4 text-xs font-semibold ${primary ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50'} ${locked ? 'opacity-50 cursor-not-allowed' : ''}">${escHtml(label)}</button>`;
+      return `<button type="button" onclick="${locked ? '' : `planBuilderAction('${escJsArg(action)}')`}" ${locked ? 'disabled title="Недоступно в режиме просмотра"' : ''} class="rm-action rm-btn rm-plan-builder-action ${primary ? 'rm-btn-primary' : 'rm-btn-secondary'} h-10 px-4 text-xs font-semibold ${primary ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50'} ${locked ? 'opacity-50 cursor-not-allowed' : ''}">${escHtml(label)}</button>`;
     }
     function _pbIntro(step, title, text) {
       return `<div class="rm-plan-builder-intro mb-4"><div class="text-[10px] font-bold tracking-widest uppercase text-indigo-600">Шаг ${step + 1} из 7</div><h3 class="text-xl font-semibold text-slate-900 mt-1">${escHtml(title)}</h3><p class="text-sm leading-relaxed text-slate-500 mt-2">${escHtml(text)}</p></div>`;
@@ -21056,9 +21081,9 @@ if (typeof globalThis !== 'undefined') {
     function _computeParallelViolations() {
       const out = new Set();
       try {
-        const lim = {}; Object.keys(resourceParallel || {}).forEach(n => { const v = _resParLimit(n); if (v > 0) lim[n] = v; });
+        const lim = Object.create(null); Object.keys(resourceParallel || {}).forEach(n => { const v = _resParLimit(n); if (v > 0) lim[n] = v; });
         if (!Object.keys(lim).length) return out;
-        const byRes = {};
+        const byRes = Object.create(null);
         (roadmapData || []).forEach(t => {
           if (!t || t.isMilestone || isFinalStatus(t.status) || isHeldStatus(t.status) || !t.start || !t.end) return;
           const nm = String(t.resource || '').split('(')[0].split(',')[0].trim();
@@ -22738,7 +22763,7 @@ if (typeof globalThis !== 'undefined') {
       const undoSvg = `<svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11a4 4 0 014 4v2M3 10l4-4M3 10l4 4"></path></svg>`;
       const row = (c, isDone) => {
         const th = headerChipTheme(c);
-        const idSafe = escAttr(c.id);
+        const idSafe = escJsArg(c.id);
         const nameCls = isDone ? 'line-through text-slate-400' : 'text-slate-700';
         const cb = isDone
           ? `<span class="w-4 h-4 shrink-0"></span>`
@@ -23084,21 +23109,30 @@ let resourceView = 'roles'; // 'roles' | 'load'
             return dateToDays(a.start) - dateToDays(b.start) || dateToDays(a.end) - dateToDays(b.end);
           });
         let freeFrom = -Infinity; // календарный индекс, раньше которого следующая задача начаться не может
+        let calendarUnavailable = false;
         arr.forEach(t => {
+          if (calendarUnavailable) return;
           const estD = (typeof parseEstimateDays === 'function') ? parseEstimateDays(t.estimate) : null;
           const anchor = getStatusGroup(t.status) === 'in_progress';
           let s = dateToDays(t.start), startYmd = t.start;
           if (anchor) {
-            freeFrom = Math.max(freeFrom, dateToDays(_spSpan(daysToDate(dateToDays(t.end) + 1), 1, person).start));
+            const next = _spSpan(daysToDate(dateToDays(t.end) + 1), 1, person);
+            if (!next) { calendarUnavailable = true; return; }
+            freeFrom = Math.max(freeFrom, dateToDays(next.start));
             return;
           }
           s = Math.max(s, freeFrom, _todayDays);
           const span = _spSpan(daysToDate(s), estD > 0 ? Math.ceil(estD) : 1, person);
+          if (!span) { calendarUnavailable = true; return; }
           startYmd = span.start;
           s = dateToDays(startYmd);
           // Без оценки сохраняется календарная длительность; окончание не ставится в отпуск.
-          const endYmd = estD > 0 ? span.end : _spSpan(daysToDate(s + Math.max(0, dateToDays(t.end) - dateToDays(t.start))), 1, person).start;
-          freeFrom = dateToDays(_spSpan(daysToDate(dateToDays(endYmd) + 1), 1, person).start);
+          const endSpan = estD > 0 ? span : _spSpan(daysToDate(s + Math.max(0, dateToDays(t.end) - dateToDays(t.start))), 1, person);
+          if (!endSpan) { calendarUnavailable = true; return; }
+          const endYmd = estD > 0 ? endSpan.end : endSpan.start;
+          const next = _spSpan(daysToDate(dateToDays(endYmd) + 1), 1, person);
+          calendarUnavailable = !next;
+          if (next) freeFrom = dateToDays(next.start);
           if ((startYmd !== t.start || endYmd !== t.end) && !seen.has(t.id)) {
             seen.add(t.id);
             sugg.push({ id: t.id, person, name: t.name, fromStart: t.start, fromEnd: t.end, toStart: startYmd, toEnd: endYmd, shiftDays: s - dateToDays(t.start) });
@@ -23536,8 +23570,8 @@ let resourceView = 'roles'; // 'roles' | 'load'
       const defs = Array.isArray(customFieldDefs) ? customFieldDefs : [];
       const rows = defs.map(d => `<div class="flex items-center gap-2 py-2 border-t border-slate-100 first:border-t-0">
         <div class="min-w-0 grow"><div class="text-xs font-medium text-slate-700 truncate">${escHtml(d.name)}</div><div class="text-[10px] text-slate-500">${_CF_TYPES[d.type] || 'Текст'}${d.type === 'list' && Array.isArray(d.options) ? ': ' + escHtml(d.options.join(', ')) : ''}</div></div>
-        ${_roMode ? '' : `<button type="button" onclick="editCustomFieldDef('${escAttr(d.id)}')" class="shrink-0 h-7 px-2 text-[10px] font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors">Изменить</button>
-        <button type="button" onclick="deleteCustomFieldDef('${escAttr(d.id)}')" class="shrink-0 h-7 px-2 text-[10px] font-semibold rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 cursor-pointer transition-colors">Удалить</button>`}
+        ${_roMode ? '' : `<button type="button" onclick="editCustomFieldDef('${escJsArg(d.id)}')" class="shrink-0 h-7 px-2 text-[10px] font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors">Изменить</button>
+        <button type="button" onclick="deleteCustomFieldDef('${escJsArg(d.id)}')" class="shrink-0 h-7 px-2 text-[10px] font-semibold rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 cursor-pointer transition-colors">Удалить</button>`}
       </div>`).join('');
       const editing = _cfEditId ? defs.find(d => d && d.id === _cfEditId) : null;
       const canAdd = !!editing || defs.length < 3;
@@ -26782,7 +26816,7 @@ const m = document.getElementById('mineModeBtn');
       const items = (customCutoffs || []).filter(c => ids.includes(c.id)).sort((a, b) => parseLocalDate(a.date) - parseLocalDate(b.date));
       const rows = items.map(c => {
         const bg = String(c.color || '').split(' ')[1] || 'bg-slate-400';
-        return `<div class="flex items-center gap-2 px-1.5 py-1.5 rounded-lg hover:bg-slate-50"><span class="w-2 h-2 rounded-full ${bg} shrink-0"></span><button type="button" onclick="closeCutoffClusterPopover(); openCutoffModal('${escAttr(c.id)}')" class="rm-cutoff-edit text-left text-xs text-slate-700 hover:text-indigo-600 grow truncate" title="${escAttr(c.name)}${c.approved ? ', согласовано' : ''}">${c.approved ? '\u2713 ' : ''}${escHtml(c.name)} <span class="text-slate-500">${escHtml(formatDateString(c.date))}</span></button><button type="button" onclick="deleteCutoffLine('${escAttr(c.id)}'); closeCutoffClusterPopover();" class="rm-cutoff-delete text-slate-400 hover:text-rose-600 text-xs px-1 shrink-0" aria-label="Удалить">✕</button></div>`;
+        return `<div class="flex items-center gap-2 px-1.5 py-1.5 rounded-lg hover:bg-slate-50"><span class="w-2 h-2 rounded-full ${bg} shrink-0"></span><button type="button" onclick="closeCutoffClusterPopover(); openCutoffModal('${escJsArg(c.id)}')" class="rm-cutoff-edit text-left text-xs text-slate-700 hover:text-indigo-600 grow truncate" title="${escAttr(c.name)}${c.approved ? ', согласовано' : ''}">${c.approved ? '\u2713 ' : ''}${escHtml(c.name)} <span class="text-slate-500">${escHtml(formatDateString(c.date))}</span></button><button type="button" onclick="deleteCutoffLine('${escJsArg(c.id)}'); closeCutoffClusterPopover();" class="rm-cutoff-delete text-slate-400 hover:text-rose-600 text-xs px-1 shrink-0" aria-label="Удалить">✕</button></div>`;
       }).join('');
       const pop = document.createElement('div');
       pop.id = 'cutoffClusterPopover';
@@ -27225,6 +27259,8 @@ const m = document.getElementById('mineModeBtn');
       // чтобы список совпадал со счетчиком на иконке. Период , опциональное сужение.
       markArchiveSeen();
       _archiveRenderLimit = 80;
+      const serviceMenu = modal.querySelector('.archive-service-menu');
+      if (serviceMenu) serviceMenu.open = false;
       renderArchiveList();
       modal.classList.remove('hidden');
       if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
@@ -28286,8 +28322,8 @@ const m = document.getElementById('mineModeBtn');
       box.innerHTML = reportBlocks.map(b => `<div class="flex items-start justify-between gap-2 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5">
         <div class="min-w-0"><div class="text-xs font-semibold text-slate-700 truncate">${escHtml(b.title || '(без заголовка)')}</div><div class="text-[10px] text-slate-500 truncate">${escHtml(String(b.text || '').split('\n')[0] || '')}</div></div>
         <div class="flex items-center gap-1 shrink-0">
-          <button type="button" onclick="rbEditBlock('${escAttr(b.id)}')" class="h-6 px-2 text-[10px] font-semibold rounded-md border border-slate-200 text-slate-600 hover:bg-slate-100 cursor-pointer">Изменить</button>
-          <button type="button" onclick="rbDeleteBlock('${escAttr(b.id)}')" class="h-6 w-6 flex items-center justify-center rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 cursor-pointer" aria-label="Удалить блок" title="Удалить блок">✕</button>
+          <button type="button" onclick="rbEditBlock('${escJsArg(b.id)}')" class="h-6 px-2 text-[10px] font-semibold rounded-md border border-slate-200 text-slate-600 hover:bg-slate-100 cursor-pointer">Изменить</button>
+          <button type="button" onclick="rbDeleteBlock('${escJsArg(b.id)}')" class="h-6 w-6 flex items-center justify-center rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 cursor-pointer" aria-label="Удалить блок" title="Удалить блок">✕</button>
         </div>
       </div>`).join('');
     }
@@ -30338,7 +30374,7 @@ const m = document.getElementById('mineModeBtn');
     // Клонирует roadmapData, дает поработать с копией и гарантированно возвращает оригинал.
     function _planSandbox(fn) { var bak = roadmapData; try { roadmapData = bak.map(function (t) { return Object.assign({}, t); }); return fn(); } finally { roadmapData = bak; } }
     // Прогноз готовности (позднейший конец) по движку раскладки, опционально в рамках scope-фильтра.
-    function _planFinish(scope) { var s = _levelSchedule({ respectFilters: false }); var mx = null; (roadmapData || []).forEach(function (t) { if (!t || t.hidden || t.isMilestone || isFinalStatus(t.status) || isHeldStatus(t.status)) return; if (scope && !scope(t)) return; var e = s[t.id] && s[t.id].end; if (e && (!mx || e > mx)) mx = e; }); return mx; }
+    function _planFinish(scope) { var s = _levelSchedule({ respectFilters: false }); var mx = null, unavailable = false; (roadmapData || []).forEach(function (t) { if (!t || t.hidden || t.isMilestone || isFinalStatus(t.status) || isHeldStatus(t.status)) return; if (scope && !scope(t)) return; if (s[t.id] && s[t.id].unavailable) unavailable = true; var e = s[t.id] && s[t.id].end; if (e && (!mx || e > mx)) mx = e; }); return unavailable ? null : mx; }
     function _taskWord(n) { n = Math.abs(n); var d = n % 10, h = n % 100; if (d === 1 && h !== 11) return 'задачу'; if (d >= 2 && d <= 4 && (h < 12 || h > 14)) return 'задачи'; return 'задач'; }
     // Транзитивные зависимые (кто ждет эту задачу, прямо или по цепочке)
     function _cutDependents(id) { var out = new Set(), byPred = {}; (roadmapData || []).forEach(function (t) { getPredecessorIds(t).forEach(function (p) { (byPred[p] = byPred[p] || []).push(t.id); }); }); (function down(x) { (byPred[x] || []).forEach(function (cid) { if (!out.has(cid)) { out.add(cid); down(cid); } }); })(id); return Array.from(out); }
@@ -30389,7 +30425,7 @@ const m = document.getElementById('mineModeBtn');
     function _renderFit(res, target) {
       var box = document.getElementById('fitResult'); if (!box) return;
       var tgt = formatDateString(target);
-      if (res.none) { box.innerHTML = '<div class="text-xs text-slate-500 py-3">Недостаточно данных: у задач нет оценок или дат, прогноз не строится.</div>'; return; }
+      if (res.none) { box.innerHTML = '<div class="text-xs text-slate-500 py-3">Прогноз недоступен. Проверьте даты, оценки и рабочий календарь.</div>'; return; }
       if (res.already) { box.innerHTML = '<div class="mt-1 p-3 rounded-xl bg-emerald-50 border border-emerald-100 text-xs text-emerald-800">Уже попадаете в ' + escHtml(tgt) + '. Прогноз готовности: <b>' + escHtml(formatDateString(res.finish)) + '</b>. Резать ничего не нужно.</div>'; return; }
       if (!res.cut || !res.cut.length) { box.innerHTML = '<div class="mt-1 p-3 rounded-xl bg-amber-50 border border-amber-100 text-xs text-amber-800">В эту дату не уложиться даже отрезом задач по одной: прогноз ' + escHtml(formatDateString(res.finish || res.f0)) + '. Скорее всего мешают зависимости или слишком крупные задачи; подвиньте дату или пересмотрите оценки.</div>'; return; }
       var hit = res.finish && res.finish <= target;
@@ -30432,8 +30468,9 @@ const m = document.getElementById('mineModeBtn');
       var laneCount = Math.max(1, parseInt(lanes, 10) || 1);
       var free = new Array(laneCount).fill(null);
       var sorted = list.slice().sort(function (a, b) { return String(a.start || '').localeCompare(String(b.start || '')); });
-      var fin = null;
+      var fin = null, unavailable = false;
       sorted.forEach(function (it) {
+        if (unavailable) return;
         var li = free.findIndex(function (value) { return value === null; });
         if (li < 0) {
           li = 0;
@@ -30442,24 +30479,26 @@ const m = document.getElementById('mineModeBtn');
         var earliest = it.start || _fcBase();
         if (free[li] && free[li] > earliest) earliest = free[li];
         var span = _spSpan(earliest, it.dur, person);
+        if (!span) { unavailable = true; return; }
         var nf = parseLocalDate(span.end); nf.setDate(nf.getDate() + 1); free[li] = toYmdLocal(nf);
         if (!fin || span.end > fin) fin = span.end;
       });
-      return fin;
+      return unavailable ? null : fin;
     }
     // Дата, когда у человека впервые возникает очередь (следующая задача не может начаться вовремя)
     function _queueStart(list, person) {
       var sorted = list.slice().sort(function (a, b) { return String(a.start || '').localeCompare(String(b.start || '')); });
-      var free = null, q = null;
-      sorted.forEach(function (it) { var earliest = it.start || _fcBase(); if (free && free > earliest && !q) q = earliest; var st = (free && free > earliest) ? free : earliest; var span = _spSpan(st, it.dur, person); var nf = parseLocalDate(span.end); nf.setDate(nf.getDate() + 1); free = toYmdLocal(nf); });
-      return q;
+      var free = null, q = null, unavailable = false;
+      sorted.forEach(function (it) { if (unavailable) return; var earliest = it.start || _fcBase(); if (free && free > earliest && !q) q = earliest; var st = (free && free > earliest) ? free : earliest; var span = _spSpan(st, it.dur, person); if (!span) { unavailable = true; return; } var nf = parseLocalDate(span.end); nf.setDate(nf.getDate() + 1); free = toYmdLocal(nf); });
+      return unavailable ? null : q;
     }
     function openRoleShortage() {
-      var base = _fcBase(), byRes = {};
+      var base = _fcBase(), byRes = Object.create(null), unavailable = [];
       (roadmapData || []).forEach(function (t) { if (!t || t.isMilestone || isFinalStatus(t.status)) return; var r = String(t.resource || '').trim(); if (!r) return; var est = parseFloat(t.estimate); var dur = (Number.isFinite(est) && est > 0) ? Math.max(1, Math.ceil(est)) : 1; (byRes[r] = byRes[r] || []).push({ start: t.start || base, dur: dur }); });
       var rows = [];
-      Object.keys(byRes).forEach(function (r) { var list = byRes[r]; if (list.length < 2) return; var f1 = _lanesFinish(list, 1, r); var f2 = _lanesFinish(list, 2, r); var saved = (f1 && f2) ? _fcDayDiff(f2, f1) : 0; if (saved > 0) { var role = (typeof resourceRoles !== 'undefined' && resourceRoles[r]) ? resourceRoles[r] : ''; rows.push({ res: r, role: role, saved: saved, n: list.length, queue: _queueStart(list, r) }); } });
+      Object.keys(byRes).forEach(function (r) { var list = byRes[r]; if (list.length < 2) return; var f1 = _lanesFinish(list, 1, r); var f2 = _lanesFinish(list, 2, r); if (!f1 || !f2) { unavailable.push(r); return; } var saved = _fcDayDiff(f2, f1); if (saved > 0) { var role = (typeof resourceRoles !== 'undefined' && resourceRoles[r]) ? resourceRoles[r] : ''; rows.push({ res: r, role: role, saved: saved, n: list.length, queue: _queueStart(list, r) }); } });
       rows.sort(function (a, b) { return b.saved - a.saved || String(a.queue || '9999').localeCompare(String(b.queue || '9999')); });
+      if (unavailable.length) { _openPlanTool('Кого не хватает', '', '<div class="py-3 text-xs text-slate-600">Прогноз недоступен. Проверьте рабочий календарь: ' + unavailable.map(escHtml).join(', ') + '.</div>'); return; }
       if (!rows.length) { _openPlanTool('Кого не хватает', '', '<div class="py-10 text-center text-xs text-slate-500 max-w-sm mx-auto">Явных очередей из задач на одном человеке не видно. Либо у людей по одной задаче за раз, либо не проставлены оценки и даты.</div>'); return; }
       var earliest = rows.slice().sort(function (a, b) { return String(a.queue || '9999').localeCompare(String(b.queue || '9999')); })[0];
       var html = '<div class="text-xs text-slate-500 mb-3">Где очередь из задач на одном человеке тормозит план. Справа — сколько дней вернул бы второй человек той же роли.</div>';
@@ -31626,10 +31665,10 @@ const m = document.getElementById('mineModeBtn');
         <div class="flex items-center justify-between gap-2 mb-1.5 flex-wrap">
           <label class="inline-flex items-center gap-1.5 text-[10px] text-slate-600 cursor-pointer"><input type="checkbox" ${_slipOnlyShift ? 'checked' : ''} onchange="setSlipOnlyShift(this.checked)" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">только со сдвигом</label>
           <div class="flex items-center gap-1">
-            <button type="button" onclick="copySlipReport('${escAttr(id)}', 'text')" class="h-7 px-2.5 text-[10px] font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 cursor-pointer">Скопировать текстом</button>
-            <button type="button" onclick="copySlipReport('${escAttr(id)}', 'table')" class="h-7 px-2.5 text-[10px] font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 cursor-pointer">Скопировать таблицей</button>
-            <button type="button" onclick="exportSlipReport('${escAttr(id)}', 'csv')" class="h-7 px-2.5 text-[10px] font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 cursor-pointer">CSV</button>
-            <button type="button" onclick="exportSlipReport('${escAttr(id)}', 'md')" class="h-7 px-2.5 text-[10px] font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 cursor-pointer">MD</button>
+            <button type="button" onclick="copySlipReport('${escJsArg(id)}', 'text')" class="h-7 px-2.5 text-[10px] font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 cursor-pointer">Скопировать текстом</button>
+            <button type="button" onclick="copySlipReport('${escJsArg(id)}', 'table')" class="h-7 px-2.5 text-[10px] font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 cursor-pointer">Скопировать таблицей</button>
+            <button type="button" onclick="exportSlipReport('${escJsArg(id)}', 'csv')" class="h-7 px-2.5 text-[10px] font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 cursor-pointer">CSV</button>
+            <button type="button" onclick="exportSlipReport('${escJsArg(id)}', 'md')" class="h-7 px-2.5 text-[10px] font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 cursor-pointer">MD</button>
           </div>
         </div>
         ${rows.length ? `<div class="overflow-auto max-h-64 border border-slate-100 rounded-lg"><table class="w-full text-[10px] border-collapse"><thead><tr class="bg-slate-50 text-left text-[10px] uppercase tracking-wider text-slate-400"><th class="px-2 py-1 font-medium">Задача</th><th class="px-2 py-1 font-medium">План</th><th class="px-2 py-1 font-medium">Факт</th><th class="px-2 py-1 font-medium text-right">Сдвиг, дн</th><th class="px-2 py-1 font-medium">Исполнитель</th></tr></thead><tbody>${trs}${more}</tbody></table></div>` : '<div class="text-[10px] text-slate-500 italic">Сдвигов относительно этой версии нет</div>'}
@@ -32058,6 +32097,7 @@ const m = document.getElementById('mineModeBtn');
       return out;
     }
     function _scheduleDependencyStart(task, predId, predSpan, dur, person) {
+      if (predSpan && predSpan.unavailable) return null;
       if (!predSpan || !predSpan.start || !predSpan.end) return '';
       var info = (typeof _depInfo === 'function') ? _depInfo(task, predId) : { type: 'FS', lag: 0 };
       var lag = Number.isFinite(parseInt(info.lag, 10)) ? parseInt(info.lag, 10) : 0;
@@ -32065,8 +32105,9 @@ const m = document.getElementById('mineModeBtn');
       if (info.type === 'FF' || info.type === 'SF') {
         var anchor = info.type === 'FF' ? predSpan.end : predSpan.start;
         var requiredEnd = _scheduleShiftDate(anchor, lag);
-        var firstValidEnd = _spSpan(requiredEnd, 1, person).start;
-        return _spStartForEnd(firstValidEnd, dur, person).start;
+        var endSpan = _spSpan(requiredEnd, 1, person);
+        var span = endSpan && _spStartForEnd(endSpan.start, dur, person);
+        return span ? span.start : null;
       }
       return _scheduleShiftDate(predSpan.end, 1 + lag);
     }
@@ -32076,7 +32117,7 @@ const m = document.getElementById('mineModeBtn');
       var tasks = (roadmapData || []).filter(function (t) { return t && !t.isMilestone && !t.hidden && !isFinalStatus(t.status) && !isHeldStatus(t.status) && (!respectFilters || typeof taskPassesFilters !== 'function' || taskPassesFilters(t)); });
       var byId = {}; tasks.forEach(function (t) { byId[t.id] = t; });
       var allById = {}; (roadmapData || []).forEach(function (t) { if (t && !t.hidden) allById[t.id] = t; });
-      var sched = {}, personLanes = {};
+      var sched = {}, personLanes = {}, unavailableResources = new Set();
       var _PAR = (typeof _spCfg !== 'undefined' && _spCfg && _spCfg.par > 0) ? Math.min(5, Math.round(_spCfg.par)) : 1;
       var base = (typeof CURRENT_DATE !== 'undefined' && CURRENT_DATE) ? toYmdLocal(CURRENT_DATE) : _getSprints()[0].from;
       var _spsLE = _getSprints(); var lastEnd = (_spsLE.length ? _spsLE.slice(-1)[0].to : '2099-12-31');
@@ -32095,11 +32136,12 @@ const m = document.getElementById('mineModeBtn');
         var _avp = resources.length && typeof _resourceAvail === 'function' ? Math.min.apply(null, resources.map(function (name) { return _resourceAvail(name) / 100; })) : 1;
         if (!(_avp > 0 && _avp <= 1)) _avp = 1; // частичная занятость исполнителя: 50% = вдвое дольше по календарю
         var dur = noEst ? 1 : Math.max(1, Math.ceil(est / (_occ * _avp)));
-        var earliest = base;
+        var earliest = base, unavailable = resources.some(function (name) { return unavailableResources.has(name); });
         getPredecessorIds(t).forEach(function (pid) {
           var pred = respectFilters ? byId[pid] : allById[pid];
           var predSpan = sched[pid] || (pred && pred.start && pred.end ? { start: pred.start, end: pred.end } : null);
           var candidate = _scheduleDependencyStart(t, pid, predSpan, dur, res);
+          if (candidate === null) unavailable = true;
           if (candidate && candidate > earliest) earliest = candidate;
         });
         var laneClaims = [];
@@ -32116,7 +32158,12 @@ const m = document.getElementById('mineModeBtn');
           if (bestFree && bestFree > earliest) earliest = bestFree;
           laneClaims.push({ name: name, index: laneIndex });
         });
-        var span = _spSpan(earliest, dur, res);
+        var span = unavailable ? null : _spSpan(earliest, dur, res);
+        if (!span) {
+          sched[id] = {start:'',end:'',dur:dur,noEst:noEst,noRes:noRes,unavailable:true};
+          resources.forEach(function (name) { unavailableResources.add(name); });
+          return;
+        }
         sched[id] = { start: span.start, end: span.end, dur: dur, noEst: noEst, noRes: noRes, overflow: span.end > lastEnd };
         laneClaims.forEach(function (claim) { var nf = parseLocalDate(span.end); nf.setDate(nf.getDate() + 1); personLanes[claim.name][claim.index] = toYmdLocal(nf); });
       });
@@ -32236,14 +32283,15 @@ const m = document.getElementById('mineModeBtn');
         var availability = resources.length && typeof _resourceAvail === 'function' ? Math.min.apply(null, resources.map(function (name) { return _resourceAvail(name) / 100; })) : 1;
         if (!(availability > 0 && availability <= 1)) availability = 1;
         var dur = (Number.isFinite(est) && est > 0) ? Math.max(1, Math.ceil(est / availability)) : 1;
-        var earliest = base;
+        var earliest = base, unavailable = false;
         getPredecessorIds(t).forEach(function (pid) {
           var pred = allById[pid];
           var predSpan = byId[pid] ? spanOf(pid, guard + 1) : (pred && pred.start && pred.end ? { start: pred.start, end: pred.end } : null);
           var candidate = _scheduleDependencyStart(t, pid, predSpan, dur, person);
+          if (candidate === null) unavailable = true;
           if (candidate && candidate > earliest) earliest = candidate;
         });
-        var span = _spSpan(earliest, dur, person);
+        var span = (unavailable ? null : _spSpan(earliest, dur, person)) || {start:'',end:'',unavailable:true};
         delete visiting[id];
         memo[id] = span; return span;
       }
@@ -32288,10 +32336,12 @@ const m = document.getElementById('mineModeBtn');
         var act = visible.filter(function (t) { return !isFinalStatus(t.status) && !isHeldStatus(t.status) && sched[t.id]; });
         var nNoEst = act.filter(function (t) { return sched[t.id] && sched[t.id].noEst; }).length;
         var allDone = visible.length > 0 && done.length === visible.length;
+        var unavailable = act.some(function (t) { return sched[t.id].unavailable; });
         var realEnd = '', optEnd = '';
         act.forEach(function (t) { var e = sched[t.id].end; if (e > realEnd) realEnd = e; var o = opt[t.id] || e; if (o > optEnd) optEnd = o; });
         var status, verdict, reason = '';
         if (allDone) { status = 'green'; verdict = 'готово, все задачи закрыты'; }
+        else if (unavailable) { status = 'gray'; verdict = 'прогноз недоступен: проверьте календарь'; reason = 'Не найдено достаточно рабочих дней. Даты не изменены.'; realEnd = ''; optEnd = ''; }
         else if (!act.length && held.length) { status = 'gray'; verdict = 'прогноз приостановлен: ' + held.length + ' ' + pluralRu(held.length, ['задача на холде', 'задачи на холде', 'задач на холде']); reason = 'Сначала решите, возвращать ли работу в план.'; }
         else if (!act.length) { status = 'gray'; verdict = visible.length ? 'нет открытых задач за этой датой' : 'дата скрыта текущими фильтрами или не связана с задачами'; }
         else if (nNoEst / act.length >= 0.5) { status = 'gray'; verdict = 'мало данных: оцените ' + nNoEst + ' ' + pluralRu(nNoEst, ['задачу', 'задачи', 'задач']); reason = _fcReason(act, sched, taskIndex); }
@@ -32345,6 +32395,7 @@ const m = document.getElementById('mineModeBtn');
         var promised = _fcParseHorizon(g.horizon), status, verdict;
         if (!total) { status = 'gray'; verdict = 'нет задач в текущем срезе'; }
         else if (done.length === total) { status = 'green'; verdict = 'вся работа закрыта'; }
+        else if (active.some(function (t) { return sched[t.id].unavailable; })) { status = 'gray'; verdict = 'прогноз недоступен: проверьте календарь'; realEnd = ''; optEnd = ''; }
         else if (!active.length && held.length) { status = 'gray'; verdict = 'прогноз приостановлен: работа на холде'; }
         else if (active.length && nNoEst / active.length >= 0.5) { status = 'gray'; verdict = 'мало оценок, прогноз неточный'; }
         else if (!promised) { status = 'info'; verdict = realEnd ? ('работа завершится ' + formatForecastDate(realEnd, promised)) : 'не хватает данных для прогноза'; }
@@ -33429,7 +33480,7 @@ const m = document.getElementById('mineModeBtn');
           var estimateDays = canDrag && typeof parseEstimateDays === 'function' ? parseEstimateDays(t.estimate) : null;
           var statusLabel = t ? ((typeof statusNameById === 'function' ? statusNameById(t.status) : '') || t.status || 'Статус не указан') : '';
           var dragTitle = canDrag ? ('Перетащите полосу, чтобы изменить даты. ' + (Number.isFinite(estimateDays) && estimateDays > 0 ? ('Длительность: ' + estimateDays + ' раб. дн. из поля «Оценка (дни)».') : 'Оценка не задана — сохранится текущая длительность.')) : '';
-          var dragAttrs = canDrag ? ' data-pres-draggable="true" onpointerdown="_presStartBarDrag(event,&quot;' + taskKey + '&quot;,this)" onclick="_presActivateBar(event,&quot;' + taskKey + '&quot;,this)" onkeydown="_presHandleBarKey(event,&quot;' + taskKey + '&quot;,this)" role="button" tabindex="0" aria-keyshortcuts="Enter Space ArrowLeft ArrowRight Control+ArrowLeft Control+ArrowRight Meta+ArrowLeft Meta+ArrowRight" aria-label="' + escAttr((t.name || 'Задача') + '. Статус: ' + statusLabel + '. ' + dragTitle + ' Enter или пробел — открыть карточку. Стрелки — сдвиг на день, Ctrl или Command со стрелкой — на неделю.') + '" title="' + escAttr(dragTitle) + '"' : '';
+          var dragAttrs = canDrag ? ' data-pres-draggable="true" onpointerdown="_presStartBarDrag(event,&quot;' + escJsArg(String(it.taskId)) + '&quot;,this)" onclick="_presActivateBar(event,&quot;' + escJsArg(String(it.taskId)) + '&quot;,this)" onkeydown="_presHandleBarKey(event,&quot;' + escJsArg(String(it.taskId)) + '&quot;,this)" role="button" tabindex="0" aria-keyshortcuts="Enter Space ArrowLeft ArrowRight Control+ArrowLeft Control+ArrowRight Meta+ArrowLeft Meta+ArrowRight" aria-label="' + escAttr((t.name || 'Задача') + '. Статус: ' + statusLabel + '. ' + dragTitle + ' Enter или пробел — открыть карточку. Стрелки — сдвиг на день, Ctrl или Command со стрелкой — на неделю.') + '" title="' + escAttr(dragTitle) + '"' : '';
           var dragClass = canDrag ? ' cursor-grab hover:ring-2 hover:ring-white/90 hover:shadow-sm' : '';
           var startTxt = it.start ? escHtml(formatDateString(it.start)) : '';
           var endTxt = it.end ? escHtml(formatDateString(it.end)) : (it.start ? escHtml(formatDateString(it.start)) : '');
@@ -35771,7 +35822,7 @@ const m = document.getElementById('mineModeBtn');
           const _apMark = cutoff.approved ? '\u2713 ' : '';
           cLabel.innerHTML = _roCut
             ? `<span>${_apMark}${escHtml(cutoff.name)} (${escHtml(formatDateString(cutoff.date))})</span>`
-            : `<span onclick="openCutoffModal('${escAttr(cutoff.id)}')" class="hover:underline">${_apMark}${escHtml(cutoff.name)} (${escHtml(formatDateString(cutoff.date))})</span><button type="button" onclick="deleteCutoffLine('${escAttr(cutoff.id)}')" aria-label="Удалить метку" title="Удалить метку" class="font-bold ml-1 text-[10px] cursor-pointer">✕</button>`;
+            : `<span onclick="openCutoffModal('${escJsArg(cutoff.id)}')" class="hover:underline">${_apMark}${escHtml(cutoff.name)} (${escHtml(formatDateString(cutoff.date))})</span><button type="button" onclick="deleteCutoffLine('${escJsArg(cutoff.id)}')" aria-label="Удалить метку" title="Удалить метку" class="font-bold ml-1 text-[10px] cursor-pointer">✕</button>`;
           cLine.appendChild(cLabel);
           // Подпись снизу: чтобы при прокрутке к концу списка было видно, что это за отсечка
           const cLabelBot = document.createElement('div');
@@ -35782,7 +35833,7 @@ const m = document.getElementById('mineModeBtn');
           cLabelBot.style.bottom = '4px';
           cLabelBot.innerHTML = _roCut
             ? `<span>${_apMark}${escHtml(cutoff.name)} (${escHtml(formatDateString(cutoff.date))})</span>`
-            : `<span onclick="openCutoffModal('${escAttr(cutoff.id)}')" class="hover:underline">${_apMark}${escHtml(cutoff.name)} (${escHtml(formatDateString(cutoff.date))})</span>`;
+            : `<span onclick="openCutoffModal('${escJsArg(cutoff.id)}')" class="hover:underline">${_apMark}${escHtml(cutoff.name)} (${escHtml(formatDateString(cutoff.date))})</span>`;
           if (cutoff.approved) { cLabel.title = cutoff.name + ', согласовано'; cLabelBot.title = cutoff.name + ', согласовано'; }
           cLine.appendChild(cLabelBot);
           cLine.style.cursor = 'ew-resize';
@@ -36374,8 +36425,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
               // (start === end) дата окончания каждый раз затиралась оценкой и сравнение факт/оценка ломалось.
               if (estimateDays && !task.end && task.start) {
                 const oldEnd = task.end;
-                task.end = (typeof _spSpan === 'function') ? _spSpan(task.start, estimateDays, String(task.resource || '').trim()).end : daysToDate(dateToDays(task.start) + estimateDays - 1);
-                _recordDateChange(task, task.start, oldEnd, 'auto');
+                const span = (typeof _spSpan === 'function') ? _spSpan(task.start, estimateDays, String(task.resource || '').trim()) : {end:daysToDate(dateToDays(task.start) + estimateDays - 1)};
+                if (span) { task.end = span.end; _recordDateChange(task, task.start, oldEnd, 'auto'); }
               }
               // Если есть оценка, но нет start-даты , достраиваем start от end (влево от окончания)
               if (estimateDays && !task.start && task.end) {
@@ -36393,7 +36444,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
               const _visEndYmd = _ganttVisualEnd(task, _statusTimelineEnd(task) || task.end);
               const _grewPastPlan = !!(_visEndYmd && task.end && _visEndYmd > task.end);
               const visualActualDays = inclusiveDurationDays(task.start, _visEndYmd);
-              const _baseEndYmd = (estimateDays && task.start && typeof _spSpan === 'function') ? _spSpan(task.start, estimateDays, String(task.resource || '').trim()).end : null;
+              const _baseSpan = (estimateDays && task.start && typeof _spSpan === 'function') ? _spSpan(task.start, estimateDays, String(task.resource || '').trim()) : null;
+              const _baseEndYmd = _baseSpan ? _baseSpan.end : null;
               const baselineDays = _baseEndYmd ? inclusiveDurationDays(task.start, _baseEndYmd) : (estimateDays || visualActualDays);
               const baselineWidth = baselineDays * DAY_WIDTH;
               const actualWidth = visualActualDays * DAY_WIDTH;
@@ -37952,6 +38004,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       let span = null;
       if (typeof _spSpan === 'function') {
         try { span = _spSpan(baseStart, duration, resource); } catch (e) { span = null; }
+        if (!span) return null;
       }
       if (!span || !span.start || !span.end) {
         let startDate = parseLocalDate(baseStart); let guard = 0;
@@ -37971,7 +38024,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       let ok = 0;
       const rows = lines.map(line => {
         const t = parseQuickAddLine(line);
-        if (!t) return `<div class="flex items-center gap-1.5 text-[10px] text-rose-600 px-2 py-1"><span class="shrink-0 font-bold">!</span><span class="truncate">${escHtml(line)} — нет названия</span></div>`;
+        if (!t) return `<div class="flex items-center gap-1.5 text-[10px] text-rose-600 px-2 py-1"><span class="shrink-0 font-bold">!</span><span class="truncate">${escHtml(line)} — проверьте название и рабочие дни</span></div>`;
         ok++;
         const _qparts = String(line).split('|').map(x => x.trim());
         const _daysRaw = _qparts[1] || '';
@@ -41231,6 +41284,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       put('jiraSummarySchedule', every > 0 ? (every + ' мин · ' + (timerActive ? 'работает' : 'ждет токен')) : 'Выключено');
       host.setAttribute('data-jira-freshness', !info ? 'empty' : (info.stale ? 'stale' : 'fresh'));
       host.setAttribute('data-jira-session', sessionActive ? 'active' : 'inactive');
+      const details = document.getElementById('jiraSyncSummaryDetails');
+      const empty = !info && !cfg.base && !activeChanges && !archivedChanges && !outgoing && !every;
+      put('jiraSummaryCompact', empty ? 'Ещё не загружалось' : 'Состояние обмена');
+      if (details && details.dataset.empty !== String(empty)) { details.open = !empty; details.dataset.empty = String(empty); }
     }
     // ===== Изменения из Jira: новые и обновленные задачи последнего импорта =====
     function renderJiraChangesChip() {
@@ -43007,6 +43064,8 @@ function syncBodyScrollLock() {
         <div id="archiveMore" class="hidden"><button type="button" class="rm-action rm-btn rm-btn-secondary" onclick="showMoreArchive()">Показать еще</button></div>
       </div>
       <div class="archive-footer px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-2xl">
+        <details class="archive-service-menu" onkeydown="if(event.key==='Escape' &amp;&amp; this.open){event.preventDefault();event.stopPropagation();this.open=false;this.querySelector('summary').focus()}" onclick="if(event.target.closest('button'))this.open=false">
+        <summary>Ещё</summary>
         <div class="archive-footer-actions">
           <button type="button" onclick="clearArchive()" id="archiveClearBtn" class="hidden shrink-0 inline-flex items-center gap-1.5 h-9 px-3 bg-white border border-slate-200 rounded-xl text-[10px] font-semibold text-slate-600 hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50 transition-all cursor-pointer" title="Удалить все задачи из архива">
             <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-17742118b34e"></use></svg>
@@ -43021,6 +43080,7 @@ function syncBodyScrollLock() {
             Проверить и починить
           </button>
         </div>
+        </details>
         <div class="archive-footer-primary">
           <button type="button" onclick="restoreSelectedArchive()" id="archiveRestoreBtn" class="hidden inline-flex items-center justify-center gap-1.5 h-9 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-all cursor-pointer">
             <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-d68a6a8c2be7"></use></svg>
@@ -43591,7 +43651,7 @@ function syncBodyScrollLock() {
   <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
    <div class="candidate-header-update info-header-main">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
-    <button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><span id="appVersionBadge" title="18.10.2026">v17.14</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
+    <button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><span id="appVersionBadge" title="18.10.2026">v17.15</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
    </div>
    <div class="flex items-center gap-2 shrink-0">
     <button type="button" id="infoCloseBtn" onclick="closeInfoModal()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-all cursor-pointer" aria-label="Закрыть" title="Закрыть">
@@ -43615,7 +43675,43 @@ function syncBodyScrollLock() {
    </section>
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.14</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.15</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="compact-mobile-actions" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-19f3fbbcef75"></use></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Больше места для плана</h5><span class="info-release-badge">ТЕЛЕФОН</span></div>
+      <p class="text-xs text-slate-600">Шапка компактнее. Данные — под значком, все действия остаются под рукой.</p>
+     </article>
+     <article data-release-card="jira-summary-details" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-86707420d16c"></use></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">В Jira — сразу к делу</h5><span class="info-release-badge">JIRA</span></div>
+      <p class="text-xs text-slate-600">Пустая сводка свёрнута. После загрузки видны результаты последнего обмена.</p>
+     </article>
+     <article data-release-card="archive-safe-actions" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-bce59f21bdee"></use></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Архив без случайной очистки</h5><span class="info-release-badge">АРХИВ</span></div>
+      <p class="text-xs text-slate-600">Восстановление — на виду. Очистка и другие служебные действия — в «Ещё».</p>
+     </article>
+     <article data-release-card="calendar-no-false-dates" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-6bf0c51d973c"></use></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Нет рабочих дней — нет выдуманных дат</h5><span class="info-release-badge">СРОКИ</span></div>
+      <p class="text-xs text-slate-600">Если календарь недоступен, прогноз честно сообщает об этом и не подставляет случайный срок.</p>
+     </article>
+     <article data-release-card="resource-name-safety" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-573e78877038"></use></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Перегруз не прячется за именем</h5><span class="info-release-badge">КОМАНДА</span></div>
+      <p class="text-xs text-slate-600">Редкие имена исполнителей больше не мешают проверять лимиты параллельной работы.</p>
+     </article>
+     <article data-release-card="clear-file-guidance" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-a2cc2f6ca479"></use></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Понятнее, как сохранить план</h5><span class="info-release-badge">ПОМОЩЬ</span></div>
+      <p class="text-xs text-slate-600">Инструкция объясняет обновление того же файла, резервные копии и безопасное переоткрытие.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.14</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="undo-in-header" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-19f3fbbcef75"></use></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Отменить — рядом с сохранением</h5><span class="info-release-badge">ОТМЕНА</span></div>
@@ -43643,13 +43739,6 @@ function syncBodyScrollLock() {
      </article>
     </div>
    </div>
-
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.13</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -47483,7 +47572,9 @@ function syncBodyScrollLock() {
      <button type="button" onclick="closeJiraSync()" aria-label="Закрыть" title="Закрыть" class="text-slate-500 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-995cbdc86b32"></use></svg></button>
     </div>
     <section id="jiraSyncSummary" aria-label="Состояние обмена с Jira" class="px-6 pt-4">
-     <div class="rounded-xl border border-slate-200 bg-slate-50/70 p-3">
+     <details id="jiraSyncSummaryDetails" class="rounded-xl border border-slate-200 bg-slate-50/70">
+      <summary><span id="jiraSummaryCompact">Ещё не загружалось</span></summary>
+      <div class="jira-summary-body">
       <div class="flex items-center justify-between gap-3 mb-2">
        <h4 class="text-xs font-semibold text-slate-800">Состояние обмена</h4>
        <span id="jiraSummaryFreshness" class="text-[10px] font-medium text-slate-500">Еще не загружалось</span>
@@ -47495,7 +47586,8 @@ function syncBodyScrollLock() {
        <div class="rounded-lg bg-white border border-slate-100 px-2.5 py-2"><div class="text-[10px] text-slate-500">К отправке</div><div id="jiraSummaryOutgoing" class="text-base font-semibold text-slate-800 leading-tight mt-0.5">0</div><div class="text-[9px] text-slate-400">локальных изменений</div></div>
        <div class="rounded-lg bg-white border border-slate-100 px-2.5 py-2"><div class="text-[10px] text-slate-500">Автообновление</div><div id="jiraSummarySchedule" class="text-xs font-semibold text-slate-800 mt-0.5">Выключено</div></div>
       </div>
-     </div>
+      </div>
+     </details>
     </section>
     <div class="px-6 pt-3">
      <div role="group" aria-label="Направление обмена Jira" class="rm-segmented inline-flex items-center bg-slate-100 rounded-lg p-0.5">
@@ -47785,7 +47877,7 @@ function syncBodyScrollLock() {
         <div class="startup-heading">
           <div class="flex items-center gap-2 flex-wrap">
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
-            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">v17.14</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button>
+            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">v17.15</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button>
           </div>
           <div id="startupUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
