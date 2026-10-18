@@ -5337,7 +5337,6 @@
   .slip-reason-mobile{display:block;}
   .slip-reason-mobile summary{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;width:44px;cursor:pointer;list-style:none;border-radius:8px;color:var(--rm-text,#1e293b);}
   .slip-reason-mobile summary::-webkit-details-marker{display:none;}
-  .slip-reason-mobile summary:focus-visible{outline:2px solid var(--rm-text,#1e293b);outline-offset:2px;}
   .slip-reason-mobile[open] summary{background:var(--rm-surface-soft,#f8fafc);}
   .slip-reason-mobile>span{display:block;min-width:110px;max-width:190px;padding:4px 0;}
 }
@@ -5360,7 +5359,6 @@
       .app-header-actions { width: 100%; min-width: 0; flex-wrap: wrap; justify-content: flex-end; }
     } /* тач-цели и перенос панели шапки на мобильном */
     .skip-link{position:absolute;left:-9999px;top:0;z-index:3000;background:#fff;color:#4f46e5;padding:8px 14px;border:1px solid #c7d2fe;border-radius:8px;box-shadow:0 6px 18px rgba(15,23,42,.18);font-weight:600;font-size:13px;text-decoration:none;}
-    .skip-link:focus{left:8px;top:8px;outline:2px solid #4f46e5;outline-offset:2px;}
     /* Объявления скринридера не занимают колонку в flex-контейнере плана. */
     #timelineA11yStatus {
       position: absolute;
@@ -5515,10 +5513,6 @@
       opacity: 1 !important;
     }
 
-    /* У скрытого input переключателя фокус рисуется на видимой дорожке. */
-    .feat-switch input:focus-visible {
-      outline: none !important;
-    }
     /* Доступность: действия в строке/секции/ресурсе раскрываются и при фокусе с клавиатуры, не только по hover */
     .group:focus-within .row-actions,
     .group:focus-within [class*="group-hover:opacity-100"] {
@@ -5574,7 +5568,6 @@
 
     /* === Кнопки мультивыбора фильтров === */
     .filter-multibtn:hover { color: #334155; }
-    .filter-multibtn:focus-visible { outline: none !important; box-shadow: inset 0 0 0 2px var(--color-indigo-500); }
     .filter-multibtn[data-active="1"] {
       background: var(--color-indigo-50);
       color: var(--color-indigo-700);
@@ -5742,7 +5735,6 @@
   .feat-switch .fs-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:9999px;box-shadow:0 1px 2px rgba(15,23,42,.25);transition:transform .15s;}
   .feat-switch input:checked + .fs-track{background:var(--rm-primary);}
   .feat-switch input:checked ~ .fs-knob{transform:translateX(16px);}
-  .feat-switch input:focus-visible + .fs-track{outline:2px solid #6366f1;outline-offset:2px;}
   .feat-switch input:disabled{cursor:not-allowed;}
   .feat-switch input:disabled + .fs-track,.feat-switch input:disabled ~ .fs-knob{opacity:.55;}
   /* Темная тема на экране. PNG/PDF выбирают отдельную палитру в экспортном клоне/документе. */
@@ -5863,7 +5855,6 @@
    body.theme-dark input:not([type=checkbox]):not([type=radio]):not([type=range]),
    body.theme-dark textarea, body.theme-dark select { background-color:#212d3d !important; color:#e2e8f0 !important; border-color:#34465a !important; }
    body.theme-dark input::placeholder, body.theme-dark textarea::placeholder { color:#6f7d92 !important; }
-   body.theme-dark input:focus, body.theme-dark textarea:focus, body.theme-dark select:focus { border-color:var(--rm-focus) !important; }
    body.theme-dark input::-webkit-calendar-picker-indicator { filter:none; }
    body.theme-dark option { background-color:#1a2332; color:#e2e8f0; }
    /* Переключатели модулей */
@@ -6009,14 +6000,6 @@
    }
    /* UI polish: controls use one focus treatment, the workspace picker reserves
       room for its own chevron, and counters stay inside their parent action. */
-   .rm-dialog-surface .rm-control:focus-visible,
-   .rm-dialog-surface input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):focus-visible,
-   .rm-dialog-surface select:focus-visible,
-   .rm-dialog-surface textarea:focus-visible {
-     outline:3px solid color-mix(in srgb,var(--rm-focus) 22%,transparent);
-     outline-offset:1px;
-     border-color:var(--rm-focus) !important;
-   }
    .workspace-picker { position:relative; display:inline-flex; align-items:center; }
    .workspace-select.workspace-select {
      min-width:9.75rem; max-width:11rem;
@@ -6063,7 +6046,6 @@
    #startupModal .startup-choice-primary:hover { background:var(--rm-primary-hover); border-color:var(--rm-primary-hover); }
    #startupModal .startup-choice-description { color:var(--rm-muted); }
    #startupModal .startup-choice-primary .startup-choice-description { color:inherit; }
-   #startupModal .startup-choice:focus-visible { outline:2px solid var(--rm-focus); outline-offset:2px; }
    #startupModal .startup-brand-mark { background:var(--rm-primary); color:var(--rm-primary-text,#fff); }
    #startupModal #startupRecents > p { margin-bottom:.5rem; text-align:left; }
    #startupModal #startupRecents button { border-radius:var(--rm-radius-md); }
@@ -6169,7 +6151,6 @@
      box-shadow:none !important;
    }
    .rm-dialog-surface .rm-control:hover:not(:disabled):not([readonly]) { border-color:#cbd5e1 !important; background:var(--rm-surface) !important; }
-   .rm-dialog-surface .rm-control:focus { border-color:var(--rm-focus) !important; background:var(--rm-surface) !important; box-shadow:0 0 0 3px color-mix(in srgb,var(--rm-focus) 14%,transparent); }
    .rm-dialog-surface .rm-control:disabled,
    .rm-dialog-surface .rm-control[readonly] { color:var(--rm-muted) !important; background:var(--rm-control-disabled) !important; cursor:not-allowed; opacity:.82; }
    .rm-dialog-surface .rm-control[aria-invalid="true"],
@@ -6311,7 +6292,6 @@
      width:2rem; height:2rem; min-width:2rem; min-height:2rem; padding:0;
      display:inline-flex; align-items:center; justify-content:center;
    }
-   #appHeader #titleContainer > button:focus-visible { opacity:1; }
    #appHeader .app-header-meta-chip {
      height:2rem; min-height:2rem; padding:0 .625rem;
      border-radius:var(--rm-radius-sm); font-size:var(--rm-font-sm); line-height:1;
@@ -6771,9 +6751,6 @@
      color:var(--rm-text) !important; font-size:var(--rm-font-md) !important;
      line-height:var(--rm-line-tight); appearance:none; -webkit-appearance:none;
    }
-   .rm-search-input.rm-search-input:focus {
-     outline:none; border-color:var(--rm-focus) !important; box-shadow:var(--rm-ring);
-   }
    .rm-search-input::placeholder { color:#94a3b8; opacity:1; }
    .rm-search-input::-webkit-search-decoration,
    .rm-search-input::-webkit-search-cancel-button { display:none; -webkit-appearance:none; }
@@ -7204,7 +7181,6 @@
    #csvMapPreview .import-status-summary { margin:.75rem 0; }
    .import-status-summary details { border:1px solid var(--rm-border); border-radius:var(--rm-radius, .5rem); background:var(--rm-surface); }
    .import-status-summary summary { padding:.625rem .75rem; cursor:pointer; font-weight:600; overflow-wrap:anywhere; }
-   .import-status-summary summary:focus-visible { outline:2px solid var(--rm-accent); outline-offset:2px; }
    .import-status-summary-note { display:block; margin-top:.25rem; color:var(--rm-muted); font-weight:400; }
    .import-status-row { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(7rem,.8fr) auto; gap:.5rem .75rem; padding:.625rem .75rem; border-top:1px solid var(--rm-border); }
    .import-status-row > div { min-width:0; }
@@ -7282,31 +7258,54 @@
    body { background:var(--rm-page-bg,#f5f7fa) !important; }
    body.theme-dark { background:#0b1220 !important; }
 
-   /* RM_SHARED_FOCUS_CONTRACT */
-   /* Базовый контур действий; поля, цветные тосты и холст имеют свои исключения. */
+   /* RM_SHARED_FOCUS_CONTRACT
+      Единственный авторский блок фокуса приложения. Ниже — осознанные
+      исключения, не новые контуры компонентов. Утилиты Tailwind,
+      системный forced-colors и автономная PIN-оболочка остаются отдельно. */
    .rm-btn:focus-visible,.rm-action:focus-visible,.rm-control:focus-visible,
    button:focus-visible,[role="button"]:focus-visible,a:focus-visible,summary:focus-visible,
    [role="menuitem"]:focus-visible,:where([tabindex]:not(#onboardingTitle)):focus-visible,
    input:focus-visible,select:focus-visible,textarea:focus-visible,
    .rm-dialog-close:focus-visible,.rm-dialog-action:focus-visible,
-   .rm-popover button:focus-visible,
+   .rm-popover button:focus-visible,.rm-drawer-popover .rm-filter-option:focus-visible,
    .rm-dialog-close.rm-dialog-close:focus-visible,.rm-drawer-close.rm-drawer-close:focus-visible {
      outline:2px solid var(--rm-focus) !important;
      outline-offset:2px !important;
      box-shadow:none !important;
    }
-   /* RM_SHARED_FOCUS_END */
-   /* На цветном уведомлении контур наследует контрастный цвет текста. */
-   .rm-toast-close:focus-visible,.rm-toast-action:focus-visible {
-     outline:2px solid currentColor !important; outline-offset:-3px !important;
-   }
-   /* Поле выделяется одной линией внутри границы, без второго кольца и свечения. */
-   body input.rm-control:focus, body select.rm-control:focus, body textarea.rm-control:focus,
-   body input.rm-search-input:focus {
+   /* Поля и поиск: одна линия внутри границы; активная рамка без свечения. */
+   body input.rm-control:focus,body select.rm-control:focus,body textarea.rm-control:focus,
+   body input.rm-search-input:focus,.rm-search-input.rm-search-input:focus {
      outline:2px solid var(--rm-focus) !important;
      outline-offset:-2px !important;
      box-shadow:none !important;
    }
+   body.theme-dark input:focus,body.theme-dark textarea:focus,body.theme-dark select:focus,
+   .rm-dialog-surface .rm-control:focus-visible,
+   .rm-dialog-surface input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):focus-visible,
+   .rm-dialog-surface select:focus-visible,.rm-dialog-surface textarea:focus-visible,
+   .rm-drawer-popover .rm-search-input:focus,.rm-search-input.rm-search-input:focus {
+     border-color:var(--rm-focus) !important;
+   }
+   .rm-dialog-surface .rm-control:focus {
+     border-color:var(--rm-focus) !important; background:var(--rm-surface) !important;
+     box-shadow:0 0 0 3px color-mix(in srgb,var(--rm-focus) 14%,transparent);
+   }
+   /* Тост: контрастный цвет текста, линия внутри цветной поверхности. */
+   .rm-toast-close:focus-visible,.rm-toast-action:focus-visible {
+     outline:2px solid currentColor !important; outline-offset:-3px !important;
+   }
+   /* Невидимый checkbox: фокус на видимой дорожке, не на прозрачном input. */
+   .feat-switch input:focus-visible { outline:none !important; }
+   .feat-switch input:focus-visible + .fs-track { outline:2px solid #6366f1; outline-offset:2px; }
+   body.theme-studio .feat-switch input:focus-visible + .fs-track { outline-color:var(--rm-focus); }
+   /* Навигация: показать skip-link/переименование; заголовок обучения не действие. */
+   .skip-link:focus { left:8px; top:8px; }
+   #appHeader #titleContainer > button:focus-visible { opacity:1; }
+   #onboardingTitle:focus { outline:none; }
+   /* Клик не оставляет клавиатурное кольцо; Tab возвращает общий контур. */
+   body[data-input-mode="pointer"] :is(button,[role="tab"],[role="button"]):focus { outline:none !important; box-shadow:none !important; }
+   /* RM_SHARED_FOCUS_END */
 
    /* Все окна, шторки и меню имеют один радиус и одну тень. */
    .rm-dialog-surface.rm-dialog-surface,
@@ -7567,20 +7566,9 @@
      border-color:transparent !important;
      background:var(--rm-surface-soft) !important;
    }
-   .rm-drawer-popover .rm-search-input:focus {
-     border-color:var(--rm-focus) !important;
-     box-shadow:none !important;
-     outline:2px solid var(--rm-focus) !important;
-     outline-offset:2px !important;
-   }
    .rm-drawer-popover .rm-menu-action:hover,.rm-drawer-popover .rm-filter-option:hover {
      border-color:transparent !important;
      background:var(--rm-surface-soft) !important;
-   }
-   .rm-drawer-popover .rm-filter-option:focus-visible {
-     outline:2px solid var(--rm-focus) !important;
-     outline-offset:2px !important;
-     box-shadow:none !important;
    }
    .rm-drawer-popover .rm-menu-heading,
    .rm-drawer-popover > div[class*="uppercase"][class*="tracking"] {
@@ -7600,13 +7588,6 @@
    body.theme-dark .rm-dialog-header .cursor-help:hover {
      background:var(--rm-selected-bg,#eef2ff) !important;
      color:#4f46e5 !important;
-   }
-   .rm-search-input.rm-search-input:focus,
-   .rm-search-input.rm-search-input:focus-visible {
-     border-color:var(--rm-focus) !important;
-     outline:2px solid var(--rm-focus) !important;
-     outline-offset:-2px !important;
-     box-shadow:none !important;
    }
    #quickActionsGroup button,
    #settingsBtn {
@@ -7880,7 +7861,7 @@
      color:var(--rm-cutoff-ink,#000) !important;
      -webkit-text-fill-color:currentColor;
    }
-   .rm-cutoff-label > button:is(:hover,:focus-visible) {
+   .rm-cutoff-label > button:hover {
      outline:2px solid currentColor; outline-offset:-1px;
    }
    .task-wsjf-row > span {
@@ -8362,7 +8343,6 @@
   body #forecastView [data-reason] { border-color:var(--rm-border); background:var(--rm-surface-soft); border-radius:var(--rm-radius-sm); }
   body #forecastView [data-forecast-confidence] > div:first-child { justify-content:flex-start; gap:2rem; }
   body.theme-studio .feat-switch input:checked + .fs-track { background:var(--rm-primary); }
-  body.theme-studio .feat-switch input:focus-visible + .fs-track { outline-color:var(--rm-focus); }
   body.theme-studio .feat-switch .fs-knob { box-shadow:none; }
   body input,body textarea { caret-color:var(--rm-focus); }
   body input[type="checkbox"]:not(.accent-rose-600),body input[type="radio"] { accent-color:var(--rm-primary); }
@@ -8490,7 +8470,6 @@
   #onboardingPanel { border:1px solid var(--rm-border); border-radius:var(--rm-radius-lg); background:var(--rm-surface); padding:1rem; }
   .onboarding-header,.onboarding-footer { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
   .onboarding-header h2 { margin:0; font-size:1.125rem; line-height:1.35; font-weight:650; }
-  #onboardingTitle:focus { outline:none; }
   .onboarding-eyebrow { margin:0 0 .2rem; color:var(--rm-muted); font-size:var(--rm-font-xs); }
   .onboarding-storage { margin:.75rem 0; padding:.625rem .75rem; border:1px solid var(--rm-border); border-radius:var(--rm-radius-sm); background:var(--rm-surface-soft); overflow-wrap:anywhere; }
   .onboarding-actions { display:flex; align-items:center; flex-wrap:wrap; gap:.5rem; }
@@ -8578,6 +8557,7 @@
 #productContextNav{display:flex;flex:0 1 auto;flex-wrap:wrap;align-items:center;gap:6px;padding:0 8px;border-left:1px solid var(--rm-border);background:var(--rm-surface);width:auto;min-width:0}
 .plan-history-controls{display:flex;flex:0 0 auto;align-items:center;gap:6px;margin-left:auto;padding:4px 8px}
 .plan-history-controls .rm-btn{white-space:nowrap}
+#appHeader #undoActionBtn{min-width:44px;min-height:44px;flex:none}
 #moreMenu #planOverviewHost{margin:0;border-bottom:1px solid var(--rm-border)}
 #moreMenu #planOverviewHost .app-header-insight-row,#moreMenu #headerOverviewBtn{width:100%}
 #productContextNav[hidden]{display:none}
@@ -8665,13 +8645,12 @@ body #planWorkspaceHeader :is(.meeting-choices,.pres-pane-tabs,.kanban-view-acti
 body #planWorkspaceHeader .pres-pane-tabs{padding-left:8px;border-left:1px solid var(--rm-border)}
 body #planWorkspaceHeader :is(.rm-btn,[role="tab"]){min-height:var(--rm-toolbar-h);flex:0 0 auto;width:auto;border-color:transparent !important;box-shadow:none !important}
 body #planWorkspaceHeader :is(.rm-btn,[role="tab"]):not([aria-pressed="true"]):not([aria-selected="true"]){background:transparent !important;color:var(--rm-muted) !important}
-body[data-input-mode="pointer"] :is(button,[role="tab"],[role="button"]):focus{outline:none !important;box-shadow:none !important}
 .wb-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 16px;border-bottom:1px solid var(--rm-border);background:var(--rm-surface)}
 .wb-heading{display:flex;align-items:center;gap:12px;min-width:0;margin-right:8px}.wb-toolbar h2{font-size:14px;font-weight:600;margin:0}.wb-layout{display:flex;min-width:0;position:relative;background:var(--rm-surface)}
 .wb-viewport{position:relative;flex:1;min-width:0;height:clamp(420px,65vh,900px);overflow:hidden;touch-action:none;background-color:var(--rm-surface-soft);background-image:radial-gradient(var(--rm-border) 1px,transparent 1px);background-size:24px 24px;cursor:default;isolation:isolate}
 .wb-viewport[data-tool="pan"]{cursor:grab}.wb-viewport[data-tool="connect"]{cursor:crosshair}.wb-world{position:absolute;left:0;top:0;transform-origin:0 0;width:1px;height:1px}
 .wb-node{position:absolute;box-sizing:border-box;border:1px solid var(--rm-border);border-radius:12px;background:var(--rm-surface);color:var(--rm-text);padding:16px;display:flex;flex-direction:column;gap:8px;user-select:none;cursor:move}
-.wb-node[data-selected="true"]{outline:2px solid var(--rm-selected-text);outline-offset:3px}.wb-node:focus-visible{outline:3px solid var(--rm-selected-text);outline-offset:5px}
+.wb-node[data-selected="true"]{outline:2px solid var(--rm-selected-text);outline-offset:3px}
 .wb-node,.wb-node p,.wb-node .wb-task-title{touch-action:none}
 .wb-node strong{font-size:14px;line-height:1.45;overflow-wrap:anywhere}.wb-node p{font-size:14px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;margin:0;overflow:auto;min-height:0;flex:1}.wb-node small{font-size:12px;line-height:1.4;overflow-wrap:anywhere;color:var(--rm-muted)}
 .wb-node .wb-task-title{overflow:auto;min-height:0;flex:1}.wb-node .rm-btn{align-self:flex-start;flex-shrink:0;min-height:32px}.wb-node[data-type="text"]{border-style:dashed}
@@ -8730,6 +8709,7 @@ body.compact-workspace #planWorkspaceHeader .plan-history-controls{max-width:100
 }
 @media(min-width:1024px){body.compact-workspace #appHeader .app-header-grid{grid-template-columns:minmax(400px,.8fr) minmax(0,2fr);padding:8px 16px;column-gap:12px}body.compact-workspace #appHeader .app-header-toolbar{grid-column:2;grid-row:1;flex-wrap:wrap}body.compact-workspace #appHeader #globalSearchHost{flex:1 1 180px}}
 [data-compact-tools-label]{display:none}
+#undoActionBtn .undo-action-icon{display:none}
 @media(max-width:767px){
   body.compact-workspace #appHeader .app-header-grid{padding-block:4px;row-gap:4px}
   body.compact-workspace #statusOverview>button{min-height:44px}
@@ -8741,7 +8721,11 @@ body.compact-workspace #planWorkspaceHeader .plan-history-controls{max-width:100
   body.compact-workspace #appHeader #globalSearchHost{grid-column:1;grid-row:1;width:100%;min-width:0}
   body.compact-workspace #appHeader #addTaskHeaderBtn{grid-column:2;grid-row:1;width:44px;min-width:44px;padding:0;justify-content:center}
   body.compact-workspace #appHeader #addTaskHeaderBtn>span{display:none}
-  body.compact-workspace #appHeader .app-header-actions{grid-column:1/-1;grid-row:2;width:100%;display:flex;flex-wrap:nowrap;gap:6px;justify-content:flex-end}
+  body.compact-workspace #appHeader .app-header-actions{grid-column:1/-1;grid-row:2;width:100%;display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end}
+  body.compact-workspace #appHeader #undoActionBtn{width:44px;min-width:44px;padding:0;justify-content:center}
+  body.compact-workspace #appHeader #undoActionBtn>span{display:none}
+  body.compact-workspace #appHeader #undoActionBtn .undo-action-icon{display:block;width:20px;height:20px}
+  body.compact-workspace #appHeader #dataMenuBtn{padding-left:8px;padding-right:8px}
   body.compact-workspace #appHeader #moreMenuBtn{width:44px;min-width:44px;padding:0;justify-content:center}
   body.compact-workspace #appHeader #moreMenuBtn :is([data-compact-tools-label],#workspaceHubLabel,svg:last-child){display:none}
 }
@@ -8811,7 +8795,6 @@ body.compact-workspace #planWorkspaceHeader .plan-history-controls{max-width:100
 #effortComparisonModal p{max-width:80ch}
 #effortComparisonModal details{border:1px solid var(--rm-border);border-radius:var(--rm-radius-md);padding:12px;min-width:0}
 #effortComparisonModal summary{cursor:pointer;min-height:44px;display:flex;align-items:center;overflow-wrap:anywhere}
-#effortComparisonModal .effort-scroll:focus-visible{outline:2px solid var(--rm-focus);outline-offset:2px}
 .overview-search{display:grid;gap:8px;font-weight:600}
 .overview-search input{width:100%;min-width:0;min-height:44px;padding:8px 12px;border:1px solid var(--rm-border);border-radius:9px;background:var(--rm-surface);color:var(--rm-text);font:inherit}
 .overview-check{display:flex;align-items:center;gap:12px;min-height:44px}
@@ -8822,7 +8805,6 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
 #jiraDifferencesModal .rm-dialog-close,#planDigestModal .rm-dialog-close{--rm-icon-control-h:44px;--rm-hit-target:44px}
 #jiraSyncSummary>div>div:first-child{flex-wrap:wrap}
 .overview-task:hover{background:var(--rm-selected-bg)}
-.overview-task:focus-visible,.overview-search input:focus-visible{outline:2px solid var(--rm-focus);outline-offset:2px}
 .overview-task small{font-size:12px;color:var(--rm-muted);font-weight:400}
 .overview-diff{margin:8px 0 0;display:grid;gap:8px}
 .overview-diff>div{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;padding:8px;background:var(--rm-bg);border-radius:9px;overflow-wrap:anywhere}
@@ -9030,7 +9012,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.13</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.14</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9241,6 +9223,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
             </div>
           </div>
         </div>
+        <button type="button" id="undoActionBtn" onclick="applyUndo()" disabled aria-disabled="true" aria-label="Отменить последнее действие" aria-keyshortcuts="Meta+Z Control+Z" title="Отменить последнее действие (⌘/Ctrl Z)" class="rm-btn rm-btn-secondary"><svg class="undo-action-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Отменить</span></button>
         <!-- 6) Автосохранение , точка-индикатор на дискете, время в подсказке -->
         <button id="autoSaveBtn" onclick="setupAutoSaveFile()" aria-label="Автосохранение в файл (выключено)" class="group relative flex items-center justify-center w-9 h-9 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-indigo-600 border border-slate-200 rounded-xl transition-all cursor-pointer" title="Автосохранение в файл (выключено)">
           <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 21v-8H7v8M7 3v5h8"/></svg>
@@ -9428,7 +9411,6 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
     </nav>
       <nav id="productContextNav" aria-label="Виды плана" class="no-print no-image-export"></nav>
       <div class="plan-history-controls no-print no-image-export" role="group" aria-label="Отмена изменений">
-        <button type="button" id="undoActionBtn" onclick="applyUndo()" disabled aria-disabled="true" aria-label="Отменить последнее действие" aria-keyshortcuts="Meta+Z Control+Z" title="Отменить последнее действие (⌘/Ctrl Z)" class="rm-btn rm-btn-secondary">Отменить</button>
         <button type="button" id="redoActionBtn" onclick="applyRedo()" disabled aria-disabled="true" aria-label="Повторить отмененное действие" aria-keyshortcuts="Meta+Shift+Z Control+Shift+Z Control+Y" title="Повторить отмененное действие (Shift+⌘/Ctrl Z)" class="rm-btn rm-btn-secondary">Повторить</button>
         <button type="button" id="undoTimelineOpen" onclick="openUndoTimeline()" class="rm-btn rm-btn-secondary">Лента отмен</button>
       </div>
@@ -9925,7 +9907,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v17.13">
+<script data-roadmap-modules="v17.14">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -11492,7 +11474,7 @@ function taskQrPrintHtml(model) {
 
 if(typeof globalThis!=='undefined')Object.assign(globalThis.RoadmapModules||(globalThis.RoadmapModules={}),{createTaskQr,taskQrPrintHtml});
 
-/* module:date-utils sha256:28a120945f42a7d32a7d46e0c100192ac83399b606f436451f83833f0b74d2bf */
+/* module:date-utils sha256:41d063fd48320b3295ca79e3b743b8cff5f4c3629c585327ae1f58cdb4fbd308 */
 // Shared date policies extracted without changing legacy arithmetic or parsing.
 // Current day, axis origin, multi-year mode and relative-time clock are explicit.
 // No DOM, storage, network, or implicit clock. Strict domain validators remain strict.
@@ -11586,11 +11568,18 @@ function dateFormatRuRange(fromStr, toStr) {
   const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
   const f = new Date(fromStr), t = new Date(toStr);
   if (isNaN(f.getTime()) || isNaN(t.getTime())) return (fromStr || '') + ' → ' + (toStr || '');
-  const fd = f.getDate(), td = t.getDate();
-  const fm = months[f.getMonth()], tm = months[t.getMonth()];
-  const fy = f.getFullYear(), ty = t.getFullYear();
+  // A date-only value is a calendar day, not UTC midnight in the viewer's zone.
+  // Timestamp and non-ISO inputs retain their existing local-time behavior.
+  const parts = (date, value) => {
+    const dayOnly = typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
+      && date.toISOString().slice(0, 10) === value;
+    return dayOnly ? [date.getUTCDate(), date.getUTCMonth(), date.getUTCFullYear()]
+      : [date.getDate(), date.getMonth(), date.getFullYear()];
+  };
+  const [fd, fmonth, fy] = parts(f, fromStr), [td, tmonth, ty] = parts(t, toStr);
+  const fm = months[fmonth], tm = months[tmonth];
   if (fy !== ty) return `${fd} ${fm} ${fy} → ${td} ${tm} ${ty}`;
-  if (f.getMonth() === t.getMonth()) return `${fd} → ${td} ${tm} ${ty}`;
+  if (fmonth === tmonth) return `${fd} → ${td} ${tm} ${ty}`;
   return `${fd} ${fm} → ${td} ${tm} ${ty}`;
 }
 
@@ -13622,7 +13611,7 @@ if (typeof globalThis !== 'undefined') {
   Object.assign(namespace, {isJiraHierarchyColumn, parseJiraIssueLinks, createJiraHierarchyContext});
 }
 
-/* module:roadmap-indexes sha256:179fecea2256ca6e41a51a6815f51f0f572149c02e4a1730921006fd3edc0f4a */
+/* module:roadmap-indexes sha256:f55745186ba2184fe675b0c13387d819f16f1697393b8d5dea9832355181fd5b */
 const EMPTY = Object.freeze([]);
 
 function asArray(value) {
@@ -13649,6 +13638,27 @@ function freezeLists(map) {
 function predecessorIds(value) {
   const values = Array.isArray(value) ? value : text(value).split(',');
   return [...new Set(values.map(text).filter(Boolean))];
+}
+
+/** Operation-local last-match lookup. Keep separate from first-match find:
+ * Map keys use SameValueZero (including NaN); String IDs are not trimmed.
+ * legacyObject preserves presentation's existing property/prototype semantics.
+ * `before` supplies archive entries; active entries overwrite them. No cache. */
+function createTaskLookup(tasks, {stringIds = false, legacyObject = false, before = EMPTY} = {}) {
+  if (legacyObject) {
+    const byId = {};
+    const append = task => { if (task) byId[String(task.id)] = task; };
+    before.forEach(append);
+    tasks.forEach(append);
+    return byId;
+  }
+  const byId = new Map();
+  if (stringIds) {
+    for (const task of tasks) byId.set(String(task.id), task);
+  } else {
+    for (const task of tasks) byId.set(task.id, task);
+  }
+  return byId;
 }
 
 /** Operation-scoped lookup. Rebuild after structural or ID changes; task objects
@@ -13765,6 +13775,7 @@ if (typeof globalThis !== 'undefined') {
   const namespace = globalThis.RoadmapModules || (globalThis.RoadmapModules = {});
   namespace.createRoadmapIndex = createRoadmapIndex;
   namespace.createTaskIdIndex = createTaskIdIndex;
+  namespace.createTaskLookup = createTaskLookup;
   namespace.predecessorIds = predecessorIds;
   namespace.listFor = listFor;
 }
@@ -15888,7 +15899,7 @@ if (typeof globalThis !== 'undefined') {
   Object.assign(globalThis.RoadmapModules, {persistStoragePairs, enqueueStorageWrite});
 }
 
-/* module:public-roadmap-dto sha256:4d9bbb57dda664e03d502e309baa0c16626073cdd1096007c27c468d15538377 */
+/* module:public-roadmap-dto sha256:bd32000fbfa42cdc6416becfe644121a4ce5b2f8609adb96ba1b220eeb2b1a39 */
 /* bundled internal import: ./status-registry.mjs */
 // Extracted from the tested v17.0 implementation. Side effects are explicit dependencies.
 function createPublicRoadmapDTO(source, opts) {
@@ -15913,7 +15924,7 @@ function createPublicRoadmapDTO(source, opts) {
     Object.keys(obj(input)).forEach(key => { if (safeKey(key) && sectionSet.has(key)) { const value = mapValue(obj(input)[key], key); if (value !== undefined) out[key] = value; } });
     return out;
   };
-  const aliasMap = {}; let aliasCount = 0;
+  const aliasMap = Object.create(null); let aliasCount = 0;
   const alias = value => {
     const key = text(value).trim();
     if (!key || cfg.hideAssignees) return '';
@@ -16151,7 +16162,7 @@ if (typeof globalThis !== 'undefined') {
   Object.assign(globalThis.RoadmapModules, {createUiLayerController});
 }
 
-/* module:progress-trends sha256:4d55bd0231e55e470a9e7ad32b0c1d05bae681782290f591ce70108ae7cf9bf1 */
+/* module:progress-trends sha256:6ec3a684607b1e03035e1be015fd6f83b496d492a0eb3cc85dd7dd4b1b619dbc */
 // Observation-based progress and a conditional throughput simulation.
 // Pure functions: clocks, project scoping and history loading belong to the caller.
 const DAY=86400000,WEEK=7*DAY;
@@ -16195,7 +16206,7 @@ function collectProgressStatistics({statistics,current,records=[],today,projectI
  if(current)snapshots.push({savedAt:ymd(now)+'T23:59:59.999Z',data:current});
  for(const snapshot of snapshots){
   const list=tasks(snapshot.data),statuses=snapshot.data.projectStatuses||current?.projectStatuses||[];
-  observations.push({savedAt:snapshot.savedAt,scope:list.length,completed:list.filter(t=>done(t.status,snapshot.data.projectStatuses)).length});
+  observations.push({savedAt:snapshot.savedAt,scope:list.length,completed:list.filter(t=>done(t.status,statuses)).length});
   for(const t of list){
    const events=(Array.isArray(t.statusLog)?t.statusLog:[]).filter(e=>date(e.at)!==null&&done(e.to,statuses)&&!done(e.from,statuses)&&(e.source!=='jira'||date(t._jiraResolved)!==null));
    if(done(t.status,statuses)&&date(t._jiraResolved)!==null)events.push({at:t._jiraResolved});
@@ -17473,7 +17484,7 @@ if (typeof globalThis !== 'undefined') {
       setTimeout(() => {
         if (modal.classList.contains('hidden')) return;
         const top = typeof topVisibleModal === 'function' ? topVisibleModal() : null;
-        if (top && top !== modal) return;
+        if (top && top !== modal.id) return;
         if (heading) heading.focus({ preventScroll: true });
         details.scrollIntoView({ block: 'start', behavior: 'auto' });
       }, 60);
@@ -17573,8 +17584,8 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '17.13';
-    const APP_VERSION_DATE = '17.10.2026';
+    const APP_VERSION = '17.14';
+    const APP_VERSION_DATE = '18.10.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) { b.textContent = 'v' + APP_VERSION; b.title = APP_VERSION_DATE; } } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'v' + APP_VERSION; } catch (e) {}
@@ -17629,7 +17640,7 @@ if (typeof globalThis !== 'undefined') {
         // QuotaExceededError: пользователь продолжает работать с новым состоянием, а не
         // внезапно читает старое значение из localStorage поверх memory fallback.
         if (Object.prototype.hasOwnProperty.call(memoryStore, key)) return memoryStore[key];
-        if (typeof LEARNING_SCENARIO !== 'undefined' && LEARNING_SCENARIO) return fallback;
+        if ((typeof DEMO_ON_LOAD !== 'undefined' && DEMO_ON_LOAD) || (typeof LEARNING_SCENARIO !== 'undefined' && LEARNING_SCENARIO)) return fallback;
         try {
           const value = localStorage.getItem(key);
           if (value !== null) { memoryStore[key] = value; return value; }
@@ -17647,7 +17658,7 @@ if (typeof globalThis !== 'undefined') {
             globalThis.__roadmapPortableSession?.changed();
           });
         }
-        if (typeof LEARNING_SCENARIO !== 'undefined' && LEARNING_SCENARIO) return true;
+        if ((typeof DEMO_ON_LOAD !== 'undefined' && DEMO_ON_LOAD) || (typeof LEARNING_SCENARIO !== 'undefined' && LEARNING_SCENARIO)) return true;
         let ok = true;
         try { localStorage.setItem(key, value); }
         catch (e) { ok = false; if (typeof notifyStorageFailing === 'function') notifyStorageFailing(); }
@@ -18297,7 +18308,7 @@ if (typeof globalThis !== 'undefined') {
 
     // --- IndexedDB for FileHandle ---
     function _openRoadmapDatabase(name) {
-      if (window.__roadmapPinSession?.protected) return Promise.resolve(RoadmapModules.createPortableSessionDatabase());
+      if (window.__roadmapPinSession?.protected || (typeof DEMO_ON_LOAD !== 'undefined' && DEMO_ON_LOAD) || (typeof LEARNING_SCENARIO !== 'undefined' && LEARNING_SCENARIO)) return Promise.resolve(RoadmapModules.createPortableSessionDatabase());
       return new Promise((resolve, reject) => {
       const req = indexedDB.open(name, 2);
       req.onupgradeneeded = e => { const db = e.target.result; if (!db.objectStoreNames.contains('handles')) db.createObjectStore('handles'); if (!db.objectStoreNames.contains('versions')) db.createObjectStore('versions', { keyPath: 'id' }); };
@@ -23176,7 +23187,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
         _schedulePreview = null;
         return;
       }
-      const byId = new Map(roadmapData.map(task => [String(task.id), task]));
+      const byId = RoadmapModules.createTaskLookup(roadmapData, { stringIds: true });
       const snapshot = captureUndoState();
       const memory = _captureSnapshotMemoryStore();
       // Apply exactly the previewed dates, never run a second cascade on live data.
@@ -32772,17 +32783,14 @@ const m = document.getElementById('mineModeBtn');
     // Выбранные задачи презентации являются снимком состава и не исчезают после завершения или архивации.
     // Архив загружаем первым, чтобы актуальная запись с тем же id всегда имела приоритет.
     function _presTaskIndex(includeArchive) {
-      var byId = {};
-      if (includeArchive && typeof archivedTasks !== 'undefined' && Array.isArray(archivedTasks)) {
-        archivedTasks.forEach(function (t) { if (t) byId[String(t.id)] = t; });
-      }
-      (roadmapData || []).forEach(function (t) { if (t) byId[String(t.id)] = t; });
-      return byId;
+      return RoadmapModules.createTaskLookup(roadmapData || [], {
+        legacyObject: true,
+        before: includeArchive && typeof archivedTasks !== 'undefined' && Array.isArray(archivedTasks) ? archivedTasks : []
+      });
     }
     function _presDepStats(set) {
       var prep = _presPrep(set || { groups: [] });
-      var byId = _presTaskIndex(true), activeById = _presTaskIndex(false), archivedById = {}, visible = {}, pairs = {}, internal = 0, external = 0, archived = 0, missing = 0;
-      (typeof archivedTasks !== 'undefined' && Array.isArray(archivedTasks) ? archivedTasks : []).forEach(function (t) { if (t) archivedById[String(t.id)] = t; });
+      var byId = _presTaskIndex(true), activeById = _presTaskIndex(false), archivedById = RoadmapModules.createTaskLookup(typeof archivedTasks !== 'undefined' && Array.isArray(archivedTasks) ? archivedTasks : [], { legacyObject: true }), visible = {}, pairs = {}, internal = 0, external = 0, archived = 0, missing = 0;
       (prep.groups || []).forEach(function (g) { (g.items || []).forEach(function (it) { if (it.showAs !== 'hide') visible[String(it.taskId)] = 1; }); });
       Object.keys(visible).forEach(function (tid) {
         var task = byId[tid];
@@ -33184,6 +33192,8 @@ const m = document.getElementById('mineModeBtn');
         + '<div class="flex items-center gap-2 mt-2"><button onclick="_presAddPicked()" class="inline-flex items-center h-8 px-3 rounded-lg bg-indigo-600 text-white text-[12px] font-semibold hover:bg-indigo-700 cursor-pointer">Добавить выбранные</button><button onclick="_presClosePicker()" class="' + _PB + '">Отмена</button></div>'
         + '</div>';
     }
+    // Group IDs stay in data attributes, never inside executable handler text.
+    function _presGroupId(element) { var group = element.closest('[data-pres-group-id]'); return group ? group.dataset.presGroupId : ''; }
     // ---- редактор группы ----
     function _presToggleEdColl(gid) { var g = _presGroupById(gid); if (!g) return; g.edColl = !g.edColl; _presPersist(); renderPresent(); }
     function _presEdCollAll() { var st = _presActive(); if (!st || !(st.groups || []).length) return; var anyOpen = st.groups.some(function (g) { return !g.edColl; }); st.groups.forEach(function (g) { g.edColl = anyOpen; }); _presPersist(); renderPresent(); }
@@ -33199,26 +33209,26 @@ const m = document.getElementById('mineModeBtn');
         var defs = [['bar', 'Полоса'], ['date', 'Только срок'], ['milestone', 'Веха'], ['hide', 'Скрыть']];
         var opts = defs.map(function (o) { return '<option value="' + o[0] + '"' + ((it.showAs || 'bar') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('');
         return '<div class="pres-edit-row flex items-center gap-1.5 py-1">'
-          + '<label class="pres-edit-name"><span data-pres-task-name>' + escHtml(realName) + '</span><input type="text" value="' + escAttr(it.alias || '') + '" oninput="_presSetItemAlias(\'' + escAttr(g.id) + '\',' + it.taskId + ',this.value)" placeholder="Другое название для показа" aria-label="Название для показа: ' + escAttr(realName) + '" class="grow min-w-0 h-7 px-2 bg-white border border-slate-200 rounded text-[12px] text-slate-700"></label>'
-          + '<select aria-label="Отображение задачи: ' + escAttr(realName) + '" onchange="_presSetItemShow(\'' + escAttr(g.id) + '\',' + it.taskId + ',this.value)" class="h-7 px-1 bg-white border border-slate-200 rounded text-[11px] text-slate-600 cursor-pointer shrink-0">' + opts + '</select>'
-          + '<span class="pres-row-actions inline-flex items-center"><button type="button"' + (_isFirst ? ' disabled' : '') + ' onclick="_presMoveItem(\'' + escAttr(g.id) + '\',' + it.taskId + ',-1)" title="Выше" class="shrink-0 w-6 h-7 ' + (_isFirst ? 'text-slate-200 cursor-default' : 'text-slate-400 hover:text-indigo-600 cursor-pointer') + '">↑</button>'
-          + '<button type="button"' + (_isLast ? ' disabled' : '') + ' onclick="_presMoveItem(\'' + escAttr(g.id) + '\',' + it.taskId + ',1)" title="Ниже" class="shrink-0 w-6 h-7 ' + (_isLast ? 'text-slate-200 cursor-default' : 'text-slate-400 hover:text-indigo-600 cursor-pointer') + '">↓</button>'
-          + '<button type="button" aria-label="Убрать задачу из группы" onclick="_presDelItem(\'' + escAttr(g.id) + '\',' + it.taskId + ')" title="Убрать задачу" class="rm-btn-danger shrink-0 w-6 h-7 text-slate-400 hover:text-rose-600 cursor-pointer">&times;</button></span>'
+          + '<label class="pres-edit-name"><span data-pres-task-name>' + escHtml(realName) + '</span><input type="text" value="' + escAttr(it.alias || '') + '" oninput="_presSetItemAlias(_presGroupId(this),' + it.taskId + ',this.value)" placeholder="Другое название для показа" aria-label="Название для показа: ' + escAttr(realName) + '" class="grow min-w-0 h-7 px-2 bg-white border border-slate-200 rounded text-[12px] text-slate-700"></label>'
+          + '<select aria-label="Отображение задачи: ' + escAttr(realName) + '" onchange="_presSetItemShow(_presGroupId(this),' + it.taskId + ',this.value)" class="h-7 px-1 bg-white border border-slate-200 rounded text-[11px] text-slate-600 cursor-pointer shrink-0">' + opts + '</select>'
+          + '<span class="pres-row-actions inline-flex items-center"><button type="button"' + (_isFirst ? ' disabled' : '') + ' onclick="_presMoveItem(_presGroupId(this),' + it.taskId + ',-1)" title="Выше" class="shrink-0 w-6 h-7 ' + (_isFirst ? 'text-slate-200 cursor-default' : 'text-slate-400 hover:text-indigo-600 cursor-pointer') + '">↑</button>'
+          + '<button type="button"' + (_isLast ? ' disabled' : '') + ' onclick="_presMoveItem(_presGroupId(this),' + it.taskId + ',1)" title="Ниже" class="shrink-0 w-6 h-7 ' + (_isLast ? 'text-slate-200 cursor-default' : 'text-slate-400 hover:text-indigo-600 cursor-pointer') + '">↓</button>'
+          + '<button type="button" aria-label="Убрать задачу из группы" onclick="_presDelItem(_presGroupId(this),' + it.taskId + ')" title="Убрать задачу" class="rm-btn-danger shrink-0 w-6 h-7 text-slate-400 hover:text-rose-600 cursor-pointer">&times;</button></span>'
           + '</div>';
       }).join('');
       var _cnt = currentItems.length;
-      return '<div class="pres-group-editor bg-white border border-slate-200 rounded-lg p-2.5 mb-2' + (g.hidden ? ' opacity-60' : '') + '">'
+      return '<div data-pres-group-id="' + escHtml(g.id).replace(/\r/g, '&#13;') + '" class="pres-group-editor bg-white border border-slate-200 rounded-lg p-2.5 mb-2' + (g.hidden ? ' opacity-60' : '') + '">'
         + '<div class="flex items-center gap-1.5' + (g.edColl ? '' : ' mb-1.5') + ' flex-wrap">'
-        + '<button type="button" onclick="_presToggleEdColl(\'' + escAttr(g.id) + '\')" title="' + (g.edColl ? 'Развернуть задачи группы' : 'Свернуть задачи группы') + '" aria-label="' + (g.edColl ? 'Развернуть' : 'Свернуть') + '" class="shrink-0 inline-flex items-center justify-center w-7 h-8 rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" style="' + (g.edColl ? '' : 'transform:rotate(90deg)') + '" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-f8da28e14441"></use></svg></button>'
-        + '<input type="text" value="' + escAttr(g.name || '') + '" onchange="_presSetGroupField(\'' + escAttr(g.id) + '\',\'name\',this.value)" placeholder="Название группы" class="h-8 px-2 bg-white border border-slate-200 rounded-lg text-[13px] font-semibold text-slate-800" style="min-width:140px;flex:1 1 200px">'
+        + '<button type="button" onclick="_presToggleEdColl(_presGroupId(this))" title="' + (g.edColl ? 'Развернуть задачи группы' : 'Свернуть задачи группы') + '" aria-label="' + (g.edColl ? 'Развернуть' : 'Свернуть') + '" class="shrink-0 inline-flex items-center justify-center w-7 h-8 rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" style="' + (g.edColl ? '' : 'transform:rotate(90deg)') + '" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-f8da28e14441"></use></svg></button>'
+        + '<input type="text" value="' + escAttr(g.name || '') + '" onchange="_presSetGroupField(_presGroupId(this),\'name\',this.value)" placeholder="Название группы" class="h-8 px-2 bg-white border border-slate-200 rounded-lg text-[13px] font-semibold text-slate-800" style="min-width:140px;flex:1 1 200px">'
         + '<span class="text-[11px] text-slate-500">срок</span>'
-        + '<input type="date" value="' + escAttr(g.due || '') + '" onchange="_presSetGroupField(\'' + escAttr(g.id) + '\',\'due\',this.value)" class="h-8 px-1.5 bg-white border border-slate-200 rounded-lg text-[12px] text-slate-600">'
-        + '<button onclick="_presOpenPicker(\'' + escAttr(g.id) + '\')" class="' + _PB + '">+ Задачи</button>'
+        + '<input type="date" value="' + escAttr(g.due || '') + '" onchange="_presSetGroupField(_presGroupId(this),\'due\',this.value)" class="h-8 px-1.5 bg-white border border-slate-200 rounded-lg text-[12px] text-slate-600">'
+        + '<button onclick="_presOpenPicker(_presGroupId(this))" class="' + _PB + '">+ Задачи</button>'
         + '<span class="ml-auto inline-flex items-center gap-1">'
-        + '<button type="button"' + (_gi === 0 ? ' disabled' : '') + ' onclick="_presMoveGroup(\'' + escAttr(g.id) + '\',-1)" title="Выше" class="inline-flex items-center justify-center w-7 h-8 rounded-lg border border-slate-200 bg-white ' + (_gi === 0 ? 'text-slate-200 cursor-default' : 'text-slate-600 hover:bg-slate-50 cursor-pointer') + '">↑</button>'
-        + '<button type="button"' + (_gi === _gtotal - 1 ? ' disabled' : '') + ' onclick="_presMoveGroup(\'' + escAttr(g.id) + '\',1)" title="Ниже" class="inline-flex items-center justify-center w-7 h-8 rounded-lg border border-slate-200 bg-white ' + (_gi === _gtotal - 1 ? 'text-slate-200 cursor-default' : 'text-slate-600 hover:bg-slate-50 cursor-pointer') + '">↓</button>'
-        + '<button type="button" onclick="_presToggleGroupHidden(\'' + escAttr(g.id) + '\')" title="' + (g.hidden ? 'Показать в презентации' : 'Скрыть из презентации') + '" class="' + _PB + '">' + (g.hidden ? 'Показать' : 'Скрыть') + '</button>'
-        + '<button type="button" onclick="_presDelGroup(\'' + escAttr(g.id) + '\')" title="Удалить группу" class="' + _PB + ' text-rose-600">Удалить</button>'
+        + '<button type="button"' + (_gi === 0 ? ' disabled' : '') + ' onclick="_presMoveGroup(_presGroupId(this),-1)" title="Выше" class="inline-flex items-center justify-center w-7 h-8 rounded-lg border border-slate-200 bg-white ' + (_gi === 0 ? 'text-slate-200 cursor-default' : 'text-slate-600 hover:bg-slate-50 cursor-pointer') + '">↑</button>'
+        + '<button type="button"' + (_gi === _gtotal - 1 ? ' disabled' : '') + ' onclick="_presMoveGroup(_presGroupId(this),1)" title="Ниже" class="inline-flex items-center justify-center w-7 h-8 rounded-lg border border-slate-200 bg-white ' + (_gi === _gtotal - 1 ? 'text-slate-200 cursor-default' : 'text-slate-600 hover:bg-slate-50 cursor-pointer') + '">↓</button>'
+        + '<button type="button" onclick="_presToggleGroupHidden(_presGroupId(this))" title="' + (g.hidden ? 'Показать в презентации' : 'Скрыть из презентации') + '" class="' + _PB + '">' + (g.hidden ? 'Показать' : 'Скрыть') + '</button>'
+        + '<button type="button" onclick="_presDelGroup(_presGroupId(this))" title="Удалить группу" class="' + _PB + ' text-rose-600">Удалить</button>'
         + '</span>'
         + '</div>'
         + (g.edColl
@@ -33403,7 +33413,7 @@ const m = document.getElementById('mineModeBtn');
         var cnt = '<span class="text-[11px] font-semibold text-slate-500 tabular-nums">' + g.count + ' ' + _presNZad(g.count) + '</span>';
         var gStartTxt = g.gStart ? escHtml(formatDateString(g.gStart)) : '';
         var gEndTxt = g.due ? escHtml(formatDateString(g.due)) : (g.gEnd ? escHtml(formatDateString(g.gEnd)) : '');
-        var header = '<div onclick="_presToggleGroupCollapse(\'' + escAttr(g.id) + '\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();_presToggleGroupCollapse(\'' + escAttr(g.id) + '\');}" role="button" tabindex="0" aria-expanded="' + (g.collapsed ? 'false' : 'true') + '" title="' + (g.collapsed ? 'Развернуть группу' : 'Свернуть группу') + '" class="pres-group-row flex items-center gap-2 ' + (compact ? 'py-1' : 'py-1.5') + ' border-b-2 cursor-pointer select-none hover:bg-slate-50/70 rounded-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" style="border-color:' + gcol + '40">'
+        var header = '<div data-pres-group-id="' + escHtml(g.id).replace(/\r/g, '&#13;') + '" onclick="_presToggleGroupCollapse(_presGroupId(this))" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();_presToggleGroupCollapse(_presGroupId(this));}" role="button" tabindex="0" aria-expanded="' + (g.collapsed ? 'false' : 'true') + '" title="' + (g.collapsed ? 'Развернуть группу' : 'Свернуть группу') + '" class="pres-group-row flex items-center gap-2 ' + (compact ? 'py-1' : 'py-1.5') + ' border-b-2 cursor-pointer select-none hover:bg-slate-50/70 rounded-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" style="border-color:' + gcol + '40">'
           + '<div class="pres-col-task shrink-0 flex items-center gap-1.5"><span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background:' + gcol + '"></span>' + chev + '<span class="text-sm font-bold text-slate-800 truncate">' + escHtml(g.name) + '</span></div>'
           + '<div class="pres-col-count shrink-0 text-right" style="width:72px">' + cnt + '</div>'
           + '<div class="pres-col-date shrink-0 text-right text-[11px] text-slate-500 tabular-nums" style="width:60px">' + gStartTxt + '</div>'
@@ -33442,8 +33452,7 @@ const m = document.getElementById('mineModeBtn');
         var bars = {};
         dk.querySelectorAll('[data-presbar]').forEach(function (el) { var k = el.getAttribute('data-presbar'); (bars[k] = bars[k] || []).push(el); });
         if (!Object.keys(bars).length) return;
-        var byId = _presTaskIndex(true), activeById = _presTaskIndex(false), archivedById = {};
-        (typeof archivedTasks !== 'undefined' && Array.isArray(archivedTasks) ? archivedTasks : []).forEach(function (t) { if (t) archivedById[String(t.id)] = t; });
+        var byId = _presTaskIndex(true), activeById = _presTaskIndex(false), archivedById = RoadmapModules.createTaskLookup(typeof archivedTasks !== 'undefined' && Array.isArray(archivedTasks) ? archivedTasks : [], { legacyObject: true });
         dk.style.position = 'relative';
         var dr = dk.getBoundingClientRect(); var paths = '';
         function anchorX(el, edge) {
@@ -33612,10 +33621,12 @@ const m = document.getElementById('mineModeBtn');
         + '</div></div><b>' + row.total + '</b></div>').join('');
       const table = '<div class="date-change-table"><table><caption>Число записей изменения дат по месяцу записи</caption><thead><tr><th scope="col">Месяц</th>' + model.sources.map(source => '<th scope="col">' + labels[source] + '</th>').join('') + '<th scope="col">Всего</th></tr></thead><tbody>'
         + model.rows.map(row => '<tr><th scope="row">' + monthLabel(row.month) + '</th>' + model.sources.map(source => '<td>' + row.counts[source] + '</td>').join('') + '<td>' + row.total + '</td></tr>').join('') + '</tbody></table></div>';
-      return '<section class="meeting-result date-change-chart" data-meeting-result="changes"><h3>Почему менялись даты</h3><p>Весь нескрытый план, без архива, независимо от фильтров. Считаются записи истории, не задачи и не дни задержки: начало и окончание считаются отдельно. Это распределение источников, а не оценка работы людей.</p>'
-        + '<p>Всего записей: ' + model.total + '. Без достоверной даты: ' + model.undated + ' (вне месяцев). Старая история без источника остается неизвестной.</p>'
-        + (model.rows.length ? '<div class="date-change-legend">' + model.sources.map(source => '<span><i data-change-source="' + source + '"></i>' + labels[source] + '</span>').join('') + '</div><p>Шкала от 0 до ' + model.max + ' записей. Месяцы без доступных записей не достраиваются.</p>' + bars + table
-          : '<p>Пока нет датированных записей изменения сроков. По мере работы они появятся в истории задач; прошлые месяцы не восстанавливаются догадкой.</p>') + '</section>';
+      return '<section class="meeting-result date-change-chart" data-meeting-result="changes"><h3>Почему менялись даты</h3><p>Записи истории · весь нескрытый план без архива.</p>'
+        + '<p>Всего: ' + model.total + ' · Без достоверной даты: ' + model.undated + '.</p>'
+        + (model.rows.length ? '<div class="date-change-legend">' + model.sources.map(source => '<span><i data-change-source="' + source + '"></i>' + labels[source] + '</span>').join('') + '</div><p>Шкала: 0–' + model.max + ' записей.</p>' + bars
+          : '<p>Пока нет датированных изменений сроков.</p>')
+        + '<details data-date-change-method><summary class="rm-btn rm-btn-ghost">Как считается</summary><p>Считаются записи истории, не задачи и не дни задержки: начало и окончание отдельно. Фильтры не ограничивают состав. Это источники изменений, не оценка работы людей.</p><p>Записи без достоверной даты не входят в месяцы. Старая история без источника остается неизвестной. Месяцы без доступных записей не достраиваются.</p>'
+        + (model.rows.length ? table : '') + '</details></section>';
     }
     var _tvState = null;
     function openTvShow() {
@@ -36662,7 +36673,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
       // Собираем пары (предшественник → зависимая) с учетом видимости (свернутых секций / фильтров)
       const pairs = [];
-      const _byId = new Map((roadmapData || []).map(t => [t.id, t])); // O(1) поиск предшественника вместо roadmapData.find в цикле
+      const _byId = RoadmapModules.createTaskLookup(roadmapData || []); // O(1) поиск предшественника вместо roadmapData.find в цикле
       roadmapData.forEach(task => {
         const preds = getPredecessorIds(task);
         if (preds.length === 0) return;
@@ -43580,7 +43591,7 @@ function syncBodyScrollLock() {
   <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
    <div class="candidate-header-update info-header-main">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
-    <button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><span id="appVersionBadge" title="17.10.2026">v17.13</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
+    <button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><span id="appVersionBadge" title="18.10.2026">v17.14</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
    </div>
    <div class="flex items-center gap-2 shrink-0">
     <button type="button" id="infoCloseBtn" onclick="closeInfoModal()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-all cursor-pointer" aria-label="Закрыть" title="Закрыть">
@@ -43604,7 +43615,43 @@ function syncBodyScrollLock() {
    </section>
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.13</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.14</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="undo-in-header" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-19f3fbbcef75"></use></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Отменить — рядом с сохранением</h5><span class="info-release-badge">ОТМЕНА</span></div>
+      <p class="text-xs text-slate-600">Кнопка в шапке возвращает последнее действие. ⌘Z / Ctrl+Z работают как прежде.</p>
+     </article>
+     <article data-release-card="mobile-header-wrap" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-86707420d16c"></use></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Действия помещаются на телефоне</h5><span class="info-release-badge">ТЕЛЕФОН</span></div>
+      <p class="text-xs text-slate-600">Кнопки шапки переносятся на новую строку и не уходят за край экрана.</p>
+     </article>
+     <article data-release-card="filter-keyboard-ring" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-bce59f21bdee"></use></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Фильтры видны с клавиатуры</h5><span class="info-release-badge">ФИЛЬТРЫ</span></div>
+      <p class="text-xs text-slate-600">Нажмите Tab: выбранная кнопка обведена. Enter открывает фильтр, Escape возвращает фокус.</p>
+     </article>
+     <article data-release-card="consistent-keyboard-focus" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-6bf0c51d973c"></use></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Один понятный контур фокуса</h5><span class="info-release-badge">НАВИГАЦИЯ</span></div>
+      <p class="text-xs text-slate-600">Кнопки и поля выделяются согласованно. Особые режимы контраста сохранены.</p>
+     </article>
+     <article data-release-card="shortcut-guide-jump" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-573e78877038"></use></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">«?» сразу открывает шпаргалку</h5><span class="info-release-badge">КЛАВИШИ</span></div>
+      <p class="text-xs text-slate-600">Справка прокручивается к сочетаниям клавиш — в том числе на узком экране.</p>
+     </article>
+     <article data-release-card="shared-task-lookups" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
+      <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-a2cc2f6ca479"></use></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Меньше лишней работы с задачами</h5><span class="info-release-badge">ПОД КАПОТОМ</span></div>
+      <p class="text-xs text-slate-600">Упрощён поиск задач для связей и переноса дат. Расчёты и история сохранены.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.13</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="baseline-compare" class="info-release-card bg-white rn-card border-slate-200 shadow-sm">
       <div class="info-release-card-heading flex flex-wrap items-center gap-2 mb-2"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-573e78877038"></use></svg><h5 class="min-w-0 font-semibold text-slate-800 text-sm">Сроки: как было и как стало</h5><span class="info-release-badge">ПЛАН/ФАКТ</span></div>
@@ -43632,13 +43679,6 @@ function syncBodyScrollLock() {
      </article>
     </div>
    </div>
-
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.12</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -47745,7 +47785,7 @@ function syncBodyScrollLock() {
         <div class="startup-heading">
           <div class="flex items-center gap-2 flex-wrap">
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
-            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">v17.13</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button>
+            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">v17.14</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button>
           </div>
           <div id="startupUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>
