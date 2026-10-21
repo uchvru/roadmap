@@ -3,6 +3,10 @@ import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+const args=process.argv.slice(2),usage='Usage: node .quality/verify-sync.mjs\n--help, -h: справка без чтения файлов.';
+if(args.includes('--help')||args.includes('-h')){console.log(usage);process.exit(0);}
+if(args.length){console.error(usage);process.exit(2);}
+
 const repo = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const app = resolve(repo, 'app.html');
 const main = process.env.ROADMAP_MAIN_FILE || resolve(repo, '..', 'roadmap.html');

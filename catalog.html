@@ -5,8 +5,8 @@
 <meta property="og:title" content="Возможности Roadmap">
 <meta property="og:description" content="Функции планировщика: описания и примеры на экране.">
 <meta property="og:url" content="https://uchvru.github.io/roadmap/catalog.html">
-<meta name="roadmap-build-date" content="2026-10-18">
-<meta name="roadmap-publication-date" content="2026-10-18">
+<meta name="roadmap-build-date" content="2026-10-21">
+<meta name="roadmap-publication-date" content="2026-10-21">
 <style>
 :root{--ink:#0f172a;--mut:#5b6c85;--secondary-ink:#334155;--line:#e6eaf1;--brand:#4f46e5;--brand2:#3b82f6;--bg:#f6f8fc;--card:#fff;--accent-gradient:linear-gradient(135deg,#5148e4,#4941d6);--accent-hover:linear-gradient(135deg,#4740cc,#4038ba);--soft-gradient:linear-gradient(135deg,#fff,#f4f5fd);--soft-hover:linear-gradient(135deg,#fafaff,#eef0fc)}
 *{box-sizing:border-box}
@@ -70,6 +70,7 @@ h1{font-size:34px;line-height:1.1;font-weight:800;letter-spacing:-.5px;margin:16
 .desc{font-size:13px;color:#52607a;line-height:1.55}
 .shot{position:relative;aspect-ratio:1440/913;border:1px solid #edf1f7;border-radius:13px;overflow:hidden;background:#f8fafc;box-shadow:inset 0 1px 3px rgba(15,23,42,.04)}
 .shotbtn{width:100%;height:100%;display:block;border:0;padding:0;background:transparent;cursor:zoom-in}
+.shotbtn:focus-visible{outline-offset:-3px}
 .shot img{width:100%;height:100%;display:block;object-fit:cover}
 .zoomtag{position:absolute;top:9px;right:9px;font-size:10.5px;font-weight:700;color:#fff;background:rgba(15,23,42,.62);border-radius:999px;padding:3px 9px;opacity:0;transform:translateY(-3px);transition:opacity .16s,transform .16s;pointer-events:none;backdrop-filter:blur(3px)}
 .card:hover .zoomtag{opacity:1;transform:translateY(0)}
@@ -78,8 +79,9 @@ h1{font-size:34px;line-height:1.1;font-weight:800;letter-spacing:-.5px;margin:16
 #lb.on{display:flex;align-items:center;justify-content:center}
 #lb img{display:block;max-width:94vw;max-height:94vh;border-radius:12px;cursor:zoom-in;box-shadow:0 40px 100px rgba(0,0,0,.6)}
 #lb .lbimage{display:block;border:0;padding:0;background:transparent}
-#lb.zoom{display:block;padding:26px;text-align:center}
-#lb.zoom img{max-width:none;max-height:none;cursor:zoom-out}
+#lb.zoom{display:block;padding:0;text-align:center}
+#lb.zoom img{width:max(1440px,96vw);height:auto;max-width:none;max-height:none;cursor:zoom-out}
+#lb.zoom #lbHint{display:none}
 #lbHint{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);font-size:12px;color:#cbd5e1;background:rgba(15,23,42,.72);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:7px 16px;pointer-events:none}
 .lbclose{position:fixed;top:16px;right:16px;z-index:2;width:44px;height:44px;border:1px solid rgba(255,255,255,.22);border-radius:50%;background:var(--accent-gradient);color:#fff;font-size:27px;line-height:1;cursor:pointer}
 .lbclose:hover{background:var(--accent-hover)}
@@ -110,7 +112,7 @@ h1{font-size:34px;line-height:1.1;font-weight:800;letter-spacing:-.5px;margin:16
 <!-- CATALOG:DESKTOP:END -->
  <details class=catalog-theme-menu><summary>Тема</summary><div class=thsw id=gsw role=group aria-label="Тема всех скриншотов" title="Показать все функции в светлой или темной теме"><button type=button class="tw on" aria-pressed=true onclick="thAll(0)">Светлая</button><button type=button class=tw aria-pressed=false onclick="thAll(1)">Темная</button></div></details>
 </div></nav>
-<div id=lb role=dialog aria-modal=true aria-label="Просмотр скриншота" aria-hidden=true onclick="lbClose()"><button type=button class=lbclose aria-label="Закрыть просмотр" onclick="event.stopPropagation();lbClose()">&times;</button><button type=button class=lbimage aria-label="Изменить масштаб" aria-pressed=false onclick="lbZoom(event)"><img alt=""></button><span id=lbHint>Изменить масштаб : кнопкой на изображении; закрыть : кнопкой, кликом мимо или Esc</span></div>
+<div id=lb role=dialog aria-modal=true aria-label="Просмотр скриншота" aria-hidden=true onclick="lbClose()"><button type=button class=lbclose aria-label="Закрыть просмотр" onclick="event.stopPropagation();lbClose()">&times;</button><button type=button class=lbimage aria-label="Изменить масштаб" aria-pressed=false onclick="lbZoom(event)"><img alt=""></button><span id=lbHint>Изменить масштаб: кнопкой на изображении; закрыть: кнопкой, кликом мимо или Esc</span></div>
 <main class=wrap id=main-content tabindex=-1>
 <!-- CATALOG:SECTIONS:START -->
 <section class=catsec id=plan><div class=cathd><span class=catnum>01</span><div class=cathdtx><h2 class=cat>Собрать и сохранить план</h2><div class=catsub>14 функций</div></div><span class=catline></span></div><p class=group-lead>Главное для ежедневной работы: Jira, задачи и сроки, доска, сохранение и обновление.</p><div class=grid>
@@ -187,7 +189,7 @@ h1{font-size:34px;line-height:1.1;font-weight:800;letter-spacing:-.5px;margin:16
   </div>
  </div>
 </div>
-<div class=foot>Roadmap v17.15 · Владимир Учинин</div></footer>
+<div class=foot>Roadmap v17.17 · Владимир Учинин</div></footer>
 <script>
 function setPressed(btn,on){btn.classList.toggle('on',on);btn.setAttribute('aria-pressed',on?'true':'false');}
 function thsw(btn,i){var card=btn.closest('.card');card.querySelector('.sA').style.display=i?'none':'';card.querySelector('.sB').style.display=i?'':'none';card.querySelectorAll('.thsw .tw').forEach(function(b){setPressed(b,b===btn);});}

@@ -136,11 +136,9 @@ def bump_version(new_version, new_date_str=None):
     print(f"\nВсе файлы успешно синхронизированы на v{new_version} ({new_date_str})!")
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print("Использование: python3 bump_version.py <новая_версия> [дата_ДД.ММ.ГГГГ]")
-        print("Пример:        python3 bump_version.py 16.5.0")
-        print("Пример:        python3 bump_version.py 16.5.0 20.09.2026")
-        sys.exit(1)
-    v = sys.argv[1]
-    d = sys.argv[2] if len(sys.argv) > 2 else None
-    bump_version(v, d)
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
+    parser.add_argument('version', help='новая версия, например 16.5.0')
+    parser.add_argument('date', nargs='?', help='дата ДД.ММ.ГГГГ')
+    args = parser.parse_args()
+    bump_version(args.version, args.date)

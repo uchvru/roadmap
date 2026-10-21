@@ -12,7 +12,9 @@ import { basename, extname, join, relative, resolve } from 'node:path';
 import {publicUpdatePath,verifyUpdateAsset,historicalUpdateAssets,verifyHistoricalUpdateAsset} from './verify-update-asset.mjs';
 
 const args=process.argv.slice(2);
-if(args.some(arg=>arg.startsWith('--')&&arg!=='--local')||args.filter(arg=>!arg.startsWith('--')).length>1)throw Error('Expected [root] [--local]');
+const usage='Usage: node .quality/verify-public.mjs [root] [--local]\n--help, -h: справка без проверки файлов.';
+if(args.includes('--help')||args.includes('-h')){console.log(usage);process.exit(0);}
+if(args.some(arg=>arg.startsWith('-')&&arg!=='--local')||args.filter(arg=>!arg.startsWith('-')).length>1||args.filter(arg=>arg==='--local').length>1){console.error(usage);process.exit(2);}
 const localOnly=args.includes('--local');
 const root = resolve(args.find(arg=>!arg.startsWith('--')) || process.cwd());
 if(localOnly)console.log('LOCAL ONLY: release readiness and update/app equivalence are not certified.');
