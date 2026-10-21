@@ -1,28 +1,18 @@
 {
   "schema": "roadmap-private-package/v1",
   "ready": true,
-  "generationId": "s0cIJJFPr7SktdyFbiR_xg",
-  "createdAt": "2026-09-24T10:00:42.165Z",
+  "generationId": "W7h92vYkI4e8T69SQPjhIg",
+  "createdAt": "2026-10-21T13:40:14.774Z",
   "files": [
     {
       "name": "roadmap-mpv0.html",
-      "bytes": 65685,
-      "sha256": "00ecc2c30f4e2bfb824e6f7a190399c6c7783df8c44ee133093a4080f509dd2d"
-    },
-    {
-      "name": "roadmap-online.html",
-      "bytes": 8098101,
-      "sha256": "5019c3fd1865bd3032cb15ca59a0767d9e48f8150d2d5902cdd134adb86bdb30"
+      "bytes": 126980,
+      "sha256": "69d9f98329b0ba0f884a38526fa137ce7e2b2732584dea5a9e93a1fbc2abfa35"
     },
     {
       "name": "roadmap-online-r.html",
-      "bytes": 8098065,
-      "sha256": "d242fde36003824143fcbc811605176565f23e2f48caff228ff54a7097ebd77b"
-    },
-    {
-      "name": "roadmap-online-n.html",
-      "bytes": 8098101,
-      "sha256": "6b1bff7c54c6c96cd8ae93c29b0b5fed6297e9595bf85f888513b7e8c60ee166"
+      "bytes": 9254644,
+      "sha256": "fdb65af731b1adf28d0b48556867c48e480fa07555690a7de96bc92ac29f067c"
     }
   ]
 }
