@@ -9123,7 +9123,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.17</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.18</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -10018,7 +10018,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v17.17">
+<script data-roadmap-modules="v17.18">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -13244,7 +13244,7 @@ if (typeof globalThis !== 'undefined') {
   snapshotNamespace.createPortableSnapshotPreserver = createPortableSnapshotPreserver;
 }
 
-/* module:portable-app-runtime sha256:2f9fbedd6fa5cbd5886fa6c826da267562ad715ccdab11937a13f7062d41896c */
+/* module:portable-app-runtime sha256:1771e52ea70caa552576d058e0f94b851dcfcb166d7f2410ee05b59aee4a07ad */
 /* bundled internal import: ./portable-document.mjs */
 /* bundled internal import: ./portable-save-controller.mjs */
 /* bundled internal import: ./portable-snapshot.mjs */
@@ -13367,9 +13367,38 @@ async function createPortableAppRuntime(host) {
       } catch { invalid++; }
     }
     if (candidates.length || invalid) {
-      const chosen = await host.chooseDraft({file:fileDocument, candidates, invalid});
+      const openingEpoch = host.getEpoch();
+      let choosing = true, deleted = 0;
+      // Explicit deletion is separate from automatic duplicate cleanup. Only
+      // verified candidates shown in this chooser can be removed, never HTML.
+      const deleteDraft = async key => {
+        const unchanged = () => choosing && openingEpoch === host.getEpoch() && !host.isEphemeral();
+        const candidate = candidates.find(row => row.key === key);
+        if (!unchanged() || !candidate || !candidateBytes.has(key)) throw new Error('Копия недоступна. Откройте файл заново.');
+        const remove = () => {
+          if (!unchanged()) throw new Error('Открытие изменилось. Черновик сохранён.');
+          if (storage.getItem(key) !== candidateBytes.get(key)) throw new Error('Черновик изменён в другой вкладке. Откройте файл заново.');
+          // No await between comparison and deletion, including legacy keys.
+          storage.removeItem(key);
+          if (storage.getItem(key) !== null) throw new Error('Не удалось удалить черновик. Повторите позже.');
+          candidates.splice(candidates.indexOf(candidate), 1);
+          candidateBytes.delete(key); deleted++;
+          return true;
+        };
+        if (lockedDrafts && key.startsWith(draftPrefix + 'gc1:')) {
+          return draftLocks.request(draftLockName(key), {mode:'exclusive',ifAvailable:true}, lock => {
+            if (!lock) throw new Error('Черновик используется другой вкладкой. Закройте её и повторите.');
+            return remove();
+          });
+        }
+        return remove();
+      };
+      let chosen;
+      try { chosen = await host.chooseDraft({file:fileDocument, candidates, invalid, deleteDraft}); }
+      finally { choosing = false; }
       if (chosen == null) {
-        const error = new Error('Открытие отменено. Файл и браузерные черновики не изменены.');
+        const error = new Error(deleted ? 'Открытие отменено. Выбранные черновики удалены; HTML не изменён.'
+          : 'Открытие отменено. Файл и браузерные черновики не изменены.');
         error.code = 'OPEN_CANCELLED';
         throw error;
       }
@@ -17895,6 +17924,7 @@ if (typeof globalThis !== 'undefined') {
     // сохраняет читаемые числа и показывает меньший диапазон с прокруткой.
     const ZOOM_VISIBLE_DAYS = { currentWeek: 7, day: 30, month: 182 };
     function _normalizeTimelineZoom(level) {
+      if (level === 'fit') return 'fit';
       if (level === 'week' || level === 'quarter') return 'month';
       return Object.prototype.hasOwnProperty.call(ZOOM_VISIBLE_DAYS, level) ? level : 'day';
     }
@@ -17932,8 +17962,8 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '17.17';
-    const APP_VERSION_DATE = '21.10.2026';
+    const APP_VERSION = '17.18';
+    const APP_VERSION_DATE = '31.10.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) { b.textContent = 'v' + APP_VERSION; b.title = APP_VERSION_DATE; } } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'v' + APP_VERSION; } catch (e) {}
@@ -19475,13 +19505,16 @@ if (typeof globalThis !== 'undefined') {
         modal.setAttribute('aria-labelledby', 'portableChoiceTitle');
         modal.innerHTML = '<div class="bg-white rounded-2xl w-full max-w-lg p-6 overflow-y-auto max-h-[90vh]">'
           + '<h2 id="portableChoiceTitle" class="text-lg font-semibold text-slate-800">Какие данные открыть?</h2>'
-          + '<p class="mt-2 text-sm text-slate-600">В этом браузере есть правки, отличающиеся от HTML. Выберите копию. Остальные варианты не удаляются и не объединяются автоматически.</p>'
+          + '<p class="mt-2 text-sm text-slate-600">Выберите копию. Черновики отличаются от HTML и не объединяются автоматически.</p>'
           + '<div id="portableChoices" class="mt-4 space-y-2"></div>'
           + '<p id="portableInvalidDraft" class="mt-3 text-sm text-slate-600"></p>'
+          + '<p id="portableChoiceError" role="alert" class="mt-3 text-sm" style="color:var(--rm-danger-text,var(--rm-danger))"></p>'
           + '<button type="button" id="portableChoiceCancel" class="mt-4 h-9 px-3 rounded-lg border border-slate-200 text-sm text-slate-700 bg-white">Отменить открытие</button></div>';
         if (info.title) modal.querySelector('#portableChoiceTitle').textContent = info.title;
         if (info.description) modal.querySelector('p').textContent = info.description;
+        let deleting = false, pendingDelete = null;
         function done(choice) {
+          if (deleting) return;
           document.removeEventListener('keydown', keys, true);
           modal.remove(); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
           if (previousFocus && previousFocus.isConnected) previousFocus.focus();
@@ -19491,10 +19524,24 @@ if (typeof globalThis !== 'undefined') {
         choices.forEach(row => {
           const button = document.createElement('button');
           button.type = 'button'; button.className = 'w-full text-left p-3 rounded-lg border border-slate-200 bg-white text-sm text-slate-800';
+          button.style.minWidth = '0'; button.style.whiteSpace = 'normal';
+          button.style.overflowWrap = 'anywhere'; button.style.minHeight = '44px';
           button.dataset.portableChoice = row.key;
           button.textContent = row.label + ' · ' + _fmtVersionDate(row.document.savedAt) + ' · задач: ' + row.document.snapshot.roadmapData.length;
           button.onclick = () => done(row.key);
-          modal.querySelector('#portableChoices').appendChild(button);
+          const line = document.createElement('div');
+          line.style.cssText = 'display:flex;align-items:stretch;gap:8px';
+          line.appendChild(button);
+          if (row.key !== 'file' && typeof info.deleteDraft === 'function') {
+            const remove = document.createElement('button');
+            remove.type = 'button'; remove.className = 'rm-btn rm-btn-danger';
+            remove.style.cssText = 'flex-shrink:0;min-height:44px;align-self:center';
+            remove.dataset.portableDelete = row.key;
+            remove.textContent = 'Удалить'; remove.setAttribute('aria-label', 'Удалить: ' + row.label);
+            remove.onclick = () => showDeleteConfirmation({row,line,trigger:remove});
+            line.appendChild(remove);
+          }
+          modal.querySelector('#portableChoices').appendChild(line);
         });
         if (info.invalid) modal.querySelector('#portableInvalidDraft').textContent = 'Поврежденных черновиков: ' + info.invalid + '. Они не применены и не удалены.';
         let confirmingDiscard = false;
@@ -19502,6 +19549,46 @@ if (typeof globalThis !== 'undefined') {
         const choiceTitle = modal.querySelector('#portableChoiceTitle');
         const choiceDescription = modal.querySelector('p');
         const originalTitle = choiceTitle.textContent, originalDescription = choiceDescription.textContent;
+        const errorLine = modal.querySelector('#portableChoiceError');
+        const confirmDelete = document.createElement('button');
+        confirmDelete.id = 'portableDeleteConfirm'; confirmDelete.type = 'button';
+        confirmDelete.className = 'rm-btn rm-btn-danger mt-4 mr-2 hidden';
+        confirmDelete.textContent = 'Удалить черновик';
+        cancelButton.before(confirmDelete);
+        function showDeleteConfirmation(target) {
+          if (deleting) return;
+          const previous = pendingDelete;
+          pendingDelete = target; errorLine.textContent = '';
+          modal.querySelector('#portableChoices').classList.toggle('hidden', !!target);
+          modal.querySelector('#portableInvalidDraft').classList.toggle('hidden', !!target);
+          confirmDelete.classList.toggle('hidden', !target);
+          choiceTitle.textContent = target ? 'Удалить черновик?' : originalTitle;
+          choiceDescription.textContent = target
+            ? target.row.label + ' · ' + _fmtVersionDate(target.row.document.savedAt)
+              + ' · задач: ' + target.row.document.snapshot.roadmapData.length
+              + '. Только эта копия браузера. HTML и другие копии останутся. Отменить удаление нельзя.'
+            : originalDescription;
+          cancelButton.textContent = target ? 'Назад' : 'Отменить открытие';
+          if (target) cancelButton.focus();
+          else if (previous?.trigger.isConnected) previous.trigger.focus();
+          else modal.querySelector('[data-portable-choice="file"]').focus();
+        }
+        confirmDelete.onclick = async () => {
+          if (!pendingDelete || deleting) return;
+          const target = pendingDelete; deleting = true;
+          confirmDelete.disabled = true; cancelButton.disabled = true;
+          errorLine.textContent = ''; confirmDelete.textContent = 'Удаляем…';
+          try {
+            await info.deleteDraft(target.row.key);
+            target.line.remove(); deleting = false;
+            showDeleteConfirmation(null);
+          } catch (error) {
+            errorLine.textContent = error?.message || 'Не удалось удалить черновик. Повторите позже.';
+          } finally {
+            deleting = false; confirmDelete.disabled = false; cancelButton.disabled = false;
+            confirmDelete.textContent = 'Удалить черновик';
+          }
+        };
         let discardButton;
         function showDiscardConfirmation(confirming) {
           confirmingDiscard = confirming;
@@ -19522,11 +19609,12 @@ if (typeof globalThis !== 'undefined') {
           discardButton.onclick = () => confirmingDiscard ? done('discard-browser') : showDiscardConfirmation(true);
           cancelButton.before(discardButton);
         }
-        cancelButton.onclick = () => confirmingDiscard ? showDiscardConfirmation(false) : done(null);
+        cancelButton.onclick = () => pendingDelete ? showDeleteConfirmation(null) : confirmingDiscard ? showDiscardConfirmation(false) : done(null);
         function keys(event) {
-          if (event.key === 'Escape') { event.preventDefault(); event.stopImmediatePropagation(); if (confirmingDiscard) showDiscardConfirmation(false); else done(null); }
+          if (event.key === 'Escape') { event.preventDefault(); event.stopImmediatePropagation(); if (deleting) return; if (pendingDelete) showDeleteConfirmation(null); else if (confirmingDiscard) showDiscardConfirmation(false); else done(null); }
           if (event.key === 'Tab') {
             const buttons = Array.from(modal.querySelectorAll('button')).filter(button => button.getClientRects().length && !button.disabled);
+            if (!buttons.length) { event.preventDefault(); return; }
             const i = buttons.indexOf(document.activeElement);
             if (event.shiftKey && i <= 0) { event.preventDefault(); buttons.at(-1).focus(); }
             else if (!event.shiftKey && i === buttons.length - 1) { event.preventDefault(); buttons[0].focus(); }
@@ -19579,7 +19667,7 @@ if (typeof globalThis !== 'undefined') {
       _applyRoadmapSnapshotState(packet.snapshot, {projectIdMode:'adopt'});
       _persistProjectStateNow(); _refreshAfterSnapshotApply();
       await _refreshFileVersions();
-      applyTimelinePreset('currentWeek');
+      if (timelineZoom === 'fit') fitTimelineToPlan(); else scrollToToday();
     }
     async function _portableInitialize() {
       // Защищенные и прочие экспортированные копии имеют собственный
@@ -20170,6 +20258,7 @@ if (typeof globalThis !== 'undefined') {
         poName: storage.get('gantt_po_name') || 'Фамилия Имя'
       });
       try { const savedZoom = storage.get('gantt_timeline_zoom'); timelineZoom = _normalizeTimelineZoom(savedZoom); if (savedZoom && savedZoom !== timelineZoom) storage.set('gantt_timeline_zoom', timelineZoom); } catch (e) {}
+      try { const savedView = storage.get('gantt_view_preferences'); if (savedView) _applyViewPreferences(JSON.parse(savedView)); } catch (e) {}
       DAY_WIDTH = computeDayWidth(timelineZoom);
       updateZoomControlUI();
       if (typeof updateDepLinesToggle === 'function') updateDepLinesToggle();
@@ -20220,7 +20309,7 @@ if (typeof globalThis !== 'undefined') {
         const projectToken = _projectTransitionToken;
         setTimeout(function () {
           if (projectToken !== _projectTransitionToken || zoomRevision !== (setTimelineZoom.scrollRevision || 0)) return;
-          if (DEMO_MODE) fitTimelineToPlan(); else applyTimelinePreset('currentWeek');
+          if (DEMO_MODE || timelineZoom === 'fit') fitTimelineToPlan(); else scrollToToday();
         }, 60);
       } catch (e) {}
       // Окно помощи само НЕ всплывает (раньше каскадом перекрывало другие окна) , справка в стартовом окне.
@@ -20540,6 +20629,7 @@ if (typeof globalThis !== 'undefined') {
         'gantt_project_audit_log': JSON.stringify(projectAuditLog),
         'gantt_task_sort_mode': String(storage.get('gantt_task_sort_mode') || 'date'),
         'gantt_filters_active': JSON.stringify(_captureViewFilters()),
+        'gantt_view_preferences': JSON.stringify(_captureViewPreferences()),
         'gantt_filter_presets': JSON.stringify(getFilterPresets())
       };
       const saved = persistPlan({ undo: false, pairs });
@@ -22003,6 +22093,7 @@ if (typeof globalThis !== 'undefined') {
       timelineZoom = level;
       DAY_WIDTH = computeDayWidth(level);
       try { storage.set('gantt_timeline_zoom', level); } catch (e) {}
+      _persistViewPreferences();
       updateZoomControlUI();
       renderTimelineHeader();
       renderRoadmap(true);
@@ -22014,7 +22105,7 @@ if (typeof globalThis !== 'undefined') {
         requestAnimationFrame(() => { const sc = document.querySelector('.timeline-scroll'); if (sc) sc.scrollLeft = Math.max(0,dateToDays(monday)*DAY_WIDTH); });
         return;
       }
-      if (level === 'fit') { fitTimelineToPlan(); return; }
+      if (level === 'fit') { if (fitTimelineToPlan()) { storage.set('gantt_timeline_zoom','fit'); _persistViewPreferences(); } return; }
       if (level === 'today') { setTimelineZoom('currentWeek'); setTimeout(function(){scrollToToday();},80); return; }
       setTimelineZoom(level);
     }
@@ -22026,6 +22117,7 @@ if (typeof globalThis !== 'undefined') {
       _zoomResizeTimer = setTimeout(_resizeTimelinePreservingDate, 280);
     });
     function _resizeTimelinePreservingDate() {
+      if (!appInitialized) return; // Пока выбирается копия, границы плана ещё не заданы.
       const width = computeDayWidth(timelineZoom);
       if (Math.abs(width - DAY_WIDTH) <= 0.5) return;
       if (appView === 'kanban' && _boardMode === 'canvas') { DAY_WIDTH = width; renderTimelineHeader(); _wbPositionComment(); return; }
@@ -23473,11 +23565,11 @@ if (typeof globalThis !== 'undefined') {
 
     // === Ресурсы: поддержка связки «роль-имя» (например PO-a.ivanov) ===
     let resourceSortMode = 'list'; // 'list' | 'load'
-    function setResourceSortMode(m) { resourceSortMode = (m === 'load') ? 'load' : 'list'; renderResourceManagerList(); }
+    function setResourceSortMode(m) { resourceSortMode = (m === 'load') ? 'load' : 'list'; _persistViewPreferences(); renderResourceManagerList(); }
     // Тепловая карта: какие люди показаны (пусто = все). Сохраняем в localStorage.
     let heatmapPeopleSel = new Set();
     try { const _hp = safeStorageGet('gantt_heatmap_people', null); if (Array.isArray(_hp)) heatmapPeopleSel = new Set(_hp.filter(x => typeof x === 'string')); } catch (e) {}
-    function _persistHeatmapPeople() { try { storage.set('gantt_heatmap_people', JSON.stringify([...heatmapPeopleSel])); } catch (e) {} }
+    function _persistHeatmapPeople() { try { storage.set('gantt_heatmap_people', JSON.stringify([...heatmapPeopleSel])); } catch (e) {} _persistViewPreferences(); }
     function toggleHeatmapPerson(name) { if (heatmapPeopleSel.has(name)) heatmapPeopleSel.delete(name); else heatmapPeopleSel.add(name); _persistHeatmapPeople(); renderResourceManagerList(); }
     function setHeatmapAllPeople() { heatmapPeopleSel.clear(); _persistHeatmapPeople(); renderResourceManagerList(); }
     document.addEventListener('click', (e) => { const _b = e.target.closest && e.target.closest('[data-hp]'); if (_b) toggleHeatmapPerson(_b.getAttribute('data-hp')); });
@@ -24769,11 +24861,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
     
     function updateStatusSelects() {
       const statuses = getDisplayStatuses();
-      // Чистим только исчезнувшие статусы; импортированные состояния и спец-фильтры сохраняем.
-      [...statusFilterSel].forEach(id => {
-        if (['overdue','milestone','blocked','inwork','thisweek','hot','nodates'].includes(id)) return;
-        if (!statuses.find(s => s.id === id)) statusFilterSel.delete(id);
-      });
+      // Отрисовка не сбрасывает сохранённый выбор, даже если сейчас нет таких задач.
       const sPanel = document.getElementById('statusFilterPanel');
       if (sPanel && !sPanel.classList.contains('hidden')) renderFilterPanelBody('status');
       updateFilterLabels();
@@ -25497,9 +25585,13 @@ const m = document.getElementById('mineModeBtn');
       resource: { set: () => resourceFilterSel, allLabel: 'Все исполнители', noun: ['исполнитель','исполнителя','исполнителей'],
             options: () => resourceFilterSummary().options },
       status:  { set: () => statusFilterSel, allLabel: 'Все статусы', noun: ['статус','статуса','статусов'],
-            options: () => getDisplayStatuses().map(s => ({ id: s.id, name: s.name })).concat([{ id: 'overdue', name: 'Просрочено' }, { id: 'milestone', name: 'Вехи' }, { id: 'blocked', name: 'Блокеры' }, { id: 'inwork', name: 'В работе сейчас' }, { id: 'thisweek', name: 'На этой неделе' }, { id: 'hot', name: 'Горящее' }, { id: 'nodates', name: 'Без дат' }]) },
+            options: () => {
+              const options = getDisplayStatuses().map(s => ({ id:s.id, name:s.name })).concat([{ id:'overdue', name:'Просрочено' }, { id:'milestone', name:'Вехи' }, { id:'blocked', name:'Блокеры' }, { id:'inwork', name:'В работе сейчас' }, { id:'thisweek', name:'На этой неделе' }, { id:'hot', name:'Горящее' }, { id:'nodates', name:'Без дат' }]);
+              for (const id of statusFilterSel) if (!options.some(o => o.id === id)) options.push({id, name:id});
+              return options;
+            } },
       project: { set: () => projectFilterSel, allLabel: 'Все проекты', noun: ['проект','проекта','проектов'],
-            options: () => getJiraProjects().map(p => ({ id: p, name: p })) }
+            options: () => [...new Set([...getJiraProjects(), ...projectFilterSel])].map(p => ({ id:p, name:p })) }
     };
     function pluralRu(n, forms) {
       const n10 = n % 10, n100 = n % 100;
@@ -25661,6 +25753,52 @@ const m = document.getElementById('mineModeBtn');
       result.presets = Array.isArray(value?.presets) ? value.presets.filter(p=>p&&typeof p.name==='string'&&p.name.trim()).map(p=>({name:p.name,...core(p)})) : [];
       return result;
     }
+    // Project view choices travel with HTML. Sparse defaults preserve old documents.
+    function _normalizeViewPreferences(value) {
+      const v = value && typeof value === 'object' && !Array.isArray(value) ? value : {}, out = {};
+      const option = (key, values, fallback) => { if (values.includes(v[key]) && v[key] !== fallback) out[key] = v[key]; };
+      option('zoom', ['day','currentWeek','month','fit'], 'day');
+      option('sort', ['date','manual','status','priority','name','resource','cascade'], 'date');
+      option('boardMode', ['kanban','scrum','canvas'], 'kanban');
+      option('capacityFilter', ['all','overloaded','available'], 'all');
+      option('capacityView', ['person','role','cards'], 'person');
+      option('capacityGran', ['day','week','month'], 'week');
+      option('capacityUnit', ['days','hours'], 'days');
+      option('resourceSort', ['list','load'], 'list');
+      for (const key of ['archiveFrom','archiveTo']) if (typeof v[key] === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v[key])) out[key] = v[key];
+      if (typeof v.archiveSearch === 'string' && v.archiveSearch) out.archiveSearch = v.archiveSearch;
+      for (const key of ['scrumRelease','scrumSection']) if (typeof v[key] === 'string') out[key] = v[key];
+      if (v.reportApplyFilters === true) out.reportApplyFilters = true;
+      if (Array.isArray(v.heatmapPeople)) { const people = [...new Set(v.heatmapPeople.filter(x => typeof x === 'string'))]; if (people.length) out.heatmapPeople = people; }
+      return out;
+    }
+    function _captureViewPreferences() {
+      return _normalizeViewPreferences({zoom:storage.get('gantt_timeline_zoom'),sort:storage.get('gantt_task_sort_mode'),
+        boardMode:_boardMode,scrumRelease:_scrumRelease,scrumSection:_scrumSection,
+        capacityFilter,capacityView,capacityGran,capacityUnit,resourceSort:resourceSortMode,heatmapPeople:[...heatmapPeopleSel],reportApplyFilters:_reportApplyFilters,
+        ...Object.fromEntries(['archiveFrom','archiveTo','archiveSearch'].map(id => [id,document.getElementById(id)?.value || '']))});
+    }
+    function _applyViewPreferences(value) {
+      const v = _normalizeViewPreferences(value);
+      timelineZoom = v.zoom || 'day'; DAY_WIDTH = computeDayWidth(timelineZoom);
+      _boardMode = v.boardMode || 'kanban'; _scrumRelease = v.scrumRelease ?? null; _scrumSection = v.scrumSection ?? null;
+      _scrumContext = {project:projectStorageId,epoch:_projectTransitionToken};
+      capacityFilter = v.capacityFilter || 'all'; capacityView = v.capacityView || 'person';
+      capacityGran = v.capacityGran || 'week'; capacityUnit = v.capacityUnit || 'days';
+      for (const id of ['archiveFrom','archiveTo','archiveSearch']) { const input = document.getElementById(id); if (input) input.value = v[id] || ''; }
+      resourceSortMode = v.resourceSort || 'list'; heatmapPeopleSel = new Set(v.heatmapPeople || []);
+      _reportApplyFilters = v.reportApplyFilters === true;
+      Object.assign(memoryStore, {gantt_view_preferences:JSON.stringify(v),gantt_timeline_zoom:timelineZoom,
+        gantt_task_sort_mode:v.sort || 'date',gantt_board_mode:_boardMode,gantt_capacity_filter:capacityFilter,
+        gantt_capacity_view:capacityView,gantt_capacity_gran:capacityGran,gantt_capacity_unit:capacityUnit,gantt_heatmap_people:JSON.stringify([...heatmapPeopleSel]),
+        gantt_report_apply_filters:_reportApplyFilters ? '1' : '0'});
+      updateZoomControlUI();
+      return v;
+    }
+    function _persistViewPreferences() {
+      try { storage.set('gantt_view_preferences', JSON.stringify(_captureViewPreferences())); } catch (e) {}
+      scheduleAutoSaveFile();
+    }
     function _captureViewFilters() {
       return _normalizeViewFilters({status:[...statusFilterSel],resource:[...resourceFilterSel],project:[...projectFilterSel],type:[...typeFilterSel],release:[...releaseFilterSel],label:[...labelFilterSel],component:[...componentFilterSel],board:_boardTaskFilter,
         modes:{hot:_goritMode,mine:_mineMode,critical:_critPathMode,kind:_kindFilter,noGoal:_noGoalFilter,forecast:_forecastReasonFilter},
@@ -25687,7 +25825,7 @@ const m = document.getElementById('mineModeBtn');
       _clearBulkSelectionOnFilterChange();
       try {
         storage.set('gantt_filters_active', JSON.stringify(_captureViewFilters()));
-        if(typeof scheduleAutoSave==='function')scheduleAutoSave();
+        if(typeof scheduleAutoSaveFile==='function')scheduleAutoSaveFile();
       } catch (e) {}
     }
     function restoreFilters() {
@@ -26964,6 +27102,7 @@ const m = document.getElementById('mineModeBtn');
           }, {})
         });
         storage.set('gantt_filter_presets', JSON.stringify(presets));
+        persistFilters();
         renderPresetMenu();
         showToast(`Набор «${name}» сохранен`, 'ok');
       }});
@@ -26993,7 +27132,7 @@ const m = document.getElementById('mineModeBtn');
     }
     function deleteFilterPreset(idx) {
       const presets = getFilterPresets(); presets.splice(idx, 1);
-      storage.set('gantt_filter_presets', JSON.stringify(presets)); renderPresetMenu();
+      storage.set('gantt_filter_presets', JSON.stringify(presets)); persistFilters(); renderPresetMenu();
     }
     // Короткая сводка измерений набора: «статус: 2, релиз: 1, метки: 3» , чтобы было видно, что попадет в фильтр
     function _presetSummary(p) {
@@ -27645,13 +27784,10 @@ const m = document.getElementById('mineModeBtn');
       const group = document.getElementById('projectFilterGroup');
       if (!group) return;
       const projects = getJiraProjects();
-      // Чистим выбранные проекты, которых больше нет
-      [...projectFilterSel].forEach(p => { if (!projects.includes(p)) projectFilterSel.delete(p); });
-      // Скрываем группу, если проектов < 2
-      if (projects.length < 2) {
+      // Активный фильтр остаётся доступен и при пустом срезе или одном проекте.
+      if (projects.length < 2 && !projectFilterSel.size) {
         group.classList.add('hidden');
         group.classList.remove('flex');
-        projectFilterSel.clear();
       } else {
         group.classList.remove('hidden');
         group.classList.add('flex');
@@ -27687,8 +27823,7 @@ const m = document.getElementById('mineModeBtn');
       } catch (e) { return ''; }
     }
     function updateResourceSelects() {
-      // Чистим выбранные ресурсы, которых больше нет
-      [...resourceFilterSel].forEach(r => { if (!projectResources.includes(r)) resourceFilterSel.delete(r); });
+      // Включая «Не назначено»: обновление справочника не меняет фильтр.
       const rPanel = document.getElementById('resourceFilterPanel');
       if (rPanel && !rPanel.classList.contains('hidden')) renderFilterPanelBody('resource');
       updateFilterLabels();
@@ -27833,6 +27968,7 @@ const m = document.getElementById('mineModeBtn');
         const input = document.getElementById(id);
         if (input) input.value = '';
       });
+      _persistViewPreferences();
       renderArchiveList();
       document.getElementById('archiveSearch')?.focus({ preventScroll: true });
     }
@@ -27841,6 +27977,7 @@ const m = document.getElementById('mineModeBtn');
       _archiveFilterKey = null;
       const inp = document.getElementById('archiveSearch');
       if (inp) { inp.value = ''; inp.focus({ preventScroll:true }); }
+      _persistViewPreferences();
       renderArchiveList();
     }
     var _archiveSearchTimer = null;
@@ -27851,6 +27988,7 @@ const m = document.getElementById('mineModeBtn');
       const input = document.getElementById('archiveSearch');
       const clear = document.getElementById('archiveSearchClear');
       if (clear) clear.classList.toggle('hidden', !input || !input.value);
+      _persistViewPreferences();
       _archiveSearchTimer = setTimeout(renderArchiveList, 180);
     }
     function showMoreArchive() {
@@ -28929,6 +29067,7 @@ const m = document.getElementById('mineModeBtn');
     function _setReportApplyFilters(on) {
       _reportApplyFilters = !!on;
       try { storage.set('gantt_report_apply_filters', _reportApplyFilters ? '1' : '0'); } catch (e) {}
+      _persistViewPreferences();
       try { const _pc = document.getElementById('periodCompareBlock'); if (_pc) _pc.innerHTML = buildPeriodCompareHtml(); } catch (e) {}
       if (typeof renderReleaseProgress === 'function') { try { renderReleaseProgress(); } catch (e) {} }
       const report = document.getElementById('reportModal');
@@ -31607,15 +31746,15 @@ const m = document.getElementById('mineModeBtn');
     // Загрузка команды: гранулярность день / неделя / месяц (внутри окна «Загрузка команды»)
     let capacityFilter = (storage.get('gantt_capacity_filter') || 'all');
     if (!['all', 'overloaded', 'available'].includes(capacityFilter)) capacityFilter = 'all';
-    function setCapacityFilter(f) { capacityFilter = ['overloaded', 'available'].includes(f) ? f : 'all'; try { storage.set('gantt_capacity_filter', capacityFilter); } catch (e) {} renderResourceManagerList(); }
+    function setCapacityFilter(f) { capacityFilter = ['overloaded', 'available'].includes(f) ? f : 'all'; try { storage.set('gantt_capacity_filter', capacityFilter); } catch (e) {} _persistViewPreferences(); renderResourceManagerList(); }
     let capacityGran = (storage.get('gantt_capacity_gran') || 'week');
     if (!['day', 'week', 'month'].includes(capacityGran)) capacityGran = 'week';
-    function setCapacityGran(g) { capacityGran = ['day', 'month'].includes(g) ? g : 'week'; try { storage.set('gantt_capacity_gran', capacityGran); } catch (e) {} renderResourceManagerList(); }
+    function setCapacityGran(g) { capacityGran = ['day', 'month'].includes(g) ? g : 'week'; try { storage.set('gantt_capacity_gran', capacityGran); } catch (e) {} _persistViewPreferences(); renderResourceManagerList(); }
     let capacityUnit = (storage.get('gantt_capacity_unit') || 'days');
     if (!['days', 'hours'].includes(capacityUnit)) capacityUnit = 'days';
-    function setCapacityUnit(u) { capacityUnit = (u === 'hours') ? 'hours' : 'days'; try { storage.set('gantt_capacity_unit', capacityUnit); } catch (e) {} renderResourceManagerList(); }
+    function setCapacityUnit(u) { capacityUnit = (u === 'hours') ? 'hours' : 'days'; try { storage.set('gantt_capacity_unit', capacityUnit); } catch (e) {} _persistViewPreferences(); renderResourceManagerList(); }
     let capacityView = (storage.get('gantt_capacity_view') || 'person'); if (!['person','role','cards'].includes(capacityView)) capacityView = 'person';
-    function setCapacityView(v) { capacityView = ['role','cards'].includes(v) ? v : 'person'; try { storage.set('gantt_capacity_view', capacityView); } catch (e) {} renderResourceManagerList(); }
+    function setCapacityView(v) { capacityView = ['role','cards'].includes(v) ? v : 'person'; try { storage.set('gantt_capacity_view', capacityView); } catch (e) {} _persistViewPreferences(); renderResourceManagerList(); }
     let overloadThreshold = (function () { const v = parseFloat(storage.get('gantt_overload_threshold')); return (v >= 1 && v <= 3) ? v : 1.6; })();
     function setOverloadThreshold(pct) { let v = parseFloat(pct) / 100; if (!(v >= 1 && v <= 3)) v = 1.6; overloadThreshold = Math.round(v * 100) / 100; try { storage.set('gantt_overload_threshold', String(overloadThreshold)); } catch (e) {} renderResourceManagerList(); }
     // A1: горизонт напоминания о приближающихся вехах/отсечках (дни), per-browser как overloadThreshold
@@ -35806,7 +35945,7 @@ const m = document.getElementById('mineModeBtn');
     }
     function setBoardMode(mode) {
       if (!['kanban','scrum','canvas'].includes(mode)) return;
-      _boardMode = mode; storage.set('gantt_board_mode',mode); renderKanban();
+      _boardMode = mode; storage.set('gantt_board_mode',mode); _persistViewPreferences(); renderKanban();
       const btn = document.querySelector('[data-board-mode="'+mode+'"]');
       if (btn) btn.focus({preventScroll:true});
     }
@@ -35831,8 +35970,14 @@ const m = document.getElementById('mineModeBtn');
     function _scrumSetFilter(field,value) {
       if (field==='release') _scrumRelease=value==='*'?null:value;
       if (field==='section') _scrumSection=value==='*'?null:value;
+      _scrumContext = {project:projectStorageId,epoch:_projectTransitionToken};
+      _persistViewPreferences();
       renderScrum();
       const el=document.getElementById('scrumFilter-'+field); if(el) el.focus({preventScroll:true});
+    }
+    function _scrumResetFilters() {
+      _scrumRelease = null; _scrumSection = null;
+      _persistViewPreferences(); renderScrum();
     }
     function _scrumMoveTask(id,sprint) {
       if (typeof READ_ONLY_MODE!=='undefined' && READ_ONLY_MODE) return false;
@@ -35888,7 +36033,7 @@ const m = document.getElementById('mineModeBtn');
         </div>`;
       };
       kv.innerHTML=`<div class="scrum-heading"><h2>Задачи по спринтам <span>${tasks.length}</span></h2><div class="kanban-view-actions flex items-center gap-2">${_boardModeButtons()}${ro?'':'<button type="button" class="rm-btn rm-btn-ghost" onclick="openSprintCfg()">Спринты</button>'}</div></div>
-        <div class="scrum-filters">${facet('release',_scrumRelease,'Релиз','Без релиза')}${facet('section',_scrumSection,'Раздел / эпик','Без раздела')}${_scrumRelease!==null||_scrumSection!==null?'<button type="button" class="rm-btn rm-btn-ghost" onclick="_scrumRelease=null;_scrumSection=null;renderScrum()">Сбросить</button>':''}</div>
+        <div class="scrum-filters">${facet('release',_scrumRelease,'Релиз','Без релиза')}${facet('section',_scrumSection,'Раздел / эпик','Без раздела')}${_scrumRelease!==null||_scrumSection!==null?'<button type="button" class="rm-btn rm-btn-ghost" onclick="_scrumResetFilters()">Сбросить</button>':''}</div>
         <p class="scrum-hint">${ro?'План только для просмотра.':'Перетащите задачу в спринт или выберите его в строке. Изменения сохраняются только в Roadmap, не в Jira.'}</p>
         <div class="scrum-groups">${groups.map(s=>{
           const list=tasks.filter(t=>text(t,'sprint')===s.name),done=list.filter(t=>isFinalStatus(t.status)).length;
@@ -37995,6 +38140,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     }
     function setTaskSortMode(mode) {
       storage.set('gantt_task_sort_mode', mode);
+      _persistViewPreferences();
       if (mode === 'priority' && typeof _showPriorityScores !== 'undefined' && !_showPriorityScores && typeof setShowPriorityScores === 'function') { setShowPriorityScores(true); }
       else { renderRoadmap(true); }
     }
@@ -38026,6 +38172,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       before = before || captureUndoState();
       snapshotVisibleOrderToData();
       storage.set('gantt_task_sort_mode', 'manual');
+      _persistViewPreferences();
       const sel = document.getElementById('taskSortMode'); if (sel) sel.value = 'manual';
       persistPlan({ undo: true, before: before });
       return true;
@@ -39795,6 +39942,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 
     function buildRoadmapSnapshot(includeVersions) {
       const viewFilters = _captureViewFilters();
+      const viewPreferences = _captureViewPreferences();
       const kanbanLimits = typeof _kanbanLimits === 'function' ? _kanbanLimits() : {};
       return {
         formatVersion: _jsonStorage.STORAGE_FORMAT_VERSION,
@@ -39805,6 +39953,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         title: roadmapTitleText,
         pageMeta: getPageMeta(),
         ...(_hasViewFilters(viewFilters) ? {viewFilters} : {}),
+        ...(Object.keys(viewPreferences).length ? {viewPreferences} : {}),
         ...(Object.keys(kanbanLimits).length ? {kanbanLimits} : {}),
         sections: planSections,
         sectionColors: sectionColors,
@@ -40001,6 +40150,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         title: String(source.title || '').trim() || 'Новый Roadmap',
         pageMeta: _normalizeSnapshotPageMeta(source.pageMeta),
         ...(source.viewFilters && typeof source.viewFilters==='object' && !Array.isArray(source.viewFilters) ? {viewFilters:_normalizeViewFilters(source.viewFilters)} : {}),
+        ...(source.viewPreferences && typeof source.viewPreferences==='object' && !Array.isArray(source.viewPreferences) ? {viewPreferences:_normalizeViewPreferences(source.viewPreferences)} : {}),
         sections,
         sectionColors: _snapshotObject(source.sectionColors),
         resources,
@@ -40142,6 +40292,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       sectionDeps = snap.sectionDeps;
       projectAuditLog = snap.projectAuditLog;
       if(opts.restoreViewFilters!==false){
+        _applyViewPreferences(snap.viewPreferences);
         const filters=_applyViewFilters(snap.viewFilters);
         memoryStore['gantt_filters_active']=JSON.stringify(filters);
         memoryStore['gantt_filter_presets']=JSON.stringify(filters.presets);
@@ -40151,6 +40302,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       return snap;
     }
     function _refreshAfterSnapshotApply() {
+      if (typeof renderTimelineHeader === 'function') renderTimelineHeader();
       if (typeof updateFilterLabels === 'function') updateFilterLabels();
       if (typeof applyTaskSortModeUI === 'function') applyTaskSortModeUI();
       if (typeof updateArchiveBadge === 'function') updateArchiveBadge();
@@ -43937,11 +44089,11 @@ function syncBodyScrollLock() {
         <div class="grid grid-cols-2 gap-3 items-end">
           <div>
             <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Период с</label>
-            <input type="date" id="archiveFrom" aria-label="Архив, дата с" min="2000-01-01" max="2100-12-31" onchange="renderArchiveList()" class="w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all">
+            <input type="date" id="archiveFrom" aria-label="Архив, дата с" min="2000-01-01" max="2100-12-31" onchange="_persistViewPreferences();renderArchiveList()" class="w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all">
           </div>
           <div>
             <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">по</label>
-            <input type="date" id="archiveTo" aria-label="Архив, дата по" min="2000-01-01" max="2100-12-31" onchange="renderArchiveList()" class="w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all">
+            <input type="date" id="archiveTo" aria-label="Архив, дата по" min="2000-01-01" max="2100-12-31" onchange="_persistViewPreferences();renderArchiveList()" class="w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-all">
           </div>
         </div>
         <p class="text-xs text-slate-500" id="archiveStats" role="status" aria-live="polite"></p>
@@ -44536,7 +44688,7 @@ function syncBodyScrollLock() {
   <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
    <div class="candidate-header-update info-header-main">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
-    <button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><span id="appVersionBadge" title="21.10.2026">v17.17</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
+    <button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><span id="appVersionBadge" title="31.10.2026">v17.18</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
    </div>
    <div class="flex items-center gap-2 shrink-0">
     <button type="button" id="infoCloseBtn" onclick="closeInfoModal()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-all cursor-pointer" aria-label="Закрыть" title="Закрыть">
@@ -44560,7 +44712,35 @@ function syncBodyScrollLock() {
    </section>
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.17</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.18</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="draft-choice-delete" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-86707420d16c"></use></svg><h5 class="min-w-0 rn-title">Лишний черновик можно удалить</h5><span class="info-release-badge">КОПИИ</span></div>
+      <p class="text-xs text-slate-600">Удалите выбранную копию браузера прямо при открытии. Сначала подтвердите удаление; HTML и остальные копии сохранятся.</p>
+     </article>
+     <article data-release-card="filters-travel-with-plan" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-573e78877038"></use></svg><h5 class="min-w-0 rn-title">Ваши фильтры — вместе с планом</h5><span class="info-release-badge">ФИЛЬТРЫ</span></div>
+      <p class="text-xs text-slate-600">Сохраните рабочий HTML: выбранные проекты, статусы, исполнители и наборы фильтров откроются вместе с ним.</p>
+     </article>
+     <article data-release-card="remember-view-preferences" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-19f3fbbcef75"></use></svg><h5 class="min-w-0 rn-title">Продолжайте с привычного вида</h5><span class="info-release-badge">ВИД</span></div>
+      <p class="text-xs text-slate-600">Масштаб, сортировка, режим доски и настройки отчётов сохраняются в рабочем файле.</p>
+     </article>
+     <article data-release-card="daily-default" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-6bf0c51d973c"></use></svg><h5 class="min-w-0 rn-title">Новый план — по дням</h5><span class="info-release-badge">ГАНТ</span></div>
+      <p class="text-xs text-slate-600">Если масштаб ещё не выбран, показываем дни. Ваш сохранённый масштаб не меняем.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.17</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="browser-copy-choice" class="info-release-card rn-card rn-solid">
       <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-86707420d16c"></use></svg><h5 class="min-w-0 rn-title">Свежий план — на ваш выбор</h5><span class="info-release-badge">ФАЙЛ</span></div>
@@ -44588,13 +44768,6 @@ function syncBodyScrollLock() {
      </article>
     </div>
    </div>
-
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.16</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -48820,7 +48993,7 @@ function syncBodyScrollLock() {
         <div class="startup-heading">
           <div class="flex items-center gap-2 flex-wrap">
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
-            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">v17.17</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button>
+            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">v17.18</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button>
           </div>
           <div id="startupUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте пример, продолжите работу с файлом или загрузите свои данные. Ничего устанавливать не нужно.</p>

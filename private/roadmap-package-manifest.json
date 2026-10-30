@@ -13,6 +13,16 @@
       "name": "roadmap-online-r.html",
       "bytes": 9254644,
       "sha256": "fdb65af731b1adf28d0b48556867c48e480fa07555690a7de96bc92ac29f067c"
+    },
+    {
+      "name": "roadmap-online.html",
+      "bytes": 8098101,
+      "sha256": "5019c3fd1865bd3032cb15ca59a0767d9e48f8150d2d5902cdd134adb86bdb30"
+    },
+    {
+      "name": "roadmap-online-n.html",
+      "bytes": 8098101,
+      "sha256": "6b1bff7c54c6c96cd8ae93c29b0b5fed6297e9595bf85f888513b7e8c60ee166"
     }
   ]
 }
