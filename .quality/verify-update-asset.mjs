@@ -14,7 +14,9 @@ export const historicalUpdateAssets=Object.freeze({
   'updates/roadmap-v17.15.roadmap-update':'e2ddec1a64d285543e91e6112b1def9bad2850bde21b007db69df9a9d4128b08',
   'updates/roadmap-v17.17.roadmap-update':'910f301c3086be558f9f8fb3f662667d8199ba4d773d735f294f0eea5fdcd6d7',
   // Published bytes: review-2026-10-31-v17.18/PUBLICATION.md, not a rebuilt asset.
-  'updates/roadmap-v17.18.roadmap-update':'cb14bfebe3b9e386b7875b993e89acf09116775a6f45b7860fec3267f70cbbde'
+  'updates/roadmap-v17.18.roadmap-update':'cb14bfebe3b9e386b7875b993e89acf09116775a6f45b7860fec3267f70cbbde',
+  // Published bytes: review-2026-11-02-v17.19/PUBLICATION.md; never rebuild in maintenance.
+  'updates/roadmap-v17.19.roadmap-update':'f1b3cdfa787920636443c2518921ac5e256c5757fed4fba3bc05ff54005e1cc7'
 });
 export function verifyHistoricalUpdateAsset(path,text){
   if(!Object.hasOwn(historicalUpdateAssets,path)||typeof text!=='string'||Buffer.byteLength(text)>16*1024*1024

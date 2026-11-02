@@ -322,7 +322,15 @@ if (mediaManifest?.video && mediaManifest?.poster) {
     const buffer = read(path);
     assert(buffer.length === item.bytes, `${path}: размер совпадает с манифестом`);
     assert(sha256(buffer) === item.sha256, `${path}: SHA-256 совпадает с манифестом`);
-    assert(landing.includes(path), `${path}: файл подключен на лендинге`);
+    // The original video poster stays integrity-checked; the landing may use
+    // the existing catalog Gantt frame as its explicit, separately checked cover.
+    if(kind==='video')assert(landing.includes(path), `${path}: файл подключен на лендинге`);
+    else {
+      const cover=landing.match(/<video\b[^>]*\bposter="([^"]+)"/)?.[1];
+      assert(cover===path||cover==='catalog-img/f01_light.webp','Обложка: исходный постер или проверенный кадр Ганта');
+      assert(Boolean(cover&&existsSync(file(cover))), 'Обложка лендинга существует');
+      assert(Boolean(cover&&landing.includes('id="demo-poster" src="'+cover+'"')), 'Видео и кнопка запуска используют одну обложку');
+    }
     if (kind === 'poster') {
       const dimensions = jpegSize(buffer);
       assert(Boolean(dimensions), `${path}: корректный JPEG`);
