@@ -5852,6 +5852,9 @@
    body.theme-dark :is(.border-slate-300,.rn-tag-slate-300) { border-color:#475569 !important; }
    body.theme-dark .divide-slate-200 > * { border-color:#34465a !important; }
    body.theme-dark .divide-slate-100 > * { border-color:#2a3a4c !important; }
+   /* Маркер времени важнее общей границы строк (divide-* действует и на него). */
+   body.theme-dark .border-slate-700\/70 { border-color:#cbd5e1b3 !important; }
+   body.theme-dark [data-pres-today] { border-left-color:#cbd5e1b3 !important; }
    /* Бэкдропы модалок остаются темными */
    body.theme-dark .bg-slate-900\/50 { background-color:rgba(2,6,16,.7) !important; }
    body.theme-dark .bg-slate-900\/40 { background-color:rgba(2,6,16,.6) !important; }
@@ -6584,7 +6587,7 @@
      }
      #appHeader .app-header-grid > :first-child { gap:.25rem; }
      #appHeader .app-header-meta { margin-top:0 !important; flex-wrap:nowrap; }
-     #appHeader #roadmapTitle { font-size:1rem; }
+     #appHeader #roadmapTitle { font-size:1rem; white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
      #appHeader .app-header-toolbar { gap:.375rem; }
      #appHeader .app-header-toolbar > button:first-child { min-width:0; }
      #settingsTabList {
@@ -6727,7 +6730,7 @@
    body:not([data-app-view="list"]) [data-app-context="list"] { display:none !important; }
    #zoomControl button,#zoomControlMobile button,#zoomControlMobile select,
    #viewIconsBar button,#planViewTabs button,#listDensityBtn,#collapseAllBtn,#selectModeBtn,#sortBtn,
-   [data-summary-tile] button,[data-summary-action] {
+   [data-summary-tile] button,[data-summary-action],[data-secmenu] {
      min-width:var(--rm-hit-target); min-height:var(--rm-hit-target);
    }
    body { font-size:var(--rm-font-md); line-height:var(--rm-line-body); }
@@ -6751,6 +6754,8 @@
    #appHeader .app-header-toolbar button,#appHeader .app-header-toolbar select,#planFilterBar button,#planFilterBar select,
    #planViewNav button,#timeline-header button { min-height:var(--rm-toolbar-h); border-radius:var(--rm-radius-md); }
    #appHeader .app-header-toolbar > button:first-child { border-radius:var(--rm-radius-md); }
+   /* Все действия футера карточки используют общую высоту контролов. */
+   #taskModal form + div button { min-height:var(--rm-control-h); font-size:var(--rm-font-sm); }
 
    /* Поля: внутренняя строка должна помещаться и в компактные 36 px.
       Размер внешней рамки сам по себе не защищает нативный редактор от обрезания. */
@@ -7684,7 +7689,7 @@
      .rm-info-button,.rm-dialog-header .cursor-help,
      .rm-search-clear.rm-search-clear,.rm-dialog-close.rm-dialog-close,.rm-drawer-close.rm-drawer-close,
      #zoomControl button,#zoomControlMobile button,#zoomControlMobile select,
-     #summaryView button,[data-summary-tile] button {
+     #summaryView button,[data-summary-tile] button,#startupModal .startup-header-actions button,[data-secmenu] {
        min-width:var(--rm-touch-target); min-height:var(--rm-touch-target);
      }
      .rm-info-button,.rm-dialog-header .cursor-help,
@@ -7785,6 +7790,7 @@
    body:is(.theme-studio,.theme-dark) #kanbanView .kanban-col[data-wip-over="true"] { border-color:var(--rm-danger-text,var(--rm-danger)); }
    .sp-sprint-goal { display:grid; gap:4px; margin:8px 0 16px; color:var(--rm-muted); font-size:12px; }
    .sp-sprint-goal textarea { width:100%; min-width:0; min-height:64px; padding:8px; border:1px solid var(--rm-border); border-radius:var(--rm-radius-sm); color:var(--rm-text); background:var(--rm-surface); resize:vertical; }
+   @media (pointer:coarse) { #sprintCfgModal .rm-choice-label { min-height:var(--rm-touch-target); } }
    .scrum-goal { margin:0; padding:12px 16px; color:var(--rm-text); border-bottom:1px solid var(--rm-border); background:var(--rm-surface-soft); white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; line-height:1.5; }
    .kanban-people { display:flex; flex:1 1 24rem; align-items:center; gap:8px; min-width:0; max-width:100%; }
    .kanban-people-label { color:var(--rm-muted); font-size:12px; }
@@ -8599,7 +8605,8 @@
 #moreMenu #planOverviewHost{margin:0;border-bottom:1px solid var(--rm-border)}
 #moreMenu #planOverviewHost .app-header-insight-row,#moreMenu #headerOverviewBtn{width:100%}
 #productContextNav[hidden]{display:none}
-#productContextNav button[aria-pressed="true"],.meeting-choice[aria-pressed="true"]{box-shadow:none}
+/* Второй уровень: подчёркивание вместо второй залитой вкладки раздела. */
+#productContextNav :is(.meeting-choice[data-meeting-content][aria-pressed="true"],button[data-product-view][aria-pressed="true"]),#productContextNav .pres-pane-tabs [role="tab"][aria-selected="true"],.meeting-choice[data-meeting-content][aria-pressed="true"],#presentView .pres-pane-tabs [role="tab"][data-active="true"]{--rm-selected-bg:transparent;--rm-selected-border:transparent;box-shadow:inset 0 -2px var(--rm-selected-text) !important;background:transparent;color:var(--rm-selected-text)}
 .meeting-choices{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
 .meeting-choices button{min-height:40px;white-space:normal}
 .meeting-intro{margin:0 0 16px;color:var(--rm-muted);font-size:14px;line-height:1.55;max-width:70ch}
@@ -8847,9 +8854,9 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
 #archiveModal .archive-service-menu[open]>.archive-footer-actions{position:absolute;bottom:calc(100% + 8px);left:0;width:min(280px,calc(100vw - 64px));max-height:50dvh;overflow-y:auto;padding:8px;display:grid;background:var(--rm-surface);border:1px solid var(--rm-border);border-radius:var(--rm-radius-md);box-shadow:var(--rm-shadow-sm);z-index:5}
 #archiveModal .archive-service-menu .archive-footer-actions>button{width:100%;justify-content:flex-start;min-height:44px}
 @media(max-width:767px){
- body.compact-workspace #appHeader #dataMenuBtn{width:44px;min-width:44px;padding:0;justify-content:center}
+ body.compact-workspace #appHeader #dataMenuBtn{min-width:44px;padding-left:8px;padding-right:8px}
  body.compact-workspace #appHeader #dataMenuBtn>svg:first-child{display:block}
- body.compact-workspace #appHeader #dataMenuBtn .rm-header-action-label,body.compact-workspace #appHeader #dataMenuBtn>svg:last-child{display:none}
+ body.compact-workspace #appHeader #dataMenuBtn>svg:last-child{display:none}
  body.compact-workspace #appHeader .app-header-meta{flex-wrap:nowrap;font-size:12px}
  body.compact-workspace #appHeader .app-header-po-chip{max-width:50%;min-width:0}
  body.compact-workspace #appHeader .app-header-date{min-width:0;flex-shrink:1;white-space:nowrap}
@@ -9122,11 +9129,11 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.20</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.30</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
-          <h1 id="roadmapTitle" onclick="startEditTitle()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();startEditTitle();}" aria-label="Название карты, нажмите чтобы переименовать" class="text-lg font-semibold tracking-tight text-slate-900 leading-snug cursor-pointer hover:bg-slate-50 px-1.5 py-0.5 rounded-lg border border-transparent hover:border-slate-200/60 transition-colors truncate min-w-0">
+          <h1 id="roadmapTitle" title="Дорожная карта продукта" onclick="startEditTitle()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();startEditTitle();}" aria-label="Название карты, нажмите чтобы переименовать" class="text-lg font-semibold tracking-tight text-slate-900 leading-snug cursor-pointer hover:bg-slate-50 px-1.5 py-0.5 rounded-lg border border-transparent hover:border-slate-200/60 transition-colors truncate min-w-0">
             Дорожная карта продукта
           </h1>
           <button onclick="startEditTitle()" aria-label="Переименовать роадмап" class="opacity-0 group-hover/title:opacity-100 text-slate-500 hover:text-indigo-600 p-1 transition-colors cursor-pointer shrink-0" title="Переименовать роадмап">
@@ -10017,12 +10024,12 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v17.20">
+<script data-roadmap-modules="v17.30">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
-/* module:report-cards sha256:fd615511360c328b2b5ae6116bd717d98a71174c0c75197e12ba089786c4d76f */
+/* module:report-cards sha256:e5053b541534fd9a18dc1f9e3f398a24d53085284324721e35ab18a93f581491 */
 // Pure task-card markup. Callers own selection, ordering, limits, dates and
 // status names. No DOM, persistence, clock, or new plan fields live here.
 // origin is the existing application-owned jira/digest route, not user text.
@@ -10092,7 +10099,7 @@ var click = o.click ? ' onclick="' + o.click + '" role="button" tabindex="0" onk
           + '<div class="flex items-start justify-between gap-2"><div class="text-[12px] font-medium text-slate-600">' + o.title + '</div><span class="shrink-0 text-[10px] font-normal text-slate-500">' + scopeLabel + '</span></div>'
           + '<div class="text-3xl font-semibold ' + o.num + ' tabular-nums leading-none">' + o.big + '</div>'
           + '<div class="mt-1 grow min-h-0">' + (o.body || '') + '</div>'
-          + (o.foot ? '<div class="text-[10px] text-slate-400 mt-1">' + o.foot + '</div>' : '')
+          + (o.foot ? '<div class="text-[10px] text-slate-500 mt-1">' + o.foot + '</div>' : '')
           + '</div>';
   }
   if(view==='print'){
@@ -17961,7 +17968,7 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '17.20';
+    const APP_VERSION = '17.30';
     const APP_VERSION_DATE = '02.11.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) { b.textContent = 'v' + APP_VERSION; b.title = APP_VERSION_DATE; } } catch (e) {}
@@ -19508,7 +19515,7 @@ if (typeof globalThis !== 'undefined') {
           + '<div id="portableChoices" class="mt-4 space-y-2"></div>'
           + '<p id="portableInvalidDraft" class="mt-3 text-sm text-slate-600"></p>'
           + '<p id="portableChoiceError" role="alert" class="mt-3 text-sm" style="color:var(--rm-danger-text,var(--rm-danger))"></p>'
-          + '<button type="button" id="portableChoiceCancel" class="mt-4 h-9 px-3 rounded-lg border border-slate-200 text-sm text-slate-700 bg-white">Отменить открытие</button></div>';
+          + '<button type="button" id="portableChoiceCancel" class="rm-btn rm-btn-secondary mt-4">Отменить открытие</button></div>';
         if (info.title) modal.querySelector('#portableChoiceTitle').textContent = info.title;
         if (info.description) modal.querySelector('p').textContent = info.description;
         let deleting = false, pendingDelete = null;
@@ -32656,9 +32663,7 @@ const m = document.getElementById('mineModeBtn');
         okText: 'Сохранить',
         onOk: (v) => {
           const name = (v && v.trim()) || 'Фамилия Имя';
-          const el = document.getElementById('poNameDisplay');
-          if (el) el.innerText = name;
-          storage.set('gantt_po_name', name);
+          applyPageMeta({poName: name});
           if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile();
         }
       });
@@ -33137,7 +33142,7 @@ const m = document.getElementById('mineModeBtn');
         else if (nNoEst / act.length >= 0.5) { status = 'gray'; verdict = 'мало данных: оцените ' + nNoEst + ' ' + pluralRu(nNoEst, ['задачу', 'задачи', 'задач']); reason = _fcReason(act, sched, taskIndex); }
         else {
           var slip = _fcDayDiff(promised, realEnd);
-          if (realEnd <= promised) { status = 'green'; var reserve = _fcDayDiff(realEnd, promised); verdict = 'успеваем, прогноз ' + formatForecastDate(realEnd, promised) + (reserve > 0 ? ' (запас ' + reserve + ' дн)' : ''); }
+          if (realEnd <= promised) { status = 'green'; var reserve = _fcDayDiff(realEnd, promised); verdict = 'успеваем' + (reserve > 0 ? ' (запас ' + reserve + ' дн)' : ''); }
           else if (optEnd && optEnd <= promised) { status = 'amber'; verdict = 'под вопросом, прогноз ' + formatForecastDate(realEnd, promised) + ' (+' + Math.max(1, slip) + ' дн)'; }
           else { status = 'red'; verdict = 'опоздаем, прогноз ' + formatForecastDate(realEnd, promised) + ' (+' + Math.max(1, slip) + ' дн)'; }
           reason = status === 'green' ? 'идет по плану' : _fcReason(act, sched, taskIndex);
@@ -34430,7 +34435,7 @@ const m = document.getElementById('mineModeBtn');
       const saved = persistPlan({undo:true,before,render:true});
       scheduleAutoSaveFile();
       if (saved === false) showToast('Повестка изменена в памяти. Сохраните рабочий файл.', 'warn', 6000);
-      else showToast('Задача убрана из повестки. Изменение можно отменить.', 'ok');
+      else showUndoToast('Задача убрана из повестки');
     }
     function clearMeetingAgenda() {
       if (READ_ONLY_MODE || !requireUnlocked()) return;
@@ -34884,7 +34889,7 @@ const m = document.getElementById('mineModeBtn');
         var dotClass = r.status === 'green' ? 'bg-emerald-500' : (r.status === 'amber' ? 'bg-amber-500' : (r.status === 'red' ? 'bg-rose-500' : (r.status === 'info' ? 'bg-indigo-500' : 'bg-slate-400')));
         var forecast = r.realEnd ? formatForecastDate(r.realEnd, r.promised) : 'не считается';
         return '<article data-forecast-date class="' + hidden + ' forecast-date-row grid items-center px-3 py-3 border-b border-slate-100 last:border-0">'
-          + '<div class="min-w-0"><div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full ' + dotClass + '"></span><span class="font-semibold text-sm text-slate-800 break-words lg:truncate">' + esc(r.label) + '</span></div><div class="text-[11px] text-slate-500 mt-1 break-words lg:truncate">' + esc(r.reason || r.verdict || '') + '</div></div>'
+          + '<div class="min-w-0"><div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full ' + dotClass + '"></span><span class="font-semibold text-sm text-slate-800 break-words lg:truncate">' + esc(r.label) + '</span></div>' + (r.reason && r.reason !== r.verdict ? '<div class="text-[11px] text-slate-500 mt-1 break-words lg:truncate">' + esc(r.reason) + '</div>' : '') + '</div>'
           + '<div><div class="text-[10px] uppercase tracking-wider text-slate-400">Обещано</div><div class="text-sm tabular-nums text-slate-700">' + esc(formatForecastDate(r.promised, r.realEnd)) + '</div></div>'
           + '<div><div class="text-[10px] uppercase tracking-wider text-slate-400">Прогноз</div><div class="text-sm tabular-nums font-semibold ' + meta.t + '">' + esc(forecast) + '</div></div>'
           + '<div class="lg:text-right"><div class="text-xs font-semibold ' + meta.t + '">' + esc(r.verdict) + '</div><div class="text-[10px] text-slate-400 mt-1">' + r.nTasks + ' ' + pluralRu(r.nTasks, ['задача', 'задачи', 'задач']) + (r.nHeld ? ' · на холде ' + r.nHeld : '') + '</div></div></article>';
@@ -34965,7 +34970,7 @@ const m = document.getElementById('mineModeBtn');
         + '</div><p class="text-sm mt-3">Прогноз рассчитывает завершение по оценкам и зависимостям. Запас времени и критический путь анализируют уже заданные даты и связи: это другой вопрос, поэтому результаты могут отличаться. Ни один из расчетов не гарантирует срок.</p><div class="meeting-format-list"><button type="button" class="rm-btn rm-btn-secondary" onclick="setAppView(\'list\');setShowCriticalPath(true)">Критический путь в плане</button><button type="button" class="rm-btn rm-btn-secondary" onclick="exportSlackReportPdf()">Запас времени (PDF)</button></div></details>';
 
       var dates = '<div data-forecast-dates class="mt-3 rounded-2xl bg-white border border-slate-200"><div class="px-4 py-3 flex items-center justify-between gap-3 border-b border-slate-100"><div><div class="text-sm font-bold text-slate-800">Контрольные даты</div><div class="text-xs text-slate-500">Сравните обещанный и расчетный срок. Это расчет по оценкам, не вероятность выполнения.</div></div><span class="text-xs text-slate-500">' + rows.length + '</span></div><div id="forecastDatesList">' + _fcDatesHtml(rows) + '</div>'
-        + (rows.length > 6 ? '<div class="p-3 border-t border-slate-100"><button type="button" onclick="_fcShowMoreDates(this)" class="px-3 rounded-xl bg-slate-50 border border-slate-200 font-semibold text-slate-700">Показать ещё ' + Math.min(20, rows.length - 6) + ' · осталось ' + (rows.length - 6) + '</button></div>' : '') + '</div>';
+        + (rows.length > 6 ? '<div class="p-3 border-t border-slate-100"><button type="button" onclick="_fcShowMoreDates(this)" class="rm-btn rm-btn-secondary px-3 rounded-xl bg-slate-50 border border-slate-200 font-semibold text-slate-700">Показать ещё ' + Math.min(20, rows.length - 6) + ' · осталось ' + (rows.length - 6) + '</button></div>' : '') + '</div>';
       var goals = goalRows.length ? '<section data-forecast-goals class="mt-4"><div class="text-xs font-semibold text-slate-500 uppercase tracking-wider py-1">Успеваем по целям · ' + goalRows.length + '</div><div class="mt-2">' + goalRows.map(function (g) { return _fcGoalCardHtml(g); }).join('') + '</div></section>' : '<section data-forecast-goals class="mt-4 text-sm text-slate-500">Цели для прогноза пока не настроены.</section>';
       var fullList = '<details data-forecast-full-list class="mt-4 rounded-2xl border border-slate-200 bg-white overflow-hidden"><summary class="min-h-11 px-4 py-3 flex items-center justify-between gap-3 cursor-pointer font-semibold text-slate-800"><span>Полный разбор</span><span class="text-xs font-normal text-slate-500">задачи, даты и цели</span></summary><div class="border-t border-slate-200 p-3">'  + burnHtml + goals + '</div></details>';
       var note = '<div class="text-xs text-slate-500 mt-3 leading-relaxed">Расчет учитывает рабочие дни, занятость, отпуска и зависимости. Задачи на холде помечаются как пауза. «Что если» не меняет реальный план.</div>';
@@ -35141,11 +35146,11 @@ const m = document.getElementById('mineModeBtn');
       const groups=[['overdue','Просроченные','Нет просроченных задач.'],['mine','Мои задачи','Нет моих текущих задач в этом срезе. Имя автора должно совпадать с исполнителем.'],['waiting','Ожидают решения','Нет заблокированных задач.']];
       return '<section data-summary-tile="today" data-summary-answer aria-labelledby="summaryTodayTitle" class="bg-white border border-slate-200 rounded-2xl p-4 mb-4">'
         +'<div class="flex items-center justify-between gap-3 flex-wrap"><h3 id="summaryTodayTitle" class="text-base font-semibold text-slate-800">Что сегодня</h3><span class="text-xs text-slate-500">'+escHtml(formatDateString(model.today))+' · '+escHtml(model.scopeLabel)+'</span></div>'
-        +'<p class="summary-today-note">Всего <b>'+model.total+'</b> уникальных задач. Группы пересекаются и не суммируются.</p>'
+        +'<p class="summary-today-note">Всего <b>'+model.total+'</b> '+pluralRu(model.total,['уникальная задача','уникальные задачи','уникальных задач'])+'. Группы пересекаются и не суммируются.</p>'
         +'<div class="summary-today-grid">'+groups.map(([key,title,empty])=>{
           const list=model.groups[key],noAuthor=key==='mine'&&!model.author;
           const hint=key==='waiting'?'Активные задачи с флагом «Заблокирована».':key==='mine'&&model.author?'Автор: '+model.author+'. Включая будущие задачи и задачи без срока.':'';
-          return '<section aria-label="'+title+'"><h4 class="text-sm font-semibold text-slate-800">'+title+' <span class="tabular-nums">'+(noAuthor?'—':list.length)+'</span></h4>'
+          return '<section aria-label="'+title+'"><h4 class="text-sm font-semibold text-slate-800">'+title+' <span class="tabular-nums '+(key==='overdue'&&list.length?'text-rose-600':'')+'">'+(noAuthor?'—':list.length)+'</span></h4>'
             +(hint?'<p class="summary-today-note">'+escHtml(hint)+'</p>':'')
             +(noAuthor?(READ_ONLY_MODE?'<p class="summary-today-note">Автор не указан. В режиме просмотра менять нельзя.</p>':'<p class="summary-today-note">Укажите имя автора в настройках — как у исполнителя.</p><button type="button" class="rm-btn rm-btn-secondary summary-today-more" onclick="openSettingsModal()">Настройки автора</button>'):list.length?_sumTodayTaskRows(list,3):'<p class="summary-today-note">'+empty+'</p>')
             +(list.length>3?'<button type="button" class="rm-btn rm-btn-secondary summary-today-more" data-today-group="'+key+'" onclick="_sumTodayOpenGroup(this.dataset.todayGroup)">Все задачи ('+list.length+')</button>':'')+'</section>';
@@ -35417,7 +35422,7 @@ const m = document.getElementById('mineModeBtn');
         var more = rest > 0
           ? (action
             ? '<button type="button" onclick="event.stopPropagation();' + action + '" class="mt-1 text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 underline decoration-dotted underline-offset-2 cursor-pointer">Показать ещё ' + rest + '</button>'
-            : '<div class="text-[11px] text-slate-400 mt-0.5">ещё ' + rest + '</div>')
+            : '<div class="text-[11px] text-slate-500 mt-0.5">ещё ' + rest + '</div>')
           : '';
         return list.slice(0, n).map(function (t) { return '<div class="truncate text-[11px] text-slate-600 leading-relaxed">' + (fmt ? fmt(t) : esc(t.name || '')) + '</div>'; }).join('') + more;
       }
@@ -35427,13 +35432,13 @@ const m = document.getElementById('mineModeBtn');
       var tiles = [];
       var leaveWarn = actLeave.length ? '<div class="text-[11px] font-semibold text-rose-600 mb-1">' + actLeave.length + ' ' + _presNZad(actLeave.length) + ' у исполнителей в отпуске:</div>' + names(actLeave, 2, null, "_sumOpen('inwork')") : '';
       tiles.push(tile({ key: 'inwork', title: 'В работе сейчас', big: String(act.length), cap: 'text-indigo-600', num: 'text-slate-900', border: 'border-indigo-200', body: leaveWarn + names(act.filter(function (t) { return actLeave.indexOf(t) < 0; }), actLeave.length ? 2 : 4, null, "_sumOpen('inwork')"), click: "_sumOpen('inwork')", foot: 'открыть список' }));
-      tiles.push(tile({ key: 'overdue', primary: true, title: 'Просрочено', big: String(over.length), cap: 'text-rose-600', num: over.length ? 'text-rose-600' : 'text-slate-900', border: over.length ? 'border-rose-200' : 'border-slate-200', body: over.length ? names(over, 4, function (t) { return esc(t.name || '') + ' <span class="text-rose-500 tabular-nums">(' + esc(formatDateString(t.end)) + ')</span>'; }, "_sumOpen('overdue')") : '<div class="text-[11px] text-slate-400">просроченных нет</div>', click: "_sumOpen('overdue')", foot: 'открыть список' }));
-      tiles.push(tile({ key: 'week', title: 'На этой неделе', big: String(week.length), cap: 'text-amber-600', num: 'text-slate-900', border: 'border-amber-200', body: week.length ? names(week, 4, function (t) { return esc(t.name || '') + ' <span class="text-slate-400 tabular-nums">(' + esc(formatDateString(t.isMilestone ? t.start : t.end)) + ')</span>'; }, "_sumOpen('thisweek')") : '<div class="text-[11px] text-slate-400">сроков на этой неделе нет</div>', click: "_sumOpen('thisweek')", foot: 'открыть список' }));
+      tiles.push(tile({ key: 'overdue', primary: true, title: 'Просрочено', big: String(over.length), cap: 'text-rose-600', num: over.length ? 'text-rose-600' : 'text-slate-900', border: over.length ? 'border-rose-200' : 'border-slate-200', body: over.length ? names(over, 4, function (t) { return esc(t.name || '') + ' <span class="text-rose-500 tabular-nums">(' + esc(formatDateString(t.end)) + ')</span>'; }, "_sumOpen('overdue')") : '<div class="text-[11px] text-slate-500">просроченных нет</div>', click: "_sumOpen('overdue')", foot: 'открыть список' }));
+      tiles.push(tile({ key: 'week', title: 'На этой неделе', big: String(week.length), cap: 'text-amber-600', num: 'text-slate-900', border: 'border-amber-200', body: week.length ? names(week, 4, function (t) { return esc(t.name || '') + ' <span class="text-slate-500 tabular-nums">(' + esc(formatDateString(t.isMilestone ? t.start : t.end)) + ')</span>'; }, "_sumOpen('thisweek')") : '<div class="text-[11px] text-slate-500">сроков на этой неделе нет</div>', click: "_sumOpen('thisweek')", foot: 'открыть список' }));
       var lvBody = lv.length ? lv.slice(0, 4).map(function (p) {
         return '<div class="truncate text-[11px] leading-relaxed ' + (p.now ? 'text-slate-700' : 'text-slate-500') + '"><span class="font-medium">' + esc(p.name) + '</span>, ' + (p.now ? ('до ' + esc(formatDateString(p.to))) : ('с ' + esc(formatDateString(p.from)) + ' по ' + esc(formatDateString(p.to)))) + '</div>';
-      }).join('') + (lv.length > 4 ? '<button type="button" onclick="event.stopPropagation();openResourceModal()" class="mt-1 text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 underline decoration-dotted underline-offset-2 cursor-pointer">Показать ещё ' + (lv.length - 4) + '</button>' : '') : '<div class="text-[11px] text-slate-400">сейчас и в ближайшие 2 недели отпусков нет</div>';
+      }).join('') + (lv.length > 4 ? '<button type="button" onclick="event.stopPropagation();openResourceModal()" class="mt-1 text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 underline decoration-dotted underline-offset-2 cursor-pointer">Показать ещё ' + (lv.length - 4) + '</button>' : '') : '<div class="text-[11px] text-slate-500">сейчас и в ближайшие 2 недели отпусков нет</div>';
       tiles.push(tile({ key: 'leave', title: 'Кто в отпуске', big: String(lv.filter(function (p) { return p.now; }).length), cap: 'text-sky-600', num: 'text-slate-900', border: 'border-sky-200', body: lvBody, click: (typeof openResourceModal === 'function') ? 'openResourceModal()' : '', foot: 'открыть «Команду»', global: true }));
-      tiles.push(tile({ key: 'next', title: 'Ближайшая дата', big: cut ? (cutDays === 0 ? 'сегодня' : ('через ' + cutDays + ' ' + _dniWord(cutDays))) : '—', cap: 'text-emerald-600', num: cut && cutDays <= 7 ? 'text-emerald-700' : 'text-slate-900', border: 'border-emerald-200', body: cut ? ('<div class="text-[12px] font-semibold text-slate-700 truncate">' + esc(cut.name || 'Отсечка') + '</div><div class="text-[11px] text-slate-500 tabular-nums">' + esc(formatDateString(cut.date)) + '</div>') : '<div class="text-[11px] text-slate-400">впереди нет вех и отсечек — добавьте контрольную дату на шкале сверху</div>', click: "setAppView('list')", foot: 'открыть план', global: true }));
+      tiles.push(tile({ key: 'next', title: 'Ближайшая дата', big: cut ? (cutDays === 0 ? 'сегодня' : ('через ' + cutDays + ' ' + _dniWord(cutDays))) : '—', cap: 'text-emerald-600', num: cut && cutDays <= 7 ? 'text-emerald-700' : 'text-slate-900', border: 'border-emerald-200', body: cut ? ('<div class="text-[12px] font-semibold text-slate-700 truncate">' + esc(cut.name || 'Отсечка') + '</div><div class="text-[11px] text-slate-500 tabular-nums">' + esc(formatDateString(cut.date)) + '</div>') : '<div class="text-[11px] text-slate-500">впереди нет вех и отсечек — добавьте контрольную дату на шкале сверху</div>', click: "setAppView('list')", foot: 'открыть план', global: true }));
       // плитка «Готовность по разделам» (бывшее окно «Обзор», часть 1)
       try {
         var _secRows = primary.sectionRows;
@@ -36094,14 +36099,14 @@ const m = document.getElementById('mineModeBtn');
       const cols = statuses.map(st => {
         const list = byStatus[st.id] || [];
         const load = columnLoad.get(st.id) || {count:0,limit:0,exceeded:false};
-        const limitNote = load.limit ? `<span class="kanban-wip${load.exceeded?' kanban-wip-over':''}">По плану: ${load.count} / ${load.limit}${load.exceeded?' · Превышен лимит':''}</span>` : '';
+        const limitNote = load.limit ? `<span class="kanban-wip${load.exceeded?' kanban-wip-over':''}" title="Все нескрытые задачи плана: ${load.count} из лимита ${load.limit}">По плану: ${load.count} / ${load.limit}${load.exceeded?' · Превышен лимит':''}</span>` : '';
         if (!list.length && !_kanbanShowEmpty && !load.exceeded) return '';
         const dot = escAttr(RoadmapModules.statusBackgroundClass(st));
         const cards = list.length ? list.map(t => _kanbanCard(t, ro, _allSt)).join('') : '<div class="text-[10px] text-slate-500 text-center py-4 border border-dashed border-slate-200 rounded-lg">Нет задач в текущем срезе</div>';
         return `<div class="kanban-col shrink-0 w-[80vw] sm:w-72 flex flex-col bg-slate-50 rounded-xl border border-slate-200 overflow-hidden" role="group" aria-label="${escAttr(st.name + ', задач в текущем срезе ' + list.length)}" data-wip-over="${load.exceeded}" data-status="${escAttr(st.id)}"${ro ? '' : ` ondragover="event.preventDefault(); this.classList.add('ring-2','ring-indigo-300')" ondragleave="this.classList.remove('ring-2','ring-indigo-300')" ondrop="_kanbanDrop(event, '${escJsArg(st.id)}')"`}>
           <div class="px-3 py-2.5 flex items-center justify-between gap-2 flex-wrap border-b border-slate-200 sticky top-0 bg-white z-10">
             <span class="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 min-w-0"><span class="w-2.5 h-2.5 rounded-full ${dot} shrink-0"></span><span class="truncate">${escHtml(st.name)}</span></span>
-            <span class="text-[10px] font-semibold text-slate-500 bg-slate-100 border border-slate-200 rounded-full px-1.5 py-0.5 tabular-nums shrink-0">В срезе: ${list.length}</span>
+            <span class="text-[10px] font-semibold text-slate-500 bg-slate-100 border border-slate-200 rounded-full px-1.5 py-0.5 tabular-nums shrink-0" title="Видно при текущих фильтрах">В срезе: ${list.length}</span>
             ${limitNote}
           </div>
           <div class="p-2 space-y-2 overflow-y-auto" style="max-height:calc(100vh - 320px)">${cards}</div>
@@ -37123,7 +37128,7 @@ const m = document.getElementById('mineModeBtn');
         if (zoneKind === 'hiddenTasks') {
           actionsHtml = (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE) ? '' : `<div class="flex items-center gap-0.5 shrink-0 ml-0.5">${sectionArchiveBtn}</div>`;
         } else {
-          const _kebab = `<button type="button" data-secmenu="${escAttr(sectionName)}" onclick="event.stopPropagation(); openSectionMenu(this, '${sectionNameAttr}', ${isHiddenZone ? 'true' : 'false'})" class="shrink-0 w-6 h-6 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200 flex items-center justify-center transition-colors cursor-pointer opacity-40 group-hover:opacity-100 focus:opacity-100" aria-haspopup="menu" aria-controls="sectionActionsMenu" aria-expanded="${_secMenuFor === sectionName ? 'true' : 'false'}" aria-label="Действия с секцией" title="Действия с секцией"><svg aria-hidden="true" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="12" cy="19" r="1.7"></circle></svg></button>`;
+          const _kebab = `<button type="button" data-secmenu="${escAttr(sectionName)}" onclick="event.stopPropagation(); openSectionMenu(this, '${sectionNameAttr}', ${isHiddenZone ? 'true' : 'false'})" class="shrink-0 w-6 h-6 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200 flex items-center justify-center transition-colors cursor-pointer opacity-70 group-hover:opacity-100 focus:opacity-100" aria-haspopup="menu" aria-controls="sectionActionsMenu" aria-expanded="${_secMenuFor === sectionName ? 'true' : 'false'}" aria-label="Действия с секцией" title="Действия с секцией"><svg aria-hidden="true" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="12" cy="19" r="1.7"></circle></svg></button>`;
           actionsHtml = `<div class="flex items-center gap-0.5 shrink-0 ml-0.5">${_kebab}</div>`;
         }
 
@@ -37581,7 +37586,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
                 // Текст статуса , только если реально помещается целиком (иначе одна иконка: цвет полоски уже кодирует статус).
                 const labelPx = measureStatusLabel(label, bar, statusBadge);
                 const approxBadgePx = labelPx + (icon ? 26 : 12);
-                const showFull = (actualWidth - 22) >= approxBadgePx && labelPx <= actualWidth * 0.5;
+                const showFull = (actualWidth - 22) >= approxBadgePx + 12 && approxBadgePx + 12 <= actualWidth * 0.58;
                 statusBadge.innerHTML = icon + (showFull ? `<span class="min-w-0 truncate">${escHtml(label)}</span>` : '');
                 statusBadge.title = 'Статус: ' + label;
                 statusBadge.setAttribute('aria-label', 'Статус: ' + label);
@@ -39886,7 +39891,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     function applyPageMeta(meta = {}) {
       if (meta.poName) {
         const poEl = document.getElementById('poNameDisplay');
-        if (poEl) poEl.innerText = meta.poName;
+        if (poEl) {
+          poEl.innerText = meta.poName;
+          const chip = poEl.closest('button');
+          if (chip) chip.title = 'Продакт-оунер (РО): ' + meta.poName + '. Нажмите, чтобы поменять имя';
+        }
         storage.set('gantt_po_name', meta.poName);
       }
       if (meta.focusKeyDate != null) { try { storage.set('gantt_focus_keydate', String(meta.focusKeyDate || '')); } catch (e) {} }
@@ -44698,7 +44707,7 @@ function syncBodyScrollLock() {
   <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
    <div class="candidate-header-update info-header-main">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
-    <button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><span id="appVersionBadge" title="02.11.2026">v17.20</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
+    <button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><span id="appVersionBadge" title="02.11.2026">v17.30</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
    </div>
    <div class="flex items-center gap-2 shrink-0">
     <button type="button" id="infoCloseBtn" onclick="closeInfoModal()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer" aria-label="Закрыть" title="Закрыть">
@@ -44722,7 +44731,31 @@ function syncBodyScrollLock() {
    </section>
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.20</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.30</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="readable-plan" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-573e78877038"></use></svg><h5 class="min-w-0 rn-title">Сегодня видно в любой теме</h5><span class="info-release-badge">ПЛАН</span></div>
+      <p class="text-xs text-slate-600">Линия «Сегодня» заметнее в тёмной теме. Подписи статусов и показатели Сводки легче прочитать.</p>
+     </article>
+     <article data-release-card="meeting-materials" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-19f3fbbcef75"></use></svg><h5 class="min-w-0 rn-title">Материал из любой вкладки встречи</h5><span class="info-release-badge">ВСТРЕЧА</span></div>
+      <p class="text-xs text-slate-600">Из повестки и причин сдвигов открывается выбор материала. Удалённый пункт повестки можно сразу вернуть.</p>
+     </article>
+     <article data-release-card="comfortable-touch" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-6bf0c51d973c"></use></svg><h5 class="min-w-0 rn-title">Меньше промахов на телефоне</h5><span class="info-release-badge">ИНТЕРФЕЙС</span></div>
+      <p class="text-xs text-slate-600">Крупнее зоны нажатия в разделах, спринте и окнах. У меню «Данные» снова есть подпись.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.20</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="calmer-workspace" class="info-release-card rn-card rn-solid">
       <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-573e78877038"></use></svg><h5 class="min-w-0 rn-title">Меньше шума, больше плана</h5><span class="info-release-badge">ИНТЕРФЕЙС</span></div>
@@ -44739,12 +44772,6 @@ function syncBodyScrollLock() {
     </div>
    </div>
 
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.19</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -49038,7 +49065,7 @@ function syncBodyScrollLock() {
         <div class="startup-heading">
           <div class="flex items-center gap-2 flex-wrap">
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
-            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">v17.20</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button>
+            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">v17.30</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button>
           </div>
           <div id="startupUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте свой план или начните с примера.</p>
@@ -50053,7 +50080,7 @@ function openMaterialPreparation() {
     + [['status','Статус'],['plan','План'],['period','Итоги периода']].map(function(p){return '<button type="button" class="rm-btn rm-btn-secondary" data-material-group="'+p[0]+'" aria-pressed="false" onclick="selectMaterialGroup(\''+p[0]+'\')">'+p[1]+'</button>';}).join('')
     + '</div><div id="materialPreparationOptions" class="grid gap-3"></div><p class="mt-3 text-sm">Файл создается после подтверждения. Автоматической отправки нет.</p></div></div>';
   m.addEventListener('click',function(e){if(e.target===m)closeMaterialPreparation();});
-  document.body.appendChild(m); selectMaterialGroup(_meetingContent||'plan'); syncBodyScrollLock();
+  document.body.appendChild(m); selectMaterialGroup(['status','plan','period'].includes(_meetingContent)?_meetingContent:'plan'); syncBodyScrollLock();
 }
 function selectMaterialGroup(group) {
   var host=document.getElementById('materialPreparationOptions'); if(!host)return;
