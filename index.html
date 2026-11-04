@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="roadmap-build-date" content="2026-11-02">
-  <meta name="roadmap-publication-date" content="2026-11-02">
+  <meta name="roadmap-build-date" content="2026-11-04">
+  <meta name="roadmap-publication-date" content="2026-11-04">
   <meta name="description" content="Roadmap: планировщик задач и проектов. Список с календарем, Канбан, Скрам, задачи из Jira и настройка под вашу команду. Работает в браузере.">
   <title>Roadmap: планировщик задач и проектов</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Cpath d='M9 10h14M9 16h10M9 22h6' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -64,6 +64,8 @@
     ::selection{background:#dfe3ff;color:#0f172a}input,textarea{caret-color:var(--brand)}
     @media(max-width:900px){.heroright{justify-content:flex-start}.heroright .vhero{max-width:none}}
     @media(max-width:720px){.hero .wrap{padding:24px 20px 28px}.herogrid{margin-top:24px}.shotwrap .wrap{padding:0 20px}.video{border-radius:12px}.vidnote{font-size:12px}.hero .cta{margin-top:20px;gap:12px}.hero .cta .btn{width:auto;flex:1 1 180px;padding:0 12px;font-size:14px}}
+    .video-help[hidden]{display:none}
+    @media(pointer:coarse){.vhero .lk>a{display:inline-flex;align-items:center;min-height:44px}}
   </style>
 </head>
 <body>
@@ -71,7 +73,7 @@
     <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">Roadmap</span></div>
     <div class="herogrid">
       <div>
-        <h1>Дорожная карта — Roadmap v17.30</h1>
+        <h1>Дорожная карта — Roadmap v17.31</h1>
         <p class="lead">Задачи из Jira, сроки и команда — в одном плане. Гант, Канбан и Скрам в браузере, без установки. План сохраняется в файл.</p>
         <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a><a class="story-link" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a></div>
       </div>
@@ -85,6 +87,7 @@
       <div class="video-cover" id="demo-cover" hidden><img id="demo-poster" src="catalog-img/f01_light.webp" width="1440" height="913" alt="" decoding="sync"><button class="btn primary video-start" id="demo-play" type="button" aria-controls="demo-video"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l14-8z"/></svg><span>Смотреть ролик · 2 минуты</span></button></div>
     </div>
     <div id="demo-video-status" class="video-help video-status" role="status" aria-live="polite"></div>
+    <div id="demo-video-fallback" class="video-help" hidden><a href="media/roadmap-demo.mp4" target="_blank" rel="noopener">Открыть MP4 ↗</a><a href="media/roadmap-demo.mp4" download>Скачать ролик</a></div>
   </div></div>
 
 
@@ -126,7 +129,7 @@
     <section><div class="wrap"><div class="catcta"><h2>Посмотрите, подойдет ли вам Roadmap</h2><p>Попробуйте план на примере команды или найдите в каталоге то, что поможет в вашей работе.</p><div class="cta"><a class="btn primary" href="app.html">Попробовать демо</a><a class="btn ghost" href="catalog.html">Посмотреть возможности</a></div></div></div></section>
   </main>
 
-  <footer class="foot"><div class="wrap">Roadmap v17.30 · Владимир Учинин</div></footer>
+  <footer class="foot"><div class="wrap">Roadmap v17.31 · Владимир Учинин</div></footer>
   <dialog class="purchase-dialog" id="purchase-dialog" aria-labelledby="purchase-title" aria-describedby="purchase-note">
     <div class="purchase-head"><h2 id="purchase-title">Запросить рабочую версию</h2><button class="btn ghost purchase-close" id="purchase-close" type="button" aria-label="Закрыть форму">&times;</button></div>
     <p class="purchase-note" id="purchase-note">Форма подготовит письмо автору для обсуждения цены и условий. Оно откроется в вашей почтовой программе, отправить его нужно самостоятельно. Это не заказ и не оплата. Сайт не отправляет и не сохраняет данные формы.</p>
@@ -151,6 +154,7 @@
       const button = document.getElementById('demo-play');
       const label = button.querySelector('span');
       const status = document.getElementById('demo-video-status');
+      const fallback = document.getElementById('demo-video-fallback');
       let loadingTimer;
       let attempt = 0;
       cover.hidden = false;
@@ -159,6 +163,7 @@
         attempt++;
         clearLoading();
         cover.hidden = false;
+        fallback.hidden = false;
         label.textContent = 'Попробовать еще раз';
         status.textContent = message;
       }
@@ -186,6 +191,7 @@
       });
       video.addEventListener('playing', () => {
         clearLoading(); cover.hidden = true; status.textContent = '';
+        fallback.hidden = true;
         if (document.activeElement === button) video.focus();
       });
       video.addEventListener('ended', () => {

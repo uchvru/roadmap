@@ -7689,7 +7689,7 @@
      .rm-info-button,.rm-dialog-header .cursor-help,
      .rm-search-clear.rm-search-clear,.rm-dialog-close.rm-dialog-close,.rm-drawer-close.rm-drawer-close,
      #zoomControl button,#zoomControlMobile button,#zoomControlMobile select,
-     #summaryView button,[data-summary-tile] button,#startupModal .startup-header-actions button,[data-secmenu] {
+     #summaryView button,[data-summary-tile] button,#startupModal .startup-header-actions button,[data-secmenu],.rm-touch-choice {
        min-width:var(--rm-touch-target); min-height:var(--rm-touch-target);
      }
      .rm-info-button,.rm-dialog-header .cursor-help,
@@ -9129,7 +9129,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.30</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.31</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9676,9 +9676,9 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
           <div class="task-parameters">
             <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Параметры</label>
             <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 min-h-9 bg-slate-50/50 px-3 py-2 rounded-xl border border-slate-100">
-            <span class="inline-flex items-center gap-1.5"><input type="checkbox" id="taskIsMilestone" onchange="toggleMilestoneMode()" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500/20 w-4 h-4 cursor-pointer"><label for="taskIsMilestone" class="text-xs font-medium text-slate-700 cursor-pointer select-none">Веха</label></span>
-            <span class="inline-flex items-center gap-1.5"><input type="checkbox" id="taskIsBlocker" class="rounded border-slate-300 text-rose-600 focus:ring-rose-500/20 w-4 h-4 cursor-pointer"><label for="taskIsBlocker" class="text-xs font-medium text-rose-700 cursor-pointer select-none">Блокер</label></span>
-            <label class="inline-flex items-center gap-1.5 min-h-11 cursor-pointer"><input type="checkbox" id="taskAgenda" class="rounded border-slate-300 text-indigo-600 w-4 h-4"><span class="text-xs font-medium text-slate-700">В повестку</span></label>
+            <label for="taskIsMilestone" class="rm-touch-choice inline-flex items-center gap-1.5 shrink-0 cursor-pointer"><input type="checkbox" id="taskIsMilestone" onchange="toggleMilestoneMode()" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500/20 w-4 h-4 cursor-pointer"><span class="text-xs font-medium text-slate-700 select-none">Веха</span></label>
+            <label for="taskIsBlocker" class="rm-touch-choice inline-flex items-center gap-1.5 shrink-0 cursor-pointer"><input type="checkbox" id="taskIsBlocker" class="rounded border-slate-300 text-rose-600 focus:ring-rose-500/20 w-4 h-4 cursor-pointer"><span class="text-xs font-medium text-rose-700 select-none">Блокер</span></label>
+            <label class="rm-touch-choice inline-flex items-center gap-1.5 shrink-0 cursor-pointer"><input type="checkbox" id="taskAgenda" class="rounded border-slate-300 text-indigo-600 w-4 h-4"><span class="text-xs font-medium text-slate-700">В повестку</span></label>
             <span class="task-kind-field inline-flex items-center gap-1.5" data-adv><label for="taskKind" class="text-xs font-medium text-slate-600 cursor-pointer select-none">Тип</label><select id="taskKind" onchange="_taskKindFormToggle()" aria-label="Тип задачи" class="h-9 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 cursor-pointer"><option value="">Обычная</option><option value="incident">Инцидент</option><option value="hotfix">Хотфикс</option><option value="extdep">Внешняя зависимость</option><option value="research">Исследование</option></select></span>
             <span id="taskExtPartyWrap" data-adv class="inline-flex items-center gap-1.5 hidden"><span class="task-external-field"><label for="taskExtParty" class="text-xs font-medium text-slate-600 select-none">Сторона</label><input type="text" id="taskExtParty" placeholder="подрядчик / отдел" aria-label="Внешняя ответственная сторона" class="h-8 px-2 w-40 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500"></span><span class="task-external-field"><label for="taskExtEta" class="text-xs font-medium text-slate-600 select-none">Ожидаемая дата</label><input type="date" id="taskExtEta" aria-label="Ожидаемая дата от внешней стороны" title="Ожидаемая дата готовности от внешней стороны, для контроля просрочки" class="h-8 px-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500"></span></span>
             </div>
@@ -9921,7 +9921,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
               <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1"><svg aria-hidden="true" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="6" fill="#2563eb"/><text x="12" y="16.5" fill="white" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">J</text></svg> Jira</label>
               <div class="flex items-stretch gap-1">
                 <input type="text" id="taskJira" maxlength="120" placeholder="TASK-123 или URL" class="grow min-w-0 h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors">
-                <button type="button" onclick="copyTaskLink('taskJira', 'Ссылка Jira')" class="group flex items-center justify-center w-8 h-9 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer shrink-0" aria-label="Скопировать (поле можно редактировать)" title="Скопировать (поле можно редактировать)">
+                <button type="button" onclick="copyTaskLink('taskJira', 'Ссылка Jira')" class="group flex items-center justify-center w-8 h-9 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer shrink-0" aria-label="Скопировать ссылку Jira" title="Скопировать ссылку Jira">
                   <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-32bbc3efbd19"></use></svg>
                 </button>
               </div>
@@ -9931,7 +9931,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
               <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Эпик в Jira</label>
               <div class="flex items-stretch gap-1">
                 <input type="text" id="taskEpicLink" maxlength="120" placeholder="PROJ-123" class="grow min-w-0 h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors">
-                <button type="button" onclick="copyTaskLink('taskEpicLink', 'Ссылка на эпик')" class="group flex items-center justify-center w-8 h-9 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer shrink-0" aria-label="Скопировать (поле можно редактировать)" title="Скопировать (поле можно редактировать)">
+                <button type="button" onclick="copyTaskLink('taskEpicLink', 'Ссылка на эпик')" class="group flex items-center justify-center w-8 h-9 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer shrink-0" aria-label="Скопировать ссылку эпика" title="Скопировать ссылку эпика">
                   <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-32bbc3efbd19"></use></svg>
                 </button>
               </div>
@@ -9940,7 +9940,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
               <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1"><svg aria-hidden="true" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="6" fill="#3b82f6"/><text x="12" y="16.5" fill="white" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">C</text></svg> Confluence</label>
               <div class="flex items-stretch gap-1">
                 <input type="text" id="taskConf" maxlength="2000" placeholder="URL страницы" class="grow min-w-0 h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors">
-                <button type="button" onclick="copyTaskLink('taskConf', 'Ссылка Confluence')" class="group flex items-center justify-center w-8 h-9 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer shrink-0" aria-label="Скопировать (поле можно редактировать)" title="Скопировать (поле можно редактировать)">
+                <button type="button" onclick="copyTaskLink('taskConf', 'Ссылка Confluence')" class="group flex items-center justify-center w-8 h-9 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer shrink-0" aria-label="Скопировать ссылку Confluence" title="Скопировать ссылку Confluence">
                   <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-32bbc3efbd19"></use></svg>
                 </button>
               </div>
@@ -9949,7 +9949,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
               <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1"><svg aria-hidden="true" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="6" fill="#8b5cf6"/><text x="12" y="16.5" fill="white" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">F</text></svg> Figma</label>
               <div class="flex items-stretch gap-1">
                 <input type="text" id="taskFigma" maxlength="2000" placeholder="URL макета" class="grow min-w-0 h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors">
-                <button type="button" onclick="copyTaskLink('taskFigma', 'Ссылка Figma')" class="group flex items-center justify-center w-8 h-9 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer shrink-0" aria-label="Скопировать (поле можно редактировать)" title="Скопировать (поле можно редактировать)">
+                <button type="button" onclick="copyTaskLink('taskFigma', 'Ссылка Figma')" class="group flex items-center justify-center w-8 h-9 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer shrink-0" aria-label="Скопировать ссылку Figma" title="Скопировать ссылку Figma">
                   <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-32bbc3efbd19"></use></svg>
                 </button>
               </div>
@@ -10024,7 +10024,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v17.30">
+<script data-roadmap-modules="v17.31">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -17968,8 +17968,8 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '17.30';
-    const APP_VERSION_DATE = '02.11.2026';
+    const APP_VERSION = '17.31';
+    const APP_VERSION_DATE = '04.11.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) { b.textContent = 'v' + APP_VERSION; b.title = APP_VERSION_DATE; } } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'v' + APP_VERSION; } catch (e) {}
@@ -22580,25 +22580,41 @@ if (typeof globalThis !== 'undefined') {
       if (!target) return;
       var set = {}; target.forEach(function (id) { set[id] = 1; });
       var n = pairs.filter(function (pr) { return set[pr[0]] && set[pr[1]]; }).length;
+      var context = { project: projectStorageId, epoch: _projectTransitionToken };
       openConfirm({
         title: 'Разобрать цепочку', danger: true, okText: 'Разобрать',
         desc: 'Будут убраны все связи внутри цепочки (' + n + ' ' + pluralRu(n, ['связь', 'связи', 'связей']) + '). Задачи останутся и попадут в «Без связей». Даты не меняются.',
         onOk: function () {
+          if (context.project !== projectStorageId || context.epoch !== _projectTransitionToken) {
+            showToast('Проект изменился. Откройте цепочку заново.', 'warn'); return;
+          }
+          if (READ_ONLY_MODE || !requireUnlocked()) return;
           var today = toYmdLocal(CURRENT_DATE);
-          (roadmapData || []).forEach(function (t) {
-            if (!t || !set[t.id]) return;
+          var previous = roadmapData, changed = false;
+          var next = (roadmapData || []).map(function (t) {
+            if (!t || !set[t.id]) return t;
             var cur = getPredecessorIds(t);
             var keep = cur.filter(function (p2) { return !set[p2]; });
-            if (keep.length !== cur.length) {
-              var old = t.pred || '';
-              t.pred = keep.join(',');
-              t.history = t.history || [];
-              t.history.push({ at: today, time: (typeof _auditClock === 'function' ? _auditClock() : ''), by: (typeof _authorName === 'function' ? _authorName() : ''), field: 'Связи', old: old, new: t.pred });
-            }
+            if (keep.length === cur.length) return t;
+            changed = true;
+            var pred = keep.join(',');
+            return Object.assign({}, t, { pred: pred, history: (t.history || []).concat([{
+              at: today, time: _auditClock(), by: _authorName(), field: 'Связи', old: t.pred || '', new: pred
+            }]) });
           });
-          if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile();
+          if (!changed) return;
+          var before = captureUndoState(), memoryBefore = _captureSnapshotMemoryStore();
+          roadmapData = next;
+          try {
+            if (_persistProjectStateNow() !== true) throw new Error('Dependency chain write failed');
+          } catch (error) {
+            roadmapData = previous; _restoreSnapshotMemoryStore(memoryBefore);
+            try { globalThis.__roadmapPortableSession?.changed(); } catch (e) {}
+            showToast('Не удалось сохранить. Связи не изменены.', 'error'); return;
+          }
+          scheduleAutoSaveFile();
           renderRoadmap(true); refreshDepsOverview();
-          showToast('Цепочка разобрана, задачи вернулись в «Без связей»', 'ok', 3000);
+          offerUndo('Цепочка разобрана', before);
         }
       });
     }
@@ -28074,7 +28090,7 @@ const m = document.getElementById('mineModeBtn');
         const archiveDate = archiveDates.get(t);
         return `
         <div class="archive-row px-4 py-2.5 hover:bg-slate-50 transition-colors group/arc">
-          <input type="checkbox" class="archive-row-check w-3.5 h-3.5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500/20 cursor-pointer shrink-0" data-id="${t.id}" ${selected.has(String(t.id)) ? 'checked' : ''} onchange="updateArchiveSelectionUI()" aria-label="Выбрать для восстановления: ${taskLabel}" title="Выбрать для восстановления">
+          <label class="archive-row-select rm-touch-choice inline-flex items-center justify-center shrink-0 cursor-pointer"><input type="checkbox" class="archive-row-check w-3.5 h-3.5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500/20 cursor-pointer shrink-0" data-id="${t.id}" ${selected.has(String(t.id)) ? 'checked' : ''} onchange="updateArchiveSelectionUI()" aria-label="Выбрать для восстановления: ${taskLabel}" title="Выбрать для восстановления"></label>
           <button type="button" class="archive-task-button rm-action rm-btn rm-btn-secondary grow min-w-0 cursor-pointer rounded-lg focus:outline-none" onclick="viewArchivedTask(${t.id})" aria-label="Открыть архивную задачу: ${taskLabel}" title="Открыть карточку задачи">
             <span class="archive-task-copy">
               <span class="archive-task-title group-hover/arc:text-indigo-700">
@@ -32415,7 +32431,8 @@ const m = document.getElementById('mineModeBtn');
     }
     // Общие ячейки строки slip-репорта (панель, копирование и PDF-сводка): план/факт/сдвиг текстом
     function _slipCells(r) {
-      const f = (v) => v ? formatDateString(v) : '';
+      const years = new Set([r.planStart, r.planEnd, r.curStart, r.curEnd].filter(v => /^\d{4}-\d{2}-\d{2}$/.test(v || '')).map(v => v.slice(0, 4)));
+      const f = (v) => v ? (years.size > 1 ? formatDateWithYear(v) : formatDateString(v)) : '';
       const rng = (a, b) => (a || b) ? (f(a) + ' → ' + f(b)) : '';
       const badge = r.added ? 'новая' : (r.removed ? 'удалена' : '');
       const slip = (r.added || r.removed) ? '' : (r.slipDays > 0 ? '+' + r.slipDays : String(r.slipDays));
@@ -35800,16 +35817,56 @@ const m = document.getElementById('mineModeBtn');
       const out=document.getElementById('wbZoomValue');if(out)out.textContent=Math.round(c.zoom*100)+'%';
       _wbPositionComment();
     }
+    // Label baseline coordinates must avoid node rectangles, not cover card text.
+    function _wbEdgeLabelPosition(point, box, nodes) {
+      const gap = 6, left = point.x + box.x, right = left + box.width;
+      const intervals = [];
+      for (const node of nodes) {
+        if (right <= node.x - gap || left >= node.x + node.width + gap) continue;
+        intervals.push([node.y - gap - box.y - box.height, node.y + node.height + gap - box.y]);
+      }
+      intervals.sort((a,b) => a[0] - b[0]);
+      const merged = [];
+      for (const interval of intervals) {
+        const last = merged[merged.length - 1];
+        if (last && interval[0] <= last[1]) last[1] = Math.max(last[1], interval[1]);
+        else merged.push(interval.slice());
+      }
+      for (const [low, high] of merged) {
+        if (point.y > low && point.y < high) return {x:point.x, y:point.y-low <= high-point.y ? low : high};
+      }
+      return {x:point.x, y:point.y};
+    }
+    function _wbPositionEdgeLabel(entry, nodes) {
+      if (!entry.label.textContent) return;
+      if (!entry.box) {
+        const box = entry.label.getBBox();
+        entry.box = {x:box.x - Number(entry.label.getAttribute('x')),y:box.y - Number(entry.label.getAttribute('y')),width:box.width,height:box.height};
+      }
+      entry.position = _wbEdgeLabelPosition(entry.anchor, entry.box, nodes);
+      entry.label.setAttribute('x',entry.position.x);entry.label.setAttribute('y',entry.position.y);
+    }
     function _wbPaintEdges(override) {
       const svg=document.getElementById('wbEdges');if(!svg)return;
       // Per-render index: reset on every board render/filter/project change.
       // During a drag, update only incident paths, without replacing SVG nodes.
       if(override&&_wbUi.edgeIndex?.svg===svg){
-        for(const entry of _wbUi.edgeIndex.byNode.get(override.id)||[]){
+        const index = _wbUi.edgeIndex, incident = new Set(index.byNode.get(override.id)||[]);
+        const previous = index.nodes.get(override.id), nodes = Array.from(index.nodes.values(), n => n.id===override.id ? override : n);
+        for(const entry of incident){
           const g=RoadmapModules.whiteboardEdgeGeometry(entry.from.id===override.id?override:entry.from,entry.to.id===override.id?override:entry.to);
           for(const path of entry.paths)path.setAttribute('d',g.path);
-          entry.label.setAttribute('x',g.label.x);entry.label.setAttribute('y',g.label.y-8);
+          entry.anchor = {x:g.label.x,y:g.label.y-8};
         }
+        // A moved third card can cover an unrelated label. Reposition only nearby
+        // labels; do not recompute every edge geometry on every pointer movement.
+        const touches = (point, box, node) => point && box && node && point.x+box.x < node.x+node.width+6 && point.x+box.x+box.width > node.x-6
+          && point.y+box.y < node.y+node.height+6 && point.y+box.y+box.height > node.y-6;
+        for (const entry of index.entries) {
+          if (incident.has(entry) || touches(entry.anchor,entry.box,previous) || touches(entry.anchor,entry.box,override)
+            || touches(entry.position,entry.box,previous) || touches(entry.position,entry.box,override)) _wbPositionEdgeLabel(entry,nodes);
+        }
+        index.nodes.set(override.id, Object.assign({}, override));
         return;
       }
       const nodes=new Map(_wbVisibleNodes().map(n=>[n.id,n]));if(override)nodes.set(override.id,override);
@@ -35818,12 +35875,14 @@ const m = document.getElementById('mineModeBtn');
         const g=RoadmapModules.whiteboardEdgeGeometry(nodes.get(e.from),nodes.get(e.to));
         return `<g data-wb-edge="${escHtml(e.id)}" class="${e.id===_wbUi.selected?'wb-edge-selected':''}"><path class="wb-edge-line" d="${g.path}" marker-end="url(#wbArrow)"/><path class="wb-edge" d="${g.path}"/><text class="wb-edge-label" x="${g.label.x}" y="${g.label.y-8}" text-anchor="middle">${escHtml(e.label)}</text></g>`;
       }).join('');
-      const byNode=new Map(),groups=svg.querySelectorAll('[data-wb-edge]');
+      const byNode=new Map(),groups=svg.querySelectorAll('[data-wb-edge]'),entries=[];
       edges.forEach((e,i)=>{
         const entry={from:nodes.get(e.from),to:nodes.get(e.to),paths:groups[i].querySelectorAll('path'),label:groups[i].querySelector('text')};
+        entry.anchor={x:Number(entry.label.getAttribute('x')),y:Number(entry.label.getAttribute('y'))};
+        _wbPositionEdgeLabel(entry,nodes.values());entries.push(entry);
         for(const id of [e.from,e.to]){if(!byNode.has(id))byNode.set(id,[]);byNode.get(id).push(entry);}
       });
-      _wbUi.edgeIndex={svg,byNode};
+      _wbUi.edgeIndex={svg,byNode,nodes,entries};
     }
     function _wbRenderPanel(taskIndex) {
       const p=document.getElementById('wbPanel');if(!p)return;
@@ -36188,10 +36247,10 @@ const m = document.getElementById('mineModeBtn');
       m.classList.remove('hidden');
       if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
     }
-    function _renderKanbanColsModal() {
+    function _renderKanbanColsModal(focus) {
       const m = document.getElementById('kanbanColsModal'); if (!m) return;
       const onCount = _kbDraft.filter(d => d.on).length;
-      const rows = _kbDraft.map((d, i) => '<div class="kanban-col-setting flex items-center gap-2 px-3 py-2 rounded-xl border ' + (d.on ? 'border-indigo-200 bg-indigo-50/40' : 'border-slate-200 bg-white') + '">'
+      const rows = _kbDraft.map((d, i) => '<div data-kb-col-id="' + escAttr(d.id) + '" class="kanban-col-setting flex items-center gap-2 px-3 py-2 rounded-xl border ' + (d.on ? 'border-indigo-200 bg-indigo-50/40' : 'border-slate-200 bg-white') + '">'
         + '<label class="flex items-center gap-2 grow min-w-0 cursor-pointer"><input type="checkbox" ' + (d.on ? 'checked' : '') + ' onchange="_kbToggle(' + i + ')" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500/20 shrink-0"><span class="text-sm ' + (d.on ? 'text-slate-700 font-medium' : 'text-slate-400') + ' truncate">' + escHtml(d.name) + '</span></label>'
         + '<label class="kanban-limit-field"><span>Лимит задач</span><input type="number" min="0" max="999" step="1" inputmode="numeric" data-kb-limit="' + i + '" value="' + escAttr(d.limit || '') + '" oninput="_kbDraft[' + i + '].limit=this.value" aria-label="Лимит задач: ' + escAttr(d.name) + '" placeholder="Нет"></label>'
         + '<button type="button" onclick="_kbMove(' + i + ',-1)" ' + (i === 0 ? 'disabled' : '') + ' class="w-7 h-7 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 disabled:opacity-30 disabled:hover:bg-transparent flex items-center justify-center cursor-pointer disabled:cursor-default" aria-label="Выше"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg></button>'
@@ -36202,10 +36261,18 @@ const m = document.getElementById('mineModeBtn');
         + '<div class="p-6 space-y-2 overflow-y-auto">' + (rows || '<div class="text-xs text-slate-400 text-center py-6">Нет статусов</div>') + '</div>'
         + '<div class="kanban-cols-footer px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-2xl flex items-center justify-between gap-2"><button type="button" onclick="_kbResetCols()" class="h-9 px-3 text-slate-600 hover:bg-slate-200 text-xs font-medium rounded-xl transition-colors cursor-pointer">Показать все</button><div class="kanban-cols-actions flex items-center gap-2"><span class="text-[10px] text-slate-400 self-center">Столбцов: ' + onCount + '</span><button type="button" onclick="closeKanbanColsModal()" class="h-9 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors cursor-pointer">Отмена</button><button type="button" onclick="_kbSaveCols()" class="h-9 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-colors cursor-pointer">Применить</button></div></div>'
         + '</div>';
+      if (focus) {
+        const row = Array.from(m.querySelectorAll('[data-kb-col-id]')).find(node => node.dataset.kbColId === String(focus.id));
+        const controls = row ? row.querySelectorAll('button') : [];
+        const requested = focus.control === 'all' ? m.querySelector('.kanban-cols-footer > button')
+          : focus.control === 'up' ? controls[0] : focus.control === 'down' ? controls[1] : row?.querySelector('input[type="checkbox"]');
+        const target = requested && !requested.disabled ? requested : row?.querySelector('input[type="checkbox"]');
+        if (target) target.focus({preventScroll:true});
+      }
     }
-    function _kbToggle(i) { if (_kbDraft[i]) { _kbDraft[i].on = !_kbDraft[i].on; _renderKanbanColsModal(); } }
-    function _kbMove(i, dir) { const j = i + dir; if (j < 0 || j >= _kbDraft.length) return; const t = _kbDraft[i]; _kbDraft[i] = _kbDraft[j]; _kbDraft[j] = t; _renderKanbanColsModal(); }
-    function _kbResetCols() { _saveKanbanColIds(null); closeKanbanColsModal(); renderKanban(); showToast('Столбцы: показаны все статусы', 'ok'); }
+    function _kbToggle(i) { if (_kbDraft[i]) { _kbDraft[i].on = !_kbDraft[i].on; _renderKanbanColsModal({id:_kbDraft[i].id,control:'toggle'}); } }
+    function _kbMove(i, dir) { const j = i + dir; if (j < 0 || j >= _kbDraft.length) return; const t = _kbDraft[i]; _kbDraft[i] = _kbDraft[j]; _kbDraft[j] = t; _renderKanbanColsModal({id:t.id,control:dir<0?'up':'down'}); }
+    function _kbResetCols() { _kbDraft.forEach(d => { d.on = true; }); _renderKanbanColsModal({control:'all'}); }
     function _kbSaveCols() {
       if (READ_ONLY_MODE || !requireUnlocked()) return;
       if (!_kbContext || _kbContext.project !== projectStorageId || _kbContext.transition !== _projectTransitionToken) {
@@ -42491,6 +42558,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         const btn = jiraGetEl('jiraScope-' + value); if (!btn) return;
         const active = value === scope;
         btn.setAttribute('aria-checked', active ? 'true' : 'false');
+        btn.setAttribute('tabindex', active ? '0' : '-1');
         btn.setAttribute('data-active', active ? '1' : '0');
         btn.classList.toggle('bg-white', active);
         btn.classList.toggle('shadow-sm', active);
@@ -42524,6 +42592,20 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       }
       jiraRenderImportScope();
       if (persist !== false) saveJiraCfg({ scope: value });
+    }
+    function jiraImportScopeKey(event) {
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      const keys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+      if (!keys.includes(event.key)) return;
+      const current = event.target.closest('[role="radio"]');
+      const values = ['projects', 'keys'];
+      const index = values.findIndex(value => current && current.id === 'jiraScope-' + value);
+      if (index < 0) return;
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? values.length - 1
+        : (index + (event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 1) + values.length) % values.length;
+      event.preventDefault();
+      jiraSetImportScope(values[next]);
+      jiraGetEl('jiraScope-' + values[next])?.focus();
     }
     function jiraSyncDefaultJqlFromProject() {
       const scopeEl = jiraGetEl('jiraImportScope');
@@ -43807,7 +43889,7 @@ function syncBodyScrollLock() {
         return top;
       }
       const focusables = (el) => Array.from(el.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),summary,[tabindex]:not([tabindex="-1"])')).filter(function (node) {
-        if (!node.isConnected || node.hidden || node.closest('[hidden], details:not([open]) > :not(summary)')) return false;
+        if (!node.isConnected || node.hidden || node.tabIndex < 0 || node.closest('[hidden], [inert], details:not([open]) > :not(summary)')) return false;
         const style = getComputedStyle(node);
         const rect = node.getBoundingClientRect();
         return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
@@ -44707,7 +44789,7 @@ function syncBodyScrollLock() {
   <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
    <div class="candidate-header-update info-header-main">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
-    <button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><span id="appVersionBadge" title="02.11.2026">v17.30</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
+    <button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><span id="appVersionBadge" title="04.11.2026">v17.31</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
    </div>
    <div class="flex items-center gap-2 shrink-0">
     <button type="button" id="infoCloseBtn" onclick="closeInfoModal()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer" aria-label="Закрыть" title="Закрыть">
@@ -44731,7 +44813,43 @@ function syncBodyScrollLock() {
    </section>
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.30</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.31</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="chain-safe-undo" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-8fdf6e7df469"></use></svg><h5 class="min-w-0 rn-title">Разбор цепочки можно отменить</h5><span class="info-release-badge">СВЯЗИ</span></div>
+      <p class="text-xs text-slate-600">Удаление связей сохраняется в плане и отменяется одним действием; при ошибке записи прежние связи остаются.</p>
+     </article>
+     <article data-release-card="kanban-draft-controls" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-b4d248aac25e"></use></svg><h5 class="min-w-0 rn-title">Настройки Канбана не теряются</h5><span class="info-release-badge">ДОСКА</span></div>
+      <p class="text-xs text-slate-600">«Показать все» сохраняет лимиты и порядок столбцов, а клавиатурный фокус остаётся на выбранном статусе.</p>
+     </article>
+     <article data-release-card="readable-dates-links" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-c2b76789950a"></use></svg><h5 class="min-w-0 rn-title">Сроки и связи легче прочитать</h5><span class="info-release-badge">ПЛАН</span></div>
+      <p class="text-xs text-slate-600">В сравнении план/факт видны разные годы, а на Холсте подписи связей не прячутся под карточками.</p>
+     </article>
+     <article data-release-card="keyboard-clear-controls" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-503857921646"></use></svg><h5 class="min-w-0 rn-title">Клавиатура — без лишних остановок</h5><span class="info-release-badge">УПРАВЛЕНИЕ</span></div>
+      <p class="text-xs text-slate-600">В импорте Jira работают стрелки, Tab пропускает неактивные вкладки, а кнопки копирования различимы для скринридера.</p>
+     </article>
+     <article data-release-card="touch-task-archive" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-b12c9b1b0fbd"></use></svg><h5 class="min-w-0 rn-title">Проще попасть пальцем</h5><span class="info-release-badge">ТЕЛЕФОН</span></div>
+      <p class="text-xs text-slate-600">Увеличены области выбора задач в архиве и флажков «Веха», «Блокер», «В повестку».</p>
+     </article>
+     <article data-release-card="site-video-theme-state" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-65c0edbfe7ae"></use></svg><h5 class="min-w-0 rn-title">Каталог и видео понятнее</h5><span class="info-release-badge">САЙТ</span></div>
+      <p class="text-xs text-slate-600">При ошибке ролик можно открыть отдельно; каталог показывает разные темы карточек, а ссылки удобнее нажимать.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.30</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="readable-plan" class="info-release-card rn-card rn-solid">
       <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-573e78877038"></use></svg><h5 class="min-w-0 rn-title">Сегодня видно в любой теме</h5><span class="info-release-badge">ПЛАН</span></div>
@@ -44748,12 +44866,6 @@ function syncBodyScrollLock() {
     </div>
    </div>
 
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.20</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -48789,9 +48901,9 @@ function syncBodyScrollLock() {
       <input type="hidden" id="jiraImportScope" value="projects">
       <div>
        <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Что загружать из Jira</span>
-       <div role="radiogroup" aria-label="Область импорта Jira" class="rm-segmented mt-1.5 inline-flex max-w-full items-center bg-slate-100 rounded-xl p-1">
+       <div role="radiogroup" aria-label="Область импорта Jira" onkeydown="jiraImportScopeKey(event)" class="rm-segmented mt-1.5 inline-flex max-w-full items-center bg-slate-100 rounded-xl p-1">
         <button type="button" id="jiraScope-projects" role="radio" aria-checked="true" data-active="1" onclick="jiraSetImportScope('projects')" class="min-h-9 px-3 rounded-lg text-xs font-semibold transition-colors cursor-pointer bg-white shadow-sm text-indigo-700">По проектам</button>
-        <button type="button" id="jiraScope-keys" role="radio" aria-checked="false" data-active="0" onclick="jiraSetImportScope('keys')" class="min-h-9 px-3 rounded-lg text-xs font-semibold transition-colors cursor-pointer text-slate-500">По ключам из Ганта</button>
+        <button type="button" id="jiraScope-keys" role="radio" aria-checked="false" tabindex="-1" data-active="0" onclick="jiraSetImportScope('keys')" class="min-h-9 px-3 rounded-lg text-xs font-semibold transition-colors cursor-pointer text-slate-500">По ключам из Ганта</button>
        </div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -49065,7 +49177,7 @@ function syncBodyScrollLock() {
         <div class="startup-heading">
           <div class="flex items-center gap-2 flex-wrap">
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
-            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">v17.30</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button>
+            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">v17.31</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button>
           </div>
           <div id="startupUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте свой план или начните с примера.</p>

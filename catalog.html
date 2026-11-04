@@ -5,8 +5,8 @@
 <meta property="og:title" content="Возможности Roadmap">
 <meta property="og:description" content="Функции планировщика: описания и примеры на экране.">
 <meta property="og:url" content="https://uchvru.github.io/roadmap/catalog.html">
-<meta name="roadmap-build-date" content="2026-11-02">
-<meta name="roadmap-publication-date" content="2026-11-02">
+<meta name="roadmap-build-date" content="2026-11-04">
+<meta name="roadmap-publication-date" content="2026-11-04">
 <style>
 :root{--ink:#0f172a;--mut:#5b6c85;--secondary-ink:#334155;--line:#e6eaf1;--brand:#4f46e5;--bg:#f6f8fc;--card:#fff;--accent-fill:var(--brand);--accent-hover:#4338ca;--soft-fill:#fff;--soft-hover:#f1f3f8}
 *{box-sizing:border-box}
@@ -89,6 +89,7 @@ h1{font-size:34px;line-height:1.2;font-weight:600;letter-spacing:-.5px;margin:16
 @media(max-width:620px){.hd{display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px 10px}.hd>.thsw{grid-column:2;justify-self:start}}
 @media(max-width:620px){.heroIn{padding:32px 18px 26px}.navIn{padding:8px 12px;gap:8px}.wrap{padding-left:18px;padding-right:18px}.tw,.navpill{min-height:44px}.catline{display:none}.cathd{align-items:flex-start}.cat{font-size:17px}.hd{align-items:flex-start}.nm{min-width:0}.shot{border-radius:11px}#lbHint{max-width:calc(100vw - 76px);text-align:center;white-space:normal}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.navpill,.tw,.card,.zoomtag{transition:none}.card:hover{transform:none}}
+@media(pointer:coarse){.brandtx a,.foot-author-link{display:inline-flex;align-items:center;min-height:44px}}
 </style></head><body>
 <a class=skip href=#main-content>К каталогу функций</a>
 <header class=hero><div class=heroIn>
@@ -107,7 +108,7 @@ h1{font-size:34px;line-height:1.2;font-weight:600;letter-spacing:-.5px;margin:16
  <!-- CATALOG:DESKTOP:START -->
 <div class=navwrap><div class=navscroll id=navscroll><a class=navpill href="#plan"><span>Собрать и сохранить план</span><b>14</b></a><a class=navpill href="#risks"><span>Проверить сроки и риски</span><b>12</b></a><a class=navpill href="#meeting"><span>Подготовить встречу</span><b>5</b></a><a class=navpill href="#workspace"><span>Настройка плана</span><b>8</b></a><a class=navpill href="#additional"><span>Дополнения</span><b>4</b></a></div></div>
 <!-- CATALOG:DESKTOP:END -->
- <details class=catalog-theme-menu><summary>Тема</summary><div class=thsw id=gsw role=group aria-label="Тема всех скриншотов" title="Показать все функции в светлой или темной теме"><button type=button class="tw on" aria-pressed=true onclick="thAll(0)">Светлая</button><button type=button class=tw aria-pressed=false onclick="thAll(1)">Темная</button></div></details>
+ <details class=catalog-theme-menu><summary><span id=catalogThemeLabel>Тема</span></summary><div class=thsw id=gsw role=group aria-label="Тема всех скриншотов" title="Показать все функции в светлой или темной теме"><button type=button class="tw on" aria-pressed=true onclick="thAll(0)">Светлая</button><button type=button class=tw aria-pressed=false onclick="thAll(1)">Темная</button></div></details>
 </div></nav>
 <div id=lb role=dialog aria-modal=true aria-label="Просмотр скриншота" aria-hidden=true onclick="lbClose()"><button type=button class=lbclose aria-label="Закрыть просмотр" onclick="event.stopPropagation();lbClose()">&times;</button><button type=button class=lbimage aria-label="Изменить масштаб" aria-pressed=false onclick="lbZoom(event)"><img alt=""></button><span id=lbHint>Изменить масштаб: кнопкой на изображении; закрыть: кнопкой, кликом мимо или Esc</span></div>
 <main class=wrap id=main-content tabindex=-1>
@@ -182,15 +183,16 @@ h1{font-size:34px;line-height:1.2;font-weight:600;letter-spacing:-.5px;margin:16
    <div style="font-size:12px;font-weight:400;color:var(--mut);margin-bottom:4px">Автор проекта</div>
    <div style="font-size:18px;font-weight:600">Владимир Учинин</div>
    <div style="font-size:13px;color:var(--mut)">Владелец продукта / Product Owner</div>
-   <div style="margin-top:8px"><a href="mailto:uchv@ya.ru" style="font-size:14px;font-weight:600;color:#4f46e5;text-decoration:none">uchv@ya.ru</a></div>
+   <div style="margin-top:8px"><a class=foot-author-link href="mailto:uchv@ya.ru" style="font-size:14px;font-weight:600;color:#4f46e5;text-decoration:none">uchv@ya.ru</a></div>
   </div>
  </div>
 </div>
-<div class=foot>Roadmap v17.30 · Владимир Учинин</div></footer>
+<div class=foot>Roadmap v17.31 · Владимир Учинин</div></footer>
 <script>
 function setPressed(btn,on){btn.classList.toggle('on',on);btn.setAttribute('aria-pressed',on?'true':'false');}
-function thsw(btn,i){var card=btn.closest('.card');card.querySelector('.sA').style.display=i?'none':'';card.querySelector('.sB').style.display=i?'':'none';card.querySelectorAll('.thsw .tw').forEach(function(b){setPressed(b,b===btn);});}
-function thAll(i){document.querySelectorAll('.card').forEach(function(c){var sA=c.querySelector('.sA'),sB=c.querySelector('.sB');if(!sA||!sB)return;sA.style.display=i?'none':'';sB.style.display=i?'':'none';c.querySelectorAll('.thsw .tw').forEach(function(b,k){setPressed(b,k===i);});});document.querySelectorAll('#gsw .tw').forEach(function(b,k){setPressed(b,k===i);});}
+function syncGlobalTheme(){var cards=[].slice.call(document.querySelectorAll('.card'));var light=cards.length>0&&cards.every(function(c){return c.querySelector('.sB').style.display==='none';});var dark=cards.length>0&&cards.every(function(c){return c.querySelector('.sA').style.display==='none';});document.querySelectorAll('#gsw .tw').forEach(function(b,k){setPressed(b,k===0?light:dark);});document.getElementById('catalogThemeLabel').textContent=light||dark?'Тема':'Разные темы';}
+function thsw(btn,i){var card=btn.closest('.card');card.querySelector('.sA').style.display=i?'none':'';card.querySelector('.sB').style.display=i?'':'none';card.querySelectorAll('.thsw .tw').forEach(function(b){setPressed(b,b===btn);});syncGlobalTheme();}
+function thAll(i){document.querySelectorAll('.card').forEach(function(c){var sA=c.querySelector('.sA'),sB=c.querySelector('.sB');if(!sA||!sB)return;sA.style.display=i?'none':'';sB.style.display=i?'':'none';c.querySelectorAll('.thsw .tw').forEach(function(b,k){setPressed(b,k===i);});});syncGlobalTheme();}
 var lbReturnFocus=null;
 function lbOpen(btn){var lb=document.getElementById('lb'),src=btn.querySelector('img'),img=lb.querySelector('.lbimage img'),zoom=lb.querySelector('.lbimage');lbReturnFocus=btn;img.src=src.src;img.alt=src.alt;lb.classList.remove('zoom');zoom.setAttribute('aria-pressed','false');lb.classList.add('on');lb.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';requestAnimationFrame(function(){lb.querySelector('.lbclose').focus();});}
 function lbClose(){var lb=document.getElementById('lb');if(!lb.classList.contains('on'))return;lb.classList.remove('on','zoom');lb.setAttribute('aria-hidden','true');document.body.style.overflow='';if(lbReturnFocus&&lbReturnFocus.isConnected)lbReturnFocus.focus();lbReturnFocus=null;}
