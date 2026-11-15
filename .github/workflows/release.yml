@@ -21,11 +21,6 @@ on:
         required: true
         default: false
         type: boolean
-      owner_waived_v1732:
-        description: 'Разовая доставка готовой v17.32 по решению владельца, без новых тестов'
-        required: false
-        default: false
-        type: boolean
 
 concurrency:
   group: static-release-${{ github.ref }}
@@ -33,7 +28,6 @@ concurrency:
 
 jobs:
   package:
-    if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.owner_waived_v1732 == true) }}
     name: Verify and package
     runs-on: ubuntu-latest
     timeout-minutes: 12
@@ -123,58 +117,5 @@ jobs:
           path: _site
           retention-days: 1
       - name: Deploy Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
-
-  owner-v1732-delivery:
-    name: Owner-authorized v17.32 delivery (no QA)
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.owner_waived_v1732 == true && inputs.deploy_pages == true && inputs.publish_release != true
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Checkout exact approved release (not workflow revision)
-        uses: actions/checkout@v6
-        with:
-          ref: ec8a0d535c09d6c4e1a2fec1d6162a94cecc39b1
-      - name: Verify immutable delivery inventory, not product QA
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = ec8a0d535c09d6c4e1a2fec1d6162a94cecc39b1
-          test "$(git rev-parse 'HEAD^{tree}')" = a3b5e08cdb53b9f43861fdabc0eefd3946c58782
-          test "$(git ls-tree -r --name-only HEAD | wc -l | tr -d ' ')" = 130
-          test "$(git ls-remote origin 'refs/tags/v17.32^{}' | cut -f1)" = ec8a0d535c09d6c4e1a2fec1d6162a94cecc39b1
-          if git ls-tree -r HEAD | awk '$1 != "100644" && $1 != "100755" { found=1 } END { exit found ? 0 : 1 }'; then
-            echo "Unexpected symlink or non-file in approved inventory" >&2
-            exit 1
-          fi
-          sha256sum -c <<'SUMS'
-          eb3c4838da1ae30dadba80b5451aa28836025ef5efa6fe5d609792f4db5a9b70  app.html
-          9e283a776c195f7382da53c8d12fbd84e5b40822675c27a120d267ebd7bda842  updates/roadmap-v17.32.roadmap-update
-          6647c238346d57463efc655c0d52cbcbd849d131e7403866e26e0a6c08d96ebc  media/media-manifest.json
-          0dc8f75e7291abb7f60e34c16f7d4c9a5b75721f37932509a58339b0439870cb  catalog-img/media-manifest.json
-          SUMS
-          echo 'Owner-authorized delivery only. No new tests. Full release QA remains NOT PASSED.' >> "$GITHUB_STEP_SUMMARY"
-      - name: Configure Pages
-        uses: actions/configure-pages@v6
-      - name: Package only the approved Git tree
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir _site
-          git archive --format=tar ec8a0d535c09d6c4e1a2fec1d6162a94cecc39b1 | tar -xf - -C _site
-      - name: Upload approved Pages files
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: _site
-          retention-days: 1
-      - name: Deploy approved v17.32
         id: deployment
         uses: actions/deploy-pages@v5
