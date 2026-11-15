@@ -5,8 +5,8 @@
 <meta property="og:title" content="Возможности Roadmap">
 <meta property="og:description" content="Функции планировщика: описания и примеры на экране.">
 <meta property="og:url" content="https://uchvru.github.io/roadmap/catalog.html">
-<meta name="roadmap-build-date" content="2026-11-04">
-<meta name="roadmap-publication-date" content="2026-11-04">
+<meta name="roadmap-build-date" content="2026-11-15">
+<meta name="roadmap-publication-date" content="2026-11-15">
 <style>
 :root{--ink:#0f172a;--mut:#5b6c85;--secondary-ink:#334155;--line:#e6eaf1;--brand:#4f46e5;--bg:#f6f8fc;--card:#fff;--accent-fill:var(--brand);--accent-hover:#4338ca;--soft-fill:#fff;--soft-hover:#f1f3f8}
 *{box-sizing:border-box}
@@ -45,7 +45,8 @@ h1{font-size:34px;line-height:1.2;font-weight:600;letter-spacing:-.5px;margin:16
 .tw.on:hover{background:var(--accent-hover)}
 #gsw{margin-left:auto}
 .catalog-mobile-nav{display:none;position:relative}.catalog-mobile-nav summary{display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;list-style:none;min-height:44px;padding:8px 10px;font-size:14px;font-weight:600;color:#334155;background:#fff;border:1px solid #cbd5e1;border-radius:9px}.catalog-mobile-nav summary::-webkit-details-marker{display:none}.catalog-section-links{position:absolute;left:0;top:calc(100% + 6px);width:min(350px,calc(100vw - 24px));max-height:65vh;overflow:auto;padding:6px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px #0f172a18}.catalog-section-links a{display:flex;align-items:center;min-height:44px;padding:8px 12px;font-size:14px;line-height:1.4;border-radius:7px;color:#334155}.catalog-section-links a:hover{background:#eef2ff}.catalog-section-links a:focus-visible{outline:2px solid #4338ca;outline-offset:-2px}.catalog-theme-menu{position:relative;margin-left:auto}.catalog-theme-menu>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;padding:0 12px;border:1px solid var(--line);border-radius:9px;color:#475569;font-size:13px;font-weight:600;list-style:none}.catalog-theme-menu>summary::-webkit-details-marker{display:none}.catalog-theme-menu>summary::after{content:'⌄';margin-left:8px}.catalog-theme-menu #gsw{position:absolute;right:0;top:calc(100% + 6px);padding:6px;background:#fff;box-shadow:0 8px 24px #0f172a18}.catalog-theme-menu summary:focus-visible,.catalog-mobile-nav summary:focus-visible{outline:2px solid #4338ca;outline-offset:2px}
-@media(max-width:620px){.navwrap{display:none}.catalog-mobile-nav{display:block;flex:1;min-width:0}.catalog-theme-menu>summary{padding:0 10px}.catsec{scroll-margin-top:78px}.hero .heroIn{padding-top:24px;padding-bottom:16px}.hero h1{font-size:28px;line-height:1.2}.hero .lead{font-size:16px;line-height:1.5}}
+@media(max-width:1124px){.navwrap{display:none}.catalog-mobile-nav{display:block;flex:1;min-width:0}}
+@media(max-width:620px){.catalog-theme-menu>summary{padding:0 10px}.catsec{scroll-margin-top:78px}.hero .heroIn{padding-top:24px;padding-bottom:16px}.hero h1{font-size:28px;line-height:1.2}.hero .lead{font-size:16px;line-height:1.5}}
 /* ===== Разделы ===== */
 .wrap{max-width:1180px;margin:0 auto;padding:10px 24px 70px}
 .catsec{padding-top:30px;scroll-margin-top:var(--catalog-nav-offset,72px)}
@@ -187,7 +188,7 @@ h1{font-size:34px;line-height:1.2;font-weight:600;letter-spacing:-.5px;margin:16
   </div>
  </div>
 </div>
-<div class=foot>Roadmap v17.31 · Владимир Учинин</div></footer>
+<div class=foot>Roadmap v17.32 · Владимир Учинин</div></footer>
 <script>
 function setPressed(btn,on){btn.classList.toggle('on',on);btn.setAttribute('aria-pressed',on?'true':'false');}
 function syncGlobalTheme(){var cards=[].slice.call(document.querySelectorAll('.card'));var light=cards.length>0&&cards.every(function(c){return c.querySelector('.sB').style.display==='none';});var dark=cards.length>0&&cards.every(function(c){return c.querySelector('.sA').style.display==='none';});document.querySelectorAll('#gsw .tw').forEach(function(b,k){setPressed(b,k===0?light:dark);});document.getElementById('catalogThemeLabel').textContent=light||dark?'Тема':'Разные темы';}

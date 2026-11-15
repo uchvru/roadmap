@@ -151,7 +151,7 @@
     --color-emerald-300: oklch(84.5% 0.143 164.978);
     --color-emerald-400: oklch(76.5% 0.177 163.223);
     --color-emerald-500: oklch(69.6% 0.17 162.48);
-    --color-emerald-600: oklch(59.6% 0.145 163.225);
+    --color-emerald-600: #087b55;
     --color-emerald-700: oklch(50.8% 0.118 165.612);
     --color-teal-50: oklch(98.4% 0.014 180.72);
     --color-teal-100: oklch(95.3% 0.051 180.801);
@@ -5680,7 +5680,6 @@
     body.image-export-mode .no-print,
     body.image-export-mode .no-image-export,
     body.image-export-mode #autosaveStatus,
-    body.image-export-mode header > div:last-child,
     body.image-export-mode .drag-handle,
     body.image-export-mode #titleEditContainer,
     body.image-export-mode #timeline-footer {
@@ -5703,15 +5702,15 @@
       display: flex !important;
       flex-direction: row !important;
     }
-    /* Левая колонка: 540px вместо 460 , подзаголовки задач помещаются целиком.
-      Цель , по классу .export-left-col, а не :first-child: первым ребенком main
-      идет абсолютно спозиционированный #zoomControl, поэтому :first-child промахивался. */
+    /* Широкие метаданные в PNG; мобильный список не шире кадра. */
     body.image-export-mode main > .export-left-col {
-      width: 540px !important;
-      min-width: 540px !important;
-      max-width: 540px !important;
-      flex: 0 0 540px !important;
+      width: min(540px,100%) !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      flex: 0 0 auto !important;
     }
+    body.image-export-mode #appHeader .app-header-grid { grid-template-columns:minmax(0,1fr); }
+    body.image-export-mode #appHeader #roadmapTitle { display:block; white-space:normal; overflow:visible; -webkit-line-clamp:unset; overflow-wrap:anywhere; }
     /* Подзаголовок строки задачи не должен переноситься , даем ему scroll-overflow */
     body.image-export-mode [id^="task-row-left-"] {
       min-height: 56px !important;
@@ -5739,7 +5738,7 @@
     body.image-export-mode [id^="task-row-right-"] {
       overflow: visible !important;
     }
-    body.image-export-mode [id^="task-row-left-"] .truncate {
+    body.image-export-mode [id^="task-row-left-"] .truncate:not(.js-task-name) {
       text-overflow: ellipsis !important;
       overflow: hidden !important;
       white-space: nowrap !important;
@@ -5937,7 +5936,7 @@
    /* Поля ввода */
    body.theme-dark input:not([type=checkbox]):not([type=radio]):not([type=range]),
    body.theme-dark textarea, body.theme-dark select { background-color:#212d3d !important; color:#e2e8f0 !important; border-color:#34465a !important; }
-   body.theme-dark input::placeholder, body.theme-dark textarea::placeholder { color:#6f7d92 !important; }
+   body.theme-dark input::placeholder, body.theme-dark textarea::placeholder { color:#94a3b8 !important; }
    body.theme-dark input::-webkit-calendar-picker-indicator { filter:none; }
    body.theme-dark option { background-color:#1a2332; color:#e2e8f0; }
    /* Переключатели модулей */
@@ -6269,9 +6268,9 @@
      position:sticky; top:0; z-index:3; display:flex; gap:.25rem; padding:.25rem;
      border:1px solid var(--rm-border); border-radius:.875rem; background:var(--rm-surface-soft);
    }
-   .rm-scroll-hints.fade-right { -webkit-mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 20px),transparent); mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 20px),transparent); }
-   .rm-scroll-hints.fade-left:not(.fade-right) { -webkit-mask-image:linear-gradient(to right,transparent,#000 20px); mask-image:linear-gradient(to right,transparent,#000 20px); }
-   .rm-scroll-hints.fade-left.fade-right { -webkit-mask-image:linear-gradient(to right,transparent,#000 20px,#000 calc(100% - 20px),transparent); mask-image:linear-gradient(to right,transparent,#000 20px,#000 calc(100% - 20px),transparent); }
+   .rm-scroll-hints.fade-right { -webkit-mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 32px),transparent); mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 32px),transparent); }
+   .rm-scroll-hints.fade-left:not(.fade-right) { -webkit-mask-image:linear-gradient(to right,transparent,#000 32px); mask-image:linear-gradient(to right,transparent,#000 32px); }
+   .rm-scroll-hints.fade-left.fade-right { -webkit-mask-image:linear-gradient(to right,transparent,#000 32px,#000 calc(100% - 32px),transparent); mask-image:linear-gradient(to right,transparent,#000 32px,#000 calc(100% - 32px),transparent); }
    /* A mask also clips fixed descendants: keep open menus visible and clickable. */
    .rm-scroll-hints:is(.fade-left,.fade-right):has(details[open]) { -webkit-mask-image:none; mask-image:none; }
    .progress-trends { container-type:inline-size; }
@@ -6531,14 +6530,14 @@
    }
    #activeFiltersBar[hidden] { display:none !important; }
    #planControlDeck.has-active-filters #planFilterBar { border-radius:0 !important; }
-   .active-filter-chip { flex:none; display:inline-flex; align-items:center; gap:.3rem; min-height:1.875rem; padding:.25rem .55rem; border:1px solid #c7d2fe; border-radius:.625rem; background:#eef2ff; color:#4338ca; font-size:.6875rem; font-weight:600; white-space:nowrap; }
+   .active-filter-chip { flex:none; display:inline-flex; align-items:center; gap:.3rem; min-height:1.875rem; padding:.25rem .55rem; border:1px solid var(--rm-selected-border,#c7d2fe); border-radius:.625rem; background:var(--rm-selected-bg,#eef2ff); color:var(--rm-selected-text,#4338ca); font-size:.6875rem; font-weight:600; white-space:nowrap; }
    #filterToolsBtn {
      min-height:2.25rem; padding:.4rem .7rem; border:1px solid var(--rm-border);
      border-radius:.7rem; background:var(--rm-surface-soft); color:var(--rm-text);
      display:inline-flex; align-items:center; gap:.4rem; font-size:.75rem; font-weight:600;
    }
    #filterToolsBtn:hover,#filterToolsBtn[aria-expanded="true"],#filterToolsBtn[data-active="1"] {
-     color:#4338ca; border-color:#c7d2fe; background:#eef2ff;
+     color:var(--rm-selected-text,#4338ca); border-color:var(--rm-selected-border,#c7d2fe); background:var(--rm-selected-bg,#eef2ff);
    }
    #statusOverview {
      flex:1 1 auto !important; min-width:0; max-width:calc(100% - 6.75rem);
@@ -6564,6 +6563,9 @@
      #appHeader .app-header-grid > :first-child { grid-column:1; grid-row:1; }
      #appHeader .app-header-toolbar { grid-column:1; grid-row:2; }
      #appHeader .app-header-insight-row { grid-column:1; grid-row:3; padding-left:0; }
+   }
+   @media screen and (min-width:768px) and (max-width:1279px) {
+     #appHeader #roadmapTitle { white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
    }
 
    @media (max-width:767px) {
@@ -7337,6 +7339,10 @@
    .rm-toast-close:focus-visible,.rm-toast-action:focus-visible {
      outline:2px solid currentColor !important; outline-offset:-3px !important;
    }
+   /* Метаданные: внутренний контур, в том числе в forced-colors; цвет системный. */
+   @media screen and (min-width:1024px) and (pointer:fine) {
+     body:not(.image-export-mode) .task-meta-line :focus-visible { outline-offset:-2px !important; }
+   }
    /* Невидимый checkbox: фокус на видимой дорожке, не на прозрачном input. */
    .feat-switch input:focus-visible { outline:none !important; }
    .feat-switch input:focus-visible + .fs-track { outline:2px solid #6366f1; outline-offset:2px; }
@@ -7700,6 +7706,8 @@
    @media (pointer:coarse) {
      /* Keep the 36×20 track; only the transparent checkbox hit area grows to 44×44. */
      .feat-switch.feat-switch input[type="checkbox"] { inset:-12px -4px; width:calc(100% + 8px); min-width:var(--rm-touch-target); height:calc(100% + 24px); }
+     #tasks-list-container button { min-height:var(--rm-touch-target); }
+     #appHeader #titleContainer > button { opacity:1; width:var(--rm-touch-target); height:var(--rm-touch-target); min-width:var(--rm-touch-target); min-height:var(--rm-touch-target); }
    }
 
    /* Презентация: две взаимоисключающие полноширинные вкладки на любом экране. */
@@ -8248,7 +8256,6 @@
   body.theme-studio #globalSearchPanelFooter span,
   body.theme-studio #globalSearchResults .search-result .text-slate-500,
   body.theme-studio #dataMenu .text-slate-500 { color:#475569; }
-  body.theme-studio #planningMenuHealth.bg-emerald-600 { background:#087b55; }
 
   /* The same neutral control and selected state in navigation, filters and menus. */
   body:is(.theme-studio,.theme-dark) #planControlDeck { border-radius:var(--rm-radius-lg); }
@@ -8561,6 +8568,16 @@
     .task-list-row .task-actions-disclosure { margin-right:0; }
     .task-list-row > .drag-handle { padding-left:0; width:16px; }
   }
+  @media screen and (min-width:1024px) and (pointer:fine) {
+    body:not(.image-export-mode) .section-list-header { flex-wrap:wrap; row-gap:.375rem; }
+    body:not(.image-export-mode) .section-list-header > .section-heading { flex-basis:12rem; }
+    body:not(.image-export-mode) .section-list-header > .section-heading-summary { margin-left:auto; }
+    /* Truncate the line, not an arbitrary chip: risk can precede resource/release metadata. */
+    body:not(.image-export-mode) .task-meta-line { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-inline:4px; box-sizing:border-box; }
+    body:not(.image-export-mode) .task-meta-line > :not(.hidden):not([hidden]) { display:inline-block; vertical-align:middle; margin-right:.375rem; }
+    body:not(.image-export-mode) .task-meta-line > :is(.flex,.inline-flex):not(.hidden):not([hidden]) { display:inline-flex; }
+    body:not(.image-export-mode) .task-meta-line:focus-within { text-overflow:clip; }
+  }
   .section-color-control { display:inline-flex; align-items:center; justify-content:center; background:transparent; border:0; padding:0; }
   .section-color-dot { display:block; width:12px; height:12px; border-radius:50%; flex:none; }
   #storageLocationStatus { color:var(--rm-muted); font-size:12px; line-height:1.5; padding:.625rem 0; }
@@ -8570,6 +8587,8 @@
     .section-list-header button[aria-label="Действия с секцией"],
     .section-list-header .section-color-control { min-width:44px; min-height:44px; opacity:1; }
     .task-list-row [role="button"][aria-label^="Статус "] { min-height:44px; display:inline-flex; align-items:center; justify-content:center; padding:.5rem .75rem; }
+    .hidden-zone-divider { min-height:calc(var(--rm-touch-target) + 2px); }
+    .hidden-zone-archive { min-width:var(--rm-touch-target); min-height:var(--rm-touch-target); }
   }
 /* RM_SOFT_SHEEN_START */
 /* Однотонные поверхности. Имена переменных сохранены для совместимости.
@@ -8742,6 +8761,8 @@ body.theme-dark .wb-node[data-color="violet"]{background:#352957;color:#ede9fe;b
 .scrum-drop-active{outline:2px dashed var(--rm-selected-text);outline-offset:-3px}
 @media(max-width:767px){.scrum-groups{padding-inline:8px;gap:12px}.scrum-task{grid-template-columns:minmax(0,1fr);gap:8px}.scrum-facet{flex:1 1 100%}.scrum-sprint time{margin-left:0}.scrum-heading,.scrum-filters{padding-inline:12px}}
 @media(max-width:767px),(pointer:coarse){#kanbanView .kanban-card select,#kanbanView .scrum-facet select,#kanbanView .scrum-task select{min-height:var(--rm-touch-target);font-size:1rem}}
+.rm-drag-hint-coarse{display:none}
+@media(pointer:coarse){.rm-drag-hint-fine{display:none}.rm-drag-hint-coarse{display:inline}}
 @media(max-width:767px){body #planWorkspaceHeader #productContextNav{padding:8px;border-left:0}body #planWorkspaceHeader :is(.rm-btn,[role="tab"]){min-height:44px}}
 body[data-app-view="present"] #planWorkspaceHeader #productContextNav :is(.rm-btn,[role="tab"]){min-height:44px}
 /* Meeting modes keep one row on phones; the row scrolls, not the page. */
@@ -9129,14 +9150,14 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.31</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.32</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
           <h1 id="roadmapTitle" title="Дорожная карта продукта" onclick="startEditTitle()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();startEditTitle();}" aria-label="Название карты, нажмите чтобы переименовать" class="text-lg font-semibold tracking-tight text-slate-900 leading-snug cursor-pointer hover:bg-slate-50 px-1.5 py-0.5 rounded-lg border border-transparent hover:border-slate-200/60 transition-colors truncate min-w-0">
             Дорожная карта продукта
           </h1>
-          <button onclick="startEditTitle()" aria-label="Переименовать роадмап" class="opacity-0 group-hover/title:opacity-100 text-slate-500 hover:text-indigo-600 p-1 transition-colors cursor-pointer shrink-0" title="Переименовать роадмап">
+          <button onclick="startEditTitle()" aria-label="Переименовать роадмап" class="no-image-export opacity-0 group-hover/title:opacity-100 text-slate-500 hover:text-indigo-600 p-1 transition-colors cursor-pointer shrink-0" title="Переименовать роадмап">
             <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-be87e4b48422"></use></svg>
           </button>
         </div>
@@ -9478,7 +9499,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
 <button type="button" id="mineModeBtn" data-label="Мои задачи" onclick="toggleMineMode()" aria-pressed="false" aria-label="Мои задачи" title="Мои задачи (исполнитель — имя автора из Настроек)" class="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl border transition-colors cursor-pointer bg-slate-50 border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-997cb0765593"></use></svg></button>
       <div class="relative shrink-0">
         <button type="button" id="releaseFilterBtn" data-label="Метки и релизы" onclick="toggleReleaseFilterMenu(event)" class="relative inline-flex items-center justify-center h-9 w-9 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl transition-colors cursor-pointer" title="Фильтр по метке, компоненту, релизу и своим полям" aria-label="Фильтр по метке, компоненту, релизу и своим полям" aria-haspopup="dialog" aria-expanded="false"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-822f0d79ec96"></use></svg><span id="releaseFilterCount" class="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 bg-indigo-600 text-white text-[10px] font-semibold leading-none rounded-full ring-2 ring-white inline-flex items-center justify-center tabular-nums" style="display:none">0</span></button>
-        <div id="releaseFilterMenu" data-rm-surface="adaptive-popover" role="menu" class="hidden fixed w-60 max-h-72 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-[110] no-print no-image-export"></div>
+        <div id="releaseFilterMenu" data-rm-surface="adaptive-popover" role="dialog" aria-label="Метки и релизы" class="hidden fixed w-60 max-h-72 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-[110] no-print no-image-export"></div>
       </div>
       <div class="relative shrink-0">
         <button type="button" id="presetBtn" data-label="Наборы" onclick="togglePresetMenu(event)" class="inline-flex items-center justify-center h-9 w-9 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl transition-colors cursor-pointer" title="Наборы фильтров" aria-label="Наборы фильтров" aria-haspopup="menu" aria-controls="presetMenu" aria-expanded="false"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-64f58069bc9e"></use></svg></button>
@@ -9500,7 +9521,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
 
     </div>
 
-    <nav id="mobilePlanNav" aria-label="Основные разделы">
+    <nav id="mobilePlanNav" class="no-image-export" aria-label="Основные разделы">
     </nav>
 
     <section id="planWorkspace" aria-label="Рабочая область плана">
@@ -9579,7 +9600,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
             <span id="viewIconsBar" class="shrink-0 no-image-export"></span><div class="w-px h-5 bg-slate-200 mx-0.5 shrink-0 no-image-export" aria-hidden="true"></div><button type="button" id="listDensityBtn" onclick="toggleListDensity()" class="no-image-export flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-colors cursor-pointer shrink-0" title="Плотность списка" aria-label="Переключить плотность списка"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14"></path></svg></button><button type="button" id="collapseAllBtn" onclick="toggleAllSections()" class="no-image-export flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-colors cursor-pointer shrink-0" title="Свернуть или развернуть все секции" aria-label="Свернуть или развернуть все секции"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l-7 7-7-7m14-8l-7 7-7-7"></path></svg></button>
             <button type="button" id="selectModeBtn" onclick="toggleSelectMode()" class="no-image-export flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer shrink-0 focus:outline-none focus:ring-2 focus:ring-indigo-500/40" aria-label="Выбрать несколько задач" title="Выбрать несколько задач"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-47afbb5c2bdd"></use></svg></button>
             <div class="relative shrink-0 no-image-export">
-              <button type="button" id="sortBtn" onclick="toggleSortMenu(event)" class="flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-lg text-slate-500 hover:bg-slate-50 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/40" aria-label="Сортировка задач в секции" aria-haspopup="menu" aria-controls="sortMenu" aria-expanded="false" title="Сортировка задач в секции"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-4188de660e96"></use></svg></button>
+              <button type="button" id="sortBtn" onclick="toggleSortMenu(event)" class="flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-lg text-slate-500 hover:bg-slate-50 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/40" aria-label="Сортировка задач в секции" aria-haspopup="dialog" aria-controls="sortMenu" aria-expanded="false" title="Сортировка задач в секции"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-4188de660e96"></use></svg></button>
               <div id="sortMenu" data-rm-surface="adaptive-popover" class="hidden absolute right-0 mt-1 w-44 bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 z-[100] no-print no-image-export"></div>
             </div>
             <button id="addSectionToolbarBtn" type="button" onclick="addSectionPrompt()" class="group relative no-image-export flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-colors cursor-pointer shrink-0" aria-label="Добавить секцию" title="Добавить секцию">
@@ -10024,12 +10045,12 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v17.31">
+<script data-roadmap-modules="v17.32">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
 'use strict';
-/* module:report-cards sha256:e5053b541534fd9a18dc1f9e3f398a24d53085284324721e35ab18a93f581491 */
+/* module:report-cards sha256:1bbab1db325424123ae1174e2a2d18010b8cd0b61d97dcc9aff126f86f62a13f */
 // Pure task-card markup. Callers own selection, ordering, limits, dates and
 // status names. No DOM, persistence, clock, or new plan fields live here.
 // origin is the existing application-owned jira/digest route, not user text.
@@ -10062,8 +10083,8 @@ function renderPresentationTaskCard(view, row, layout, helpers) {
   const {compact,twStyle,todayLine}=layout;
   const {escHtml}=helpers;
   if(view==='screen'){
-          return '<div ' + (t ? 'onclick="openTaskById(' + it.taskId + ')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openTaskById(' + it.taskId + ');}" role="button" tabindex="0" title="Открыть карточку задачи" ' : '') + 'class="pres-task-row flex items-center gap-2 ' + (compact ? 'py-0.5' : 'py-1') + ' border-b border-slate-100' + (t ? ' cursor-pointer hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:ring-inset' : '') + '">'
-            + '<div class="pres-col-task shrink-0 flex items-center gap-2 flex-wrap min-w-0 pl-6"><span class="' + (compact ? 'text-[12px]' : 'text-[13px]') + ' text-slate-700 truncate min-w-0">' + escHtml(it.name) + '</span>' + (chip ? '<span class="shrink-0 ml-auto">' + chip + '</span>' : '') + '<span class="pres-mobile-dates w-full text-[10px] text-slate-500 tabular-nums">' + (startTxt || 'без дат') + (endTxt ? (' — ' + endTxt) : '') + '</span></div>'
+          return '<div ' + (t ? 'onclick="openTaskById(' + it.taskId + ')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openTaskById(' + it.taskId + ');}" role="button" tabindex="0" title="Открыть карточку задачи: ' + escHtml(it.name) + '" ' : '') + 'class="pres-task-row flex items-center gap-2 ' + (compact ? 'py-0.5' : 'py-1') + ' border-b border-slate-100' + (t ? ' cursor-pointer hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:ring-inset' : '') + '">'
+            + '<div class="pres-col-task shrink-0 flex items-center gap-2 flex-wrap min-w-0 pl-6"><span class="' + (compact ? 'text-[12px]' : 'text-[13px]') + ' text-slate-700 min-w-0" title="' + escHtml(it.name) + '" style="max-width:100%;white-space:normal;overflow-wrap:anywhere">' + escHtml(it.name) + '</span>' + (chip ? '<span class="shrink-0 ml-auto">' + chip + '</span>' : '') + '<span class="pres-mobile-dates w-full text-[10px] text-slate-500 tabular-nums">' + (startTxt || 'без дат') + (endTxt ? (' — ' + endTxt) : '') + '</span></div>'
             + '<div class="pres-col-count shrink-0" style="width:72px"></div>'
             + '<div data-pres-start="' + taskKey + '" class="pres-col-date shrink-0 text-right text-[11px] text-slate-500 tabular-nums" style="width:60px">' + startTxt + '</div>'
             + '<div data-pres-end="' + taskKey + '" class="pres-col-date shrink-0 text-right text-[11px] text-slate-600 tabular-nums" style="width:60px">' + endTxt + '</div>'
@@ -16407,7 +16428,7 @@ if (typeof globalThis !== 'undefined') {
   Object.assign(globalThis.RoadmapModules, {createPublicRoadmapDTO});
 }
 
-/* module:ui-layer-controller sha256:813fb7372dd3130a74fb82cc07d955a021629efd80f116ad2e865a3a794a575f */
+/* module:ui-layer-controller sha256:c32ac1a4a060a5e3cd69df7ac1804970e50287880e7497126687d6ea1d31152e */
 // Extracted from the tested v17.0 implementation. Side effects are explicit dependencies.
 function createUiLayerController(state, env) {
   function uiLayerIsTourCore(layer) {
@@ -16487,6 +16508,7 @@ function createUiLayerController(state, env) {
       state.active = null;
       restorePreviousUiLayerCore();
     } else removeSuspendedUiLayerCore(layer);
+    env.syncToast();
     if (typeof env.scheduleScroll === 'function') env.scheduleScroll();
     if (typeof env.scheduleDrawer === 'function') env.scheduleDrawer();
   }
@@ -16784,13 +16806,26 @@ if (typeof globalThis !== 'undefined') {
     function _syncToastLayer() {
       const host = document.getElementById('toastHost');
       if (!host) return;
-      let top = 2200;
+      let top = 2200, topLayer = null, topLayerZ = -Infinity;
       document.querySelectorAll('[data-rm-layer-kind]').forEach(layer => {
         if (layer.classList.contains('hidden') || layer.hasAttribute('inert')) return;
-        top = Math.max(top, parseInt(getComputedStyle(layer).zIndex, 10) || 0);
+        const computed = getComputedStyle(layer);
+        if (computed.display === 'none' || computed.visibility === 'hidden') return;
+        const z = parseInt(computed.zIndex, 10) || 0;
+        top = Math.max(top, z);
+        if (z >= topLayerZ) { topLayer = layer; topLayerZ = z; }
       });
       host.style.zIndex = String(top + 10);
+      let footerTop = window.innerHeight;
+      if (topLayer) topLayer.querySelectorAll('.rm-dialog-footer, .jira-import-preview-footer').forEach(footer => {
+        if (!footer.getClientRects().length || getComputedStyle(footer).visibility === 'hidden') return;
+        const rect = footer.getBoundingClientRect();
+        if (rect.height > 0 && rect.bottom > 0 && rect.top < footerTop) footerTop = Math.max(0, rect.top);
+      });
+      if (footerTop < window.innerHeight) host.style.setProperty('bottom', String(Math.ceil(window.innerHeight - footerTop + 8)) + 'px', 'important');
+      else host.style.removeProperty('bottom');
     }
+    window.addEventListener('resize', _syncToastLayer, { passive: true });
     function _ensureToastHost() {
       let host = document.getElementById('toastHost');
       if (!host) {
@@ -17968,8 +18003,8 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '17.31';
-    const APP_VERSION_DATE = '04.11.2026';
+    const APP_VERSION = '17.32';
+    const APP_VERSION_DATE = '15.11.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) { b.textContent = 'v' + APP_VERSION; b.title = APP_VERSION_DATE; } } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'v' + APP_VERSION; } catch (e) {}
@@ -26529,7 +26564,7 @@ const m = document.getElementById('mineModeBtn');
     }
     // Возраст задачи (Work Item Age): активная задача в работе идет заметно дольше своей оценки , ведущий сигнал застревания
     let ageFactorThreshold = (function () { const v = parseFloat(storage.get('gantt_age_factor')); return (Number.isFinite(v) && v >= 1.1 && v <= 5) ? v : 1.5; })(); // во сколько раз дольше оценки , буксует
-    function setAgeFactorThreshold(v) { let n = parseFloat(v); if (!(n >= 1.1 && n <= 5)) n = 1.5; ageFactorThreshold = Math.round(n * 10) / 10; try { storage.set('gantt_age_factor', String(ageFactorThreshold)); } catch (e) {} if (typeof renderRoadmap === 'function') renderRoadmap(true); }
+    function setAgeFactorThreshold(v, el) { let n = parseFloat(v); if (!(n >= 1.1 && n <= 5)) n = 1.5; ageFactorThreshold = Math.round(n * 10) / 10; if (el) { el.value = String(ageFactorThreshold); el.title = 'Принято: ' + ageFactorThreshold + '× (диапазон 1.1–5×)'; } try { storage.set('gantt_age_factor', String(ageFactorThreshold)); } catch (e) {} if (typeof renderRoadmap === 'function') renderRoadmap(true); }
     function _taskAgeInfo(task) {
       try {
         if (!task || task.isMilestone || isFinalStatus(task.status)) return null;
@@ -27221,7 +27256,16 @@ const m = document.getElementById('mineModeBtn');
       }
       if (button) button.setAttribute('aria-expanded', !m.classList.contains('hidden') ? 'true' : 'false');
     }
-    function closeSortMenu() { const m = document.getElementById('sortMenu'); if (m) m.classList.add('hidden'); const button = document.getElementById('sortBtn'); if (button) button.setAttribute('aria-expanded', 'false'); }
+    function _restorePopoverTriggerFocus(...candidates) {
+      const target = candidates.find(el => el && el.isConnected && !el.hidden && !el.disabled && el.getClientRects().length
+        && getComputedStyle(el).visibility !== 'hidden' && !el.closest('[inert]'));
+      if (target) target.focus({preventScroll:true});
+    }
+    function closeSortMenu(restoreFocus = false) {
+      const m = document.getElementById('sortMenu'); if (m) m.classList.add('hidden');
+      const button = document.getElementById('sortBtn'); if (button) button.setAttribute('aria-expanded', 'false');
+      if (restoreFocus) _restorePopoverTriggerFocus(button);
+    }
     document.addEventListener('click', (e) => { const m = document.getElementById('sortMenu'); if (m && !m.classList.contains('hidden') && !e.target.closest('#sortMenu') && !e.target.closest('#sortBtn')) closeSortMenu(); });
 
     // === Фильтр по метке (Jira Labels) и релизу (отдельное меню, не в строке фильтров) ===
@@ -27391,16 +27435,18 @@ const m = document.getElementById('mineModeBtn');
         const rect = btn && btn.getBoundingClientRect();
         const anchor = rect && rect.width && rect.height ? btn : document.getElementById('filterToolsBtn');
         positionFilterPopover(m, anchor);
+        if (e && e.detail === 0) m.querySelector('input,button')?.focus({preventScroll:true});
       } else closeReleaseFilterMenu();
     }
-    function closeReleaseFilterMenu() {
+    function closeReleaseFilterMenu(restoreFocus = false) {
       const m = document.getElementById('releaseFilterMenu');
       const b = document.getElementById('releaseFilterBtn');
       if (m) m.classList.add('hidden');
       if (b) b.setAttribute('aria-expanded', 'false');
       if (typeof _scheduleDrawerSync === 'function') _scheduleDrawerSync();
+      if (restoreFocus) _restorePopoverTriggerFocus(b, document.getElementById('filterToolsBtn'));
     }
-    document.addEventListener('click', (e) => { const m = document.getElementById('releaseFilterMenu'); if (m && !m.classList.contains('hidden') && !e.target.closest('#releaseFilterMenu') && !e.target.closest('#releaseFilterBtn')) m.classList.add('hidden'); });
+    document.addEventListener('click', (e) => { const m = document.getElementById('releaseFilterMenu'); if (m && !m.classList.contains('hidden') && !e.target.closest('#releaseFilterMenu') && !e.target.closest('#releaseFilterBtn')) closeReleaseFilterMenu(); });
     document.addEventListener('click', (e) => { const m = document.getElementById('presetMenu'); if (m && !m.classList.contains('hidden') && !e.target.closest('#presetMenu') && !e.target.closest('[onclick*="togglePresetMenu"]')) closePresetMenu(); });
     // Закрываем выпадающие панели (фильтры и перенос задачи) при скролле / ресайзе / Esc
     // Выпадающее меню «Данные» (Jira CSV / импорт / экспорт)
@@ -27585,12 +27631,7 @@ const m = document.getElementById('mineModeBtn');
         if (menu) menu.classList.add('hidden');
         if (button) button.setAttribute('aria-expanded', 'false');
       });
-      safely(() => {
-        const menu = document.getElementById('depLinesMenu');
-        const button = document.getElementById('depLinesToggle');
-        if (menu) menu.classList.add('hidden');
-        if (button) button.setAttribute('aria-expanded', 'false');
-      });
+      safely(typeof closeDepLinesMenu === 'function' ? closeDepLinesMenu : null);
       safely(typeof closeCutoffClusterPopover === 'function' ? closeCutoffClusterPopover : null);
       safely(typeof closeSectionMenu === 'function' ? () => closeSectionMenu(false) : null);
       safely(typeof _scheduleDrawerSync === 'function' ? _scheduleDrawerSync : null);
@@ -27647,8 +27688,17 @@ const m = document.getElementById('mineModeBtn');
       if (openedDrawer) return;
       closeAllPopovers();
     }, true);
+    function _closeFocusedPopoverOnEscape(e) {
+      const popup = e.target && e.target.closest && e.target.closest('#sortMenu,#releaseFilterMenu,#taskMovePanel,#depLinesMenu');
+      if (!popup || popup.classList.contains('hidden')) return false;
+      const close = {sortMenu:closeSortMenu,releaseFilterMenu:closeReleaseFilterMenu,taskMovePanel:closeTaskMovePanel,depLinesMenu:closeDepLinesMenu}[popup.id];
+      close(true);
+      e.preventDefault(); e.stopImmediatePropagation();
+      return true;
+    }
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
+      if (_closeFocusedPopoverOnEscape(e)) return;
       const sectionMenu = document.getElementById('sectionActionsMenu');
       if (sectionMenu && !sectionMenu.classList.contains('hidden')) {
         closeSectionMenu(); e.preventDefault(); e.stopImmediatePropagation(); return;
@@ -27727,7 +27777,7 @@ const m = document.getElementById('mineModeBtn');
         if (!el || !el.isConnected) return false;
         enhanceHelpTrigger(el);
         let txt = el.getAttribute('data-tip');
-        if (!txt && el.hasAttribute('title')) {
+        if (el.hasAttribute('title')) {
           txt = el.getAttribute('title');
           el.setAttribute('data-tip', txt);
           el.removeAttribute('title');    // гасим нативный желтый тултип (снимаем даже в тихом режиме, чтобы системный не всплывал)
@@ -27797,6 +27847,8 @@ const m = document.getElementById('mineModeBtn');
       document.addEventListener('keydown', (e) => {
         if (e.key !== 'Escape' || !current) return;
         hide();
+        // Одно Escape закрывает поповер и его подсказку, возвращая фокус.
+        if (_closeFocusedPopoverOnEscape(e)) return;
         e.preventDefault();
         e.stopImmediatePropagation();
       }, true);
@@ -29718,7 +29770,7 @@ const m = document.getElementById('mineModeBtn');
         return `<div class="flex items-center gap-2 px-2.5 py-1.5 text-[10px] border-b border-slate-50 last:border-0"><span class="truncate grow text-slate-700" title="${escAttr(t.name)}">${escHtml(t.name)}</span><span class="text-slate-400 tabular-nums shrink-0 whitespace-nowrap">${escHtml(formatDateString(t.start))} → ${escHtml(formatDateString(t.end))}</span>${arrow}<span class="text-indigo-600 font-medium tabular-nums shrink-0 whitespace-nowrap">${escHtml(formatDateString(ns))} → ${escHtml(formatDateString(ne))}</span></div>`;
       }).join('');
       const body = document.getElementById('backPlanBody');
-      if (body) body.innerHTML = `<div class="text-xs text-slate-600 mb-2.5">Релиз <b>${escHtml(String(rel))}</b>, цель <b>${escHtml(formatDateString(targetYmd))}</b>. Сейчас последняя задача релиза заканчивается <b>${escHtml(formatDateString(daysToDate(curEnd)))}</b>. Чтобы попасть точно в дату, сдвинуть <b>${tasks.length}</b> задач ${dirWord}. Сдвигается весь блок релиза; относительные сроки и связи между задачами сохраняются.</div><div class="max-h-[42vh] overflow-auto border border-slate-100 rounded-xl">${rowsHtml}</div>`;
+      if (body) body.innerHTML = `<div class="text-xs text-slate-600 mb-2.5 break-words">Релиз <b>${escHtml(String(rel))}</b>, цель <b>${escHtml(formatDateString(targetYmd))}</b>. Сейчас последняя задача релиза заканчивается <b>${escHtml(formatDateString(daysToDate(curEnd)))}</b>. Чтобы попасть точно в дату, сдвинуть <b>${tasks.length}</b> задач ${dirWord}. Сдвигается весь блок релиза; относительные сроки и связи между задачами сохраняются.</div><div class="max-h-[42vh] overflow-auto border border-slate-100 rounded-xl">${rowsHtml}</div>`;
       const ap = document.getElementById('backPlanApply'); if (ap) { ap.disabled = (delta === 0); ap.classList.toggle('opacity-50', delta === 0); ap.classList.toggle('cursor-not-allowed', delta === 0); }
       const m = document.getElementById('backPlanModal'); if (m) { m.classList.remove('hidden'); if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock(); }
     }
@@ -30624,8 +30676,8 @@ const m = document.getElementById('mineModeBtn');
       const e = releaseRag[rel];
       const dots = ['g', 'a', 'r'].map(k => `<button type="button" onclick="setReleaseRag('${escJsArg(rel)}', '${k}')" class="rm-action rm-btn rm-btn-ghost rm-btn-icon -my-1 inline-flex items-center justify-center cursor-pointer shrink-0 ${e && e.rag === k ? '' : 'opacity-40 hover:opacity-100'} transition-opacity" aria-pressed="${!!(e && e.rag === k)}" aria-label="Светофор ${_RAG_META[k].name}" title="${_RAG_META[k].name}${e && e.rag === k ? ' — нажмите еще раз, чтобы снять' : ''}"><span class="w-3.5 h-3.5 rounded-full ${_RAG_META[k].dot} ${e && e.rag === k ? 'ring-2 ring-offset-1 ring-indigo-500' : ''} transition-colors"></span></button>`).join('');
       const note = (e && e.note) ? `<span class="text-[10px] text-slate-500 truncate" title="${escAttr(e.note)}">${escHtml(e.note)}</span>` : '';
-      const meta = e ? `<span class="text-[10px] text-slate-400 shrink-0 ml-auto">${escHtml(formatDateString(e.at || ''))}${e.by ? ' · ' + escHtml(e.by) : ''}</span>` : '';
-      return `<div class="flex items-center gap-1.5 mb-2 min-w-0"><span class="text-[10px] font-semibold uppercase tracking-wider text-slate-400 shrink-0" title="Светофор релиза: зеленый — по плану, янтарный — есть риски, красный — проблемы">Светофор</span>${dots}<button type="button" onclick="editReleaseRagNote('${escJsArg(rel)}')" class="text-[10px] font-semibold text-indigo-600 hover:text-indigo-700 hover:underline cursor-pointer shrink-0">комментарий</button>${note}${meta}</div>`;
+      const meta = e ? `<span class="text-[10px] text-slate-400 min-w-0 max-w-full break-words ml-auto">${escHtml(formatDateString(e.at || ''))}${e.by ? ' · ' + escHtml(e.by) : ''}</span>` : '';
+      return `<div class="flex flex-wrap items-center gap-1.5 mb-2 min-w-0"><span class="text-[10px] font-semibold uppercase tracking-wider text-slate-400 shrink-0" title="Светофор релиза: зеленый — по плану, янтарный — есть риски, красный — проблемы">Светофор</span>${dots}<button type="button" onclick="editReleaseRagNote('${escJsArg(rel)}')" class="text-[10px] font-semibold text-indigo-600 hover:text-indigo-700 hover:underline cursor-pointer shrink-0">комментарий</button>${note}${meta}</div>`;
     }
     function renderReleaseProgress() {
       const box = document.getElementById('releaseProgressBody');
@@ -30654,9 +30706,9 @@ const m = document.getElementById('mineModeBtn');
         html += `<div class="mb-4 bg-white border border-slate-200 rounded-xl px-4 py-3">
           <div class="text-[10px] font-semibold text-slate-600 mb-2">Что если перенести задачу в другой релиз — прогноз пересчитается для обоих</div>
           <div class="flex items-center gap-2 flex-wrap text-xs">
-            <select id="wifTask" class="h-8 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs max-w-[260px] cursor-pointer">${_wifTasks.map(t => `<option value="${t.id}">${escHtml(t.name)} — ${escHtml(t.release)}</option>`).join('')}</select>
+            <select id="wifTask" class="h-8 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs max-w-[260px] min-w-0 cursor-pointer">${_wifTasks.map(t => `<option value="${t.id}">${escHtml(t.name)} — ${escHtml(t.release)}</option>`).join('')}</select>
             <span class="text-slate-500">в релиз</span>
-            <select id="wifTarget" class="h-8 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs cursor-pointer">${rels.map(r => `<option value="${escAttr(r)}">${escHtml(r)}</option>`).join('')}</select>
+            <select id="wifTarget" class="h-8 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs min-w-0 max-w-full cursor-pointer">${rels.map(r => `<option value="${escAttr(r)}">${escHtml(r)}</option>`).join('')}</select>
             <button type="button" onclick="_renderWhatIf()" class="h-8 px-3 rounded-lg bg-indigo-600 text-white text-xs font-semibold cursor-pointer hover:bg-indigo-700">Показать эффект</button>
           </div>
           <div id="wifResult" class="mt-2 text-[10px]"></div>
@@ -30673,14 +30725,14 @@ const m = document.getElementById('mineModeBtn');
           ? `<button type="button" onclick="_toggleRelList(${ri}, '${key}')" aria-expanded="false" data-rel-cnt="${ri}-${key}" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md hover:bg-slate-100 cursor-pointer transition-colors"><svg aria-hidden="true" data-rel-chev class="w-2.5 h-2.5 text-slate-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-a418f506617e"></use></svg><b class="${color}">${n}</b> ${label}</button>`
           : `<span class="px-1.5 py-0.5"><b class="text-slate-500">0</b> ${label}</span>`;
         return `<div class="mb-3 bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
-          <div class="flex items-center justify-between gap-2 mb-2">
-            <div class="flex items-center gap-2 min-w-0">
-              <span class="inline-flex items-center gap-1 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-1.5 py-0.5 rounded shrink-0"><svg aria-hidden="true" class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-aa4b8d19c862"></use></svg>${escHtml(rel)}</span>
+          <div class="flex flex-wrap items-start justify-between gap-2 mb-2">
+            <div class="flex flex-1 flex-wrap items-center gap-2 min-w-0">
+              <span class="inline-flex items-center gap-1 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-1.5 py-0.5 rounded min-w-0 max-w-full"><svg aria-hidden="true" class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-aa4b8d19c862"></use></svg><span class="min-w-0 break-words">${escHtml(rel)}</span></span>
               ${(releaseRag[rel] && _RAG_META[releaseRag[rel].rag]) ? `<span role="img" aria-label="Светофор: ${_RAG_META[releaseRag[rel].rag].name}${releaseRag[rel].note ? ' — ' + escAttr(releaseRag[rel].note) : ''}" class="w-2.5 h-2.5 rounded-full ${_RAG_META[releaseRag[rel].rag].dot} shrink-0" title="RAG: ${_RAG_META[releaseRag[rel].rag].name}${releaseRag[rel].note ? ' — ' + escAttr(releaseRag[rel].note) : ''}"></span>` : ''}
               ${dt ? `<span class="text-[10px] text-slate-500 shrink-0">${escHtml(dt)}</span><button type="button" onclick="openBackPlanByIndex(${ri})" class="text-[10px] font-semibold text-indigo-600 hover:text-indigo-700 hover:underline shrink-0 cursor-pointer" title="Обратное планирование: сдвинуть задачи релиза так, чтобы попасть в эту дату">выровнять под дату</button>` : ''}
               <button type="button" onclick="openDuplicateReleaseByIndex(${ri})" class="text-[10px] font-semibold text-slate-500 hover:text-indigo-700 hover:underline shrink-0 cursor-pointer" title="Дублировать релиз: копия задач релиза с новым названием релиза и сдвигом дат">дублировать</button>
             </div>
-            <div class="text-sm font-bold tabular-nums ${pct >= 100 ? 'text-emerald-600' : 'text-slate-700'}">${pct}%</div>
+            <div class="shrink-0 text-sm font-bold tabular-nums ${pct >= 100 ? 'text-emerald-600' : 'text-slate-700'}">${pct}%</div>
           </div>
           ${_ragControlsHtml(rel)}
           <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden mb-1.5"><div class="h-full ${barColor} rounded-full" style="width:${pct}%"></div></div>
@@ -31008,7 +31060,7 @@ const m = document.getElementById('mineModeBtn');
       const go = () => { closePlanTool(); if (typeof openTaskById === 'function') openTaskById(id); else if (typeof scrollToTask === 'function') scrollToTask(id); };
       const card = document.getElementById('taskModal');
       if (card && !card.classList.contains('hidden') && _taskDirty && !READ_ONLY_MODE) {
-        openConfirm({title:'Несохраненные изменения',desc:'В карточке есть несохраненные изменения. Перейти к другой задаче без сохранения?',onOk:()=>{_taskDirty=false;go();}});
+        openConfirm({title:'Несохраненные изменения',desc:'В карточке есть несохраненные изменения. Перейти к другой задаче без сохранения?',okText:'Перейти без сохранения',onOk:()=>{_taskDirty=false;go();}});
         return;
       }
       go();
@@ -31778,13 +31830,13 @@ const m = document.getElementById('mineModeBtn');
     let capacityView = (storage.get('gantt_capacity_view') || 'person'); if (!['person','role','cards'].includes(capacityView)) capacityView = 'person';
     function setCapacityView(v) { capacityView = ['role','cards'].includes(v) ? v : 'person'; try { storage.set('gantt_capacity_view', capacityView); } catch (e) {} _persistViewPreferences(); renderResourceManagerList(); }
     let overloadThreshold = (function () { const v = parseFloat(storage.get('gantt_overload_threshold')); return (v >= 1 && v <= 3) ? v : 1.6; })();
-    function setOverloadThreshold(pct) { let v = parseFloat(pct) / 100; if (!(v >= 1 && v <= 3)) v = 1.6; overloadThreshold = Math.round(v * 100) / 100; try { storage.set('gantt_overload_threshold', String(overloadThreshold)); } catch (e) {} renderResourceManagerList(); }
+    function setOverloadThreshold(pct, el) { let v = parseFloat(pct) / 100; if (!(v >= 1 && v <= 3)) v = 1.6; overloadThreshold = Math.round(v * 100) / 100; if (el) { el.value = String(Math.round(overloadThreshold * 100)); el.title = 'Принято: ' + el.value + '% (диапазон 100–300%)'; } try { storage.set('gantt_overload_threshold', String(overloadThreshold)); } catch (e) {} renderResourceManagerList(); }
     // A1: горизонт напоминания о приближающихся вехах/отсечках (дни), per-browser как overloadThreshold
     let milestoneWarningThreshold = (function () { const v = parseInt(storage.get('gantt_milestone_warn_days'), 10); return (v >= 1 && v <= 90) ? v : 7; })();
-    function setMilestoneWarningThreshold(d) { let v = parseInt(d, 10); if (!(v >= 1 && v <= 90)) v = 7; milestoneWarningThreshold = v; try { storage.set('gantt_milestone_warn_days', String(v)); } catch (e) {} if (typeof renderRoadmap === 'function') renderRoadmap(true); }
+    function setMilestoneWarningThreshold(d, el) { let v = parseInt(d, 10); if (!(v >= 1 && v <= 90)) v = 7; milestoneWarningThreshold = v; if (el) { el.value = String(v); el.title = 'Принято: ' + v + ' дн. (диапазон 1–90 дн.)'; } try { storage.set('gantt_milestone_warn_days', String(v)); } catch (e) {} if (typeof renderRoadmap === 'function') renderRoadmap(true); }
     // C2: единый настраиваемый порог перегруза по дням (одновременных задач у человека) вместо магической 6 в выравнивании
     let levelingOverloadTasks = (function () { const v = parseInt(storage.get('gantt_leveling_overload_tasks'), 10); return (v >= 2 && v <= 20) ? v : 6; })();
-    function setLevelingOverloadTasks(d) { let v = parseInt(d, 10); if (!(v >= 2 && v <= 20)) v = 6; levelingOverloadTasks = v; try { storage.set('gantt_leveling_overload_tasks', String(v)); } catch (e) {} if (typeof renderResourceManagerList === 'function') renderResourceManagerList(); }
+    function setLevelingOverloadTasks(d, el) { let v = parseInt(d, 10); if (!(v >= 2 && v <= 20)) v = 6; levelingOverloadTasks = v; if (el) { el.value = String(v); el.title = 'Принято: ' + v + ' (диапазон 2–20 задач)'; } try { storage.set('gantt_leveling_overload_tasks', String(v)); } catch (e) {} if (typeof renderResourceManagerList === 'function') renderResourceManagerList(); }
     // Считаем рабочие дни, назначенные на человека, по корзинам (недели или месяцы). Емкость корзины , число рабочих дней периода.
     function computeCapacityBuckets(gran, unit) {
       const sourceTasks = Array.isArray(arguments[2]) ? arguments[2] : (roadmapData || []);
@@ -31878,7 +31930,7 @@ const m = document.getElementById('mineModeBtn');
         html += `<td class="px-2.5 py-1 text-right font-semibold text-slate-700 tabular-nums border-l border-slate-200 bg-slate-50/60">${_fmtLoad(row.total)}</td></tr>`;
       });
       html += '</tbody></table></div>';
-      html += `<div class="mt-3 flex flex-wrap items-center gap-3 text-[10px] text-slate-500"><span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-emerald-100"></span>в норме (до 100%)</span><span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-amber-100"></span>выше нормы (от 100% до ${Math.round(overloadThreshold*100)}%)</span><span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-rose-200 ring-1 ring-rose-400"></span>перегруз (свыше ${Math.round(overloadThreshold*100)}%)</span><span>Наведите на ячейку — увидите список задач</span><span class="inline-flex items-center gap-1.5 ml-auto whitespace-nowrap">Перегруз от <input type="number" min="100" max="300" step="10" value="${Math.round(overloadThreshold * 100)}" onchange="setOverloadThreshold(this.value)" class="w-14 h-6 px-1.5 text-center tabular-nums bg-white border border-slate-200 rounded-lg text-[10px] focus:outline-none focus:border-indigo-500 cursor-text" aria-label="Порог перегруза в процентах" title="Доля от емкости, выше которой неделя/месяц считается перегруженным"> %</span></div>`;
+      html += `<div class="mt-3 flex flex-wrap items-center gap-3 text-[10px] text-slate-500"><span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-emerald-100"></span>в норме (до 100%)</span><span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-amber-100"></span>выше нормы (от 100% до ${Math.round(overloadThreshold*100)}%)</span><span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded bg-rose-200 ring-1 ring-rose-400"></span>перегруз (свыше ${Math.round(overloadThreshold*100)}%)</span><span>Наведите на ячейку — увидите список задач</span><span class="inline-flex items-center gap-1.5 ml-auto whitespace-nowrap">Перегруз от <input type="number" min="100" max="300" step="10" value="${Math.round(overloadThreshold * 100)}" onchange="setOverloadThreshold(this.value, this)" class="w-14 h-6 px-1.5 text-center tabular-nums bg-white border border-slate-200 rounded-lg text-[10px] focus:outline-none focus:border-indigo-500 cursor-text" aria-label="Порог перегруза в процентах" title="Доля от емкости, выше которой неделя/месяц считается перегруженным"> %</span></div>`;
       return html;
     }
     // ===== Лечение перегруза: клик по красной ячейке -> панель «передать / сдвинуть» =====
@@ -32785,7 +32837,7 @@ const m = document.getElementById('mineModeBtn');
       _taskRowLayoutFrame = 0;
       const list = document.getElementById('tasks-list-container'), bars = document.getElementById('bars-container');
       if (!list || !bars) return;
-      const adaptive = typeof matchMedia === 'function' && matchMedia('print, (max-width:1023px), (pointer:coarse)').matches;
+      const adaptive = document.body.classList.contains('image-export-mode') || (typeof matchMedia === 'function' && matchMedia('print, (max-width:1023px), (pointer:coarse)').matches);
       if (typeof window !== 'undefined' && window.__rowVirtualization && (adaptive !== _taskRowAdaptive || _taskRowVirtualizer !== window.__rowVirtualization)) {
         window.__rowVirtualization[adaptive ? 'suspend' : 'resume']('adaptive-row-layout');
         _taskRowVirtualizer = window.__rowVirtualization;
@@ -33074,9 +33126,36 @@ const m = document.getElementById('mineModeBtn');
       _spCfgRender(); renderRoadmap(true);
       showToast('Спринт изменен. Изменения можно отменить.', 'ok');
     }
-    function _spCfgDelSprint(i) { var a = _getSprints(); var _nm = (a[i] && a[i].name) || 'спринт'; if (typeof openConfirm === 'function') { openConfirm({ title: 'Удалить спринт', desc: 'Удалить «' + _nm + '»? Задачи не пострадают, исчезнет только плашка на таймлайне.', okText: 'Удалить', danger: true, onOk: function () { a.splice(i, 1); _spPersistSprints(a); _spCfgRender(); } }); return; } a.splice(i, 1); _spPersistSprints(a); _spCfgRender(); try { renderSprintBand(); } catch (e) {} try { renderRoadmap(true); } catch (e) {} }
-    function _spCfgAddSprint() { var a = _getSprints(); var last = a[a.length - 1]; var from = last ? _spAddDays(last.to, 1) : (typeof CURRENT_DATE !== 'undefined' ? toYmdLocal(CURRENT_DATE) : '2026-01-01'); var to = _spAddDays(from, Math.max(1, _spCfg.len) - 1); a.push({ id: 's' + Date.now(), name: (({ 'Спринты': 'Спринт', 'Периоды': 'Период', 'Итерации': 'Итерация', 'Волны': 'Волна' })[_spName()] || _spName().replace(/ы$|и$/, '')) + ' ' + (a.length + 1), from: from, to: to }); _spPersistSprints(a); _spCfgRender(); try { renderSprintBand(); } catch (e) {} try { renderRoadmap(true); } catch (e) {} }
-    function _spCfgRegen() { var a = _getSprints(); if (!a.length) return; var start = a[0].from; a.forEach(function (sp, i) { sp.from = (i === 0) ? start : _spAddDays(a[i - 1].to, 1); sp.to = _spAddDays(sp.from, Math.max(1, _spCfg.len) - 1); }); _spPersistSprints(a); _spCfgRender(); try { renderSprintBand(); } catch (e) {} try { renderRoadmap(true); } catch (e) {} }
+    function _spCfgDelSprint(i) {
+      if (READ_ONLY_MODE || !requireUnlocked()) return;
+      var a = _getSprints(); if (!a[i]) return;
+      var _nm = a[i].name || 'спринт';
+      const remove = function () {
+        if (READ_ONLY_MODE || !requireUnlocked()) return;
+        const undo = captureUndoState();
+        a.splice(i, 1); _spPersistSprints(a); _spCfgRender();
+        try { renderRoadmap(true); } catch (e) {}
+        offerUndo('Спринт удалён', undo);
+      };
+      if (typeof openConfirm === 'function') { openConfirm({ title: 'Удалить спринт', desc: 'Удалить «' + _nm + '»? Задачи не пострадают, исчезнет только плашка на таймлайне.', okText: 'Удалить', danger: true, onOk: remove }); return; }
+      remove();
+    }
+    function _spCfgAddSprint() {
+      if (READ_ONLY_MODE || !requireUnlocked()) return;
+      var a = _getSprints(); var last = a[a.length - 1]; var from = last ? _spAddDays(last.to, 1) : (typeof CURRENT_DATE !== 'undefined' ? toYmdLocal(CURRENT_DATE) : '2026-01-01'); var to = _spAddDays(from, Math.max(1, _spCfg.len) - 1);
+      const undo = captureUndoState();
+      a.push({ id: 's' + Date.now(), name: (({ 'Спринты': 'Спринт', 'Периоды': 'Период', 'Итерации': 'Итерация', 'Волны': 'Волна' })[_spName()] || _spName().replace(/ы$|и$/, '')) + ' ' + (a.length + 1), from: from, to: to });
+      _spPersistSprints(a); _spCfgRender(); try { renderSprintBand(); } catch (e) {} try { renderRoadmap(true); } catch (e) {}
+      offerUndo('Спринт добавлен', undo);
+    }
+    function _spCfgRegen() {
+      if (READ_ONLY_MODE || !requireUnlocked()) return;
+      var a = _getSprints(); if (!a.length) return; var start = a[0].from;
+      const undo = captureUndoState();
+      a.forEach(function (sp, i) { sp.from = (i === 0) ? start : _spAddDays(a[i - 1].to, 1); sp.to = _spAddDays(sp.from, Math.max(1, _spCfg.len) - 1); });
+      _spPersistSprints(a); _spCfgRender(); try { renderSprintBand(); } catch (e) {} try { renderRoadmap(true); } catch (e) {}
+      offerUndo('Даты спринтов пересозданы по длине: ' + a.length, undo);
+    }
     function _fcBase() { return (typeof CURRENT_DATE !== 'undefined' && CURRENT_DATE) ? toYmdLocal(CURRENT_DATE) : (_getSprints()[0] || {}).from || '2026-01-01'; }
     function _fcDayDiff(a, b) { return RoadmapModules.dateLocalDifference(a, b, CURRENT_DATE); }
     // Оптимистичный финиш: только зависимости + рабочие дни/отпуска, ресурсы работают параллельно (без конфликта)
@@ -33155,7 +33234,7 @@ const m = document.getElementById('mineModeBtn');
         if (allDone) { status = 'green'; verdict = 'готово, все задачи закрыты'; }
         else if (unavailable) { status = 'gray'; verdict = 'прогноз недоступен: проверьте календарь'; reason = 'Не найдено достаточно рабочих дней. Даты не изменены.'; realEnd = ''; optEnd = ''; }
         else if (!act.length && held.length) { status = 'gray'; verdict = 'прогноз приостановлен: ' + held.length + ' ' + pluralRu(held.length, ['задача на холде', 'задачи на холде', 'задач на холде']); reason = 'Сначала решите, возвращать ли работу в план.'; }
-        else if (!act.length) { status = 'gray'; verdict = visible.length ? 'нет открытых задач за этой датой' : 'дата скрыта текущими фильтрами или не связана с задачами'; }
+        else if (!act.length) { status = 'gray'; verdict = visible.length ? 'нет открытых задач за этой датой' : 'не связана с задачами'; }
         else if (nNoEst / act.length >= 0.5) { status = 'gray'; verdict = 'мало данных: оцените ' + nNoEst + ' ' + pluralRu(nNoEst, ['задачу', 'задачи', 'задач']); reason = _fcReason(act, sched, taskIndex); }
         else {
           var slip = _fcDayDiff(promised, realEnd);
@@ -33258,8 +33337,8 @@ const m = document.getElementById('mineModeBtn');
       }).join('');
       var remaining = Math.max(0, res.total - initiallyVisible);
       var nextCount = Math.min(20, remaining);
-      var more = remaining ? '<button type="button" data-forecast-burning-more aria-controls="forecastBurningList" aria-label="Показать ещё ' + nextCount + ', осталось ' + remaining + '" onclick="_fcShowMoreBurning(this)" class="mt-2 inline-flex items-center h-8 px-3 rounded-lg bg-white/80 text-[11px] font-semibold text-rose-700 hover:bg-white cursor-pointer"><span data-forecast-burning-action>Показать ещё ' + nextCount + '</span><span data-forecast-burning-remaining class="ml-1.5 font-normal text-rose-400">осталось ' + remaining + '</span></button>' : '';
-      return '<div data-forecast-burning class="bg-rose-50 border border-rose-200 rounded-xl px-3 py-2.5 mb-3"><div class="flex items-center gap-2 mb-1.5 text-sm font-semibold text-rose-700"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.757 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.757 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path></svg>Горит сейчас <span class="font-normal text-rose-400">' + res.total + '</span></div><div id="forecastBurningList" data-forecast-burning-list class="space-y-0.5">' + items + '</div>' + more + '</div>';
+      var more = remaining ? '<button type="button" data-forecast-burning-more aria-controls="forecastBurningList" aria-label="Показать ещё ' + nextCount + ', осталось ' + remaining + '" onclick="_fcShowMoreBurning(this)" class="mt-2 inline-flex items-center h-8 px-3 rounded-lg bg-white/80 text-[11px] font-semibold text-rose-700 hover:bg-white cursor-pointer"><span data-forecast-burning-action>Показать ещё ' + nextCount + '</span><span data-forecast-burning-remaining class="ml-1.5 font-normal text-rose-700">осталось ' + remaining + '</span></button>' : '';
+      return '<div data-forecast-burning class="bg-rose-50 border border-rose-200 rounded-xl px-3 py-2.5 mb-3"><div class="flex items-center gap-2 mb-1.5 text-sm font-semibold text-rose-700"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.757 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.757 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path></svg>Горит сейчас <span class="font-normal text-rose-700">' + res.total + '</span></div><div id="forecastBurningList" data-forecast-burning-list class="space-y-0.5">' + items + '</div>' + more + '</div>';
     }
     function _fcGoalCardHtml(gr) {
       var esc = (typeof escHtml === 'function') ? escHtml : function (x) { return String(x == null ? '' : x); };
@@ -35048,7 +35127,7 @@ const m = document.getElementById('mineModeBtn');
       if (!nav || !nav.clientWidth || nav.scrollWidth <= nav.clientWidth + 1) return;
       if (getComputedStyle(nav).overflowX !== 'auto') return;
       const target = control && nav.contains(control) ? control
-        : nav.querySelector('[data-pres-tab][aria-selected="true"]') || nav.querySelector('[data-meeting-content][aria-pressed="true"]');
+        : nav.querySelector('[data-meeting-content][aria-pressed="true"]') || nav.querySelector('[data-pres-tab][aria-selected="true"]');
       if (!target) return;
       const bounds = nav.getBoundingClientRect(), rect = target.getBoundingClientRect();
       if (rect.right > bounds.right - 8) nav.scrollLeft += rect.right - bounds.right + 8;
@@ -35101,7 +35180,7 @@ const m = document.getElementById('mineModeBtn');
             context._meetingResizeObserver.observe(context);
           }
         }
-        _revealMeetingControl(context.querySelector('[data-pres-tab][aria-selected="true"]'));
+        _revealMeetingControl(context.querySelector('.meeting-choice[aria-pressed="true"]'));
         syncHorizontalScrollHints(context);
       }
     }
@@ -35191,7 +35270,7 @@ const m = document.getElementById('mineModeBtn');
       };
       const card=document.getElementById('taskModal');
       if(card&&!card.classList.contains('hidden')&&_taskDirty&&!READ_ONLY_MODE){
-        openConfirm({title:'Несохраненные изменения',desc:'В карточке есть несохраненные изменения. Перейти к другой задаче без сохранения?',onOk:open});
+        openConfirm({title:'Несохраненные изменения',desc:'В карточке есть несохраненные изменения. Перейти к другой задаче без сохранения?',okText:'Перейти без сохранения',onOk:open});
         return;
       }
       open();
@@ -35599,7 +35678,8 @@ const m = document.getElementById('mineModeBtn');
       const dragAttrs = ro ? '' : `draggable="true" ondragstart="_kanbanDragStart(event, ${t.id})"`;
       const blocked = (typeof isBlocked === 'function') ? isBlocked(t) : !!(t && t.blocked);
       const kd = (typeof _kindDotHtml === 'function') ? _kindDotHtml(t) : '';
-      const blockBadge = blocked ? '<span title="Заблокирована" class="shrink-0 mt-0.5 text-rose-500"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-8f3b406ad8b2"></use></svg></span>' : '';
+      const blockBadge = blocked ? '<span role="img" aria-label="Заблокирована" title="Заблокирована" class="shrink-0 mt-0.5 text-rose-500"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-8f3b406ad8b2"></use></svg></span>' : '';
+      const overdueBadge = overdue ? '<span class="inline-flex px-1.5 py-0.5 rounded text-[10px] font-medium bg-rose-50 text-rose-700" title="Риск срока, не статус задачи">Просрочено</span>' : '';
       const statusName = (displayStatuses || getDisplayStatuses()).find(s => s.id === t.status)?.name || t.status || 'Без статуса';
       const _risk = [];
       try { if (_critPathIds && _critPathIds.has && _critPathIds.has(t.id)) _risk.push('<span title="Критический путь: сдвиг этой задачи двигает весь план" class="inline-block w-2 h-2 rounded-full bg-violet-500 shrink-0 mt-1.5"></span>'); } catch (e) {}
@@ -35607,11 +35687,11 @@ const m = document.getElementById('mineModeBtn');
       try { if (typeof _taskLeaveConflict === 'function' && _taskLeaveConflict(t)) _risk.push('<span title="Пересекается с отпуском исполнителя" class="inline-block w-2 h-2 rounded-full bg-amber-500 shrink-0 mt-1.5"></span>'); } catch (e) {}
       const riskHtml = _risk.length ? `<span class="inline-flex items-center gap-1 shrink-0 mt-0.5">${_risk.join('')}</span>` : '';
       const statusControl = ro ? '' : `<select data-kanban-status="${t.id}" aria-label="Статус задачи: ${escAttr(t.name||'Без названия')}" class="mt-2 w-full rm-input" onclick="event.stopPropagation()" onpointerdown="event.stopPropagation()" onkeydown="event.stopPropagation()" onchange="event.stopPropagation();_kanbanSetStatus(${t.id},this.value)">${(displayStatuses||getDisplayStatuses()).map(s=>`<option value="${escAttr(s.id)}"${s.id===t.status?' selected':''}>${escHtml(s.name)}</option>`).join('')}</select>`;
-      return `<div aria-label="${escAttr((t.name || 'Без названия') + '. Статус: ' + statusName)}" ${dragAttrs} onclick="openTaskById(${t.id})" tabindex="0" role="button" onkeydown="if(event.target!==event.currentTarget)return;if(event.key==='Enter'||event.key===' '){event.preventDefault();openTaskById(${t.id});}" class="kanban-card bg-white rounded-lg border border-slate-200 ${blocked ? 'border-l-2 border-l-rose-400' : ''} p-2.5 shadow-2xs hover:border-indigo-300 hover:shadow-sm cursor-pointer transition-colors ${ro ? '' : 'active:cursor-grabbing'}">
+      return `<div aria-label="${escAttr((t.name || 'Без названия') + '. Статус: ' + statusName + (blocked ? '. Заблокирована' : '') + (overdue ? '. Просрочено' : ''))}" ${dragAttrs} onclick="openTaskById(${t.id})" tabindex="0" role="button" onkeydown="if(event.target!==event.currentTarget)return;if(event.key==='Enter'||event.key===' '){event.preventDefault();openTaskById(${t.id});}" class="kanban-card bg-white rounded-lg border border-slate-200 ${blocked ? 'border-l-2 border-l-rose-400' : ''} p-2.5 shadow-2xs hover:border-indigo-300 hover:shadow-sm cursor-pointer transition-colors ${ro ? '' : 'active:cursor-grabbing'}">
         <div class="flex items-start gap-1.5">${kd}<div class="text-xs font-medium text-slate-800 leading-snug grow min-w-0">${escHtml(t.name || 'Без названия')}</div>${riskHtml}${blockBadge}</div>
         ${sec}
         <div class="mt-1"><span class="inline-flex px-1.5 py-0.5 rounded text-[10px] font-medium ${jiraTypeBadgeClass(taskTypeLabel(t))}">${escHtml(taskTypeLabel(t))}</span></div>
-        <div class="flex items-center justify-between gap-2 mt-1.5">${res}<span class="text-[10px] tabular-nums ${overdue ? 'text-rose-600 font-semibold' : 'text-slate-500'}">${escHtml(dt)}</span></div>
+        <div class="flex items-center justify-between gap-2 mt-1.5">${res}<span class="inline-flex items-center justify-end gap-1 flex-wrap">${overdueBadge}<span class="text-[10px] tabular-nums ${overdue ? 'text-rose-600 font-semibold' : 'text-slate-500'}">${escHtml(dt)}</span></span></div>
         ${key ? `<div class="text-[10px] font-mono text-slate-400 mt-1">${escHtml(key)}</div>` : ''}
         ${statusControl}
       </div>`;
@@ -36108,7 +36188,7 @@ const m = document.getElementById('mineModeBtn');
       };
       kv.innerHTML=`<div class="scrum-heading"><h2>Задачи по спринтам <span>${tasks.length}</span></h2><div class="kanban-view-actions flex items-center gap-2">${_boardModeButtons()}${ro?'':'<button type="button" class="rm-btn rm-btn-ghost" onclick="openSprintCfg()">Спринты</button>'}</div></div>
         <div class="scrum-filters">${facet('release',_scrumRelease,'Релиз','Без релиза')}${facet('section',_scrumSection,'Раздел / эпик','Без раздела')}${_scrumRelease!==null||_scrumSection!==null?'<button type="button" class="rm-btn rm-btn-ghost" onclick="_scrumResetFilters()">Сбросить</button>':''}</div>
-        <p class="scrum-hint">${ro?'План только для просмотра.':'Перетащите задачу в спринт или выберите его в строке. Изменения сохраняются только в Roadmap, не в Jira.'}</p>
+        <p class="scrum-hint">${ro?'План только для просмотра.':'<span class="rm-drag-hint-fine">Перетащите задачу в спринт или выберите его в строке.</span><span class="rm-drag-hint-coarse">Выберите спринт в строке задачи. Перетаскивание — на компьютере.</span> Изменения сохраняются только в Roadmap, не в Jira.'}</p>
         <div class="scrum-groups">${groups.map(s=>{
           const list=tasks.filter(t=>text(t,'sprint')===s.name),done=list.filter(t=>isFinalStatus(t.status)).length;
           const dates=s.from&&s.to?formatDateString(s.from)+' – '+formatDateString(s.to):s.name?'Даты не заданы':'';
@@ -36182,7 +36262,7 @@ const m = document.getElementById('mineModeBtn');
       </div>
       ${hiddenByColumns ? `<div class="px-4 py-2 text-xs text-slate-600 bg-slate-50 border-b border-slate-200">В скрытых столбцах: ${hiddenByColumns} задач.${ro ? '' : ' <button type="button" onclick="openKanbanColsModal()" class="underline font-semibold">Настроить столбцы</button>'}</div>` : ''}
       <div id="kanbanTrack" class="kanban-track flex gap-3 px-4 pt-4 pb-2 overflow-x-auto grow items-start w-full" onscroll="_kanbanTrackScroll(this)">${cols}${orphanCol}${!cols && !orphanCol ? '<p class="w-full py-8 text-center text-sm text-slate-600">Нет задач для отображения</p>' : ''}</div>
-      ${ro ? '' : '<div class="px-4 pb-3 text-[10px] text-slate-400 shrink-0">Перетащите карточку между колонками или выберите нужный статус в карточке. Доска листается по горизонтали ↔</div>'}`;
+      ${ro ? '' : '<div class="px-4 pb-3 text-[10px] text-slate-400 shrink-0"><span class="rm-drag-hint-fine">Перетащите карточку между колонками или выберите нужный статус в карточке.</span><span class="rm-drag-hint-coarse">Выберите статус в карточке. Перетаскивание — на компьютере.</span> Доска листается по горизонтали ↔</div>'}`;
       requestAnimationFrame(function () { _kanbanTrackScroll(document.getElementById('kanbanTrack')); });
       try { if (!tasks.length && typeof anyTaskFilterActive === 'function' && anyTaskFilterActive()) { const _kbe = document.createElement('div'); _kbe.className = 'px-4 py-2 text-[11px] text-amber-800 bg-amber-50 border-b border-amber-200 flex items-center gap-2 shrink-0'; _kbe.innerHTML = 'Все задачи скрыты фильтрами. <button onclick="resetAllFilters()" class="underline font-semibold cursor-pointer">Сбросить фильтры</button>'; const _hd = kv.firstElementChild; if (_hd && _hd.nextSibling) kv.insertBefore(_kbe, _hd.nextSibling); else kv.appendChild(_kbe); } } catch (e) {}
       if (typeof _normalizeUiButton === 'function') kv.querySelectorAll('button').forEach(_normalizeUiButton);
@@ -36780,6 +36860,33 @@ const m = document.getElementById('mineModeBtn');
         }
         return metrics.widths.get(text);
       };
+    }
+
+    function refreshTaskMetaLineTitle(line) {
+      if (!line) return;
+      // Resolve visibility only for the hovered/focused line, never during bulk row rendering.
+      const visibleText = node => {
+        if (node.nodeType === 3) return node.textContent || '';
+        if (node.nodeType !== 1 || node.hidden || node.getAttribute('aria-hidden') === 'true') return '';
+        const style = getComputedStyle(node);
+        if (style.display === 'none' || style.visibility === 'hidden' || style.visibility === 'collapse' || style.opacity === '0') return '';
+        return Array.from(node.childNodes).map(visibleText).join('');
+      };
+      line.title = Array.from(line.children).map(visibleText).map(text => text.replace(/\s+/g, ' ').trim()).filter(Boolean).join(' · ');
+    }
+
+    function focusTaskMetaLine(line, target) {
+      refreshTaskMetaLineTitle(line);
+      if (!line || !target || !line.contains(target) || line.scrollWidth <= line.clientWidth) return;
+      const clip = line.getBoundingClientRect(), item = target.getBoundingClientRect();
+      const left = clip.left + 4, right = clip.right - 4;
+      // Scroll this line only: focusing a clipped chip must not move the plan or lose its row.
+      if (item.left < left || item.width > right - left) line.scrollLeft += item.left - left;
+      else if (item.right > right) line.scrollLeft += item.right - right;
+    }
+
+    function resetTaskMetaLineFocus(line, nextTarget) {
+      if (line && (!nextTarget || !line.contains(nextTarget))) line.scrollLeft = 0;
     }
 
     function renderRoadmap(skipSave = false, options = null) {
@@ -37397,7 +37504,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
               <div class="task-row-content grow flex items-center min-w-0">
                 <div class="task-row-copy truncate min-w-0">
                   <div class="js-task-name text-xs font-semibold text-slate-800 truncate tracking-tight${READ_ONLY_MODE ? '' : ' hover:bg-indigo-50 rounded'}"${READ_ONLY_MODE ? '' : ` ondblclick="event.stopPropagation(); startEditTaskName(${task.id})" title="Двойной клик — переименовать"`}>${_kindDotHtml(task)}${escHtml(task.name)}</div>
-                  <div class="task-meta-line text-[10px] text-slate-500 flex items-center gap-1.5 mt-0.5 flex-wrap md:flex-nowrap overflow-visible md:overflow-hidden gap-y-1 min-w-0">
+                  <div class="task-meta-line text-[10px] text-slate-500 flex items-center gap-1.5 mt-0.5 flex-wrap md:flex-nowrap overflow-visible md:overflow-hidden gap-y-1 min-w-0" onpointerenter="refreshTaskMetaLineTitle(this)" onfocusin="focusTaskMetaLine(this, event.target)" onfocusout="resetTaskMetaLineFocus(this, event.relatedTarget)">
                     ${task._jiraChange ? (task._jiraChange.kind === 'new'
                       ? '<span data-feat="jira" class="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-300" title="Новая задача из последнего импорта Jira">новое</span>'
                       : '<span data-feat="jira" class="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300" title="Обновлено из Jira: ' + escAttr((task._jiraChange.fields || []).join(', ') || 'изменения') + '">обновлено</span>') : ''}
@@ -38277,11 +38384,18 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     }
     // Поповер «переместить в другую секцию»
     let taskMoveCtx = null;
+    let _taskMoveTrigger = null;
     function openTaskMovePanel(task, ev) {
       if (ev) ev.stopPropagation();
       const panel = document.getElementById('taskMovePanel');
       if (!panel || !task) return;
+      if (panel.parentElement !== document.body) document.body.appendChild(panel);
       taskMoveCtx = task;
+      _taskMoveTrigger = ev && ev.currentTarget ? ev.currentTarget : document.activeElement;
+      if (_taskMoveTrigger && _taskMoveTrigger.setAttribute) {
+        _taskMoveTrigger.setAttribute('aria-controls', 'taskMovePanel');
+        _taskMoveTrigger.setAttribute('aria-expanded', 'true');
+      }
       const others = taskTargetSections().filter(s => s !== task.section);
       panel.innerHTML = `<div class="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Переместить в секцию</div>` +
         (others.length
@@ -38295,16 +38409,22 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
       panel.style.left = left + 'px';
       panel.style.top = (r.bottom + 6) + 'px';
+      if (ev && ev.detail === 0) panel.querySelector('button')?.focus({preventScroll:true});
       setTimeout(() => document.addEventListener('mousedown', taskMoveOutside, true), 0);
     }
     function taskMoveOutside(e) {
       if (e.target.closest('#taskMovePanel') || e.target.closest('[data-task-move]')) return;
       closeTaskMovePanel();
     }
-    function closeTaskMovePanel() {
+    function closeTaskMovePanel(restoreFocus = false) {
       const p = document.getElementById('taskMovePanel');
       if (p) p.classList.add('hidden');
       document.removeEventListener('mousedown', taskMoveOutside, true);
+      if (_taskMoveTrigger) _taskMoveTrigger.setAttribute('aria-expanded', 'false');
+      if (restoreFocus) {
+        const row = taskMoveCtx ? document.getElementById('task-row-left-' + String(taskMoveCtx.id)) : null;
+        _restorePopoverTriggerFocus(_taskMoveTrigger, row?.querySelector('[data-task-move]'), row?.querySelector('.task-actions-trigger'));
+      }
     }
     function moveTaskToSection(task, section) {
       closeTaskMovePanel();
@@ -38496,23 +38616,23 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const rs = document.createElement('div'); rs.className = 'grow no-image-export'; barsContainer.appendChild(rs);
 
       const l = document.createElement('div');
-      l.className = 'no-image-export h-9 px-5 flex items-center justify-between gap-2 bg-slate-100 border-y border-slate-200 select-none cursor-pointer hover:bg-slate-200/70 transition-colors';
+      l.className = 'no-image-export hidden-zone-divider h-9 px-3 flex items-center justify-between gap-2 bg-slate-100 border-y border-slate-200 select-none cursor-pointer hover:bg-slate-200/70 transition-colors';
       l.setAttribute('role', 'button'); l.setAttribute('tabindex', '0'); l.setAttribute('aria-expanded', String(!collapsed));
       l.onclick = () => toggleHiddenZone();
       l.onkeydown = (e) => { if (e.target === l && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggleHiddenZone(); } };
       l.innerHTML = `
-        <div class="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500 min-w-0">
+        <div class="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500 min-w-0">
           <span class="shrink-0 w-4 h-4 flex items-center justify-center text-slate-500"><svg aria-hidden="true" class="w-3.5 h-3.5 transition-transform ${collapsed ? '' : 'rotate-90'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-4ff154a90119"></use></svg></span>
           <svg aria-hidden="true" class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-d4d5632d1ef8"></use></svg>
-          Скрытые <span class="bg-slate-300 text-slate-700 text-[10px] px-1.5 py-0.5 rounded-full font-semibold tabular-nums normal-case">${count}</span>
+          <span class="truncate" title="Скрытые задачи и секции">Скрытые</span><span class="bg-slate-200 text-slate-700 text-[10px] px-1.5 py-0.5 rounded-full font-semibold tabular-nums normal-case shrink-0">${count}</span>
         </div>
-        <button type="button" onclick="event.stopPropagation(); archiveAllHidden()" class="no-image-export shrink-0 inline-flex items-center gap-1 h-6 px-2 rounded-md text-[10px] font-semibold text-slate-500 hover:text-white hover:bg-slate-600 border border-slate-300 bg-white transition-colors cursor-pointer" title="Перенести все скрытое (задачи и секции) в архив">
+        <button type="button" onclick="event.stopPropagation(); archiveAllHidden()" class="no-image-export hidden-zone-archive shrink-0 inline-flex items-center gap-1 h-6 px-2 rounded-md text-[10px] font-semibold text-slate-500 hover:text-white hover:bg-slate-600 border border-slate-300 bg-white transition-colors cursor-pointer" title="Перенести все скрытое (задачи и секции) в архив">
           <svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-853f0c288477"></use></svg>
           В архив
         </button>`;
       listContainer.appendChild(l);
       const r = document.createElement('div');
-      r.className = 'no-image-export h-9 bg-slate-100 border-y border-slate-200';
+      r.className = 'no-image-export hidden-zone-divider h-9 bg-slate-100 border-y border-slate-200';
       barsContainer.appendChild(r);
     }
     // Связи-зависимости на таймлайне (п.4): показ/скрытие и стиль линий (гибкие/прямые).
@@ -38567,8 +38687,14 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (willOpen) { renderDepLinesMenu(); m.classList.remove('hidden'); }
       const btn = document.getElementById('depLinesToggle');
       if (btn) btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      if (willOpen && e && e.detail === 0) m.querySelector('button')?.focus({preventScroll:true});
     }
-    document.addEventListener('click', (e) => { const m = document.getElementById('depLinesMenu'); if (m && !m.classList.contains('hidden') && !e.target.closest('#depLinesMenu') && !e.target.closest('#depLinesToggle')) { m.classList.add('hidden'); const b = document.getElementById('depLinesToggle'); if (b) b.setAttribute('aria-expanded', 'false'); } });
+    function closeDepLinesMenu(restoreFocus = false) {
+      const m = document.getElementById('depLinesMenu'); if (m) m.classList.add('hidden');
+      const b = document.getElementById('depLinesToggle'); if (b) b.setAttribute('aria-expanded', 'false');
+      if (restoreFocus) _restorePopoverTriggerFocus(b);
+    }
+    document.addEventListener('click', (e) => { const m = document.getElementById('depLinesMenu'); if (m && !m.classList.contains('hidden') && !e.target.closest('#depLinesMenu') && !e.target.closest('#depLinesToggle')) closeDepLinesMenu(); });
     function updateDepLinesToggle() {
       const btn = document.getElementById('depLinesToggle');
       if (!btn) return;
@@ -38813,13 +38939,13 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         const label = special[id] || getDisplayStatuses().find(function(s){return s.id === id;})?.name || id;
         parts.push('<button type="button" class="active-filter-chip" data-clear-status="' + escAttr(id) + '" onclick="clearActiveFilter(\'status\',\'' + escJsArg(id) + '\')" aria-label="Снять фильтр: ' + escAttr(label) + '">' + escHtml(label) + ' <span aria-hidden="true">×</span></button>');
       });
-      if (hasForecastReturn) parts.push('<button type="button" data-forecast-return class="active-filter-chip !border-indigo-200 !bg-indigo-50 !text-indigo-700" onclick="_fcReturnToForecast()" title="Снять срез причины и вернуться к прогнозу">← Вернуться в «Прогноз»</button>');
+      if (hasForecastReturn) parts.push('<button type="button" data-forecast-return class="active-filter-chip" onclick="_fcReturnToForecast()" title="Снять срез причины и вернуться к прогнозу">← Вернуться в «Прогноз»</button>');
       const kinds = {'Холст':'board','Проект':'project','Тип':'type','Исполнитель':'resource','Релиз':'release','Метка':'label','Компонент':'component','Свои поля':'custom','Горящее':'burning','Критический путь':'critical','Мои задачи':'mine','Инциденты и хотфиксы':'kind','Внешние зависимости':'kind','Тип задачи':'kind','Без цели':'goal'};
       regularItems.forEach(function (label) {
         const kind = kinds[label.split(':')[0]];
         parts.push('<button type="button" class="active-filter-chip" onclick="' + (kind ? 'clearActiveFilter(\'' + kind + '\')' : 'toggleFilterTools(true)') + '" aria-label="' + (kind ? 'Снять фильтр: ' : 'Изменить фильтр: ') + escAttr(label) + '">' + escHtml(label) + (kind ? ' <span aria-hidden="true">×</span>' : '') + '</button>');
       });
-      parts.push('<button type="button" class="active-filter-chip !border-slate-200 !bg-white !text-slate-600 hover:!text-rose-600" onclick="resetAllFilters()" title="Сбросить все фильтры">Сбросить всё</button>');
+      parts.push('<button type="button" class="active-filter-chip" onclick="resetAllFilters()" title="Сбросить все фильтры">Сбросить всё</button>');
       bar.innerHTML = parts.join('');
     }
     function clearActiveFilter(kind, value) {
@@ -39846,7 +39972,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const m = document.getElementById('taskModal');
       const ro = (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE);
       if (_taskDirty && m && !m.classList.contains('hidden') && !ro && typeof openConfirm === 'function') {
-        openConfirm({ title: 'Несохраненные изменения', desc: 'В карточке задачи есть несохраненные изменения. Закрыть без сохранения?', onOk: function () { _taskDirty = false; closeModal(); } });
+        openConfirm({ title: 'Несохраненные изменения', desc: 'В карточке задачи есть несохраненные изменения. Закрыть без сохранения?', okText: 'Закрыть без сохранения', onOk: function () { _taskDirty = false; closeModal(); } });
         return;
       }
       closeModal();
@@ -40398,6 +40524,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (typeof updateResourceSelects === 'function') updateResourceSelects();
       if (typeof updateProjectFilter === 'function') updateProjectFilter();
       if (typeof renderHeaderCutoffChips === 'function') renderHeaderCutoffChips();
+      if (typeof _spCfgRender === 'function') _spCfgRender();
       if (typeof renderRoadmap === 'function') renderRoadmap();
       if (typeof renderStatusOverview === 'function') renderStatusOverview();
     }
@@ -42270,25 +42397,25 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const current = () => (generation === null || generation === _jiraImportReadGeneration)
         && (typeof projectStorageId === 'undefined' || projectStorageId === project)
         && (typeof _projectTransitionToken === 'undefined' || _projectTransitionToken === transition);
-      const message = text => { if (typeof jiraWizardMessage === 'function') jiraWizardMessage(text); };
+      const message = (text, tone) => { if (typeof jiraWizardMessage === 'function') jiraWizardMessage(text, tone); };
       message('Читаем CSV…');
       const reader = new FileReader();
       reader.onload = function(e) {
         if (!current()) { event.target.value = ''; return; }
         try {
           const issues = parseJiraCsv(e.target.result);
-          if (!issues || !issues.length) { message('В CSV нет задач. Выберите другой файл.'); showToast('В CSV нет задач: похоже, файл пустой или в нем только заголовки.', 'warn', 5000); event.target.value = ''; return; }
+          if (!issues || !issues.length) { message('В CSV нет задач. Выберите другой файл.', 'error'); showToast('В CSV нет задач: похоже, файл пустой или в нем только заголовки.', 'warn', 5000); event.target.value = ''; return; }
           message('');
           openJiraImportPreview(issues);
         } catch (err) {
           // Не логируем полный объект ошибки, чтобы избежать утечки содержимого файла в консоль
           console.warn('Jira CSV import failed:', err && err.message ? err.message : 'parse error');
-          message(err && err.name === 'JiraCsvError' ? err.message : 'Не удалось прочитать CSV. Выберите файл еще раз.');
+          message(err && err.name === 'JiraCsvError' ? err.message : 'Не удалось прочитать CSV. Выберите файл еще раз.', 'error');
           showToast(err && err.name === 'JiraCsvError' ? err.message : 'Ошибка чтения Jira CSV.', 'error', 7000);
         }
         event.target.value = '';
       };
-      reader.onerror = function() { if (current()) message('Не удалось прочитать файл. Выберите CSV еще раз.'); event.target.value = ''; };
+      reader.onerror = function() { if (current()) message('Не удалось прочитать файл. Выберите CSV еще раз.', 'error'); event.target.value = ''; };
       reader.readAsText(file, 'utf-8');
     }
 
@@ -42626,9 +42753,15 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       el.value = (head + snippet + (tail ? ' ' + tail : '')).replace(/\s+/g, ' ').trim();
     }
     var _jiraImportReadGeneration = 0;
-    function jiraWizardMessage(message) {
+    function jiraWizardMessage(message, tone) {
       const status = document.getElementById('jiraWizardFileStatus');
-      if (status) status.textContent = message;
+      if (!status) return;
+      const error = tone === 'error';
+      status.classList.toggle('text-rose-600', error);
+      status.classList.toggle('text-slate-700', !error);
+      status.setAttribute('role', error ? 'alert' : 'status');
+      status.setAttribute('aria-live', error ? 'assertive' : 'polite');
+      status.textContent = message;
     }
     function mountJiraImportWizard() {
       const panel = document.getElementById('jiraTab-import');
@@ -43365,6 +43498,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           opts = {...opts, backgroundColor:choice.background};
           var _uc = opts.onclone;
           opts.onclone = function (doc, elc) {
+            // The renderer adopts nodes before writing the iframe doctype.
+            // Reindex IDs in the clone: otherwise camelCase #selectors can
+            // stop matching while getElementById still finds the same nodes.
+            if (typeof doc.querySelectorAll === 'function') doc.querySelectorAll('[id]').forEach(node => { node.id = node.id; });
             try {
               doc.body.classList.remove(choice.theme==='dark'?'theme-studio':'theme-dark', 'theme-portal', 'liquid-glass');
               doc.body.classList.add('theme-'+choice.theme);
@@ -43455,6 +43592,9 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         updateAutoSaveStatus('Ошибка PNG', 'error');
         return;
       }
+      const savedButtonDisabled = btn ? btn.disabled : false;
+      const savedIdleHidden = idleIcon ? idleIcon.classList.contains('hidden') : false;
+      const savedLoadingHidden = loadingIcon ? loadingIcon.classList.contains('hidden') : false;
       if (btn) btn.disabled = true;
       // Переключаем иконки , идл → loading
       if (idleIcon) idleIcon.classList.add('hidden');
@@ -43469,6 +43609,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const savedScrollLeft = timelineEl.scrollLeft;
       const savedBodyOverflow = document.body.style.overflow;
       const savedRootCss = rootEl.style.cssText;
+      const headerNode = document.querySelector('header');
+      const savedHeaderCss = headerNode ? headerNode.style.cssText : '';
+      const savedSnapshotDate = headerNode ? headerNode.getAttribute('data-snapshot-date') : null;
+      const snapBar = document.getElementById('snapshotInfoBar');
+      const savedSnapshotHtml = snapBar ? snapBar.innerHTML : '';
+      let pngTimer = null;
 
       try {
         const html2canvas = await loadHtml2CanvasPro(exportTheme);
@@ -43477,14 +43623,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         // 1) Активируем чистый режим , скрывает кнопки, фильтр-бар, ховеры, индикаторы
         if (window.__rowVirtualization) window.__rowVirtualization.suspend('image-export');
         document.body.classList.add('image-export-mode');
-        const headerNode = document.querySelector('header');
         if (headerNode) {
           const dt = new Date();
           headerNode.setAttribute('data-snapshot-date', dt.toLocaleDateString('ru-RU') + ' ' + dt.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }));
           headerNode.style.position = 'relative';
         }
         // Полезная сводка в снимке: прогресс, счетчики, активные фильтры
-        const snapBar = document.getElementById('snapshotInfoBar');
         if (snapBar) { try { snapBar.innerHTML = buildSnapshotInfoHtml(); } catch (e) { snapBar.innerHTML = ''; } }
 
         // 2) ПОДХОД: снимаем ровно ту видимую часть таймлайна, которую сейчас видит пользователь.
@@ -43514,6 +43658,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         // 3) Даем кадру/таймауту пройти , layout стабилизируется
         await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
         await new Promise(r => setTimeout(r, 100));
+        // Wrapped metadata grows the left rows even on a fine-pointer desktop.
+        // Align both sides before measuring the capture, not after rasterization.
+        syncTaskRowHeights();
+        await new Promise(r => requestAnimationFrame(r)); // queued dependency anchors use the new row heights
 
         // 4) Реальные размеры после применения класса и сдвига
         const captureWidth = Math.max(320, Math.ceil(rootEl.getBoundingClientRect().width || rootEl.clientWidth || window.innerWidth || 1440));
@@ -43544,7 +43692,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         const pngTimeoutMs = Number(window.__PNG_EXPORT_TIMEOUT_MS) > 0 ? Number(window.__PNG_EXPORT_TIMEOUT_MS) : 45000;
         const canvas = await Promise.race([
           renderPromise,
-          new Promise((_, reject) => setTimeout(() => reject(new Error('снимок не сформирован за ' + Math.ceil(pngTimeoutMs / 1000) + ' секунд')), pngTimeoutMs))
+          new Promise((_, reject) => { pngTimer = setTimeout(() => reject(new Error('снимок не сформирован за ' + Math.ceil(pngTimeoutMs / 1000) + ' секунд')), pngTimeoutMs); })
         ]);
 
         // Скачиваем PNG
@@ -43565,11 +43713,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         updateAutoSaveStatus('Ошибка PNG', 'error');
         setTimeout(() => updateAutoSaveStatus('', ''), 3000);
       } finally {
+        clearTimeout(pngTimer);
         // Полное восстановление , независимо от того, был ли успех или ошибка
         document.body.classList.remove('image-export-mode');
         if (window.__rowVirtualization) window.__rowVirtualization.resume('image-export');
-        const snapBarR = document.getElementById('snapshotInfoBar');
-        if (snapBarR) snapBarR.innerHTML = '';
+        if (snapBar) snapBar.innerHTML = savedSnapshotHtml;
         document.body.style.overflow = savedBodyOverflow;
         timelineEl.style.cssText = savedTimelineCss;
         headerEl.style.cssText = savedHCss;
@@ -43579,15 +43727,16 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         timelineEl.scrollLeft = savedScrollLeft;
         if (btn) {
           btn.className = origClass;
-          btn.disabled = false;
+          btn.disabled = savedButtonDisabled;
         }
-        if (idleIcon) idleIcon.classList.remove('hidden');
-        if (loadingIcon) loadingIcon.classList.add('hidden');
-        const headerNode = document.querySelector('header');
+        if (idleIcon) idleIcon.classList.toggle('hidden', savedIdleHidden);
+        if (loadingIcon) loadingIcon.classList.toggle('hidden', savedLoadingHidden);
         if (headerNode) {
-          headerNode.removeAttribute('data-snapshot-date');
-          headerNode.style.position = '';
+          if (savedSnapshotDate === null) headerNode.removeAttribute('data-snapshot-date');
+          else headerNode.setAttribute('data-snapshot-date', savedSnapshotDate);
+          headerNode.style.cssText = savedHeaderCss;
         }
+        syncTaskRowHeights();
       }
     }
 
@@ -44439,7 +44588,7 @@ function syncBodyScrollLock() {
      </div>
      <button type="button" onclick="closeSettingsModal()" aria-label="Закрыть" title="Закрыть" class="text-slate-500 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors shrink-0 cursor-pointer"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-995cbdc86b32"></use></svg></button>
     </div>
-    <div class="flex flex-col sm:flex-row flex-1 min-h-0"><div class="settings-sidebar"><nav role="tablist" aria-label="Разделы настроек" class="sm:w-44 shrink-0 border-b sm:border-b-0 sm:border-r border-slate-100 p-2 sm:py-3 sm:px-2 flex sm:flex-col gap-1 overflow-x-auto bg-slate-50/50 sm:rounded-bl-2xl"><button type="button" role="tab" data-settings-tab="proj" onclick="settingsTab('proj')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-7a6aec28737c"></use></svg>Проект</button><button type="button" role="tab" data-settings-tab="view" onclick="settingsTab('view')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>Вид</button><button type="button" role="tab" data-settings-tab="modules" onclick="settingsTab('modules')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-39883106c61e"></use></svg>Модули</button><button type="button" role="tab" data-settings-tab="manage" onclick="settingsTab('manage')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"></path></svg>Справочники</button></nav><div class="settings-update-entry"><button id="settingsCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('settings')"><span id="settingsUpdateVersion"></span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="settingsUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div></div></div><div id="settingsContent" class="flex-1 overflow-y-auto p-5 space-y-2.5"><div id="settingsRoNote" class="hidden bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-xl px-3 py-2 mb-2">Файл открыт для просмотра. Модули, имя автора и порог перегруза изменить нельзя. Тему оформления можно менять: это локальная настройка вида.</div><div data-settings-panel="proj" class="space-y-2"><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Про проект: название, владелец, валюта и связь с Jira. Настройки сохраняются прямо в файле.</p><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-100 to-sky-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-7a6aec28737c"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Название проекта</div><div class="text-[10px] text-slate-500 leading-snug">Заголовок в шапке роадмапа</div></div></div><input type="text" id="settingsProjectTitle" maxlength="200" onchange="settingsSetProjectTitle(this.value)" placeholder="Дорожная карта" aria-label="Название проекта" class="h-9 px-3 w-56 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors shrink-0"></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-997cb0765593"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Владелец продукта</div><div class="text-[10px] text-slate-500 leading-snug">Имя РО в шапке роадмапа</div></div></div><input type="text" id="settingsPoName" maxlength="60" onchange="settingsSetPoName(this.value)" placeholder="Фамилия Имя" aria-label="Владелец продукта (РО)" class="h-9 px-3 w-44 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors shrink-0"></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-0985683e4c91"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Имя автора</div><div class="text-[10px] text-slate-500 leading-snug">Записывается в историю правок задач, хранится только в этом файле</div></div></div><input type="text" id="settingsAuthorName" maxlength="60" onchange="saveAuthorNameInput(this.value)" placeholder="Фамилия Имя" aria-label="Имя автора для истории правок" class="h-9 px-3 w-44 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors shrink-0"></div><div data-feat="jira" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-100 to-blue-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-39b4504b7990"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Адрес Jira</div><div class="text-[10px] text-slate-500 leading-snug">Чтобы ключи задач стали кликабельными ссылками</div></div></div><input type="url" id="settingsJiraBase" onchange="settingsSetJiraBase(this.value)" placeholder="https://jira.company.ru" aria-label="Базовый адрес Jira" class="h-9 px-3 w-56 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors shrink-0"></div><div data-feat="money" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-12e7c062b3be"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Валюта проекта</div><div class="text-[10px] text-slate-500 leading-snug">Символ для сумм в «Деньгах» и отчетах</div></div></div><div class="flex items-center gap-2 shrink-0"><select id="settingsCurrency" onchange="settingsCurrencyPick(this.value)" aria-label="Валюта проекта" class="h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 cursor-pointer"><option value="руб">руб</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="__custom">свой</option></select><input type="text" id="settingsCurrencyCustom" maxlength="6" onchange="settingsSetCurrency('__custom', this.value)" placeholder="символ" aria-label="Свой символ валюты" class="hidden h-9 px-3 w-24 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"></div></div></div><div data-settings-panel="view" class="space-y-2 hidden"><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Как выглядит приложение и что показывать в списке задач.</p><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-1 px-1">Оформление</div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm"><div class="flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-100 to-indigo-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-9ffd3d18f977"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Оформление</div><div id="themeSubtitle" class="text-[10px] text-slate-600 leading-snug">Светлая: минимум оформления, единый акцент, все функции</div></div></div><div role="group" aria-label="Оформление интерфейса" aria-describedby="themeSubtitle" title="Светлая или Темная тема" class="inline-flex items-center gap-0.5 bg-slate-100 rounded-lg p-0.5 shrink-0"><button type="button" id="themeStudioBtn" onclick="setUiTheme('studio')" aria-pressed="false" class="min-h-[44px] px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-colors cursor-pointer">Светлая</button><button type="button" id="themeDarkBtn" onclick="setUiTheme('dark')" aria-pressed="false" class="min-h-[44px] px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-colors cursor-pointer">Темная</button></div></div></div><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-4 px-1">Список и таймлайн</div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-100 to-fuchsia-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-b77a793a33c3"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Критический путь</div><div class="text-[10px] text-slate-500 leading-snug">Подсветить самую длинную цепочку зависимостей, влияющую на финальный срок. Работает и без показа связей.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="critPathTgl" onchange="setShowCriticalPath(this.checked)" aria-label="Критический путь"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Цвет полосок по статусу</div><div class="text-[10px] text-slate-500 leading-snug">Полоски на таймлайне красятся цветом статуса задачи, а не цветом секции.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="barColorTgl" onchange="setBarColorByStatus(this.checked); renderRoadmap(true)" aria-label="Цвет полосок по статусу"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h11M4 12h16M4 18h8"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Спринты и раскладка</div><div class="text-[10px] text-slate-500 leading-snug">Имена и даты спринтов, длина, доля занятости — для полосы спринтов на таймлайне и прогноза «Прогноз». Открыть можно и кликом по плашке спринта.</div></div></div><button type="button" onclick="closeSettingsModal(); openSprintCfg();" class="shrink-0 inline-flex items-center h-9 px-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg cursor-pointer">Открыть</button></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-96ffa05e6069"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Компактные строки задач</div><div class="text-[10px] text-slate-500 leading-snug">Прячет второстепенные чипы в строке (приоритет, «застряла», свои поля, Story Points, тест, ссылки); остаются имя, статус, сроки, исполнитель.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="compactRowsTgl" onchange="setCompactRows(this.checked)" aria-label="Компактные строки задач"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-100 to-violet-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h4l2 7 4-14 2 7h4"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Баллы приоритизации в строках</div><div class="text-[10px] text-slate-500 leading-snug">Чип RICE/ICE на задачах с заполненной оценкой плюс сортировка «По приоритету». По умолчанию скрыто.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="prioScoresTgl" onchange="setShowPriorityScores(this.checked)" aria-label="Показывать баллы приоритизации в строках задач"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-68e5f5e19a51"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Подсветка зависших задач</div><div class="text-[10px] text-slate-500 leading-snug">Тихий янтарный маркер на задачах в работе, которые идут заметно дольше своей оценки.</div></div></div><span class="inline-flex items-center gap-1 shrink-0 mr-2"><input type="number" id="ageFactorInput" min="1.1" max="5" step="0.1" onchange="setAgeFactorThreshold(this.value)" aria-label="Во сколько раз дольше оценки считать задачу буксующей" title="Во сколько раз дольше оценки задача считается буксующей" class="w-16 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">x</span></span><span class="feat-switch shrink-0"><input type="checkbox" id="ageFlagsTgl" onchange="setShowAgeFlags(this.checked)" aria-label="Подсвечивать зависшие задачи в работе"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Тихий режим</div><div class="text-[10px] text-slate-500 leading-snug">Прячет всплывающие подсказки и уведомления — удобно для чистых скриншотов. Сообщения об ошибках сохранения остаются.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="quietModeTgl" onchange="setQuietMode(this.checked)" aria-label="Тихий режим: скрыть подсказки и уведомления"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div></div><div data-settings-panel="modules" class="hidden"><div id="fieldVisibilitySettings" class="mb-4"></div><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Включите только нужные разделы. Выключенное прячется из интерфейса, данные сохраняются и вернутся при включении.</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Деньги</span><span class="block text-[10px] text-slate-500 leading-snug">Ставки, бюджеты, фикс-стоимость и табель</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_money" onchange="setFeatureFlag('money', this.checked)" aria-label="Модуль Деньги"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Оценки</span><span class="block text-[10px] text-slate-500 leading-snug">Story Points, часы и оценка в днях</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_estimates" onchange="setFeatureFlag('estimates', this.checked)" aria-label="Модуль Оценки"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Команда</span><span class="block text-[10px] text-slate-500 leading-snug">Исполнители, загрузка команды и перегруз</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_resources" onchange="setFeatureFlag('resources', this.checked)" aria-label="Модуль Команда"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Метрики и RICE</span><span class="block text-[10px] text-slate-500 leading-snug">Продуктовые метрики и приоритизация</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_metrics" onchange="setFeatureFlag('metrics', this.checked)" aria-label="Модуль Метрики и RICE"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Свои поля</span><span class="block text-[10px] text-slate-500 leading-snug">Дополнительные поля задач, чипы и фильтры</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_custom" onchange="setFeatureFlag('custom', this.checked)" aria-label="Модуль Свои поля"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Jira-интеграция</span><span class="block text-[10px] text-slate-500 leading-snug">Импорт и выгрузка Jira, бейджи ключей</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_jira" onchange="setFeatureFlag('jira', this.checked)" aria-label="Модуль Jira-интеграция"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Зависимости</span><span class="block text-[10px] text-slate-500 leading-snug">Связи между задачами, линии и предшественники</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_deps" onchange="setFeatureFlag('deps', this.checked)" aria-label="Модуль Зависимости"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Цели и инициативы</span><span class="block text-[10px] text-slate-500 leading-snug">Стратегические цели, инициативы и метрики</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_goals" onchange="setFeatureFlag('goals', this.checked)" aria-label="Модуль Цели и инициативы"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Риски</span><span class="block text-[10px] text-slate-500 leading-snug">Журнал рисков, проблем, допущений и зависимостей (RAID). Для входа в журнал включите также «Цели и инициативы».</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_raid" onchange="setFeatureFlag('raid', this.checked)" aria-label="Модуль Риски"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label></div></div><div data-settings-panel="manage" class="hidden"><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Окна управления проектом и пороги, по которым считаются сигналы перегруза и напоминания.</p><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-1 px-1">Окна управления</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><button type="button" onclick="closeSettingsModal(); openStatusModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-a1151b919060"></use></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Статусы задач</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Свои статусы, цвета и порядок</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-f8da28e14441"></use></svg></button><button type="button" onclick="closeSettingsModal(); openTaskKindsModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-822f0d79ec96"></use></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Типы задач</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Свои типы помимо встроенных</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-f8da28e14441"></use></svg></button><button type="button" data-feat="custom" onclick="closeSettingsModal(); openCustomFieldsModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h7a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Свои поля</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Доп. поля задач, чипы и фильтры</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-f8da28e14441"></use></svg></button><button type="button" data-feat="resources" onclick="closeSettingsModal(); openResourceModal('roles');" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-2-7.75M15 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Роли и ресурсы</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Ставки, доступность, отпуска</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-f8da28e14441"></use></svg></button><button type="button" onclick="closeSettingsModal(); openHeaderCutoffPicker();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-64f58069bc9e"></use></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Метки в шапке</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Отсечки и дедлайны рядом с «Сегодня»</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-f8da28e14441"></use></svg></button><button type="button" onclick="closeSettingsModal(); openArchiveModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-853f0c288477"></use></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Архив задач</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Завершенные вне основного списка</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-f8da28e14441"></use></svg></button></div><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-4 px-1">Пороги и сигналы</div><div class="space-y-2"><div data-feat="resources" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Порог перегруза</div><div class="text-[10px] text-slate-500">Доля от емкости, выше которой период в загрузке команды считается перегрузом</div></div><span class="inline-flex items-center gap-1.5 shrink-0"><input type="number" id="settingsOverloadPct" min="100" max="300" step="10" onchange="setOverloadThreshold(this.value)" aria-label="Порог перегруза в процентах" class="w-20 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">%</span></span></div><div data-feat="resources" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Перегруз по дням</div><div class="text-[10px] text-slate-500">Сколько одновременных задач у человека на шкале «по дням» считать перегрузом (красная отметка)</div></div><span class="inline-flex items-center gap-1.5 shrink-0"><input type="number" id="settingsLevelingTasks" min="2" max="20" step="1" onchange="setLevelingOverloadTasks(this.value)" aria-label="Порог перегруза по дням, задач" class="w-20 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">задач</span></span></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Напоминание о событиях</div><div class="text-[10px] text-slate-500">За сколько дней предупреждать о приближающихся вехах и отсечках в дашборде состояния</div></div><span class="inline-flex items-center gap-1.5 shrink-0"><input type="number" id="settingsMilestoneDays" min="1" max="90" step="1" onchange="setMilestoneWarningThreshold(this.value)" aria-label="Горизонт напоминания в днях" class="w-20 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">дн</span></span></div></div></div></div></div>
+    <div class="flex flex-col sm:flex-row flex-1 min-h-0"><div class="settings-sidebar"><nav role="tablist" aria-label="Разделы настроек" class="sm:w-44 shrink-0 border-b sm:border-b-0 sm:border-r border-slate-100 p-2 sm:py-3 sm:px-2 flex sm:flex-col gap-1 overflow-x-auto bg-slate-50/50 sm:rounded-bl-2xl"><button type="button" role="tab" data-settings-tab="proj" onclick="settingsTab('proj')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-7a6aec28737c"></use></svg>Проект</button><button type="button" role="tab" data-settings-tab="view" onclick="settingsTab('view')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>Вид</button><button type="button" role="tab" data-settings-tab="modules" onclick="settingsTab('modules')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-39883106c61e"></use></svg>Модули</button><button type="button" role="tab" data-settings-tab="manage" onclick="settingsTab('manage')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-white transition-colors cursor-pointer text-left whitespace-nowrap shrink-0"><svg aria-hidden="true" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"></path></svg>Справочники</button></nav><div class="settings-update-entry"><button id="settingsCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('settings')"><span id="settingsUpdateVersion"></span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="settingsUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div></div></div><div id="settingsContent" class="flex-1 overflow-y-auto p-5 space-y-2.5"><div id="settingsRoNote" class="hidden bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-xl px-3 py-2 mb-2">Файл открыт для просмотра. Модули, имя автора и порог перегруза изменить нельзя. Тему оформления можно менять: это локальная настройка вида.</div><div data-settings-panel="proj" class="space-y-2"><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Про проект: название, владелец, валюта и связь с Jira. Настройки сохраняются прямо в файле.</p><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-100 to-sky-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-7a6aec28737c"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Название проекта</div><div class="text-[10px] text-slate-500 leading-snug">Заголовок в шапке роадмапа</div></div></div><input type="text" id="settingsProjectTitle" maxlength="200" onchange="settingsSetProjectTitle(this.value)" placeholder="Дорожная карта" aria-label="Название проекта" class="h-9 px-3 w-56 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors shrink-0"></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-997cb0765593"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Владелец продукта</div><div class="text-[10px] text-slate-500 leading-snug">Имя РО в шапке роадмапа</div></div></div><input type="text" id="settingsPoName" maxlength="60" onchange="settingsSetPoName(this.value)" placeholder="Фамилия Имя" aria-label="Владелец продукта (РО)" class="h-9 px-3 w-44 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors shrink-0"></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-0985683e4c91"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Имя автора</div><div class="text-[10px] text-slate-500 leading-snug">Записывается в историю правок задач, хранится только в этом файле</div></div></div><input type="text" id="settingsAuthorName" maxlength="60" onchange="saveAuthorNameInput(this.value)" placeholder="Фамилия Имя" aria-label="Имя автора для истории правок" class="h-9 px-3 w-44 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors shrink-0"></div><div data-feat="jira" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-100 to-blue-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-39b4504b7990"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Адрес Jira</div><div class="text-[10px] text-slate-500 leading-snug">Чтобы ключи задач стали кликабельными ссылками</div></div></div><input type="url" id="settingsJiraBase" onchange="settingsSetJiraBase(this.value)" placeholder="https://jira.company.ru" aria-label="Базовый адрес Jira" class="h-9 px-3 w-56 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors shrink-0"></div><div data-feat="money" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-12e7c062b3be"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Валюта проекта</div><div class="text-[10px] text-slate-500 leading-snug">Символ для сумм в «Деньгах» и отчетах</div></div></div><div class="flex items-center gap-2 shrink-0"><select id="settingsCurrency" onchange="settingsCurrencyPick(this.value)" aria-label="Валюта проекта" class="h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 cursor-pointer"><option value="руб">руб</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="__custom">свой</option></select><input type="text" id="settingsCurrencyCustom" maxlength="6" onchange="settingsSetCurrency('__custom', this.value)" placeholder="символ" aria-label="Свой символ валюты" class="hidden h-9 px-3 w-24 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"></div></div></div><div data-settings-panel="view" class="space-y-2 hidden"><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Как выглядит приложение и что показывать в списке задач.</p><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-1 px-1">Оформление</div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm"><div class="flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-100 to-indigo-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-9ffd3d18f977"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Оформление</div><div id="themeSubtitle" class="text-[10px] text-slate-600 leading-snug">Светлая: минимум оформления, единый акцент, все функции</div></div></div><div role="group" aria-label="Оформление интерфейса" aria-describedby="themeSubtitle" title="Светлая или Темная тема" class="inline-flex items-center gap-0.5 bg-slate-100 rounded-lg p-0.5 shrink-0"><button type="button" id="themeStudioBtn" onclick="setUiTheme('studio')" aria-pressed="false" class="min-h-[44px] px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-colors cursor-pointer">Светлая</button><button type="button" id="themeDarkBtn" onclick="setUiTheme('dark')" aria-pressed="false" class="min-h-[44px] px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-colors cursor-pointer">Темная</button></div></div></div><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-4 px-1">Список и таймлайн</div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-100 to-fuchsia-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-b77a793a33c3"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Критический путь</div><div class="text-[10px] text-slate-500 leading-snug">Подсветить самую длинную цепочку зависимостей, влияющую на финальный срок. Работает и без показа связей.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="critPathTgl" onchange="setShowCriticalPath(this.checked)" aria-label="Критический путь"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Цвет полосок по статусу</div><div class="text-[10px] text-slate-500 leading-snug">Полоски на таймлайне красятся цветом статуса задачи, а не цветом секции.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="barColorTgl" onchange="setBarColorByStatus(this.checked); renderRoadmap(true)" aria-label="Цвет полосок по статусу"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h11M4 12h16M4 18h8"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Спринты и раскладка</div><div class="text-[10px] text-slate-500 leading-snug">Имена и даты спринтов, длина, доля занятости — для полосы спринтов на таймлайне и прогноза «Прогноз». Открыть можно и кликом по плашке спринта.</div></div></div><button type="button" onclick="closeSettingsModal(); openSprintCfg();" class="shrink-0 inline-flex items-center h-9 px-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg cursor-pointer">Открыть</button></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-96ffa05e6069"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Компактные строки задач</div><div class="text-[10px] text-slate-500 leading-snug">Прячет второстепенные чипы в строке (приоритет, «застряла», свои поля, Story Points, тест, ссылки); остаются имя, статус, сроки, исполнитель.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="compactRowsTgl" onchange="setCompactRows(this.checked)" aria-label="Компактные строки задач"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-100 to-violet-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h4l2 7 4-14 2 7h4"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Баллы приоритизации в строках</div><div class="text-[10px] text-slate-500 leading-snug">Чип RICE/ICE на задачах с заполненной оценкой плюс сортировка «По приоритету». По умолчанию скрыто.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="prioScoresTgl" onchange="setShowPriorityScores(this.checked)" aria-label="Показывать баллы приоритизации в строках задач"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-68e5f5e19a51"></use></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Подсветка зависших задач</div><div class="text-[10px] text-slate-500 leading-snug">Тихий янтарный маркер на задачах в работе, которые идут заметно дольше своей оценки.</div></div></div><span class="inline-flex items-center gap-1 shrink-0 mr-2"><input type="number" id="ageFactorInput" min="1.1" max="5" step="0.1" onchange="setAgeFactorThreshold(this.value, this)" aria-label="Во сколько раз дольше оценки считать задачу буксующей" title="Во сколько раз дольше оценки задача считается буксующей" class="w-16 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">x</span></span><span class="feat-switch shrink-0"><input type="checkbox" id="ageFlagsTgl" onchange="setShowAgeFlags(this.checked)" aria-label="Подсвечивать зависшие задачи в работе"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div><div data-adv class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2.5 min-w-0"><span class="w-9 h-9 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 border border-white/70 flex items-center justify-center shrink-0 shadow-sm"><svg aria-hidden="true" class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg></span><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Тихий режим</div><div class="text-[10px] text-slate-500 leading-snug">Прячет всплывающие подсказки и уведомления — удобно для чистых скриншотов. Сообщения об ошибках сохранения остаются.</div></div></div><span class="feat-switch shrink-0"><input type="checkbox" id="quietModeTgl" onchange="setQuietMode(this.checked)" aria-label="Тихий режим: скрыть подсказки и уведомления"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></div></div><div data-settings-panel="modules" class="hidden"><div id="fieldVisibilitySettings" class="mb-4"></div><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Включите только нужные разделы. Выключенное прячется из интерфейса, данные сохраняются и вернутся при включении.</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Деньги</span><span class="block text-[10px] text-slate-500 leading-snug">Ставки, бюджеты, фикс-стоимость и табель</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_money" onchange="setFeatureFlag('money', this.checked)" aria-label="Модуль Деньги"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Оценки</span><span class="block text-[10px] text-slate-500 leading-snug">Story Points, часы и оценка в днях</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_estimates" onchange="setFeatureFlag('estimates', this.checked)" aria-label="Модуль Оценки"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Команда</span><span class="block text-[10px] text-slate-500 leading-snug">Исполнители, загрузка команды и перегруз</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_resources" onchange="setFeatureFlag('resources', this.checked)" aria-label="Модуль Команда"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Метрики и RICE</span><span class="block text-[10px] text-slate-500 leading-snug">Продуктовые метрики и приоритизация</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_metrics" onchange="setFeatureFlag('metrics', this.checked)" aria-label="Модуль Метрики и RICE"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Свои поля</span><span class="block text-[10px] text-slate-500 leading-snug">Дополнительные поля задач, чипы и фильтры</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_custom" onchange="setFeatureFlag('custom', this.checked)" aria-label="Модуль Свои поля"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Jira-интеграция</span><span class="block text-[10px] text-slate-500 leading-snug">Импорт и выгрузка Jira, бейджи ключей</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_jira" onchange="setFeatureFlag('jira', this.checked)" aria-label="Модуль Jira-интеграция"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Зависимости</span><span class="block text-[10px] text-slate-500 leading-snug">Связи между задачами, линии и предшественники</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_deps" onchange="setFeatureFlag('deps', this.checked)" aria-label="Модуль Зависимости"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Цели и инициативы</span><span class="block text-[10px] text-slate-500 leading-snug">Стратегические цели, инициативы и метрики</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_goals" onchange="setFeatureFlag('goals', this.checked)" aria-label="Модуль Цели и инициативы"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label><label data-adv class="flex items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer hover:border-indigo-200 transition-colors"><span class="min-w-0"><span class="block text-xs font-semibold text-slate-700">Риски</span><span class="block text-[10px] text-slate-500 leading-snug">Журнал рисков, проблем, допущений и зависимостей (RAID). Для входа в журнал включите также «Цели и инициативы».</span></span><span class="feat-switch"><input type="checkbox" id="featTgl_raid" onchange="setFeatureFlag('raid', this.checked)" aria-label="Модуль Риски"><span class="fs-track" aria-hidden="true"></span><span class="fs-knob" aria-hidden="true"></span></span></label></div></div><div data-settings-panel="manage" class="hidden"><p class="text-[11px] text-slate-500 mb-2.5 px-1 leading-snug">Окна управления проектом и пороги, по которым считаются сигналы перегруза и напоминания.</p><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-1 px-1">Окна управления</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><button type="button" onclick="closeSettingsModal(); openStatusModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-a1151b919060"></use></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Статусы задач</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Свои статусы, цвета и порядок</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-f8da28e14441"></use></svg></button><button type="button" onclick="closeSettingsModal(); openTaskKindsModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-822f0d79ec96"></use></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Типы задач</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Свои типы помимо встроенных</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-f8da28e14441"></use></svg></button><button type="button" data-feat="custom" onclick="closeSettingsModal(); openCustomFieldsModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h7a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Свои поля</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Доп. поля задач, чипы и фильтры</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-f8da28e14441"></use></svg></button><button type="button" data-feat="resources" onclick="closeSettingsModal(); openResourceModal('roles');" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-2-7.75M15 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Роли и ресурсы</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Ставки, доступность, отпуска</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-f8da28e14441"></use></svg></button><button type="button" onclick="closeSettingsModal(); openHeaderCutoffPicker();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-64f58069bc9e"></use></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Метки в шапке</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Отсечки и дедлайны рядом с «Сегодня»</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-f8da28e14441"></use></svg></button><button type="button" onclick="closeSettingsModal(); openArchiveModal();" class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2.5 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer text-left"><span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-853f0c288477"></use></svg></span><span class="min-w-0 grow"><span class="block text-xs font-semibold text-slate-700">Архив задач</span><span class="block text-[10px] text-slate-500 leading-snug truncate">Завершенные вне основного списка</span></span><svg aria-hidden="true" class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-f8da28e14441"></use></svg></button></div><div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 mt-4 px-1">Пороги и сигналы</div><div class="space-y-2"><div data-feat="resources" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Порог перегруза</div><div class="text-[10px] text-slate-500">Доля от емкости, выше которой период в загрузке команды считается перегрузом</div></div><span class="inline-flex items-center gap-1.5 shrink-0"><input type="number" id="settingsOverloadPct" min="100" max="300" step="10" onchange="setOverloadThreshold(this.value, this)" aria-label="Порог перегруза в процентах" class="w-20 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">%</span></span></div><div data-feat="resources" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Перегруз по дням</div><div class="text-[10px] text-slate-500">Сколько одновременных задач у человека на шкале «по дням» считать перегрузом (красная отметка)</div></div><span class="inline-flex items-center gap-1.5 shrink-0"><input type="number" id="settingsLevelingTasks" min="2" max="20" step="1" onchange="setLevelingOverloadTasks(this.value, this)" aria-label="Порог перегруза по дням, задач" class="w-20 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">задач</span></span></div><div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex items-center justify-between gap-3 flex-wrap"><div class="min-w-0"><div class="text-sm font-medium text-slate-800">Напоминание о событиях</div><div class="text-[10px] text-slate-500">За сколько дней предупреждать о приближающихся вехах и отсечках в дашборде состояния</div></div><span class="inline-flex items-center gap-1.5 shrink-0"><input type="number" id="settingsMilestoneDays" min="1" max="90" step="1" onchange="setMilestoneWarningThreshold(this.value, this)" aria-label="Горизонт напоминания в днях" class="w-20 h-9 px-2 text-center tabular-nums bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500"><span class="text-xs text-slate-500">дн</span></span></div></div></div></div></div>
    </div>
   </div>
 
@@ -44789,7 +44938,7 @@ function syncBodyScrollLock() {
   <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
    <div class="candidate-header-update info-header-main">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
-    <button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><span id="appVersionBadge" title="04.11.2026">v17.31</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
+    <button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><span id="appVersionBadge" title="15.11.2026">v17.32</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
    </div>
    <div class="flex items-center gap-2 shrink-0">
     <button type="button" id="infoCloseBtn" onclick="closeInfoModal()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer" aria-label="Закрыть" title="Закрыть">
@@ -44813,7 +44962,43 @@ function syncBodyScrollLock() {
    </section>
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.31</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.32</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="sprint-undo-redo" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-8fdf6e7df469"></use></svg><h5 class="min-w-0 rn-title">Спринт можно вернуть</h5><span class="info-release-badge">ДОСКА</span></div>
+      <p class="text-xs text-slate-600">Добавление, удаление и пересоздание спринтов работают с отменой и повтором.</p>
+     </article>
+     <article data-release-card="mobile-menu-layers" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-b12c9b1b0fbd"></use></svg><h5 class="min-w-0 rn-title">Меню не прячется за кнопками</h5><span class="info-release-badge">ТЕЛЕФОН</span></div>
+      <p class="text-xs text-slate-600">Меню переноса и уведомления выше панелей. По кнопкам проще попасть пальцем.</p>
+     </article>
+     <article data-release-card="readable-long-labels" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-c2b76789950a"></use></svg><h5 class="min-w-0 rn-title">Длинные названия читаются</h5><span class="info-release-badge">ПЛАН</span></div>
+      <p class="text-xs text-slate-600">Названия задач, релизов и проекта переносятся; метаданные раскрываются с клавиатуры.</p>
+     </article>
+     <article data-release-card="focus-and-contrast" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-503857921646"></use></svg><h5 class="min-w-0 rn-title">Видно, что выбрано</h5><span class="info-release-badge">ИНТЕРФЕЙС</span></div>
+      <p class="text-xs text-slate-600">Контрастнее фильтры и риски. Escape закрывает меню и возвращает фокус.</p>
+     </article>
+     <article data-release-card="png-aligned-rows" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-65c0edbfe7ae"></use></svg><h5 class="min-w-0 rn-title">PNG без съехавших строк</h5><span class="info-release-badge">ЭКСПОРТ</span></div>
+      <p class="text-xs text-slate-600">Полосы совпадают с задачами, названия переносятся, а после снимка возвращается прежний вид.</p>
+     </article>
+     <article data-release-card="honest-field-hints" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-b4d248aac25e"></use></svg><h5 class="min-w-0 rn-title">Подсказки по делу</h5><span class="info-release-badge">ПОМОЩЬ</span></div>
+      <p class="text-xs text-slate-600">Пороги показывают принятое значение, ошибки CSV заметнее, справка ведёт к нужным действиям.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.31</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="chain-safe-undo" class="info-release-card rn-card rn-solid">
       <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-8fdf6e7df469"></use></svg><h5 class="min-w-0 rn-title">Разбор цепочки можно отменить</h5><span class="info-release-badge">СВЯЗИ</span></div>
@@ -44842,12 +45027,6 @@ function syncBodyScrollLock() {
     </div>
    </div>
 
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.30</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -48693,7 +48872,7 @@ function syncBodyScrollLock() {
        <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-df624e38cbc3"></use></svg>
        <h5 class="rn-title">Задачи и сроки</h5>
       </div>
-      <p class="text-xs text-slate-500">Большая синяя <b>+</b> в шапке — быстрое создание. Перетаскивание карточки на графике меняет сроки. Двойной клик — полная карточка с Jira, Confluence, Figma, DOR, DOD, метриками и заметками.</p>
+      <p class="text-xs text-slate-500">Большая синяя <b>+</b> в шапке — быстрое создание. Перетаскивание карточки на графике меняет сроки. Двойной клик — полная карточка с Jira, Confluence, Figma, метриками и заметками.</p>
      </div>
 
      <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 shadow-sm">
@@ -48701,7 +48880,7 @@ function syncBodyScrollLock() {
        <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
        <h5 class="rn-title">Ресурсы и фильтры</h5>
       </div>
-      <p class="text-xs text-slate-500">Мультивыбор по ресурсу, статусу и проекту (можно отметить несколько). Табы статусов сверху — тоже фильтр. Шестеренка рядом — управление списками ресурсов и статусов.</p>
+      <p class="text-xs text-slate-500">Кнопка «Фильтры» — выбор по ресурсу, статусу и проекту. Можно отметить несколько значений. «Команда» — в меню инструментов, статусы — «Настройки → Справочники».</p>
      </div>
 
      <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 shadow-sm">
@@ -48717,7 +48896,7 @@ function syncBodyScrollLock() {
        <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16v1a3 3 0 003 3h12a3 3 0 003-3v-1M8 12l4 4 4-4m-4 4V3"></path></svg>
        <h5 class="rn-title">Импорт Jira CSV</h5>
       </div>
-      <p class="text-xs text-slate-500">Меню <b>«Данные»</b> → «Загрузить Jira CSV» — массовая загрузка задач из выгрузки Jira. Секции группируются по эпикам автоматически, статусы и ресурсы создаются на лету.</p>
+      <p class="text-xs text-slate-500">Меню <b>«Данные»</b> → «Импорт из Jira» → «CSV уже скачан» — загрузка задач из выгрузки Jira. Проверьте секции, статусы и ресурсы перед применением.</p>
      </div>
 
      <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 shadow-sm">
@@ -48846,7 +49025,7 @@ function syncBodyScrollLock() {
     <div class="bg-white rounded-2xl w-full max-w-sm shadow-2xl border border-slate-200 overflow-hidden max-h-[80vh]">
       <div class="px-5 pt-4 pb-3 border-b border-slate-100">
         <h3 id="inputModalTitle" class="text-lg font-semibold text-slate-800">Ввод</h3>
-        <p id="inputModalDesc" class="hidden text-xs text-slate-500 mt-1 whitespace-pre-line"></p>
+        <p id="inputModalDesc" class="hidden text-xs text-slate-500 mt-1 whitespace-pre-line break-words"></p>
       </div>
       <div class="px-5 py-4">
         <input id="inputModalField" type="text" aria-labelledby="inputModalTitle" autocomplete="off" oninput="updateInputModalOk()" onkeydown="inputModalKey(event)" class="w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors">
@@ -49073,7 +49252,7 @@ function syncBodyScrollLock() {
       <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <div class="flex items-center gap-3 min-w-0">
           <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0"><svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-32bbc3efbd19"></use></svg></div>
-          <div class="min-w-0"><h3 class="text-lg font-semibold text-slate-800 leading-tight">Дублировать со сдвигом <button type="button" tabindex="-1" class="ml-1 align-middle inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-help shrink-0" aria-label="Об этом окне" title="Создает копию секции или релиза со всеми задачами. Даты копий сдвигаются на заданное число дней или так, чтобы самая ранняя задача стартовала в выбранную дату; связи внутри набора переносятся на копии, привязка к Jira у копий снимается."><svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-37a3d681c065"></use></svg></button></h3><p id="dupWhatLabel" class="text-[10px] text-slate-500 leading-tight"></p></div>
+          <div class="min-w-0"><h3 class="text-lg font-semibold text-slate-800 leading-tight">Дублировать со сдвигом <button type="button" tabindex="-1" class="ml-1 align-middle inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-help shrink-0" aria-label="Об этом окне" title="Создает копию секции или релиза со всеми задачами. Даты копий сдвигаются на заданное число дней или так, чтобы самая ранняя задача стартовала в выбранную дату; связи внутри набора переносятся на копии, привязка к Jira у копий снимается."><svg aria-hidden="true" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-37a3d681c065"></use></svg></button></h3><p id="dupWhatLabel" class="text-[10px] text-slate-500 leading-tight break-words"></p></div>
         </div>
         <button type="button" onclick="closeDuplicateModal()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer shrink-0" aria-label="Закрыть" title="Закрыть"><svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-995cbdc86b32"></use></svg></button>
       </div>
@@ -49177,7 +49356,7 @@ function syncBodyScrollLock() {
         <div class="startup-heading">
           <div class="flex items-center gap-2 flex-wrap">
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
-            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">v17.31</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button>
+            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">v17.32</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button>
           </div>
           <div id="startupUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте свой план или начните с примера.</p>
@@ -49293,7 +49472,10 @@ function _decorateAdaptivePopover(popup) {
   popup.setAttribute('data-rm-surface', 'adaptive-popover');
   popup.setAttribute('data-rm-component', 'adaptive-popover-v1');
   popup.removeAttribute('aria-modal');
-  if (!popup.getAttribute('role') || popup.getAttribute('role') === 'dialog') {
+  if (popup.id === 'releaseFilterMenu' || popup.id === 'sortMenu') {
+    popup.setAttribute('role', 'dialog');
+    popup.setAttribute('aria-label', popup.id === 'releaseFilterMenu' ? 'Метки и релизы' : 'Сортировка');
+  } else if (!popup.getAttribute('role') || popup.getAttribute('role') === 'dialog') {
     popup.setAttribute('role', popup.hasAttribute('data-filter-panel') ? 'dialog' : 'menu');
   }
   if (!popup.getAttribute('aria-label')) popup.setAttribute('aria-label', _drawerPopupTitle(popup));
