@@ -9150,7 +9150,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.32</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="no-image-export cursor-pointer transition-colors" title="Версия приложения, нажмите, чтобы посмотреть, что нового">v17.33</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9687,6 +9687,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
           <div>
             <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Статус</label>
             <select id="taskStatus" class="w-full h-9 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors cursor-pointer"></select>
+            <p id="taskActualDates" class="mt-1 text-xs text-slate-600" hidden></p>
           </div>
           <div data-feat="resources">
             <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Исполнитель</label>
@@ -10045,7 +10046,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v17.32">
+<script data-roadmap-modules="v17.33">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -15413,15 +15414,16 @@ if (typeof globalThis !== 'undefined') {
   namespace.createForecastDecisionModel = createForecastDecisionModel;
 }
 
-/* module:dependency-engine sha256:d04327e20c3c54256a98f2f8f7a026405be6081c2aad3903a2a2ceee2cc151f6 */
+/* module:dependency-engine sha256:f7b0b7a5489ce9c19c07e6c62cead0ea2638f36439dedc2d9e3def968a30ecb7 */
 // Dependency calculations have no DOM, storage or clock access.
 // The caller owns the task array; preview callers must pass a copy.
 function runDependencyCascade(roadmapData, parentTaskId, options) {
-  const { getPredecessorIds, _depInfo, dateToDays, daysToDate, getStatusGroup, today } = options;
+  const { getPredecessorIds, _depInfo, dateToDays, daysToDate, getStatusGroup, today,
+    isFinalStatus = status => getStatusGroup(status) === 'completed' } = options;
   const byId = new Map(), predecessors = new Map(), successors = new Map();
   roadmapData.forEach(t => { if (t) byId.set(t.id, t); });
   const parent = byId.get(parentTaskId);
-  if (!parent) return { shifted: [], cyclic: false };
+  if (!parent) return { shifted: [], finalConflicts: [], cyclic: false };
   roadmapData.forEach(t => {
     if (!t) return;
     const preds = [...new Set(getPredecessorIds(t))];
@@ -15439,7 +15441,7 @@ function runDependencyCascade(roadmapData, parentTaskId, options) {
     const n = (predecessors.get(id) || []).filter(pid => reachable.has(pid)).length;
     indegree.set(id, n); if (!n) queue.push(id);
   });
-  const _shifted = [];
+  const _shifted = [], finalConflicts = [];
   const changed = new Set([parentTaskId]);
   let processed = 0;
   for (let head = 0; head < queue.length; head++) {
@@ -15472,8 +15474,13 @@ function runDependencyCascade(roadmapData, parentTaskId, options) {
         requiredStart = Math.max(requiredStart, rs);
       });
       if (!Number.isFinite(requiredStart)) return;
-      // Хвост тянется за колбаской в ОБЕ стороны: вправо (нарушение связи) , любая незакрытая,
-      // влево (у зависимой появился зазор) , только запланированная и не раньше сегодня.
+      // A final task is a fixed point: report an actual violation, never move it
+      // or propagate a hypothetical change through it to its successors.
+      if (isFinalStatus(task.status)) {
+        if (taskStartDays < requiredStart) finalConflicts.push(task.id);
+        return;
+      }
+      // Вправо — при нарушении связи, влево — только запланированные и не раньше сегодня.
       let _target = null;
       if (taskStartDays < requiredStart) _target = requiredStart;
       else if (getStatusGroup(task.status) === 'planned') {
@@ -15493,7 +15500,7 @@ function runDependencyCascade(roadmapData, parentTaskId, options) {
     }
   }
   // В цикле нет однозначного порядка: не угадываем новые даты цикла и его хвоста.
-  return { shifted: _shifted, cyclic: processed < reachable.size };
+  return { shifted: _shifted, finalConflicts, cyclic: processed < reachable.size };
 }
 
 function computePlanReserves(roadmapData, options) {
@@ -15560,10 +15567,11 @@ if (typeof globalThis !== 'undefined') {
   ns.computePlanReserves = computePlanReserves;
 }
 
-/* module:schedule-preview sha256:bf92396ed8257db8b171aa2d9161c23b2978b502ce6c728085b1ec781d4b0e75 */
+/* module:schedule-preview sha256:8a3ac1b6a12dc3dee6ff5be50bd04ea63edb2db02e21ca1cdc9b36e71c89830c */
 /* bundled internal import: ./dependency-engine.mjs */
 // Pure candidate calculation. Never mutates input tasks, dates or checkpoints.
-function createSchedulePreview({ tasks = [], proposals = [], checkpoints = [], today, cascadeEnabled = true, statusGroup = value => value } = {}) {
+function createSchedulePreview({ tasks = [], proposals = [], checkpoints = [], today, cascadeEnabled = true, statusGroup = value => value,
+  isFinalStatus = status => statusGroup(status) === 'completed' } = {}) {
   const day = value => {
     if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return NaN;
     const ms = Date.parse(value + 'T00:00:00Z');
@@ -15609,7 +15617,7 @@ function createSchedulePreview({ tasks = [], proposals = [], checkpoints = [], t
     const candidate = [...after.values()];
     const options = {
       getPredecessorIds: task => predecessors(task).map(id => after.get(id)?.id ?? id),
-      _depInfo: depInfo, dateToDays: day, daysToDate: ymd, getStatusGroup: statusGroup, today,
+      _depInfo: depInfo, dateToDays: day, daysToDate: ymd, getStatusGroup: statusGroup, isFinalStatus, today,
       onDateChange: (task, start, end) => remember(task, start, end, 'cascade')
     };
     for (const id of direct) {
@@ -15633,7 +15641,7 @@ function createSchedulePreview({ tasks = [], proposals = [], checkpoints = [], t
       toStart: task.start, toEnd: task.end, cause: direct.has(id) ? 'direct' : 'dependency',
       dateChanges: dateChanges.get(id) || [],
       deltaDays: Number.isFinite(day(original.end || original.start)) ? day(task.end) - day(original.end || original.start) : null,
-      isMilestone: !!task.isMilestone, final: statusGroup(task.status) === 'completed' });
+      isMilestone: !!task.isMilestone, final: isFinalStatus(task.status) });
   }
   const changed = new Set(changes.map(row => key(row.id)));
   const dependencies = [];
@@ -15670,7 +15678,10 @@ function createSchedulePreview({ tasks = [], proposals = [], checkpoints = [], t
       taskIds: affected.map(id => after.get(id).id) });
   }
   if (unscoped.length) warnings.push('Не привязаны к задачам и не оценены: ' + unscoped.join(', ') + '.');
-  if (changes.some(row => row.final)) warnings.push('Каскад затрагивает завершенные задачи. Проверьте их даты перед подтверждением.');
+  if (cascadeEnabled && dependencies.some(d => !d.unknown && !direct.has(key(d.id)) && isFinalStatus(after.get(key(d.id)).status))) {
+    warnings.push('Даты завершённых задач сохранены. Проверьте конфликты в списке связей.');
+  }
+  if (changes.some(row => row.final)) warnings.push('Вы меняете даты завершённой задачи вручную.');
   return { changes, dependencies, risks, warnings, blockers: [...new Set(blockers)], canApply: !blockers.length && changes.length > 0 };
 }
 
@@ -15679,7 +15690,7 @@ if (typeof globalThis !== 'undefined') {
   ns.createSchedulePreview = createSchedulePreview;
 }
 
-/* module:jira-import-actions sha256:e2dff23a4633d4f79615b602ba7923964c2bd63097c36f71858ee0cbe123bb4e */
+/* module:jira-import-actions sha256:ebe663b1b4f311d732a2c0081479e7fb01a49555b2206dc0f7d15a5b22936611 */
 // Extracted from the tested v17.0 implementation. Side effects are explicit dependencies.
 function portableJiraConnection(value) {
   const result = {base:''};
@@ -15751,8 +15762,8 @@ function updateArchivedJiraTask(existing, mapped, {isFinalStatus, logJiraStatusC
   const manualStart = !existing._jiraSync || (existing.start || '') !== syncStart;
   const manualEnd = !existing._jiraSync || (existing.end || '') !== syncEnd;
   if (mapped._jiraHasRealStart && !manualStart) existing.start = mapped.start;
-  if (isFinalStatus(mapped.status) && mapped._jiraResolved) existing.end = mapped._jiraResolved;
-  else if (mapped._jiraHasRealEnd && !manualEnd) existing.end = mapped.end;
+  if (mapped._jiraHasStatus !== false && isFinalStatus(mapped.status) && mapped._jiraResolved) existing.statusDates = { ...existing.statusDates, completed: mapped._jiraResolved };
+  if (mapped._jiraHasRealEnd && !manualEnd) existing.end = mapped.end;
   if (existing.start && existing.end && String(existing.end) < String(existing.start)) existing.end = existing.start;
   if (mapped.resource) existing.resource = mapped.resource;
   if (mapped.release) existing.release = mapped.release;
@@ -15777,7 +15788,7 @@ function updateArchivedJiraTask(existing, mapped, {isFinalStatus, logJiraStatusC
   existing._jiraSync = {
     status: existing.status || '',
     start: mapped._jiraHasRealStart ? mapped.start : syncStart,
-    end: (isFinalStatus(mapped.status) && mapped._jiraResolved) ? mapped._jiraResolved : (mapped._jiraHasRealEnd ? mapped.end : syncEnd),
+    end: mapped._jiraHasRealEnd ? mapped.end : syncEnd,
     resource: existing.resource || '',
     storyPoints: existing.storyPoints || ''
   };
@@ -15791,7 +15802,7 @@ if (typeof globalThis !== 'undefined') {
   Object.assign(globalThis.RoadmapModules, {applyReviewedJiraImport, updateArchivedJiraTask,portableJiraConnection,jiraExcludedImportKeys});
 }
 
-/* module:jira-merge sha256:93c92454e6e342355a343a652c41e47a883ab231897abda6facbbe5ccf3bd0be */
+/* module:jira-merge sha256:e97fc4471b7d83a24caa53071623acf84cd4f081cc31fb98d6a823c23b0d33b6 */
 // Jira merge data phases, extracted from the frozen v17.12 adapter.
 // The caller owns all arrays and objects. Existing task identities are preserved.
 // No DOM, persistence, network or clock access. Mapping, ID allocation and history
@@ -15866,8 +15877,8 @@ function mergeJiraTaskRows({issues, options, state, hierarchyContext, yearStartY
   sortedIssues.forEach(issue => {
     const mapped = mapJiraIssueToTask(issue);
     if (!mapped) return;
-    // Завершенная задача: дата закрытия из Jira , фактический конец на таймлайне (первичнее планового).
-    if (isFinalStatus(mapped.status) && mapped._jiraResolved) { mapped.end = mapped._jiraResolved; mapped._jiraHasRealEnd = true; if (!mapped.start) mapped.start = mapped.end; else if (String(mapped.end) < String(mapped.start)) mapped.start = mapped.end; }
+    const resolvedAt = mapped._jiraHasStatus !== false && isFinalStatus(mapped.status) && mapped._jiraResolved;
+    if (resolvedAt) mapped.statusDates = { completed: resolvedAt };
 
     // 0) Initiative/Epic/Story — СЕКЦИИ, а не строки задач. Даже leaf-Story без детей
     // остается пустой секцией: это валидный уровень иерархии, а не задача «без эпика».
@@ -15922,7 +15933,8 @@ function mergeJiraTaskRows({issues, options, state, hierarchyContext, yearStartY
 
     // 1) Архивный кандидат: end-дата раньше начала года И задача ВЫПОЛНЕНА.
     //    Активные (на холде, в работе, в ревью и т.п.) с прошлогодней датой , НЕ архивируем, остаются в плане.
-    const isArchive = mapped.end && mapped.end < yearStartYmd && isFinalStatus(mapped.status);
+    const archiveDateKey = resolvedAt || mapped.end;
+    const isArchive = archiveDateKey && archiveDateKey < yearStartYmd && isFinalStatus(mapped.status);
 
     if (isArchive) {
       // Архив , отдельная коллекция, не попадает в основной Gantt
@@ -15976,6 +15988,10 @@ function mergeJiraTaskRows({issues, options, state, hierarchyContext, yearStartY
 
     if (existing) {
       let _chg = false; const _cf = [];
+      if (resolvedAt && existing.statusDates?.completed !== resolvedAt) {
+        existing.statusDates = { ...existing.statusDates, completed: resolvedAt };
+        _chg = true; _cf.push('фактическое завершение');
+      }
       if (mapped.name && existing.name !== mapped.name) { chgName++; _chg = true; _cf.push('название'); }
       existing.name = mapped.name || existing.name;
       if (mapped._jiraHasStatus !== false && mapped.status && existing.status !== mapped.status) { chgStatus++; _chg = true; _cf.push('статус'); if (typeof logJiraStatusChange === 'function') logJiraStatusChange(existing, mapped); }
@@ -15995,10 +16011,8 @@ function mergeJiraTaskRows({issues, options, state, hierarchyContext, yearStartY
       const _manEnd = !existing._jiraSync || (existing.end || '') !== _syncE0;
       let _newStart = existing.start, _newEnd = existing.end;
       if (mapped._jiraHasRealStart && !_manStart) _newStart = mapped.start;
-      if (isFinalStatus(mapped.status) && mapped._jiraResolved) { _newEnd = mapped._jiraResolved; }
-      else if (mapped._jiraHasRealEnd && !_manEnd) _newEnd = mapped.end;
+      if (mapped._jiraHasRealEnd && !_manEnd) _newEnd = mapped.end;
       if (_newStart && _newEnd && String(_newEnd) < String(_newStart)) _newEnd = _newStart;
-      if (isFinalStatus(mapped.status) && mapped._jiraResolved && !_newStart) _newStart = _newEnd;
       if ((existing.start || '') !== (_newStart || '') || (existing.end || '') !== (_newEnd || '')) { chgDates++; _chg = true; _cf.push('даты'); }
       existing.start = _newStart;
       existing.end = _newEnd;
@@ -16030,7 +16044,7 @@ function mergeJiraTaskRows({issues, options, state, hierarchyContext, yearStartY
       if (mapped.issueType) existing.issueType = mapped.issueType;
       if (mapped.labels && mapped.labels.length) existing.labels = mapped.labels;
       if (mapped.components && mapped.components.length) existing.components = mapped.components;
-      existing._jiraSync = { status: existing.status || '', start: (mapped._jiraHasRealStart ? mapped.start : _syncS0), end: ((isFinalStatus(mapped.status) && mapped._jiraResolved) ? mapped._jiraResolved : (mapped._jiraHasRealEnd ? mapped.end : _syncE0)), resource: existing.resource || '', storyPoints: existing.storyPoints || '' };
+      existing._jiraSync = { status: existing.status || '', start: (mapped._jiraHasRealStart ? mapped.start : _syncS0), end: (mapped._jiraHasRealEnd ? mapped.end : _syncE0), resource: existing.resource || '', storyPoints: existing.storyPoints || '' };
       updated++;
       if (_chg) { trulyUpdated++; existing._jiraChange = { kind: 'upd', fields: _cf.slice() }; }
     } else {
@@ -17812,6 +17826,8 @@ if (typeof globalThis !== 'undefined') {
         showToast('Задача скрыта в плане. Откройте карточку и включите ее отображение.', 'warn', 4200);
         return;
       }
+      // Проверяем именно фильтры списка, в который ведёт «Показать на плане».
+      if (typeof workspaceMode !== 'undefined' && workspaceMode === 'leadership') _globalSearchUsePlanningList();
       if (typeof taskPassesFilters === 'function' && !taskPassesFilters(task)) {
         const resetAndShow = function () {
           if (typeof setWorkspaceMode === 'function' && typeof workspaceMode !== 'undefined' && workspaceMode !== 'planning') setWorkspaceMode('planning', { skipView: true, skipRender: true, silent: true });
@@ -18003,8 +18019,8 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '17.32';
-    const APP_VERSION_DATE = '15.11.2026';
+    const APP_VERSION = '17.33';
+    const APP_VERSION_DATE = '18.11.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) { b.textContent = 'v' + APP_VERSION; b.title = APP_VERSION_DATE; } } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'v' + APP_VERSION; } catch (e) {}
@@ -20559,7 +20575,9 @@ if (typeof globalThis !== 'undefined') {
       memoryStore['gantt_kanban_limits'] = '{}';
       _spCfg = _normalizeSnapshotSprintCfg(null);
       memoryStore['gantt_sprint_cfg'] = JSON.stringify(_spCfg);
-      try { statusFilterSel.clear(); resourceFilterSel.clear(); projectFilterSel.clear(); typeFilterSel.clear(); releaseFilterSel.clear(); labelFilterSel.clear(); componentFilterSel.clear(); customFieldFilterSel = {}; _boardTaskFilter = ''; } catch (e) {}
+      const filters = _applyViewFilters(null);
+      memoryStore['gantt_filters_active'] = JSON.stringify(filters);
+      memoryStore['gantt_filter_presets'] = '[]';
       try { if (typeof selectedTaskIds !== 'undefined' && selectedTaskIds.clear) selectedTaskIds.clear(); } catch (e) {}
     }
     // Записать текущее состояние проекта во все ключи хранилища (после сброса/загрузки)
@@ -20888,12 +20906,15 @@ if (typeof globalThis !== 'undefined') {
       ++_protectedUpdateGeneration;_protectedUpdateRequest?.abort();_protectedUpdateRequest=null;
       _protectedUpdatePrepared=null;_protectedUpdateAvailable=null;_closeCandidateDialog('protectedUpdateModal');
     }
-    async function _readProtectedUpdateResponse(url,maxBytes,controller,timeoutMs) {
-      let reader,timeout=false,rejectAbort;
+    async function _readProtectedUpdateResponse(url,maxBytes,controller,idleMs,{limitMs=idleMs,onProgress}={}) {
+      let reader,idleTimer,rejectAbort,abortMessage='Загрузка отменена.';
       const interrupted=new Promise((resolve,reject)=>{rejectAbort=reject;});
-      const onAbort=()=>{reader?.cancel().catch(()=>{});rejectAbort(Error(timeout?'Истекло время загрузки. Проверьте подключение и повторите.':'Загрузка отменена.'));};
+      const onAbort=()=>{reader?.cancel().catch(()=>{});rejectAbort(Error(abortMessage));};
       controller.signal.addEventListener('abort',onAbort,{once:true});
-      const timer=setTimeout(()=>{timeout=true;controller.abort();},timeoutMs);
+      const expire=message=>{abortMessage=message;controller.abort();};
+      const limitTimer=setTimeout(()=>expire('Загрузка занимает слишком долго. Повторите попытку.'),limitMs);
+      const resetIdle=()=>{if(idleMs<limitMs){clearTimeout(idleTimer);idleTimer=setTimeout(()=>expire('Данные не поступают. Проверьте подключение и повторите.'),idleMs);}};
+      resetIdle();
       const read=async()=>{
         if(controller.signal.aborted)throw Error('Загрузка отменена.');
         const response=await fetch(url,{method:'GET',credentials:'omit',referrerPolicy:'no-referrer',cache:'no-store',redirect:'error',signal:controller.signal});
@@ -20909,9 +20930,12 @@ if (typeof globalThis !== 'undefined') {
           const row=await reader.read();
           if(controller.signal.aborted)throw Error('Загрузка отменена.');
           if(row.done)break;
+          if(!row.value.byteLength)continue;
           length+=row.value.byteLength;
           if(length>maxBytes)throw Error('Ответ обновления слишком большой.');
           chunks.push(row.value);
+          resetIdle();
+          if(onProgress)onProgress(length);
         }
         const bytes=new Uint8Array(length);let at=0;
         for(const chunk of chunks){bytes.set(chunk,at);at+=chunk.byteLength;}
@@ -20920,7 +20944,7 @@ if (typeof globalThis !== 'undefined') {
       };
       try{return await Promise.race([read(),interrupted]);}
       catch(error){reader?.cancel().catch(()=>{});throw error;}
-      finally{clearTimeout(timer);controller.signal.removeEventListener('abort',onAbort);}
+      finally{clearTimeout(idleTimer);clearTimeout(limitTimer);controller.signal.removeEventListener('abort',onAbort);}
     }
     function _finishProtectedUpdate(controller,generation,epoch,result) {
       if(_protectedUpdateRequest===controller)_protectedUpdateRequest=null;
@@ -20966,12 +20990,20 @@ if (typeof globalThis !== 'undefined') {
       button.disabled=true;button.hidden=true;fetchButton.disabled=true;retry.disabled=true;
       const install=document.getElementById('protectedUpdateInstall');if(install){install.hidden=true;install.disabled=true;}
       const current=()=>generation===_protectedUpdateGeneration&&epoch===_projectTransitionToken&&result.isConnected;
-      result.textContent='Загрузка и проверка подписи…';
+      result.textContent='Загружаем обновление…';
       try{
         if(!window.__roadmapPinSession?.protected||!_portableSession?.captureForUpdate)throw Error('Нет активной защищенной копии.');
         // The version was strictly parsed; the publisher origin and path are never taken from a response.
-        const text=await _readProtectedUpdateResponse('https://uchvru.github.io/roadmap/updates/roadmap-v'+version+'.roadmap-update',RoadmapModules.PROTECTED_UPDATE_MAX_BYTES,controller,90000);
+        let nextProgressAt=0;
+        const text=await _readProtectedUpdateResponse('https://uchvru.github.io/roadmap/updates/roadmap-v'+version+'.roadmap-update',RoadmapModules.PROTECTED_UPDATE_MAX_BYTES,controller,90000,{
+          limitMs:15*60*1000,onProgress(bytes){
+            const now=Date.now();if(now<nextProgressAt||!current())return;
+            nextProgressAt=now+1000;
+            result.textContent='Загружено: '+Math.ceil(bytes/1024).toLocaleString('ru-RU')+' КБ';
+          }
+        });
         if(!current())return;
+        result.textContent='Проверяем подпись…';
         const update=await RoadmapModules.verifyProtectedUpdate(text,{currentVersion:APP_VERSION,cryptoApi:crypto});
         if(!current())return;
         if(update.version!==version)throw Error('Версия пакета отличается от объявленной. Проверьте обновления снова.');
@@ -22791,10 +22823,15 @@ if (typeof globalThis !== 'undefined') {
     function cascadeDependencies(parentTaskId) {
       if (typeof featureOn === 'function' && !featureOn('deps')) return;
       const result = RoadmapModules.runDependencyCascade(roadmapData, parentTaskId, {
-        getPredecessorIds, _depInfo, dateToDays, daysToDate, getStatusGroup, today: toYmdLocal(CURRENT_DATE),
+        getPredecessorIds, _depInfo, dateToDays, daysToDate, getStatusGroup, isFinalStatus, today: toYmdLocal(CURRENT_DATE),
         onDateChange: typeof _recordDateChange === 'function' ? (task, start, end) => _recordDateChange(task, start, end, 'cascade') : undefined
       });
       if (result.cyclic) showToast('Циклические зависимости: даты задач в цикле и после него не изменены. Проверьте связи.', 'warn', 5000);
+      if (result.finalConflicts.length) {
+        const ids = result.finalConflicts;
+        const list = ids.slice(0, 3).map(id => '#' + id).join(', ') + (ids.length > 3 ? ' и ещё ' + (ids.length - 3) : '');
+        showToast('Конфликт связей: ' + list + '. Даты завершённых задач сохранены.', 'warn', 6000);
+      }
       _cascadeShifted = result.shifted;
       return result.shifted;
     }
@@ -23882,7 +23919,7 @@ let resourceView = 'roles'; // 'roles' | 'load'
       if (READ_ONLY_MODE || !requireUnlocked() || !proposals.length) return;
       const cascadeEnabled = options && options.cascade === false ? false : featureOn('deps');
       const model = RoadmapModules.createSchedulePreview({ tasks: roadmapData, proposals, checkpoints: _schedulePreviewCheckpoints(),
-        today: toYmdLocal(CURRENT_DATE), cascadeEnabled, statusGroup: getStatusGroup });
+        today: toYmdLocal(CURRENT_DATE), cascadeEnabled, statusGroup: getStatusGroup, isFinalStatus });
       const signature = _schedulePreviewSignature();
       const dates = (start, end) => escHtml(start === end ? start : start + ' / ' + end);
       const changes = model.changes.map(row => `<li class="schedule-preview-row bg-white text-slate-700">
@@ -25857,6 +25894,12 @@ const m = document.getElementById('mineModeBtn');
       scheduleAutoSaveFile();
     }
     function _captureViewFilters() {
+      // Файл и черновик хранят рабочий срез проекта, а не временный обзор руководителя.
+      if (typeof workspaceMode !== 'undefined' && workspaceMode === 'leadership') {
+        let saved;
+        try { saved = safeJsonParse(storage.get('gantt_filters_active')); } catch (e) {}
+        return _normalizeViewFilters({...saved, presets:getFilterPresets()});
+      }
       return _normalizeViewFilters({status:[...statusFilterSel],resource:[...resourceFilterSel],project:[...projectFilterSel],type:[...typeFilterSel],release:[...releaseFilterSel],label:[...labelFilterSel],component:[...componentFilterSel],board:_boardTaskFilter,
         modes:{hot:_goritMode,mine:_mineMode,critical:_critPathMode,kind:_kindFilter,noGoal:_noGoalFilter,forecast:_forecastReasonFilter},
         customFields:Object.fromEntries(Object.entries(customFieldFilterSel||{}).map(([k,v])=>[k,[...v]])),presets:getFilterPresets()});
@@ -25865,7 +25908,8 @@ const m = document.getElementById('mineModeBtn');
       return ['status','resource','project','type','release','label','component','presets'].some(k=>f[k]?.length) || !!f.board || Object.values(f.modes).some(Boolean) || Object.keys(f.customFields).length>0;
     }
     function _applyViewFilters(value) {
-      const f = _normalizeViewFilters(value);
+      const working = _normalizeViewFilters(value);
+      const f = typeof workspaceMode !== 'undefined' && workspaceMode === 'leadership' ? _normalizeViewFilters(null) : working;
       _clearBulkSelectionOnFilterChange();
       [[statusFilterSel,'status'],[resourceFilterSel,'resource'],[projectFilterSel,'project'],[typeFilterSel,'type'],[releaseFilterSel,'release'],[labelFilterSel,'label'],[componentFilterSel,'component']].forEach(([set,key])=>{set.clear();f[key].forEach(v=>set.add(v));});
       _boardTaskFilter=f.board;
@@ -25873,7 +25917,7 @@ const m = document.getElementById('mineModeBtn');
       _goritMode=f.modes.hot;_mineMode=f.modes.mine;_critPathMode=f.modes.critical;_kindFilter=f.modes.kind;_noGoalFilter=f.modes.noGoal;_forecastReasonFilter=f.modes.forecast;
       if(_critPathMode)computeCriticalPath();
       if(typeof _updateModeButtons==='function')_updateModeButtons();
-      return f;
+      return working;
     }
     function _clearBulkSelectionOnFilterChange() {
       if (typeof selectedTaskIds !== 'undefined' && selectedTaskIds.size) clearBulkSelect();
@@ -26038,7 +26082,7 @@ const m = document.getElementById('mineModeBtn');
         'created','updated','testStatus','hours','costFixed','costType','meetingAgenda'
       ];
       const ARRAY_FIELDS = ['labels','workLog','comments','history','statusLog','components','links'];
-      const OBJECT_FIELDS = ['custom','roleEst','depMeta','_jiraSync','links'];
+      const OBJECT_FIELDS = ['custom','roleEst','depMeta','_jiraSync','links','statusDates'];
       const _isBlank = function (v) {
         if (v == null || v === '') return true;
         if (Array.isArray(v)) return v.length === 0;
@@ -26264,6 +26308,7 @@ const m = document.getElementById('mineModeBtn');
       if (!orig) return;
       const _planUndo = captureUndoState();
       const copy = JSON.parse(JSON.stringify(orig));
+      delete copy.statusDates;
       copy.id = (typeof nextTaskId === 'function') ? nextTaskId() : Date.now() + 1;
       copy.name = (orig.name || 'Задача') + ' (копия)';
       copy.jira = ''; copy.statusLog = []; copy.history = []; copy.workLog = []; delete copy._jiraChange; delete copy._jiraSync; delete copy._jiraPredIds; // копия с чистым журналом: без чужих факт-часов, истории и меток Jira
@@ -26287,6 +26332,20 @@ const m = document.getElementById('mineModeBtn');
       const _entry = { from: task.status || '', to: newStatus || '', at: _at, time: _time, by: _by };
       if (meta.source) _entry.source = String(meta.source);
       task.statusLog.push(_entry);
+      recordStatusDates(task, task.status, newStatus, meta.source ? (meta.factAt || '') : _at);
+    }
+    // Facts are separate from planned start/end and legacy estimate-based actualStart.
+    function recordStatusDates(task, from, to, at) {
+      if (!task || task.isMilestone || !to || from === to) return;
+      const dates = { ...task.statusDates };
+      const wasFinal = isFinalStatus(from), final = isFinalStatus(to);
+      const valid = typeof at === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(at);
+      if (wasFinal && !final && dates.completed) delete dates.completed;
+      else if (final && !wasFinal && valid) dates.completed = at;
+      if (valid && !final && !dates.started && getStatusGroup(to) === 'in_progress' && (wasFinal || getStatusGroup(from) !== 'in_progress')) dates.started = at;
+      // Even an undated transition is recorded as such: on reopen legacy migrations
+      // must not infer a planned start/end from the status or its log.
+      task.statusDates = dates;
     }
     // Jira не сообщает отдельную дату перехода в статус в обычной CSV-выгрузке.
     // Берем дату решения для закрытых задач, для остальных — «Обновлено» из Jira.
@@ -26296,12 +26355,18 @@ const m = document.getElementById('mineModeBtn');
       const sourceAt = (isFinalStatus(mapped.status) && mapped._jiraResolved) ? mapped._jiraResolved : (mapped.updated || '');
       // CSV без Resolved/Updated не содержит дату перехода. Не подставляем дату
       // импорта: такая запись выглядела бы как реальная история, хотя источника нет.
-      if (!sourceAt) return false;
-      logStatusChange(task, mapped.status, { at: sourceAt, time: '', by: 'Jira', source: 'jira' });
+      if (!sourceAt) { recordStatusDates(task,task.status,mapped.status,''); return false; }
+      logStatusChange(task, mapped.status, { at: sourceAt, time: '', by: 'Jira', source: 'jira', factAt: mapped._jiraResolved && isFinalStatus(mapped.status) ? mapped._jiraResolved : '' });
       return true;
     }
     function statusNameById(sid) { const s = (projectStatuses || []).find(x => x.id === sid); return s ? s.name : (sid || '-'); }
     function renderTaskStatusHistory(task) {
+      const facts = document.getElementById('taskActualDates');
+      if (facts) {
+        const dates = task?.statusDates || {};
+        facts.textContent = [dates.started && 'Начата: '+formatDateString(dates.started), dates.completed && isFinalStatus(task.status) && 'Завершена: '+formatDateString(dates.completed)].filter(Boolean).join(' · ');
+        facts.hidden = !facts.textContent;
+      }
       const el = document.getElementById('taskStatusHistory');
       if (!el) return;
       const log = (task && task.statusLog) || [];
@@ -26699,30 +26764,21 @@ const m = document.getElementById('mineModeBtn');
     function setWorkspaceMode(mode, opts) {
       opts = opts || {};
       const next = (mode === 'leadership') ? mode : 'planning';
-      const clearedForLeadership = next === 'leadership' && (
-        _boardTaskFilter ||
-        resourceFilterSel.size || statusFilterSel.size || projectFilterSel.size || typeFilterSel.size || releaseFilterSel.size ||
-        labelFilterSel.size || componentFilterSel.size || Object.keys(customFieldFilterSel || {}).length ||
-        _goritMode || _mineMode || _critPathMode || _kindFilter || _noGoalFilter || _forecastReasonFilter
-      );
-      if (clearedForLeadership) {
-        resourceFilterSel.clear(); statusFilterSel.clear(); projectFilterSel.clear(); typeFilterSel.clear(); releaseFilterSel.clear();
-        labelFilterSel.clear(); componentFilterSel.clear(); customFieldFilterSel = {};
-        _boardTaskFilter = ''; _goritMode = false; _critPathMode = false; _mineMode = false; _kindFilter = ''; _noGoalFilter = false; _forecastReasonFilter = '';
-        if (typeof persistFilters === 'function') persistFilters();
+      const changed = next !== workspaceMode;
+      if (changed && next === 'leadership') persistFilters();
+      workspaceMode = next;
+      if (next === 'leadership' || changed) {
+        if (next === 'leadership') _applyViewFilters(null);
+        else restoreFilters();
         if (typeof updateFilterLabels === 'function') updateFilterLabels();
         if (typeof updateReleaseFilterBtn === 'function') updateReleaseFilterBtn();
       }
-      workspaceMode = next;
       try { storage.set('gantt_workspace_mode', workspaceMode); } catch (e) {}
-      _mineMode = false;
-      _goritMode = false;
-      if (typeof _updateModeButtons === 'function') _updateModeButtons();
       applyWorkspaceMode({ skipView: !!opts.skipView });
       if (!opts.skipRender && typeof renderRoadmap === 'function') renderRoadmap(true);
       if (!opts.silent) {
         const label = _workspaceModeLabel(workspaceMode);
-        showToast('Режим плана: ' + label + (clearedForLeadership ? '. Показывается весь план, фильтры сброшены.' : ''), 'info', clearedForLeadership ? 4200 : 2200);
+        showToast(next === 'leadership' ? 'Руководство: весь план. Рабочие фильтры сохранены.' : 'Режим плана: ' + label, 'info', 2200);
       }
     }
     // Чип балла приоритизации в строках , опт-ин, по умолчанию выключен (вью-преференс, как режим и сортировка)
@@ -28193,7 +28249,11 @@ const m = document.getElementById('mineModeBtn');
       const memoryBefore = _captureSnapshotMemoryStore();
       const merged = Object.assign({}, previous, taskObj);
       if (String(previous.section || '') !== String(merged.section || '')) merged._archivedSectionPath = _captureArchivedSectionPath(merged.section);
-      if ((previous.status || '') !== (merged.status || '')) merged.statusLog = (previous.statusLog || []).concat([{from:previous.status || '',to:merged.status || '',at:toYmdLocal(CURRENT_DATE),time:_auditClock(),by:_authorName()}]);
+      if ((previous.status || '') !== (merged.status || '')) {
+        const entry = {from:previous.status || '',to:merged.status || '',at:toYmdLocal(CURRENT_DATE),time:_auditClock(),by:_authorName()};
+        merged.statusLog = (previous.statusLog || []).concat([entry]);
+        recordStatusDates(merged,entry.from,entry.to,entry.at);
+      }
       merged.history = (previous.history || []).slice();
       ['name','start','end','resource','section','release','estimate','notes','deadline'].forEach(field => {
         if (String(previous[field] ?? '') !== String(merged[field] ?? '')) merged.history.push({at:toYmdLocal(CURRENT_DATE),time:_auditClock(),by:_authorName(),field,old:String(previous[field] ?? ''),new:String(merged[field] ?? ''),...(['start','end'].includes(field)?_dateChangeStamp(field==='end'&&estimatedEnd?'auto':'manual'):{})});
@@ -28536,7 +28596,7 @@ const m = document.getElementById('mineModeBtn');
         var today = toYmdLocal(CURRENT_DATE);
         var moved = 0;
         (roadmapData || []).forEach(function (t) {
-          if (!t || t.isMilestone || !isFinalStatus(t.status)) return;
+          if (!t || t.isMilestone || t.statusDates || !isFinalStatus(t.status)) return;
           var st = t.start || '', en = t.end || '';
           var stFut = !!st && st > today, enFut = !!en && en > today;
           if (!stFut && !enFut) return;
@@ -28603,7 +28663,7 @@ const m = document.getElementById('mineModeBtn');
         var _fl = new Date(CURRENT_DATE); _fl.setMonth(_fl.getMonth() - 3); var floor = toYmdLocal(_fl);
         var moved = 0;
         (roadmapData || []).forEach(function (t) {
-          if (!t || t.isMilestone || isFinalStatus(t.status) || !isActiveStatus(t.status)) return;
+          if (!t || t.isMilestone || t.statusDates || isFinalStatus(t.status) || !isActiveStatus(t.status)) return;
           var st = t.start || '';
           if (!st || st <= today) return; // старт не в будущем , не трогаем
           var oldStart = st, oldEnd = t.end || '';
@@ -29145,7 +29205,7 @@ const m = document.getElementById('mineModeBtn');
       try { const _pc = document.getElementById('periodCompareBlock'); if (_pc) _pc.innerHTML = buildPeriodCompareHtml(); } catch (e) {}
       if (typeof renderReleaseProgress === 'function') { try { renderReleaseProgress(); } catch (e) {} }
       const report = document.getElementById('reportModal');
-      if (report && !report.classList.contains('hidden') && document.getElementById('reportFrom')?.value && document.getElementById('reportTo')?.value) generateReport();
+      if (report && !report.classList.contains('hidden')) _refreshPeriodReport();
     }
     function _reportFilterToggleHtml() {
       return '<label class="flex items-center gap-2 mb-3 text-xs text-slate-600 cursor-pointer select-none"><input type="checkbox" ' + (_reportApplyFilters ? 'checked' : '') + ' onchange="_setReportApplyFilters(this.checked)" class="accent-indigo-600 rounded"><span>Учитывать активные фильтры списка (секция, исполнитель, метка и другие)</span></label>';
@@ -29166,7 +29226,7 @@ const m = document.getElementById('mineModeBtn');
         if (t.isMilestone) return;
         if (_reportApplyFilters && typeof taskPassesFilters === 'function' && !taskPassesFilters(t)) return;
         if (isFinalStatus(t.status)) {
-          if (!t.start && !t.end) { undatedDone++; return; }
+          if (!t.start && !t.end && !_reportCompletedOn(t)) { undatedDone++; return; }
           const cy = compYmd(t);
           if (cy) { if (inR(cy, thisWeekStart, today)) thisW++; if (inR(cy, lastWeekStart, lastWeekEnd)) lastW++; if (inR(cy, monthStart, today)) thisM++; }
         } else {
@@ -29195,6 +29255,14 @@ const m = document.getElementById('mineModeBtn');
     function openReportModal() {
       const modal = document.getElementById('reportModal');
       if (!modal) return;
+      if (_periodPreview && _periodPreview.project !== projectStorageId) {
+        _periodPreview = null;
+        document.getElementById('reportOutput').value = '';
+        document.getElementById('reportTitle').value = '';
+      }
+      modal.onchange = e => {
+        if (['reportFrom','reportTo','reportProject','reportTitle','reportLimit'].includes(e.target.id)) _refreshPeriodReport();
+      };
       // Период: восстанавливаем последний использованный, иначе , эта неделя
       const lastFrom = storage.get('gantt_report_from');
       const lastTo = storage.get('gantt_report_to');
@@ -29223,6 +29291,7 @@ const m = document.getElementById('mineModeBtn');
       try { _initReportScopeControls(); } catch (e) {}
       try { const _pc = document.getElementById('periodCompareBlock'); if (_pc) _pc.innerHTML = buildPeriodCompareHtml(); } catch (e) {}
       modal.classList.remove('hidden');
+      _refreshPeriodReport('open');
       if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
     }
     function closeReportModal() {
@@ -29239,6 +29308,7 @@ const m = document.getElementById('mineModeBtn');
       const tEl = document.getElementById('reportTo');
       if (fEl) fEl.value = ymd(from);
       if (tEl) tEl.value = ymd(to);
+      _refreshPeriodReport();
     }
     function formatRuDateRange(fromStr, toStr) { return RoadmapModules.dateFormatRuRange(fromStr, toStr); }
     // Общий отбор задач для отчета за период: пул (активные + архив без дублей) и группы
@@ -29247,6 +29317,7 @@ const m = document.getElementById('mineModeBtn');
     let _reportScopeSections = null;   // null = все секции; иначе Set имен секций
     let _reportScopeAssignee = 'all';  // 'all' или имя исполнителя
     let _reportGroupBy = 'none';       // 'none' | 'assignee' | 'role'
+    let _periodPreview = null;         // Последний показанный текст и таблица из того же отбора.
     // Токен-осведомленное совпадение исполнителя: задача с несколькими исполнителями подходит каждому из них.
     function _taskHasAssignee(t, who) {
       if (!who || who === 'all') return true;
@@ -29306,11 +29377,13 @@ const m = document.getElementById('mineModeBtn');
       if (on) _reportScopeSections.add(sec); else _reportScopeSections.delete(sec);
       if (_reportScopeSections.size === secs.length) _reportScopeSections = null; // все выбраны , как «все»
       _updateReportSecLabel();
+      _refreshPeriodReport();
     }
     function setReportSecAll(on) {
       if (on) { _reportScopeSections = null; }
       else { _reportScopeSections = new Set(); }
       _renderReportSecPicker();
+      _refreshPeriodReport();
     }
     function toggleReportSecPicker(ev) {
       if (ev) ev.stopPropagation();
@@ -29325,7 +29398,7 @@ const m = document.getElementById('mineModeBtn');
         document.addEventListener('click', away, true);
       }
     }
-    function setReportAssignee(v) { _reportScopeAssignee = v || 'all'; _updateReportSecLabel(); }
+    function setReportAssignee(v) { _reportScopeAssignee = v || 'all'; _updateReportSecLabel(); _refreshPeriodReport(); }
     function setReportGroupBy(v) {
       _reportGroupBy = ['assignee', 'role'].includes(v) ? v : 'none';
       [['none', 'reportGrpNone'], ['assignee', 'reportGrpAssignee'], ['role', 'reportGrpRole']].forEach(([k, id]) => {
@@ -29334,6 +29407,7 @@ const m = document.getElementById('mineModeBtn');
         el.setAttribute('aria-pressed', on ? 'true' : 'false');
         el.className = `px-2.5 h-7 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${on ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-600 hover:bg-white/70'}`;
       });
+      _refreshPeriodReport();
     }
     // Заполняет элементы охвата/группировки при открытии окна отчета (сбрасывая на «все/нет»).
     function _initReportScopeControls() {
@@ -29383,8 +29457,15 @@ const m = document.getElementById('mineModeBtn');
       // Плановый конец для эскалации: только явный конец/дедлайн (старт не считаем концом), иначе нет , не эскалируем.
       const escEndDays = (t) => { const v = t.end || t.deadline; return v ? dateToDays(v) : NaN; };
       // Недатированные завершенные видны отдельно, но не приписываются периоду.
-      const doneUndated = takeNew(tasks.filter(t => isFinalStatus(t.status) && isUndated(t)));
-      const done = takeNew(tasks.filter(t => isFinalStatus(t.status) && !isUndated(t) && dEnd(t) >= fromDays && dEnd(t) <= toDays));
+      const undatedCandidates = [], datedCandidates = [];
+      for (const t of tasks) {
+        if (!isFinalStatus(t.status)) continue;
+        const fact = _reportCompletedOn(t);
+        if (!fact && isUndated(t)) { undatedCandidates.push(t); continue; }
+        const day = fact ? dateToDays(fact) : dEnd(t);
+        if (day >= fromDays && day <= toDays) datedCandidates.push(t);
+      }
+      const doneUndated = takeNew(undatedCandidates), done = takeNew(datedCandidates);
       const doneByParent = new Map();
       const doneStandalone = [];
       done.forEach(t => {
@@ -29403,13 +29484,55 @@ const m = document.getElementById('mineModeBtn');
       return { pool, tasks, done, doneUndated, doneByParent, doneStandalone, escalation, nextWeek, inWork, srcTag, todayDays };
     }
     function generateReport() {
+      return _refreshPeriodReport('generate');
+    }
+    function _periodReportKey() {
+      const v = id => document.getElementById(id)?.value || '';
+      const filters = _reportApplyFilters ? _captureViewFilters() : null;
+      return JSON.stringify([projectStorageId, v('reportFrom'), v('reportTo'), v('reportTitle'), v('reportProject'),
+        v('reportLimit'), _reportGroupBy, _reportScopeAssignee, _reportScopeSections ? [..._reportScopeSections].sort() : null, filters]);
+    }
+    function _periodReportAvailability(message) {
+      const notice = document.getElementById('reportDraftNotice');
+      if (notice) { notice.textContent = message; notice.hidden = !message; }
+      document.getElementById('reportModal').querySelectorAll('[data-report-copy]').forEach(b => { b.disabled = !!message; });
+    }
+    function _refreshPeriodReport(reason = 'change') {
+      const modal = document.getElementById('reportModal');
+      if (!modal || modal.classList.contains('hidden')) return false;
+      const ta = document.getElementById('reportOutput'), key = _periodReportKey();
+      if (_periodPreview && _periodPreview.project !== projectStorageId) { ta.value = ''; _periodPreview = null; }
+      const from = document.getElementById('reportFrom'), to = document.getElementById('reportTo');
+      if (!from.value || !to.value || from.value > to.value || from.validity?.valid === false || to.validity?.valid === false) {
+        _periodReportAvailability('Укажите корректный период.'); return false;
+      }
+      const prev = _periodPreview, dirty = prev && ta.value !== prev.text;
+      if (prev?.key === key && reason !== 'open' && reason !== 'generate' && reason !== 'confirmed' && !prev.outdated) {
+        _periodReportAvailability(''); return true;
+      }
+      const next = _composePeriodReport();
+      if (dirty && reason !== 'confirmed' && (prev.key !== key || next.text !== prev.text || reason === 'generate')) {
+        if (prev.key === key) prev.outdated = next.text !== prev.text;
+        _periodReportAvailability(prev.key !== key || prev.outdated ? 'Отбор изменился. Ручной текст сохранён. Чтобы обновить его, нажмите «Сгенерировать».' : '');
+        if (reason === 'generate') {
+          const draft = ta.value;
+          openConfirm({title:'Заменить ручные правки?', desc:'Текст будет собран заново по выбранным фильтрам.', okText:'Заменить',
+            onOk: () => { if (_periodPreview === prev && _periodReportKey() === key && ta.value === draft) _refreshPeriodReport('confirmed'); }});
+        }
+        return false;
+      }
+      _periodPreview = {project:projectStorageId, key, text:next.text, table:_buildPeriodTableHtml(next.sets)};
+      if (!dirty || reason === 'confirmed') ta.value = next.text;
+      storage.set('gantt_report_from', from.value);
+      storage.set('gantt_report_to', to.value);
+      _periodReportAvailability('');
+      if (reason === 'generate' || reason === 'confirmed') showToast(`Отчет собран: ${next.sets.done.length} сделали, ${next.sets.inWork.length} в работе`, 'ok');
+      return true;
+    }
+    function _composePeriodReport() {
       const fromStr = document.getElementById('reportFrom').value;
       const toStr = document.getElementById('reportTo').value;
       const title = (document.getElementById('reportTitle').value || '').trim() || 'проекту';
-      if (!fromStr || !toStr) { showToast('Укажите период', 'warn'); return; }
-      // Запоминаем период для следующего открытия
-      storage.set('gantt_report_from', fromStr);
-      storage.set('gantt_report_to', toStr);
       // Лимит задач в каждом разделе («Все» или топ N)
       const limitRaw = (document.getElementById('reportLimit') || {}).value || 'all';
       const _lim = parseInt(limitRaw, 10); const limitN = (limitRaw === 'all' || !Number.isFinite(_lim) || _lim <= 0) ? Infinity : _lim;
@@ -29434,6 +29557,7 @@ const m = document.getElementById('mineModeBtn');
       const statusName = (id) => (projectStatuses.find(s => s.id === id) || {}).name || id || 'Без статуса';
       const STATUS_ORDER = RoadmapModules.statusGroups.reportOrder;
       const taskLine = (t) => `${t.name}${t.jira ? ` (${getTaskKey(t)})` : ''}`;
+      const completedOn = (t) => { const fact = _reportCompletedOn(t); return fact ? ' · факт ' + formatDateString(fact) : ''; };
       // S2: разбивка задач по исполнителю/роли. Задача с несколькими исполнителями попадает к каждому.
       const _spOf = (t) => { const v = parseFloat(t && t.storyPoints); return (Number.isFinite(v) && v > 0) ? v : 0; };
       const _groupTasksBy = (arr, mode) => {
@@ -29476,7 +29600,7 @@ const m = document.getElementById('mineModeBtn');
       } else if (_reportGroupBy !== 'none') {
         _groupTasksBy(done, _reportGroupBy).forEach(g => {
           lines.push(_groupHeader(g.label, g.tasks, true));
-          g.tasks.slice(0, limitN).forEach(t => lines.push(`  • ${taskLine(t)}${srcTag(t)}`));
+          g.tasks.slice(0, limitN).forEach(t => lines.push(`  • ${taskLine(t)}${completedOn(t)}${srcTag(t)}`));
           const rest = g.tasks.length - Math.min(g.tasks.length, limitN);
           if (rest > 0) lines.push(`  • …и еще ${rest}`);
         });
@@ -29490,12 +29614,12 @@ const m = document.getElementById('mineModeBtn');
             const closedWhole = isEpicClosed(sec);
             const tail = closedWhole ? `закрыт полностью (за период • ${items.length})` : `за период закрыто задач: ${items.length}`;
             lines.push(`- ${sectionKind(sec)} «${cleanSectionName(sec)}»${k ? ` (${k})` : ''} • ${tail}`);
-            items.slice(0, limitN).forEach(t => lines.push(`  • ${taskLine(t)}${srcTag(t)}`));
+            items.slice(0, limitN).forEach(t => lines.push(`  • ${taskLine(t)}${completedOn(t)}${srcTag(t)}`));
             const rest = items.length - Math.min(items.length, limitN);
             if (rest > 0) lines.push(`  • …и еще ${rest}`);
           });
         // Отдельные задачи без эпика , по имени
-        pushLimited(doneStandalone, t => lines.push(`- ${taskLine(t)}, закрыта${srcTag(t)}`));
+        pushLimited(doneStandalone, t => lines.push(`- ${taskLine(t)}, закрыта${completedOn(t)}${srcTag(t)}`));
       }
       lines.push('');
 
@@ -29565,12 +29689,18 @@ const m = document.getElementById('mineModeBtn');
       }
       const _reportEmpty = !done.length;
       if (_reportEmpty) { lines.push(''); lines.push('За выбранный период ничего не завершено. Расширьте период (кнопки «Месяц», «Квартал») или снимите фильтры по секциям и исполнителю, чтобы увидеть итоги.'); }
-      document.getElementById('reportOutput').value = lines.join('\n').trim();
-      showToast(`Отчет собран: ${done.length} сделали, ${inWork.length} в работе`, 'ok');
+      return {text:lines.join('\n').trim(), sets:S};
     }
     // === Прогресс по релизам (отдельный отчет) ===
-    // Дата завершения задачи: из истории статусов (переход в «Выполнено»), иначе по дате обновления/окончания.
+    function _reportCompletedOn(t) {
+      const value = t?.statusDates?.completed;
+      if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return '';
+      const day = new Date(value + 'T00:00:00Z');
+      return Number.isFinite(+day) && day.toISOString().slice(0, 10) === value ? value : '';
+    }
+    // Факт перехода, затем старый журнал и прежние резервные даты.
     function _taskCompletionYmd(t) {
+      const fact = _reportCompletedOn(t); if (fact) return fact;
       if (Array.isArray(t.statusLog)) {
         for (let i = t.statusLog.length - 1; i >= 0; i--) { const e = t.statusLog[i]; if (e && isFinalStatus(e.to) && e.at) return e.at; }
       }
@@ -29888,7 +30018,7 @@ const m = document.getElementById('mineModeBtn');
         const nt = JSON.parse(JSON.stringify(o));
         nt.id = (typeof nextTaskId === 'function') ? nextTaskId() : Date.now() + Math.floor(Math.random() * 1e6);
         idMap[o.id] = nt.id;
-        nt.jira = ''; delete nt._jiraSync; delete nt._jiraChange; delete nt._jiraPredIds; nt.statusLog = [];
+        nt.jira = ''; delete nt._jiraSync; delete nt._jiraChange; delete nt._jiraPredIds; delete nt.statusDates; nt.statusLog = [];
         if (ctx.kind === 'section') nt.section = newName; else nt.release = newName;
         if (nt.start) nt.start = shiftDate(nt.start);
         if (nt.isMilestone) { nt.end = nt.start; } else if (nt.end) { nt.end = shiftDate(nt.end); }
@@ -29947,11 +30077,11 @@ const m = document.getElementById('mineModeBtn');
     }
     // ===== Зависимости и сдвиг секций (план по секциям) =====
     // Диапазон секции в днях по датам ее задач (+ вложенных подсекций), без скрытых , как у сводной полосы.
-    function _sectionRange(name) {
+    function _sectionRange(name, movableOnly = false) {
       const set = new Set([name].concat((typeof _secDescendants === 'function') ? _secDescendants(name) : []));
       let mn = Infinity, mx = -Infinity;
       (roadmapData || []).forEach(t => {
-        if (!t || !set.has(t.section) || t.hidden || !t.start) return;
+        if (!t || !set.has(t.section) || t.hidden || !t.start || (movableOnly && isFinalStatus(t.status))) return;
         const sd = dateToDays(t.start);
         const ed = t.isMilestone ? sd : (t.end ? dateToDays(t.end) : sd);
         if (sd < mn) mn = sd; if (ed > mx) mx = ed;
@@ -29964,7 +30094,7 @@ const m = document.getElementById('mineModeBtn');
       const set = new Set([name].concat((typeof _secDescendants === 'function') ? _secDescendants(name) : []));
       const ids = [];
       (roadmapData || []).forEach(t => {
-        if (!t || !set.has(t.section) || !t.start) return;
+        if (!t || !set.has(t.section) || !t.start || (source === 'cascade' && isFinalStatus(t.status))) return;
         const oldStart = t.start, oldEnd = t.end;
         t.start = daysToDate(dateToDays(t.start) + delta);
         if (!t.isMilestone && t.end) t.end = daysToDate(dateToDays(t.end) + delta);
@@ -29987,6 +30117,7 @@ const m = document.getElementById('mineModeBtn');
     function cascadeSectionDeps(movedIds) {
       movedIds = movedIds || new Set();
       if (!sectionDeps || typeof sectionDeps !== 'object') return movedIds;
+      const conflicts = new Set();
       for (let pass = 0, changed = true; changed && pass < 80; pass++) {
         changed = false;
         Object.keys(sectionDeps).forEach(sec => {
@@ -29997,13 +30128,22 @@ const m = document.getElementById('mineModeBtn');
           if (!pr || !sr) return;
           const lag = parseInt(dep.lag, 10) || 0;
           const type = dep.type || 'FS';
-          let req;
-          if (type === 'SS') req = pr.start + lag;
-          else if (type === 'FF') req = pr.end + lag - (sr.end - sr.start);
-          else if (type === 'SF') req = pr.start + lag - (sr.end - sr.start);
-          else req = pr.end + 1 + lag;
-          if (sr.start < req) { _shiftSectionDates(sec, req - sr.start, 'cascade').forEach(id => movedIds.add(id)); changed = true; }
+          const anchor = type === 'FF' || type === 'SF' ? 'end' : 'start';
+          const req = (type === 'SS' || type === 'SF' ? pr.start : pr.end + (type === 'FF' ? 0 : 1)) + lag;
+          if (sr[anchor] >= req) { conflicts.delete(sec); return; }
+          // A fixed completed task can keep the section start before req on every pass.
+          // Use movable dates for the actual shift, so the open tasks move only as far as needed.
+          const movable = _sectionRange(sec, true);
+          if (!movable || (anchor === 'start' && sr.start < movable.start)) conflicts.add(sec);
+          if (movable && movable[anchor] < req) {
+            _shiftSectionDates(sec, req - movable[anchor], 'cascade').forEach(id => movedIds.add(id));
+            changed = true;
+          }
         });
+      }
+      if (conflicts.size) {
+        const names = [...conflicts];
+        showToast('Конфликт связей: ' + names.slice(0, 3).join(', ') + (names.length > 3 ? ' и ещё ' + (names.length - 3) : '') + '. Даты завершённых задач сохранены.', 'warn', 6000);
       }
       return movedIds;
     }
@@ -32420,7 +32560,7 @@ const m = document.getElementById('mineModeBtn');
       const byId = new Map((roadmapData || []).map(t => [t.id, t]));
       const _undo = (typeof captureUndoState === 'function') ? captureUndoState() : null;
       let n = 0;
-      b.tasks.forEach(bt => { const t = byId.get(bt.id); if (!t) return; if ((typeof bt.start === 'string' && typeof bt.end === 'string') && (t.start !== bt.start || t.end !== bt.end || t.status !== bt.status)) { const oldStart = t.start, oldEnd = t.end; t.start = bt.start; t.end = bt.end; logStatusChange(t, bt.status); t.status = bt.status; _recordDateChange(t, oldStart, oldEnd, 'manual'); n++; } });
+      b.tasks.forEach(bt => { const t = byId.get(bt.id); if (!t) return; if ((typeof bt.start === 'string' && typeof bt.end === 'string') && (t.start !== bt.start || t.end !== bt.end || t.status !== bt.status)) { const oldStart = t.start, oldEnd = t.end; t.start = bt.start; t.end = bt.end; logStatusChange(t, bt.status, {source:'baseline'}); t.status = bt.status; _recordDateChange(t, oldStart, oldEnd, 'manual'); n++; } });
       persistPlan({ undo: true, before: _undo });
       if (typeof scheduleAutoSaveFile === 'function') scheduleAutoSaveFile();
       renderRoadmap(true); if (typeof renderStatusOverview === 'function') renderStatusOverview();
@@ -32580,6 +32720,7 @@ const m = document.getElementById('mineModeBtn');
       }).join('');
     }
     async function copyReportToClipboard() {
+      if (!_refreshPeriodReport('copy')) return;
       const ta = document.getElementById('reportOutput');
       const text = ta.value;
       if (!text) { showToast('Сначала сгенерируйте отчет', 'warn'); return; }
@@ -32592,12 +32733,7 @@ const m = document.getElementById('mineModeBtn');
       }
     }
     // Отчет за период таблицей: тот же набор задач, что в текстовом отчете, но HTML-таблицей для письма или Word
-    function _buildPeriodTableHtml() {
-      const fromStr = (document.getElementById('reportFrom') || {}).value || '';
-      const toStr = (document.getElementById('reportTo') || {}).value || '';
-      if (!fromStr || !toStr) return null;
-      const projectVal = (document.getElementById('reportProject') || {}).value || 'all';
-      const S = _periodReportSets(fromStr, toStr, projectVal, _currentReportScope());
+    function _buildPeriodTableHtml(S) {
       const rows = [...S.done, ...S.escalation, ...S.nextWeek, ...S.inWork, ...S.doneUndated];
       const groupNames = new Map();
       [['Сделали',S.done],['Требуется эскалация',S.escalation],['На следующей неделе',S.nextWeek],['В работе',S.inWork],['Завершены без дат (вне периода)',S.doneUndated]].forEach(([name,tasks]) => tasks.forEach(t => groupNames.set(t,name)));
@@ -32605,15 +32741,15 @@ const m = document.getElementById('mineModeBtn');
       const stName = (id) => (typeof statusNameById === 'function') ? statusNameById(id) : (id || '');
       const secName = (s) => (typeof cleanSectionName === 'function' ? cleanSectionName(s) : s) || '';
       const fd = (v) => v ? formatDateString(v) : '';
-      const head = ['Группа', 'Задача', 'Секция', 'Статус', 'Старт', 'Окончание', 'Исполнитель', 'Релиз'];
-      const html = `<table border="1" cellpadding="4" cellspacing="0" style="border-collapse:collapse;font-size:12px"><thead><tr>${head.map(h => `<th style="background:#f1f5f9;text-align:left">${escHtml(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(t => `<tr><td>${escHtml(groupNames.get(t))}</td><td>${escHtml(t.name)}${t.jira ? ' (' + escHtml(getTaskKey(t)) + ')' : ''}</td><td>${escHtml(secName(t.section))}</td><td>${escHtml(stName(t.status))}</td><td>${escHtml(fd(t.start))}</td><td>${escHtml(fd(t.end))}</td><td>${escHtml(t.resource || '')}</td><td>${escHtml(t.release || '')}</td></tr>`).join('')}</tbody></table>`;
+      const head = ['Группа', 'Задача', 'Секция', 'Статус', 'Старт', 'Окончание', 'Факт завершения', 'Исполнитель', 'Релиз'];
+      const html = `<table border="1" cellpadding="4" cellspacing="0" style="border-collapse:collapse;font-size:12px"><thead><tr>${head.map(h => `<th style="background:#f1f5f9;text-align:left">${escHtml(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(t => `<tr><td>${escHtml(groupNames.get(t))}</td><td>${escHtml(t.name)}${t.jira ? ' (' + escHtml(getTaskKey(t)) + ')' : ''}</td><td>${escHtml(secName(t.section))}</td><td>${escHtml(stName(t.status))}</td><td>${escHtml(fd(t.start))}</td><td>${escHtml(fd(t.end))}</td><td>${escHtml(fd(groupNames.get(t) === 'Сделали' ? _reportCompletedOn(t) : ''))}</td><td>${escHtml(t.resource || '')}</td><td>${escHtml(t.release || '')}</td></tr>`).join('')}</tbody></table>`;
       const _tsvCell = (x) => { let v = String(x == null ? '' : x).replace(/[\t\n]+/g, ' '); if (/^[=+@\-]/.test(v)) v = "'" + v; return v; }; // нейтрализуем формульные префиксы (как jiraCsvCell), без кавычек , для TSV-вставки
-      const tsv = [head.map(_tsvCell).join('\t')].concat(rows.map(t => [groupNames.get(t), t.name + (t.jira ? ' (' + getTaskKey(t) + ')' : ''), secName(t.section), stName(t.status), fd(t.start), fd(t.end), t.resource || '', t.release || ''].map(_tsvCell).join('\t'))).join('\n');
+      const tsv = [head.map(_tsvCell).join('\t')].concat(rows.map(t => [groupNames.get(t), t.name + (t.jira ? ' (' + getTaskKey(t) + ')' : ''), secName(t.section), stName(t.status), fd(t.start), fd(t.end), fd(groupNames.get(t) === 'Сделали' ? _reportCompletedOn(t) : ''), t.resource || '', t.release || ''].map(_tsvCell).join('\t'))).join('\n');
       return { count: rows.length, html: html, tsv: tsv };
     }
     function copyReportAsTable() {
-      const built = _buildPeriodTableHtml();
-      if (!built) { showToast('Укажите период', 'warn'); return; }
+      if (!_refreshPeriodReport('copy')) return;
+      const built = _periodPreview.table;
       if (!built.count) { showToast('За период нет задач для таблицы', 'warn'); return; }
       const done = () => showToast('Таблица скопирована — вставьте в письмо или Word', 'ok');
       const fallback = () => { try { navigator.clipboard.writeText(built.tsv).then(done).catch(() => showToast('Не удалось скопировать', 'warn')); } catch (e) { showToast('Не удалось скопировать', 'warn'); } };
@@ -32640,6 +32776,7 @@ const m = document.getElementById('mineModeBtn');
       }).join('\n');
     }
     async function copyReportAsMarkdown() {
+      if (!_refreshPeriodReport('copy')) return;
       const ta = document.getElementById('reportOutput');
       const text = ta && ta.value;
       if (!text) { showToast('Сначала сгенерируйте отчет', 'warn'); return; }
@@ -32775,6 +32912,7 @@ const m = document.getElementById('mineModeBtn');
       t.status = next.id; t.updated = toYmdLocal(CURRENT_DATE);
       if (!Array.isArray(t.statusLog)) t.statusLog = [];
       t.statusLog.push({ from: prev, to: next.id, at: toYmdLocal(CURRENT_DATE), time: _auditClock(), by: _authorName() });
+      recordStatusDates(t,prev,next.id,t.updated);
       if (typeof renderRoadmap === 'function') renderRoadmap();
       if (snap && typeof offerUndo === 'function') offerUndo('Статус изменен', snap);
       showToast('Статус: ' + next.name, 'info', 1800);
@@ -34918,9 +35056,9 @@ const m = document.getElementById('mineModeBtn');
       });
     }
     function _fcOpenReason(reason) {
+      if (typeof setAppView === 'function') setAppView('list');
       _forecastReasonFilter = reason || '';
       persistFilters();
-      if (typeof setAppView === 'function') setAppView('list');
       if (typeof updateFilterToolsSummary === 'function') updateFilterToolsSummary();
       if (typeof renderStatusOverview === 'function') renderStatusOverview();
       if (typeof renderRoadmap === 'function') renderRoadmap(true);
@@ -35277,8 +35415,8 @@ const m = document.getElementById('mineModeBtn');
     }
     function _sumOpen(key) {
       // нестатусные фильтры (исполнитель/проект/метки) сохраняем , меняем только статусный срез
-      try { statusFilterSel.clear(); statusFilterSel.add(key); } catch (e) {}
       setAppView('list');
+      try { statusFilterSel.clear(); statusFilterSel.add(key); } catch (e) {}
       if (typeof afterFilterChange === 'function') afterFilterChange();
     }
     var _SUM_TILE_NAMES = { inwork: 'В работе сейчас', overdue: 'Просрочено', week: 'На этой неделе', leave: 'Кто в отпуске', next: 'Ближайшая дата', ready: 'Готовность', signals: 'Сигналы', quality: 'Заполненность полей', capacity: 'Перегруз' };
@@ -37599,9 +37737,6 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
               }
               const estimateDays = (typeof _taskEstDays === 'function') ? (_taskEstDays(task) || null) : parseEstimateDays(task.estimate);
 
-              if (estimateDays && !task.actualStart) {
-                task.actualStart = task.start;
-              }
               // Если есть оценка, но нет end-даты , достраиваем end от start.
               // Раньше условие включало actualDays === 1, из-за чего у честной однодневной задачи
               // (start === end) дата окончания каждый раз затиралась оценкой и сравнение факт/оценка ломалось.
@@ -39900,7 +40035,6 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const estimateDays = parseEstimateDays(taskObj.estimate);
       const estimatedEnd = !!(estimateDays && taskObj.start && !taskObj.end);
       if (estimateDays && taskObj.start) {
-        taskObj.actualStart = taskObj.actualStart || taskObj.start;
         // Оценка заполняет окончание только если оно пустое; явно заданную дату (в т.ч. однодневную start==end) не трогаем.
         if (!taskObj.end) {
           taskObj.end = daysToDate(dateToDays(taskObj.start) + estimateDays - 1);
@@ -39918,7 +40052,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         if (idx >= 0) {
           const prev = roadmapData[idx];
           taskObj.statusLog = prev.statusLog || [];
-          if ((prev.status || '') !== (taskObj.status || '')) taskObj.statusLog.push({ from: prev.status || '', to: taskObj.status || '', at: toYmdLocal(CURRENT_DATE), time: _auditClock(), by: _authorName() });
+          if ((prev.status || '') !== (taskObj.status || '')) {
+            const entry = {from:prev.status || '',to:taskObj.status || '',at:toYmdLocal(CURRENT_DATE),time:_auditClock(),by:_authorName()};
+            taskObj.statusLog.push(entry);
+            if (prev.statusDates) taskObj.statusDates = prev.statusDates;
+            recordStatusDates(taskObj,entry.from,entry.to,entry.at);
+          }
           // Лог изменений по ключевым полям (кто/когда/что , сверх истории статусов).
           taskObj.history = (prev.history || []).slice();
           [['name', 'Название'], ['start', 'Старт'], ['end', 'Окончание'], ['resource', 'Исполнитель'], ['section', 'Секция'], ['release', 'Релиз'], ['estimate', 'Оценка']].forEach(([f, label]) => {
@@ -39930,7 +40069,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
           // накладывая значения формы поверх прежней задачи , иначе правка теряла метаданные.
           roadmapData[idx] = Object.assign({}, prev, taskObj);
         } else roadmapData.push(taskObj);
-      } else { roadmapData.push(taskObj); }
+      } else { recordStatusDates(taskObj,'',taskObj.status,taskObj.created); roadmapData.push(taskObj); }
 
       recordProjectAudit(id ? 'task_update' : 'task_create',
         (id ? 'Изменена задача: ' : 'Создана задача: ') + (taskObj.name || 'Без названия'),
@@ -41996,7 +42135,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             if (map.name) ex.name = name;
             if (map.section) { if (!knownSec.has(section)) { planSections.push(section); knownSec.add(section); } ex.section = section; }
             if (map.status && hasStatus) {
-              if (ex.status !== status && typeof logStatusChange === 'function') logStatusChange(ex, status);
+              if (ex.status !== status && typeof logStatusChange === 'function') logStatusChange(ex, status,{source:'csv'});
               ex.status = status;
               ex._jiraStatus = Object.assign({}, resolveJiraStatus(sourceStatus).source);
               // Общий CSV не содержит отдельного поля блокировки. Ручной признак сохраняется.
@@ -42160,9 +42299,13 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         if (!manualStart) changed = true;
         if (wantDiffs) diffs.push({ field: 'start', label: 'Старт', was: existing.start || '—', now: start, conflict: manualStart });
       }
-      const targetEnd = statusMapping.isFinal && resolved ? resolved : end;
+      if (rawStatus && statusMapping.isFinal && resolved && existing.statusDates?.completed !== resolved) {
+        changed = true;
+        if (wantDiffs) diffs.push({ field:'completed', label:'Фактическое завершение', was:existing.statusDates?.completed || '—', now:resolved, conflict:false });
+      }
+      const targetEnd = end;
       if (targetEnd && String(existing.end || '') !== String(targetEnd)) {
-        if ((statusMapping.isFinal && resolved) || !manualEnd) changed = true;
+        if (!manualEnd) changed = true;
         if (wantDiffs) diffs.push({ field: 'end', label: 'Окончание', was: existing.end || '—', now: targetEnd, conflict: manualEnd });
       }
       compare('storyPoints', 'Story Points', firstNonEmpty(issue, ['Пользовательское поле (Story Points)', 'Story Points', 'Пользовательское поле (Estimate)']));
@@ -44905,21 +45048,22 @@ function syncBodyScrollLock() {
         <div id="periodCompareBlock" class="mb-4"></div>
         <div>
           <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Результат: скопируйте и отправьте</label>
+          <p id="reportDraftNotice" role="status" class="text-xs text-slate-600 mb-1" hidden></p>
           <textarea id="reportOutput" rows="18" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono leading-relaxed text-slate-700 focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors whitespace-pre-wrap" placeholder="Здесь появится отчет. Выберите период и нажмите «Сгенерировать»."></textarea>
         </div>
       </div>
       <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-2xl flex items-center justify-end gap-2">
         <div class="flex items-center gap-2">
-          <button type="button" onclick="copyReportAsTable()" class="inline-flex items-center justify-center gap-1.5 h-9 px-3 bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 text-xs font-semibold rounded-xl transition-colors cursor-pointer" title="Скопировать таблицей: те же задачи колонками — для письма или Word">
+          <button type="button" data-report-copy onclick="copyReportAsTable()" class="inline-flex items-center justify-center gap-1.5 h-9 px-3 bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 text-xs font-semibold rounded-xl transition-colors cursor-pointer" title="Скопировать таблицей: те же задачи колонками — для письма или Word">
             <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-86707420d16c"></use></svg>
             Таблицей
           </button>
-          <button type="button" onclick="copyReportAsMarkdown()" class="inline-flex items-center justify-center gap-1.5 h-9 px-3 bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 text-xs font-semibold rounded-xl transition-colors cursor-pointer" title="Скопировать в формате Markdown (для чатов и заметок)">
+          <button type="button" data-report-copy onclick="copyReportAsMarkdown()" class="inline-flex items-center justify-center gap-1.5 h-9 px-3 bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 text-xs font-semibold rounded-xl transition-colors cursor-pointer" title="Скопировать в формате Markdown (для чатов и заметок)">
             <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-fd9c4faa9833"></use></svg>
             Markdown
           </button>
           <button type="button" onclick="closeReportModal()" class="inline-flex items-center justify-center h-9 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors cursor-pointer">Закрыть</button>
-          <button type="button" onclick="copyReportToClipboard()" class="inline-flex items-center justify-center gap-1.5 h-9 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-colors cursor-pointer">
+          <button type="button" data-report-copy onclick="copyReportToClipboard()" class="inline-flex items-center justify-center gap-1.5 h-9 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-colors cursor-pointer">
             <svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-32bbc3efbd19"></use></svg>
             Скопировать
           </button>
@@ -44938,7 +45082,7 @@ function syncBodyScrollLock() {
   <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
    <div class="candidate-header-update info-header-main">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
-    <button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><span id="appVersionBadge" title="15.11.2026">v17.32</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
+    <button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><span id="appVersionBadge" title="18.11.2026">v17.33</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
    </div>
    <div class="flex items-center gap-2 shrink-0">
     <button type="button" id="infoCloseBtn" onclick="closeInfoModal()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer" aria-label="Закрыть" title="Закрыть">
@@ -44962,7 +45106,39 @@ function syncBodyScrollLock() {
    </section>
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.32</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v17.33</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="status-actual-dates" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-8fdf6e7df469"></use></svg><h5 class="min-w-0 rn-title">Фактические даты — из статуса</h5><span class="info-release-badge">ЗАДАЧИ</span></div>
+      <p class="text-xs text-slate-600">«В работе» отмечает начало, финальный статус — завершение. Плановые сроки не меняются.</p>
+     </article>
+     <article data-release-card="finished-dates-stay" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-c2b76789950a"></use></svg><h5 class="min-w-0 rn-title">Готовые задачи не сдвигаются</h5><span class="info-release-badge">ГАНТ</span></div>
+      <p class="text-xs text-slate-600">При переносе связанных работ завершённая задача сохраняет даты. Если сроки расходятся, вы увидите конфликт.</p>
+     </article>
+     <article data-release-card="report-filter-sync" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-65c0edbfe7ae"></use></svg><h5 class="min-w-0 rn-title">Отчёт учитывает выбранный фильтр</h5><span class="info-release-badge">ОТЧЁТ</span></div>
+      <p class="text-xs text-slate-600">Текст и таблица показывают одни и те же задачи. Если вы правили текст вручную, его не заменят без спроса.</p>
+     </article>
+     <article data-release-card="leader-filters-return" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-503857921646"></use></svg><h5 class="min-w-0 rn-title">Ваши фильтры вернутся</h5><span class="info-release-badge">ФИЛЬТРЫ</span></div>
+      <p class="text-xs text-slate-600">Руководитель видит весь план. При возврате к планированию снова действуют ваши фильтры.</p>
+     </article>
+     <article data-release-card="update-download-progress" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-b12c9b1b0fbd"></use></svg><h5 class="min-w-0 rn-title">Видно, сколько скачалось</h5><span class="info-release-badge">ОБНОВЛЕНИЕ</span></div>
+      <p class="text-xs text-slate-600">На медленной связи пакет продолжает скачиваться. Если загрузка прервётся, рабочий файл останется прежним.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.32</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="sprint-undo-redo" class="info-release-card rn-card rn-solid">
       <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-8fdf6e7df469"></use></svg><h5 class="min-w-0 rn-title">Спринт можно вернуть</h5><span class="info-release-badge">ДОСКА</span></div>
@@ -44991,12 +45167,6 @@ function syncBodyScrollLock() {
     </div>
    </div>
 
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.31</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -49356,7 +49526,7 @@ function syncBodyScrollLock() {
         <div class="startup-heading">
           <div class="flex items-center gap-2 flex-wrap">
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
-            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">v17.32</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button>
+            <button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-secondary candidate-version-update" aria-label="Проверить обновления" title="Проверка по нажатию. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><span id="appVersionStartup">v17.33</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg><span>Обновления</span></button>
           </div>
           <div id="startupUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
           <p class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">Откройте свой план или начните с примера.</p>
@@ -49729,7 +49899,7 @@ function simplifyPlanningInformationArchitecture() {
   advanced.forEach(function(b){ body.appendChild(b); });
   if (modes) {
     var note = document.createElement('p'); note.className = 'px-2 py-2 text-xs text-slate-500';
-    note.textContent = 'Прежние профили обзора: «Руководство» открывает сводку и сбрасывает фильтры. Это настройка вида, не ограничение доступа.';
+    note.textContent = 'В «Руководстве» виден весь план. В «Планировании» вернутся ваши фильтры. Права доступа не меняются.';
     body.appendChild(note); body.appendChild(modes);
   }
   menu.appendChild(details);
