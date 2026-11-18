@@ -17,7 +17,7 @@
     :root{--ink:#0f172a;--mut:#5b6c85;--brand:#4f46e5;--line:#e6eaf1;--hero-wash:#f8f9fc;--button-primary:#4f46e5;--button-primary-hover:#4338ca;--button-secondary:#fff;--button-secondary-hover:#f1f3f8}
     html{scroll-behavior:smooth}
     body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#f8f9fc;-webkit-font-smoothing:antialiased;line-height:1.5}
-    a{color:inherit;text-decoration:none}.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+    a{color:inherit;text-decoration:none}.wrap{max-width:1120px;margin:0 auto;padding:0 var(--page-gutter,24px)}
     .hero{position:relative;overflow:hidden;background:var(--hero-wash);border-bottom:1px solid var(--line)}
     .hero .wrap{position:relative;padding:36px 24px 44px}.brand{display:flex;align-items:center;gap:12px}
     .logo{width:52px;height:52px;border-radius:15px;background:var(--brand);display:flex;align-items:center;justify-content:center}
@@ -63,7 +63,7 @@
     .author-note{margin-top:12px;font-size:13px;color:var(--mut)}.vchip,.vhero .hd{font-size:12px}.vhero .rw>div:last-child{min-width:0}.vhero .nm{overflow-wrap:anywhere}.vhero .lk{gap:12px}
     ::selection{background:#dfe3ff;color:#0f172a}input,textarea{caret-color:var(--brand)}
     @media(max-width:900px){.heroright{justify-content:flex-start}.heroright .vhero{max-width:none}}
-    @media(max-width:720px){.hero .wrap{padding:24px 20px 28px}.herogrid{margin-top:24px}.shotwrap .wrap{padding:0 20px}.video{border-radius:12px}.vidnote{font-size:12px}.hero .cta{margin-top:20px;gap:12px}.hero .cta .btn{width:auto;flex:1 1 180px;padding:0 12px;font-size:14px}}
+    @media(max-width:720px){:root{--page-gutter:20px}.hero .wrap{padding:24px var(--page-gutter) 28px}.herogrid{margin-top:24px}.shotwrap .wrap{padding:0 var(--page-gutter)}.video{border-radius:12px}.vidnote{font-size:12px}.hero .cta{margin-top:20px;gap:12px}.hero .cta .btn{width:auto;flex:1 1 180px;padding:0 12px;font-size:14px}}
     .video-help[hidden]{display:none}
     @media(pointer:coarse){.vhero .lk>a{display:inline-flex;align-items:center;min-height:44px}}
   </style>
@@ -73,7 +73,7 @@
     <div class="brand"><div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h9M4 12h14M4 17h6"/></svg></div><span class="vchip">Roadmap</span></div>
     <div class="herogrid">
       <div>
-        <h1>Дорожная карта — Roadmap v17.33</h1>
+        <h1>Дорожная карта — Roadmap v18.0</h1>
         <p class="lead">Задачи из Jira, сроки и команда — в одном плане. Гант, Канбан и Скрам в браузере, без установки. План сохраняется в файл.</p>
         <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a><a class="story-link" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a></div>
       </div>
@@ -129,7 +129,7 @@
     <section><div class="wrap"><div class="catcta"><h2>Посмотрите, подойдет ли вам Roadmap</h2><p>Попробуйте план на примере команды или найдите в каталоге то, что поможет в вашей работе.</p><div class="cta"><a class="btn primary" href="app.html">Попробовать демо</a><a class="btn ghost" href="catalog.html">Посмотреть возможности</a></div></div></div></section>
   </main>
 
-  <footer class="foot"><div class="wrap">Roadmap v17.33 · Владимир Учинин</div></footer>
+  <footer class="foot"><div class="wrap">Roadmap v18.0 · Владимир Учинин</div></footer>
   <dialog class="purchase-dialog" id="purchase-dialog" aria-labelledby="purchase-title" aria-describedby="purchase-note">
     <div class="purchase-head"><h2 id="purchase-title">Запросить рабочую версию</h2><button class="btn ghost purchase-close" id="purchase-close" type="button" aria-label="Закрыть форму">&times;</button></div>
     <p class="purchase-note" id="purchase-note">Форма подготовит письмо автору для обсуждения цены и условий. Оно откроется в вашей почтовой программе, отправить его нужно самостоятельно. Это не заказ и не оплата. Сайт не отправляет и не сохраняет данные формы.</p>

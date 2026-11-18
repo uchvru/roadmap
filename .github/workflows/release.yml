@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: 'Тег вида vX.Y или vX.Y.Z; нужен только при публикации Release'
+        description: 'Устаревший параметр; новые теги имеют вид vX.Y (Y — одна цифра)'
         required: false
         type: string
       publish_release:
