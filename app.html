@@ -6613,6 +6613,7 @@
    .timeline-empty-state { position:sticky; left:0; width:max(20rem,min(44rem,calc(100vw - 32rem))); min-height:34rem; }
    body[data-list-density="compact"] #tasks-list-container > div[id^="header-left-"],body[data-list-density="compact"] #bars-container > div[id^="header-right-"] { height:46px; }
    body[data-list-density="compact"] { --rm-task-row-base:48px; }
+   #tasks-list-container { --rm-tree-step:22px; }
    #tasks-list-container .task-list-row { height:var(--rm-task-row-base,56px); min-height:var(--rm-task-row-base,56px); padding-left:calc(20px + var(--rm-task-indent,0px)); }
    #bars-container .task-timeline-row { height:var(--rm-task-row-height,var(--rm-task-row-base,56px)); min-height:var(--rm-task-row-base,56px); }
    .task-list-row .task-row-content { padding-right:.5rem; }
@@ -6622,9 +6623,10 @@
    .task-list-row .task-row-actions { padding:.375rem; top:100%; bottom:auto; right:0; gap:.25rem; background:var(--rm-surface); border:1px solid var(--rm-border); border-radius:var(--rm-radius-sm); box-shadow:var(--rm-shadow-sm); opacity:1; pointer-events:auto; z-index:150; }
    .task-actions-disclosure[data-open="false"] .task-row-actions { display:none; }
    @media (max-width:1023px), (pointer:coarse) {
+     #tasks-list-container { --rm-tree-step:12px; }
      #tasks-list-container .task-list-row {
        height:auto; display:grid; grid-template-columns:auto minmax(0,1fr) auto;
-       gap:.5rem .375rem; align-items:start; padding: .625rem .75rem .625rem calc(12px + min(var(--rm-task-indent,0px),44px));
+       gap:.5rem .375rem; align-items:start; padding: .625rem .75rem .625rem calc(12px + var(--rm-task-indent,0px));
      }
      .task-list-row > .bulk-cb { grid-column:1; grid-row:1; margin:.125rem .25rem 0 0; }
      .task-list-row .task-row-content { grid-column:2 / 4; grid-row:1; padding:0; overflow:visible; }
@@ -6686,7 +6688,7 @@
    .rm-toast .rm-toast-action { flex:none; min-height:44px; color:inherit; background:var(--rm-surface-soft); border:1px solid var(--rm-border); }
    .rm-toast .rm-toast-action:hover { color:var(--rm-selected-text); background:var(--rm-selected-bg); }
    @media (max-width:1023px), (pointer:coarse) {
-     #tasks-list-container > .section-list-header { height:auto !important; min-height:54px; padding:.625rem .75rem !important; flex-wrap:wrap; gap:.5rem; }
+     #tasks-list-container > .section-list-header { height:auto !important; min-height:54px; padding:.625rem .75rem .625rem calc(12px + var(--ng-x,0px)) !important; flex-wrap:wrap; gap:.5rem; }
      .section-list-header > .section-heading { flex-basis:calc(100% - 2rem); margin-right:0; }
      .section-list-header .section-heading-line { flex-wrap:wrap; gap:.375rem; }
      .section-list-header .section-heading-line > .truncate { flex-basis:100%; white-space:normal; overflow:visible; font-size:.875rem; line-height:1.45; overflow-wrap:anywhere; }
@@ -9141,7 +9143,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="relative no-image-export cursor-pointer transition-colors" title="Что нового">v18.0</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="relative no-image-export cursor-pointer transition-colors" title="Что нового">v18.1</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -10016,7 +10018,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v18.0">
+<script data-roadmap-modules="v18.1">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -13852,7 +13854,7 @@ if (typeof globalThis !== "undefined") {
   namespace.parseJiraCsvRecords = parseJiraCsvRecords;
 }
 
-/* module:jira-relations sha256:52ce5f2ffba5e8ed5f10642814e1b079a0534d702294696744b72e1b64615844 */
+/* module:jira-relations sha256:6fe0f7ad2ed629bdd797f3854381755461dce16e4377b343709042b3b771d258 */
 // Pure Jira relations model. CSV rows, known sections and metadata are explicit
 // inputs; this module never reads the DOM, storage, network or the current plan.
 // Priority and result shape preserve the v17.0 import/preview contract.
@@ -13860,7 +13862,9 @@ const JIRA_RELATION_EPIC_LINK_COLS = ['Пользовательское поле
 
 const JIRA_RELATION_EPIC_NAME_COLS = ['Пользовательское поле (Epic Name)', 'Custom field (Epic Name)', 'Epic Name'];
 
-const JIRA_RELATION_PARENT_COLS = ['Пользовательское поле (Parent Link)', 'Custom field (Parent Link)', 'Parent Link', 'Parent', 'Parent id', 'Parent key', 'Родительская задача'];
+const JIRA_RELATION_PARENT_COLS = ['Parent key', 'Parent', 'Родительская задача', 'Parent id'];
+const JIRA_RELATION_PARENT_LINK_COLS = ['Пользовательское поле (Parent Link)', 'Custom field (Parent Link)', 'Parent Link'];
+const JIRA_SUBTASK_COLUMN = /^(?:sub[- ]?tasks?|подзадач[аи])(?:\.\d+)?$/i;
 
 function jiraRelationValue(obj, keys) {
   for (const key of keys) {
@@ -13907,23 +13911,29 @@ function parseJiraIssueLinks(issue) {
   return links;
 }
 
-function createJiraHierarchyContext(issues, sections = [], metadata = {}) {
+function createJiraHierarchyContext(issues, sections = [], metadata = {}, knownTasks = []) {
   const names = {}, types = {}, ids = {}, candidates = {}, priorities = {};
+  const duplicateIds = new Set(), ambiguousDirectIds = new Set(), listed = new Map(), parentFields = new Set();
   (issues || []).forEach(issue => {
     const key = jiraRelationKey(jiraRelationValue(issue, ['Ключ проблемы', 'Issue key', 'Key']));
     if (!key) return;
     names[key] = jiraRelationEpicName(issue) || jiraRelationValue(issue, ['Тема','Summary']);
     types[key] = jiraRelationValue(issue, ['Тип задачи','Тип запроса','Тип проблемы','Issue Type','Issue type']);
     const id = jiraRelationValue(issue, ['Issue id','Issue ID','Идентификатор проблемы']);
-    if (id) ids[id] = key;
+    if (id && /^\d+$/.test(id)) {
+      if (ids[id] && ids[id] !== key) { delete ids[id]; duplicateIds.add(id); }
+      if (!duplicateIds.has(id)) ids[id] = key;
+    }
   });
   (sections || []).forEach(section => {
-    const key = jiraRelationSectionKey(section);
+    const meta = metadata[section] || {};
+    const key = jiraRelationKey(meta.key) || jiraRelationSectionKey(section);
     if (!key || types[key]) return;
     if (/^Initiative:/i.test(section)) types[key] = 'Initiative';
     else if (/^Epic:/i.test(section)) types[key] = 'Epic';
     else if (/^Story:/i.test(section)) types[key] = 'Story';
-    names[key] = (metadata[section] && metadata[section].title) || section.replace(/^(Initiative|Epic|Story):\s*/i,'').replace(/\s*\[[^\]]+\]$/,'');
+    else if (meta.fromJira && /^(?:initiative|epic|story)$/i.test(meta.kind)) types[key] = meta.kind;
+    names[key] = meta.title || section.replace(/^(Initiative|Epic|Story):\s*/i,'').replace(/\s*\[[^\]]+\]$/,'');
   });
   const keyOf = value => jiraRelationKey(value) || ids[String(value || '').trim()] || '';
   const rankOf = key => types[key] ? jiraRelationRank(types[key]) : -1;
@@ -13931,16 +13941,35 @@ function createJiraHierarchyContext(issues, sections = [], metadata = {}) {
     if (!child || !parent || child === parent) return;
     // Parent остается главным источником даже без строки родителя в CSV.
     // Неподтвержденный уровень не дает папку, но блокирует подмену другой связью.
-    if (priority !== 40 && (rankOf(parent) < 0 || rankOf(child) !== rankOf(parent)+1)) return;
+    if (priority <= 30 && (rankOf(parent) < 0 || rankOf(child) !== rankOf(parent)+1)) return;
     if (priorities[child] === undefined || priority > priorities[child]) {
       priorities[child] = priority; candidates[child] = new Set([parent]);
     } else if (priority === priorities[child]) candidates[child].add(parent);
   };
   (issues || []).forEach(issue => {
     const self = keyOf(jiraRelationValue(issue, ['Ключ проблемы','Issue key','Key']));
-    setParent(self,keyOf(jiraRelationValue(issue,JIRA_RELATION_PARENT_COLS)),40);
+    if (JIRA_RELATION_PARENT_COLS.some(col => Object.hasOwn(issue,col))) parentFields.add(self);
+    const directParent = JIRA_RELATION_PARENT_COLS.map(col => keyOf(issue[col])).find(Boolean);
+    setParent(self,directParent,50);
+    if (self && !directParent && JIRA_RELATION_PARENT_COLS.some(col => duplicateIds.has(String(issue[col] ?? '').trim()))) {
+      // The direct id names multiple CSV rows: no weaker link may choose between them.
+      ambiguousDirectIds.add(self);
+    }
+    setParent(self,keyOf(jiraRelationValue(issue,JIRA_RELATION_PARENT_LINK_COLS)),35);
     setParent(self,keyOf(jiraRelationValue(issue,JIRA_RELATION_EPIC_LINK_COLS)),30);
     Object.keys(issue).forEach(column => {
+      if (self && JIRA_SUBTASK_COLUMN.test(column) && rankOf(self) >= 2) {
+        if (!listed.has(self)) listed.set(self,new Set());
+        // Real keys or numeric Issue ids only, never extract a key from prose in a label.
+        for (const part of String(issue[column] || '').split(/[,;\n]+/)) {
+          const tokens = part.trim().toUpperCase().split(/\s+/);
+          if (!tokens.every(t => /^(?:[A-Z][A-Z0-9]*-\d+|\d+)$/.test(t))) continue;
+          for (const token of tokens) {
+            const child = keyOf(token);
+            if (child && child !== self && (rankOf(child) === 3 || rankOf(child) < 0)) listed.get(self).add(child);
+          }
+        }
+      }
       if (!isJiraHierarchyColumn(column)) return;
       (String(issue[column] || '').match(/[A-Z][A-Z0-9]*-\d+/g) || []).forEach(linked => {
         if (rankOf(self) === rankOf(linked)+1) setParent(self,linked,20);
@@ -13948,12 +13977,49 @@ function createJiraHierarchyContext(issues, sections = [], metadata = {}) {
       });
     });
   });
-  const parents = {}, conflicts = new Set();
+  for (const [parent,children] of listed) {
+    for (const child of children) if (rankOf(child) === 3) setParent(child,parent,40);
+  }
+  // A child-only CSV can follow a list actually supplied in an earlier import.
+  // A refreshed list (including an empty one) replaces the cached list for that Story.
+  let protectedPlacements;
+  for (const section of sections || []) {
+    const meta = metadata[section];
+    if (!Array.isArray(meta?._jiraSubtaskKeys) || !/^Story:/i.test(section) && meta.kind !== 'story') continue;
+    const parent = keyOf(meta.key) || jiraRelationSectionKey(section);
+    if (listed.has(parent) || rankOf(parent) !== 2) continue;
+    if (!protectedPlacements) {
+      protectedPlacements = new Set();
+      for (const task of knownTasks || []) {
+        if (task?.jira && (task._jiraParentBlocked || task._jiraParentKey || task.section && task.section !== 'Задачи без эпика'))
+          protectedPlacements.add(String(task.jira).trim().toUpperCase());
+      }
+    }
+    for (const child of meta._jiraSubtaskKeys) {
+      if (rankOf(child) === 3 && !parentFields.has(child) && !protectedPlacements.has(child)) setParent(child,parent,10);
+    }
+  }
+  const parents = {}, conflicts = new Set(ambiguousDirectIds);
   Object.entries(candidates).forEach(([child,set]) => {
-    if (set.size === 1) parents[child] = [...set][0]; else conflicts.add(child);
+    if (set.size === 1 && !conflicts.has(child)) parents[child] = [...set][0]; else conflicts.add(child);
   });
+  // A Task and its Sub-task are both rows. Retain their direct parent keys for
+  // export, but display both in the nearest confirmed Story. Memoize long chains.
+  const storyByChild = {}, resolved = new Map();
+  for (const child of Object.keys(parents)) {
+    if (rankOf(child) !== 3 || resolved.has(child)) continue;
+    let current = child, story = '';
+    const path = new Set();
+    while (rankOf(current) === 3 && !path.has(current) && !resolved.has(current)) {
+      path.add(current); current = parents[current];
+    }
+    if (rankOf(current) === 2) story = current;
+    else if (resolved.has(current)) story = resolved.get(current);
+    for (const key of path) { resolved.set(key,story); if (story) storyByChild[key] = story; }
+  }
   return {tempEpicDict:names,tempTypeByKey:types,tempKeyById:ids,tempHierarchyParent:parents,tempHierarchyConflicts:conflicts,
-    tempStoryChildOf:Object.fromEntries(Object.entries(parents).filter(([child,parent]) => rankOf(child)===3 && rankOf(parent)===2))};
+    ...(listed.size ? {tempListedSubtaskKeys:Object.fromEntries([...listed].map(([key,set]) => [key,[...set]]))} : {}),
+    tempStoryChildOf:storyByChild};
 }
 
 if (typeof globalThis !== 'undefined') {
@@ -15660,7 +15726,7 @@ if (typeof globalThis !== 'undefined') {
   ns.createSchedulePreview = createSchedulePreview;
 }
 
-/* module:jira-import-actions sha256:ebe663b1b4f311d732a2c0081479e7fb01a49555b2206dc0f7d15a5b22936611 */
+/* module:jira-import-actions sha256:6b97d7aac7d8d5d99c6b7cec7c7ed8bbc3f84fd86b78d2f3820b8f3edfe5fe28 */
 // Extracted from the tested v17.0 implementation. Side effects are explicit dependencies.
 function portableJiraConnection(value) {
   const result = {base:''};
@@ -15749,6 +15815,8 @@ function updateArchivedJiraTask(existing, mapped, {isFinalStatus, logJiraStatusC
   if (mapped.epicName) existing.epicName = mapped.epicName;
   if (mapped.epicLink) existing.epicLink = mapped.epicLink;
   if (mapped._jiraHasHierarchy) existing._jiraParentKey = mapped._jiraParentKey || '';
+  if (mapped._jiraParentBlocked) existing._jiraParentBlocked = true;
+  else if (mapped._jiraHasHierarchy) delete existing._jiraParentBlocked;
   if (mapped.conf) existing.conf = mapped.conf;
   if (mapped.figma) existing.figma = mapped.figma;
   if (mapped._jiraHasLinks) {
@@ -15772,7 +15840,7 @@ if (typeof globalThis !== 'undefined') {
   Object.assign(globalThis.RoadmapModules, {applyReviewedJiraImport, updateArchivedJiraTask,portableJiraConnection,jiraExcludedImportKeys});
 }
 
-/* module:jira-merge sha256:e97fc4471b7d83a24caa53071623acf84cd4f081cc31fb98d6a823c23b0d33b6 */
+/* module:jira-merge sha256:6f441072d7be7e45887c003c0191545b18accea155e560a8b38e3eddba9c69e8 */
 // Jira merge data phases, extracted from the frozen v17.12 adapter.
 // The caller owns all arrays and objects. Existing task identities are preserved.
 // No DOM, persistence, network or clock access. Mapping, ID allocation and history
@@ -15881,6 +15949,8 @@ function mergeJiraTaskRows({issues, options, state, hierarchyContext, yearStartY
         };
         sectionMeta[secName].kind = jiraContainerKindFromRank(_containerRank);
         sectionMeta[secName].fromJira = true;
+        const children = hierarchyContext.tempListedSubtaskKeys?.[_jiraKey(mapped.jira)];
+        if (_containerRank === 2 && Array.isArray(children)) sectionMeta[secName]._jiraSubtaskKeys = children.slice();
         const previousParent = (sectionParents[secName] && jiraSectionKey(sectionParents[secName])) || previousMeta._jiraParentKey || '';
         sectionMeta[secName]._jiraParentKey = mapped._jiraHasHierarchy ? (mapped._jiraParentKey || '') : previousParent;
         if (mapped._jiraHasLinks) sectionMeta[secName]._jiraLinks = mapped._jiraLinks;
@@ -16004,6 +16074,8 @@ function mergeJiraTaskRows({issues, options, state, hierarchyContext, yearStartY
       existing.epicName = mapped.epicName || existing.epicName;
       existing.epicLink = mapped.epicLink || existing.epicLink;
       if (mapped._jiraHasHierarchy) existing._jiraParentKey = mapped._jiraParentKey || '';
+      if (mapped._jiraParentBlocked) existing._jiraParentBlocked = true;
+      else if (mapped._jiraHasHierarchy) delete existing._jiraParentBlocked;
       if (mapped._jiraHasLinks) { existing._predKeys = mapped._predKeys || []; existing._jiraLinks = mapped._jiraLinks || []; }
       if (mapped.release && existing.release !== mapped.release) { chgRelease++; _chg = true; _cf.push('релиз'); }
       if (mapped.release) existing.release = mapped.release;
@@ -17989,8 +18061,8 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '18.0';
-    const APP_VERSION_DATE = '18.11.2026';
+    const APP_VERSION = '18.1';
+    const APP_VERSION_DATE = '20.11.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) { b.textContent = 'v' + APP_VERSION; b.title = APP_VERSION_DATE; } } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'v' + APP_VERSION; } catch (e) {}
@@ -18535,6 +18607,89 @@ if (typeof globalThis !== 'undefined') {
       return `${prefix}: ${String(t.name || t.jira).trim()} [${String(t.jira).trim()}]`;
     }
     function isJiraContainerTask(t) { return !!jiraContainerSectionFromTask(t); }
+    function savedJiraFolders() {
+      const keyOf = value => {
+        const key = String(value || '').trim().toUpperCase();
+        return /^[A-Z][A-Z0-9_]*-\d+$/.test(key) ? key : '';
+      };
+      const sectionKey = s => {
+        if (sectionHierarchyKind(s) === 'root') return '';
+        const match = s.match(/\[([A-Z][A-Z0-9_]*-\d+)\]\s*$/i) || s.match(/^(?:Initiative|Epic|Story):\s*([A-Z][A-Z0-9_]*-\d+)\b/i);
+        return keyOf((sectionMeta[s] || {}).key) || keyOf(match && match[1]);
+      };
+      const addUnique = (map, key, value) => {
+        if (key) map.set(key, map.has(key) && map.get(key) !== value ? null : value);
+      };
+      const sectionByKey = new Map();
+      planSections.forEach(s => addUnique(sectionByKey, sectionKey(s), s));
+      return { keyOf, sectionKey, addUnique, sectionByKey };
+    }
+    // This repair changes only proven membership in live folders, never task data or history.
+    function recoverSavedJiraPlacement(folders, openOnly = false) {
+      const { keyOf, sectionKey, addUnique, sectionByKey } = folders;
+      let reparentedTasks = 0;
+      const hidden = new Set(openOnly ? hiddenSections : []);
+      const isHidden = section => {
+        if (!hidden.size) return false;
+        const seen = new Set();
+        while (section && !seen.has(section)) {
+          if (hidden.has(section)) return true;
+          seen.add(section); section = sectionParents[section];
+        }
+        return false;
+      };
+      // Сохраненные контейнеры уже не являются строками задач. Их родительские
+      // ключи нужно восстанавливать из метаданных и при повторном открытии JSON.
+      planSections.forEach(s => {
+        const kind = sectionHierarchyKind(s);
+        const parent = sectionByKey.get(keyOf((sectionMeta[s] || {})._jiraParentKey));
+        if (openOnly && (sectionParents[s] || isHidden(s) || isHidden(parent))) return;
+        if ((kind === 'epic' || kind === 'story') && parent && isValidSectionParent(s, parent)) sectionParents[s] = parent;
+      });
+      // A Task is a row, not a folder. Keep the real Parent key on its subtask,
+      // but display both under the nearest Story verified by the saved chain.
+      const taskByKey = new Map(), storyByChild = new Map(), resolved = new Map();
+      roadmapData.forEach(t => { if (t && !t.isMilestone && !isJiraContainerTask(t)) addUnique(taskByKey, keyOf(t.jira), t); });
+      planSections.forEach(s => {
+        if (sectionHierarchyKind(s) !== 'story' || sectionByKey.get(sectionKey(s)) !== s) return;
+        const children = (sectionMeta[s] || {})._jiraSubtaskKeys;
+        if (Array.isArray(children)) children.forEach(child => addUnique(storyByChild, keyOf(child), s));
+      });
+      const canRecover = t => !t.section || t.section === 'Задачи без эпика' || !isTaskTargetSection(t.section);
+      const findStory = task => {
+        let row = task, story = '';
+        const path = new Set();
+        while (row && !path.has(row)) {
+          if (resolved.has(row)) { story = resolved.get(row); break; }
+          path.add(row);
+          if (!row._jiraParentKey) {
+            const key = keyOf(row.jira);
+            const declared = storyByChild.get(key);
+            if (!row._jiraParentBlocked && declared && taskByKey.get(key) === row && (row.section === declared || canRecover(row))) story = declared;
+            break;
+          }
+          const parent = keyOf(row._jiraParentKey);
+          if (!parent) break;
+          if (sectionByKey.has(parent)) {
+            const folder = sectionByKey.get(parent);
+            if (folder && !taskByKey.has(parent) && sectionHierarchyKind(folder) === 'story') story = folder;
+            break;
+          }
+          row = taskByKey.get(parent);
+        }
+        path.forEach(visited => resolved.set(visited, story));
+        return story;
+      };
+      roadmapData.forEach(t => {
+        if (!t || t.isMilestone || jiraHierarchyRankFromType(t.issueType) < 3) return;
+        if (openOnly && (t.hidden || isHidden(t.section) || (t.section && t.section !== 'Задачи без эпика' && !['epic','initiative'].includes(sectionHierarchyKind(t.section))))) return;
+        const parentSection = findStory(t);
+        if (parentSection && !isHidden(parentSection)) {
+          if (t.section !== parentSection) { t.section = parentSection; reparentedTasks++; }
+        }
+      });
+      return reparentedTasks;
+    }
     // Старое имя оставлено для совместимости с дополнительными модулями файла.
     // Приводит секции в порядок (вызывается при загрузке, импорте JSON и импорте Jira):
     // 1) Initiative/Epic/Story всегда превращает в секцию, даже если у контейнера пока нет детей;
@@ -18546,20 +18701,17 @@ if (typeof globalThis !== 'undefined') {
       const parentsBefore = JSON.stringify(sectionParents);
       const dropSelf = new Set();
       const containerRows = [];
-      const metaSectionByKey = {};
-      planSections.forEach(s => { const k = jiraSectionKey(s); if (k) metaSectionByKey[k] = s; });
-      Object.keys(sectionMeta || {}).forEach(s => {
-        const m = sectionMeta[s] || {};
-        const k = String(m.key || jiraSectionKey(s) || '').trim();
-        if (k && !metaSectionByKey[k]) metaSectionByKey[k] = s;
-      });
+      const { keyOf, sectionKey, addUnique, sectionByKey: metaSectionByKey } = savedJiraFolders();
+      const inactiveByKey = new Map();
+      Object.keys(sectionMeta || {}).forEach(s => addUnique(inactiveByKey, sectionKey(s), s));
+      inactiveByKey.forEach((s, key) => { if (!metaSectionByKey.has(key)) metaSectionByKey.set(key, s); });
       roadmapData.forEach(t => {
         if (!isJiraContainerTask(t)) return;
         selfRows++;
         const k = String(t.jira || '').trim();
         const rank = jiraHierarchyRankFromType(t.issueType);
         const kind = jiraContainerKindFromRank(rank);
-        const previousSection = metaSectionByKey[k];
+        const previousSection = metaSectionByKey.get(keyOf(k));
         const sec = previousSection && sectionHierarchyKind(previousSection) === kind
           ? previousSection : jiraContainerSectionFromTask(t);
         if (!planSections.includes(sec)) planSections.push(sec);
@@ -18574,37 +18726,29 @@ if (typeof globalThis !== 'undefined') {
         sectionMeta[sec] = { ...prev, key: k, title: t.name || prev.title || k, status: t.status || prev.status || '', kind, fromJira: true,
           _jiraParentKey: t._jiraParentKey || (rank === 2 ? t.epicLink : '') || prev._jiraParentKey || '' };
         if (Array.isArray(t._jiraLinks)) sectionMeta[sec]._jiraLinks = t._jiraLinks.map(link => ({ ...link }));
-        metaSectionByKey[k] = sec;
+        addUnique(metaSectionByKey, keyOf(k), sec);
         containerRows.push({ task: t, section: sec, key: k, rank });
         dropSelf.add(t);
       });
       if (dropSelf.size) roadmapData = roadmapData.filter(t => !dropSelf.has(t));
       let rootedTasks = 0;
-      let reparentedTasks = 0;
 
       // Если активная Story ссылается на Epic, который ранее был ошибочно удален как пустой,
       // восстанавливаем его из sectionMeta. Не создаем выдуманный родитель без метаданных.
       containerRows.forEach(x => {
         if (x.rank !== 2) return;
-        const parentKey = String(x.task._jiraParentKey || x.task.epicLink || '').trim();
-        const parentSec = metaSectionByKey[parentKey];
+        const parentKey = keyOf(x.task._jiraParentKey || x.task.epicLink);
+        const parentSec = metaSectionByKey.get(parentKey);
         if (parentSec && /^Epic:/i.test(parentSec) && !planSections.includes(parentSec)) planSections.push(parentSec);
       });
 
-      const sectionByKey = {};
-      planSections.forEach(s => { const k = jiraSectionKey(s); if (k) sectionByKey[k] = s; });
-      // Сохраненные контейнеры уже не являются строками задач. Их родительские
-      // ключи нужно восстанавливать из метаданных и при повторном открытии JSON.
-      planSections.forEach(s => {
-        const kind = sectionHierarchyKind(s);
-        const parent = sectionByKey[String((sectionMeta[s] || {})._jiraParentKey || '').trim()];
-        if ((kind === 'epic' || kind === 'story') && parent && isValidSectionParent(s, parent)) sectionParents[s] = parent;
-      });
+      const folders = savedJiraFolders();
+      const { sectionByKey } = folders;
       containerRows.forEach(x => {
         if (x.rank === 0) { delete sectionParents[x.section]; return; }
         let parentKey = String(x.task._jiraParentKey || '').trim();
         if (!parentKey && x.rank === 2) parentKey = String(x.task.epicLink || '').trim();
-        const parentSec = sectionByKey[parentKey];
+        const parentSec = sectionByKey.get(keyOf(parentKey));
         const valid = x.rank === 1 ? /^Initiative:/i.test(String(parentSec || '')) : /^Epic:/i.test(String(parentSec || ''));
         if (valid) sectionParents[x.section] = parentSec;
         else {
@@ -18620,12 +18764,9 @@ if (typeof globalThis !== 'undefined') {
         const parentRank = /^Initiative:/i.test(parent) ? 0 : (/^Epic:/i.test(parent) ? 1 : (/^Story:/i.test(parent) ? 2 : -1));
         if (!isValidSectionParent(child, parent) || ((parentRank >= 0 || childRank >= 0) && childRank !== parentRank + 1)) delete sectionParents[child];
       });
+      const reparentedTasks = recoverSavedJiraPlacement(folders);
       roadmapData.forEach(t => {
-        if (!t || t.isMilestone || jiraHierarchyRankFromType(t.issueType) < 3) return;
-        const parentSection = sectionByKey[String(t._jiraParentKey || '').trim()];
-        if (parentSection && sectionHierarchyKind(parentSection) === 'story') {
-          if (t.section !== parentSection) { t.section = parentSection; reparentedTasks++; }
-        } else if (!isTaskTargetSection(t.section)) {
+        if (t && !t.isMilestone && jiraHierarchyRankFromType(t.issueType) === 3 && !isTaskTargetSection(t.section)) {
           t.section = 'Задачи без эпика'; rootedTasks++;
         }
       });
@@ -19724,6 +19865,7 @@ if (typeof globalThis !== 'undefined') {
       // Инициализация пустой оболочки не изменяет импортированные даты и задачи.
       roadmapData = []; archivedTasks = []; planSections = []; initApp();
       _applyRoadmapSnapshotState(packet.snapshot, {projectIdMode:'adopt'});
+      recoverSavedJiraPlacement(savedJiraFolders(), true);
       _persistProjectStateNow(); _refreshAfterSnapshotApply();
       await _refreshFileVersions();
       if (timelineZoom === 'fit') fitTimelineToPlan(); else scrollToToday();
@@ -37505,14 +37647,18 @@ const m = document.getElementById('mineModeBtn');
         const borderColorClass = `border-${colorName}`;
         // Полоска слева 4px + тонкая нижняя полоска 1px того же цвета
         headerLeft.className = `section-list-header h-[54px] px-4 bg-slate-100/90 relative group flex items-center justify-between text-[10px] font-semibold text-slate-600 select-none transition-colors border-l-4 ${borderColorClass} border-b ${borderColorClass}/50`;
-        if (secDepth) { headerLeft.style.paddingLeft = (20 + secDepth * 22) + 'px'; headerLeft.classList.add('nest-guide'); headerLeft.style.setProperty('--ng-x', (secDepth * 22) + 'px'); }
+        const folderIndent = 'calc(' + secDepth + ' * var(--rm-tree-step))';
+        if (secDepth) { headerLeft.style.paddingLeft = 'calc(20px + var(--ng-x))'; headerLeft.classList.add('nest-guide'); headerLeft.style.setProperty('--ng-x', folderIndent); }
 
         // Try to find если секция эпиковая , извлекаем краткое имя и ключ Jira
         let displaySectionName = sectionName;
         // Зона «Скрытые задачи» , свой заголовок, не подменяем его эпиком первой скрытой задачи.
         const epicTask = (zoneKind === 'hiddenTasks') ? null : sectionTasks.find(t => t.epicLink || t.epicName || t.epic);
 
-        const {epicKey, shortName, sectionKind, mainTitle} = RoadmapModules.parseSectionHeading(sectionName, epicTask);
+        const {epicKey: labelKey, shortName, sectionKind, mainTitle} = RoadmapModules.parseSectionHeading(sectionName, epicTask);
+        // A renamed Story may have no key in its label. Its child's Epic Link is not the Story's identity.
+        const savedKey = String((sectionMeta[sectionName] || {}).key || '').trim().toUpperCase();
+        const epicKey = sectionKind && /^[A-Z][A-Z0-9_]*-\d+$/.test(savedKey) ? savedKey : labelKey;
 
         // Jira-проекты секции
         const _pc = {}; sectionTasks.forEach(t => { const m = String(t.jira || '').match(/^([A-Z][A-Z0-9]*)-\d+/); if (m) _pc[m[1]] = (_pc[m[1]] || 0) + 1; });
@@ -37792,7 +37938,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
             rowLeft.className = "task-list-row group relative px-5 flex items-center justify-between " + (_zebraOdd ? "bg-slate-50/40 hover:bg-slate-100 " : "bg-white hover:bg-slate-50 ") + "border-b border-slate-100 transition-colors cursor-grab active:cursor-grabbing select-none";
             if (task.isMilestone) rowLeft.classList.add('ms-row');
             { const _fc = _focusChain(); if (_fc && !_fc.has(task.id)) rowLeft.classList.add('dep-dim'); }
-            if (secDepth) { rowLeft.style.setProperty('--rm-task-indent', (secDepth * 22) + 'px'); rowLeft.classList.add('nest-guide'); rowLeft.style.setProperty('--ng-x', (secDepth * 22) + 'px'); }
+            if (secDepth || (!isHiddenZone && sectionKind)) {
+              rowLeft.style.setProperty('--rm-task-indent', 'calc(' + folderIndent + ' + 28px)');
+              rowLeft.classList.add('nest-guide');
+              rowLeft.style.setProperty('--ng-x', 'calc(' + folderIndent + ' + var(--rm-tree-step))');
+            }
             rowLeft.draggable = !READ_ONLY_MODE;
 
             rowLeft.addEventListener('dragstart', (e) => handleRowDragStart(e, task.id));
@@ -41581,10 +41731,17 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     function jiraKeyOf(v) { const m = String(v || '').match(/[A-Z][A-Z0-9]*-\d+/); return m ? m[0] : ''; }
     const EPIC_LINK_COLS = ['Пользовательское поле (Epic Link)', 'Custom field (Epic Link)', 'Epic Link'];
     const EPIC_NAME_COLS = ['Пользовательское поле (Epic Name)', 'Custom field (Epic Name)', 'Epic Name'];
-    const PARENT_COLS = ['Пользовательское поле (Parent Link)', 'Custom field (Parent Link)', 'Parent Link', 'Parent', 'Parent id', 'Parent key', 'Родительская задача'];
+    const PARENT_COLS = ['Parent key', 'Parent', 'Родительская задача', 'Parent id', 'Пользовательское поле (Parent Link)', 'Custom field (Parent Link)', 'Parent Link'];
     function getEpicLinkKey(issue) { const v = firstNonEmpty(issue, EPIC_LINK_COLS); return jiraKeyOf(v) || (window.tempKeyById && window.tempKeyById[String(v).trim()]) || ''; }
     function getEpicNameField(issue) { return firstNonEmpty(issue, EPIC_NAME_COLS); }
-    function getParentKey(issue) { const v = firstNonEmpty(issue, PARENT_COLS); return jiraKeyOf(v) || (window.tempKeyById && window.tempKeyById[String(v).trim()]) || ''; }
+    function getParentKey(issue) {
+      for (const col of PARENT_COLS) {
+        const value = String(issue[col] ?? '').trim();
+        const key = jiraKeyOf(value) || (/^\d+$/.test(value) && window.tempKeyById?.[value]);
+        if (key) return key;
+      }
+      return '';
+    }
     function isJiraHierarchyLinkColumn(column) {
       return globalThis.RoadmapModules.isJiraHierarchyColumn(column);
     }
@@ -41594,7 +41751,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     // Одна карта для предпросмотра и применения. Только явные родительские поля
     // и иерархические link types задают папки; Blocks/Relates не назначают родителей.
     function jiraHierarchyContext(issues) {
-      return globalThis.RoadmapModules.createJiraHierarchyContext(issues, planSections, sectionMeta);
+      const known = (typeof roadmapData !== 'undefined' ? roadmapData : []).concat(typeof archivedTasks !== 'undefined' ? archivedTasks : []);
+      return globalThis.RoadmapModules.createJiraHierarchyContext(issues, planSections, sectionMeta, known);
     }
     // Fallback применяется только к явно иерархическим связям, никогда к Blocks/Relates.
     function getStoryParentFromLinks(issue) {
@@ -41616,6 +41774,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const issueType = firstNonEmpty(issue, ['Тип задачи', 'Тип запроса', 'Тип проблемы', 'Issue Type', 'Issue type']) || '';
       const selfRank = jiraHierarchyRankFromType(issueType);
       const selfKey = jiraKeyOf(firstNonEmpty(issue, ['Ключ проблемы', 'Issue key', 'Key']));
+      if (window.tempHierarchyConflicts?.has(selfKey)) return {initiativeKey:'', epicKey:'', storyKey:'', directParent:'', conflict:true};
       const typeRankOf = (k) => jiraHierarchyRankFromType((window.tempTypeByKey && window.tempTypeByKey[k]) || '');
       let directParent = (selfKey && window.tempHierarchyParent && window.tempHierarchyParent[selfKey]) || '';
       const explicitParent = getParentKey(issue);
@@ -41629,7 +41788,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         if (directParent && typeRankOf(directParent) === 1) epicKey = directParent;
       } else if (selfRank === 3) {
         if (directParent && typeRankOf(directParent) === 2) storyKey = directParent;
-        if (!storyKey && !directParent && !explicitParent && window.tempStoryChildOf && window.tempStoryChildOf[selfKey]) storyKey = window.tempStoryChildOf[selfKey];
+        if (!storyKey && window.tempStoryChildOf) storyKey = window.tempStoryChildOf[selfKey] || '';
         if (!storyKey && !directParent && !explicitParent && !(window.tempHierarchyConflicts && window.tempHierarchyConflicts.has(selfKey))) storyKey = getStoryParentFromLinks(issue);
         // Epic Link у обычной задачи — дедушка, а не прямой родитель. Он остается метаданными,
         // но без Story задача должна быть в корне, а не напрямую внутри Epic.
@@ -41641,6 +41800,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       return { initiativeKey, epicKey, storyKey, directParent };
     }
     function jiraHasParentUpdate(issue, parents) {
+      if (parents.conflict) return false;
       const key = jiraKeyOf(firstNonEmpty(issue, ['Ключ проблемы','Issue key','Key']));
       const rank = jiraTypeRank(issue);
       return PARENT_COLS.some(column => Object.prototype.hasOwnProperty.call(issue,column)) ||
@@ -41750,7 +41910,8 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const epicLink = _hp2.epicKey;
       const parentLink = _hp2.storyKey;
       const _hierRank = jiraHierarchyRankFromType(issueType);
-      const _jiraParentKey = _hp2.directParent || getParentKey(issue) || (_hierRank === 1 ? _hp2.initiativeKey : (_hierRank === 2 ? epicLink : (_hierRank === 3 ? parentLink : '')));
+      const _jiraParentKey = _hp2.conflict ? '' : _hp2.directParent || getParentKey(issue) || (_hierRank === 1 ? _hp2.initiativeKey : (_hierRank === 2 ? epicLink : (_hierRank === 3 ? parentLink : '')));
+      const parentBlocked = _hierRank === 3 && (_hp2.conflict || (!_jiraParentKey && PARENT_COLS.some(col => Object.hasOwn(issue,col))));
       let epicName = getEpicNameField(issue);
       const linkedEpic = epicLink || parentLink;
       if (!epicName && linkedEpic && window.tempEpicDict && window.tempEpicDict[linkedEpic]) {
@@ -41769,6 +41930,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         epicName: epicName || '',
         epicLink: epicLink || epicName,
         _jiraParentKey: _jiraParentKey || '',
+        ...(parentBlocked ? {_jiraParentBlocked:true} : {}),
         _jiraHasHierarchy: jiraHasParentUpdate(issue,_hp2),
         _jiraHasLinks: linkColumns.length > 0,
         _jiraLinks: jiraLinks,
@@ -42444,6 +42606,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         }
       };
       const hp = resolveJiraParents(issue), parentUpdate = jiraHasParentUpdate(issue,hp);
+      const listed = window.tempListedSubtaskKeys?.[_jiraPreviewKey(firstNonEmpty(issue,['Ключ проблемы','Issue key','Key']))];
+      if (Array.isArray(listed) && jiraTypeRank(issue) === 2 && !_jiraPreviewSameList(existing._jiraSubtaskKeys,listed)) {
+        changed = true;
+        if (wantDiffs) diffs.push({field:'_jiraSubtaskKeys',label:'Подзадачи',was:(existing._jiraSubtaskKeys || []).join(', ') || '—',now:listed.join(', ') || '—',conflict:false});
+      }
       const section = parentUpdate ? getJiraEpicSection(issue) : '';
       if (parentUpdate) {
         const target = findCanonicalSection(section) || section;
@@ -42516,7 +42683,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const figma = firstNonEmpty(issue, ['Пользовательское поле (link to design)']);
       if (figma && String(existing.figma || '') !== String(figma)) return { changed: true, diffs };
       const rank = jiraHierarchyRankFromType(issueType), epicLink = hp.epicKey || '', storyParent = hp.storyKey || '';
-      const parentKey = hp.directParent || getParentKey(issue) || (rank === 1 ? hp.initiativeKey : (rank === 2 ? epicLink : (rank === 3 ? storyParent : '')));
+      const parentKey = hp.conflict ? '' : hp.directParent || getParentKey(issue) || (rank === 1 ? hp.initiativeKey : (rank === 2 ? epicLink : (rank === 3 ? storyParent : '')));
       let epicName = getEpicNameField(issue);
       const linkedEpic = epicLink || storyParent;
       if (!epicName && linkedEpic && window.tempEpicDict && window.tempEpicDict[linkedEpic]) epicName = window.tempEpicDict[linkedEpic];
@@ -42928,9 +43095,12 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const host = String(url.hostname || '').toLowerCase();
       const isLoopback = host === 'localhost' || host === '127.0.0.1' || host === '::1' || host === '[::1]';
       if (url.protocol !== 'https:' && !(url.protocol === 'http:' && isLoopback)) return '';
-      url.search = '';
-      url.hash = '';
-      const path = String(url.pathname || '').replace(/\/+$/, '');
+      // A copied DC issue, board or search URL includes a UI route, not part of
+      // the installation's context. Keep arbitrary deployment prefixes intact.
+      let path = url.pathname.replace(/\/+$/, '');
+      const view = /\/(?:browse\/[A-Z][A-Z0-9_]*(?:-\d+)?|secure\/[^/]+\.jspa|projects\/[A-Z][A-Z0-9_]*\/(?:summary|issues(?:\/[A-Z][A-Z0-9_]*-\d+)?|versions|components)|rest\/api\/(?:2|latest)\/search)$/i;
+      if (view.test(path)) path = path.replace(view, '');
+      else if (url.searchParams.has('jql') || url.searchParams.has('filter')) path = path.replace(/\/issues$/i, '');
       return url.origin + (path === '/' ? '' : path);
     }
     function jiraOrigin(base) {
@@ -42944,6 +43114,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     function jiraGetEl(id) { return document.getElementById(id); }
     function jiraSyncBaseInput(source) {
       const other = jiraGetEl(source.id === 'jiraBaseUrlExport' ? 'jiraBaseUrl' : 'jiraBaseUrlExport');
+      // Invalidate the old secret at edit time, before a new PAT can be typed.
+      const tokenField = jiraGetEl('jiraToken');
+      if (other && tokenField && (tokenField.value || jiraSessionToken || jiraActiveRequest) && jiraNormBase(other.value) !== jiraNormBase(source.value)) {
+        clearJiraSession('origin-change');
+      }
       if (other) other.value = source.value;
       const field = jiraGetEl('jiraBaseUrlExport');
       if (field?.hasAttribute('aria-invalid')) {
@@ -43255,6 +43430,16 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     // ===== Авто-синхронизация с Jira (поверх REST). Токен держим только в памяти сессии, в файл не пишем. =====
     let jiraSessionToken = '';
     let jiraSessionOrigin = '';
+    let jiraActiveRequest = null;
+    function jiraBeginRestRequest() {
+      const epoch = _projectTransitionToken, project = projectStorageId;
+      const request = {
+        current: () => jiraActiveRequest === request && epoch === _projectTransitionToken && project === projectStorageId,
+        finish: () => { if (jiraActiveRequest === request) jiraActiveRequest = null; }
+      };
+      jiraActiveRequest = request;
+      return request;
+    }
 	    let _jiraAutoTimer = null;
 	    const JIRA_FETCH_TIMEOUT_MS = 20000;
 	    const JIRA_FETCH_MAX_RESULTS = 2000;
@@ -43267,6 +43452,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       'labels', 'components', 'fixVersions', 'project', 'issuelinks'
     ]);
     function clearJiraSession(_reason) {
+      if (_reason !== 'auth-error') jiraActiveRequest = null;
       jiraSessionToken = '';
       jiraSessionOrigin = '';
       const tokenEl = jiraGetEl('jiraToken');
@@ -43328,7 +43514,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 	      return new Promise(resolve => setTimeout(resolve, Math.max(0, Number(milliseconds) || 0)));
 	    }
 	    window.addEventListener('pagehide', function () { clearJiraSession('pagehide'); });
-    async function _jiraFetchIssues(base, jql, token, onProgress) {
+    async function _jiraFetchIssues(base, jql, token, onProgress, current = () => true) {
       const normalizedBase = jiraNormBase(base);
       const expectedOrigin = jiraOrigin(normalizedBase);
       const sessionToken = String(token || '').trim();
@@ -43338,7 +43524,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         clearJiraSession('origin-mismatch');
         throw new Error('Сессия Jira не соответствует адресу сервера');
       }
-      const auth = sessionToken.includes(':') ? ('Basic ' + btoa(sessionToken)) : ('Bearer ' + sessionToken);
+      const bearer = /^Bearer\s+/i.test(sessionToken);
+      const secret = bearer ? sessionToken.replace(/^Bearer\s+/i, '') : sessionToken;
+      if (!secret || /\s/.test(secret) || /^Bearer$/i.test(secret)) throw new Error('Введите токен Jira без пробелов и переносов.');
+      const auth = !bearer && secret.includes(':') ? ('Basic ' + btoa(secret)) : ('Bearer ' + secret);
       const all = []; let startAt = 0; const pageSize = 100; let total = Infinity;
 	      while (startAt < total && startAt < JIRA_FETCH_MAX_RESULTS) {
 	        const requestUrl = new URL(normalizedBase + '/rest/api/2/search');
@@ -43351,6 +43540,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 	        let resp;
 	        let retryCount = 0;
 	        while (true) {
+            if (!current()) return [];
 	          const controller = typeof AbortController === 'function' ? new AbortController() : null;
 	          const timeoutId = controller ? setTimeout(() => controller.abort(), JIRA_FETCH_TIMEOUT_MS) : null;
 	          try {
@@ -43365,10 +43555,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 	            });
 	          } catch (err) {
 	            if (err && err.name === 'AbortError') throw new Error('Тайм-аут Jira: сервер не ответил за ' + Math.round(JIRA_FETCH_TIMEOUT_MS / 1000) + ' с');
-	            throw err;
+	            throw new Error('Нет ответа от Jira. Проверьте сеть или VPN. Для подключения из браузера Jira должна разрешать адрес Roadmap (CORS); иначе используйте CSV.');
 	          } finally {
 	            if (timeoutId) clearTimeout(timeoutId);
 	          }
+            if (!current()) return [];
 	          if (resp.ok) break;
 	          if (resp.status === 401 || resp.status === 403) clearJiraSession('auth-error');
 	          const retryable = resp.status === 429 || (resp.status >= 500 && resp.status <= 599);
@@ -43379,9 +43570,15 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
 	            continue;
 	          }
 	          const attemptsText = retryable && retryCount ? (' после ' + (retryCount + 1) + ' попыток') : '';
-	          throw new Error('HTTP ' + resp.status + attemptsText + (resp.status === 401 ? ': неверный токен' : resp.status === 403 ? ': нет доступа' : resp.status === 429 ? ': Jira временно ограничила частоту запросов' : ''));
+	          const detail = {400: 'проверьте запрос JQL', 401: 'проверьте токен Jira', 403: 'нет доступа к задачам', 404: 'проверьте адрес установки Jira', 429: 'Jira временно ограничила частоту запросов'};
+	          throw new Error('HTTP ' + resp.status + attemptsText + (detail[resp.status] ? ': ' + detail[resp.status] : ''));
 	        }
-        const data = await resp.json();
+        const contentType = resp.headers?.get?.('Content-Type') || '';
+        if (/text\/html/i.test(contentType)) throw new Error('Вместо данных Jira получена веб-страница. Проверьте адрес Jira и доступ к REST API через корпоративный вход.');
+        let data;
+        try { data = await resp.json(); } catch (_) { throw new Error('Jira не вернула JSON. Проверьте адрес Jira и доступ к REST API.'); }
+        if (!current()) return [];
+        if (!data || !Array.isArray(data.issues)) throw new Error('В ответе Jira нет списка задач. Проверьте адрес REST API.');
         total = Number.isFinite(Number(data.total)) ? Number(data.total) : 0;
         const issues = Array.isArray(data.issues) ? data.issues : [];
         issues.forEach(it => all.push(jiraIssueToRow(it, data.names)));
@@ -43397,12 +43594,14 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       return all;
     }
     async function _jiraFetchIssueBatches(base, queries, token, onProgress) {
+      const current = jiraActiveRequest?.current || (() => true);
       const list = Array.isArray(queries) ? queries.filter(Boolean) : [];
       const rows = [], seen = new Set();
       for (let index = 0; index < list.length; index++) {
+        if (!current()) return [];
         const batch = await _jiraFetchIssues(base, list[index], token, (n, total) => {
           if (onProgress) onProgress(n, total, index + 1, list.length);
-        });
+        }, current);
         batch.forEach(row => {
           const key = String(row && (row['Issue key'] || row['Ключ проблемы'] || row.Key) || '').toUpperCase();
           if (key && seen.has(key)) return;
@@ -43432,19 +43631,21 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
     }
     async function jiraAutoSyncNow(silent) {
       if (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE) { if (!silent) showToast('Только просмотр', 'info', 2000); return; }
+      if (silent && jiraActiveRequest) return;
       const tm = document.getElementById('taskModal'); if (tm && !tm.classList.contains('hidden')) return;
-      const cfg = getJiraCfg();
-      if (!cfg.base) { if (!silent) showToast('Сначала укажите адрес Jira', 'warn', 4000); return; }
-      const token = jiraSessionTokenFor(cfg.base) || ((jiraGetEl('jiraToken') && jiraGetEl('jiraToken').value.trim()) || '');
+      const cfg = silent ? getJiraCfg() : jiraReadForm();
+      if (!cfg.base) { if (!silent) showToast('Укажите HTTPS-адрес Jira', 'warn', 4000); return; }
+      const typed = !silent && jiraGetEl('jiraToken')?.value.trim();
+      const token = typed || jiraSessionTokenFor(cfg.base);
       if (!token) { if (!silent) showToast('Введите токен в окне Jira — без него авто-синк не работает', 'warn', 5000); return; }
       const form = { base: cfg.base, proj: cfg.proj || '', jql: cfg.jql || '', scope: cfg.scope === 'keys' ? 'keys' : 'projects' };
       const queries = jiraQueryBatches(form);
       if (!queries.length) { if (!silent) showToast(form.scope === 'keys' ? 'В Ганте нет Jira-ключей' : 'Укажите проект или JQL', 'warn', 4000); return; }
-      const transitionToken = _projectTransitionToken;
-      const transitionProjectId = projectStorageId;
+      const request = jiraBeginRestRequest();
       try {
         const all = await _jiraFetchIssueBatches(cfg.base, queries, token);
-        if (transitionToken !== _projectTransitionToken || transitionProjectId !== projectStorageId) return false;
+        if (!request.current()) return false;
+        if (!silent) saveJiraCfg(form);
         jiraRememberSessionToken(token, cfg.base);
         if (all.length) {
           const pv = (typeof previewJiraMerge === 'function') ? previewJiraMerge(all) : null;
@@ -43457,14 +43658,15 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         } else if (!silent) showToast('По текущему JQL задач нет', 'info', 3000);
         jiraScheduleAutoSync();
       } catch (err) {
-        if (transitionToken !== _projectTransitionToken || transitionProjectId !== projectStorageId) return false;
+        if (!request.current()) return false;
         const msg = (err && err.message) || 'ошибка сети';
-        if (/\b(?:401|403)\b/.test(String(msg))) { clearJiraSession('auth-error'); showToast('Токен Jira недействителен или у него нет доступа — введите заново', 'warn', 5000); }
-        else if (!silent) showToast('Не удалось синхронизироваться: ' + msg + '. Возможно, Jira не разрешает запросы из браузера (CORS).', 'error', 6000);
-      }
+        if (/\b(?:401|403)\b/.test(String(msg))) showToast(msg, 'warn', 5000);
+        else if (!silent) showToast('Не удалось синхронизироваться: ' + msg, 'error', 6000);
+      } finally { request.finish(); }
     }
     // ИМПОРТ через API (опытный режим, работает если Jira отдает CORS)
     async function jiraApiImport() {
+      if (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE) return;
       const token = (jiraGetEl('jiraToken').value || '').trim();
       const f = jiraPersistForm();
       if (!f.base) { showToast('Укажите адрес Jira', 'warn', 4000); return; }
@@ -43473,12 +43675,11 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (!queries.length) { showToast(f.scope === 'keys' ? 'В Ганте нет Jira-ключей' : 'Укажите проект или JQL', 'warn', 4000); return; }
       const statusEl = jiraGetEl('jiraApiStatus');
       const setS = (t, tone) => { if (statusEl) { statusEl.textContent = t; statusEl.className = 'text-[10px] mt-2 ' + (tone === 'err' ? 'text-rose-600' : tone === 'ok' ? 'text-emerald-600' : 'text-slate-500'); } };
-      const transitionToken = _projectTransitionToken;
-      const transitionProjectId = projectStorageId;
+      const request = jiraBeginRestRequest();
       setS('Подключаюсь к Jira…', 'muted');
       try {
         const all = await _jiraFetchIssueBatches(f.base, queries, token, (n, t, batch, totalBatches) => setS((totalBatches > 1 ? 'Запрос ' + batch + ' из ' + totalBatches + ': ' : '') + 'получено ' + n + ' из ' + t + '…', 'muted'));
-        if (transitionToken !== _projectTransitionToken || transitionProjectId !== projectStorageId) return false;
+        if (!request.current()) return false;
         if (!all.length) { setS('Задач по этому JQL не найдено', 'err'); return; }
         mergeJiraTasks(all);
         setS('Импортировано задач: ' + all.length, 'ok');
@@ -43486,11 +43687,10 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         jiraRememberSessionToken(token, f.base); jiraScheduleAutoSync();
         setTimeout(closeJiraSync, 1200);
       } catch (err) {
-        if (transitionToken !== _projectTransitionToken || transitionProjectId !== projectStorageId) return false;
+        if (!request.current()) return false;
         const msg = (err && err.message) || 'ошибка сети';
-        if (/\b(?:401|403)\b/.test(String(msg))) clearJiraSession('auth-error');
-        setS('Не удалось: ' + msg + '. Скорее всего Jira не разрешает запросы из браузера (CORS). Используйте кнопку «Открыть задачи в Jira», затем «Экспорт → CSV (все поля)».', 'err');
-      }
+        setS('Не удалось: ' + msg, 'err');
+      } finally { request.finish(); }
     }
     // REST issue -> объект-строка (как из CSV), чтобы переиспользовать mergeJiraTasks.
     // names: карта fieldId -> человекочитаемое имя (из expand=names). REST возвращает только разрешённые поля.
@@ -43525,7 +43725,13 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       };
       if (f.assignee) row['Assignee'] = f.assignee.displayName || f.assignee.name || '';
       if (f.issuetype && f.issuetype.name) row['Issue Type'] = f.issuetype.name;
-      if (f.parent && f.parent.key) row['Parent'] = f.parent.key;
+      if (it.id != null && /^\d+$/.test(String(it.id))) row['Issue id'] = String(it.id);
+      if (f.parent?.key) row.Parent = f.parent.key;
+      else if (f.parent?.id != null && /^\d+$/.test(String(f.parent.id))) row.Parent = String(f.parent.id);
+      if (Array.isArray(f.subtasks)) {
+        // Jira can report membership only on the Story, not on the child row.
+        row.Subtasks = [...new Set(f.subtasks.map(child => child?.key || child?.id).filter(Boolean))].join(', ');
+      }
       // REST возвращает связи объектами, обычный flat() теряет их ключи. Разворачиваем обе стороны
       // в те же колонки, которые понимает CSV-импорт; имя link type может быть любым.
       if (Array.isArray(f.issuelinks)) {
@@ -43538,8 +43744,9 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
         f.issuelinks.forEach(link => {
           if (!link) return;
           const tp = link.type || {};
-          if (link.outwardIssue && link.outwardIssue.key) addLink('Outward issue link (' + (tp.outward || tp.name || 'link') + ')', link.outwardIssue.key);
-          if (link.inwardIssue && link.inwardIssue.key) addLink('Inward issue link (' + (tp.inward || tp.name || 'link') + ')', link.inwardIssue.key);
+          const label = direction => isJiraHierarchyLinkColumn(tp.name) ? tp.name : (tp[direction] || tp.name || 'link');
+          if (link.outwardIssue && link.outwardIssue.key) addLink('Outward issue link (' + label('outward') + ')', link.outwardIssue.key);
+          if (link.inwardIssue && link.inwardIssue.key) addLink('Inward issue link (' + label('inward') + ')', link.inwardIssue.key);
         });
       }
       if (f.duedate) row['Due Date'] = f.duedate;
@@ -45290,7 +45497,7 @@ function syncBodyScrollLock() {
   <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
    <div class="candidate-header-update info-header-main">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
-    <span class="update-version-pair"><span id="appVersionBadge" title="18.11.2026">v18.0</span><button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-ghost rm-btn-icon candidate-version-update" data-update-state="idle" aria-label="Проверить обновления" aria-describedby="infoUpdateResult" title="Проверить обновления. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg></button></span><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
+    <span class="update-version-pair"><span id="appVersionBadge" title="20.11.2026">v18.1</span><button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-ghost rm-btn-icon candidate-version-update" data-update-state="idle" aria-label="Проверить обновления" aria-describedby="infoUpdateResult" title="Проверить обновления. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg></button></span><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
    </div>
    <div class="flex items-center gap-2 shrink-0">
     <button type="button" id="infoCloseBtn" onclick="closeInfoModal()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer" aria-label="Закрыть" title="Закрыть">
@@ -45314,7 +45521,27 @@ function syncBodyScrollLock() {
    </section>
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v18.0</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v18.1</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="jira-story-folders" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-c2b76789950a"></use></svg><h5 class="min-w-0 rn-title">Задачи внутри своей Story</h5><span class="info-release-badge">ГАНТ</span></div>
+      <p class="text-xs text-slate-600">Задачи с указанным родителем видны в папке своей Story. Сверните её, чтобы скрыть только эту ветку.</p>
+     </article>
+     <article data-release-card="jira-pat-web" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-b12c9b1b0fbd"></use></svg><h5 class="min-w-0 rn-title">Подключение к Jira по токену</h5><span class="info-release-badge">ИМПОРТ</span></div>
+      <p class="text-xs text-slate-600">Вставьте ссылку на задачу Jira Server/Data Center и личный токен (PAT). Если доступ закрыт, используйте CSV.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v18.0</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="dialog-header-help" class="info-release-card rn-card rn-solid">
       <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-50634f35cc56"></use></svg><h5 class="min-w-0 rn-title">Пояснения — под ⓘ</h5><span class="info-release-badge">ОКНА</span></div>
@@ -45338,13 +45565,6 @@ function syncBodyScrollLock() {
      </article>
     </div>
    </div>
-
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v17.33</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -49514,7 +49734,7 @@ function syncBodyScrollLock() {
        <div class="p-3 space-y-2.5">
         <input type="password" id="jiraToken" aria-label="Токен Jira" placeholder="PAT для Server/DC, или email:api_token для Cloud" class="w-full h-9 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500 transition-colors" autocomplete="off">
         <button type="button" onclick="jiraApiImport()" class="inline-flex items-center justify-center gap-2 h-9 px-4 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer">Загрузить через API</button>
-        <p id="jiraApiStatus" class="text-[10px] text-slate-500"></p>
+        <p id="jiraApiStatus" role="status" class="text-[10px] text-slate-500"></p>
         <p class="text-[10px] text-slate-500 leading-relaxed">Jira должна разрешать запросы из браузера (CORS). Токен не записывается в файл.</p>
         <div class="border-t border-slate-100 pt-2.5 mt-1 space-y-2">
          <label class="flex items-center justify-between gap-2 text-[10px] font-medium text-slate-600">Обновлять автоматически каждые<span class="inline-flex items-center gap-1 shrink-0"><input type="number" id="jiraSyncEvery" min="0" max="1440" step="5" value="0" onchange="jiraSetSyncEvery(this.value)" aria-label="Интервал авто-обновления Jira, минут" class="w-16 h-8 px-2 text-center tabular-nums bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500"><span class="text-[10px] text-slate-500">мин</span></span></label>
@@ -49753,7 +49973,7 @@ function syncBodyScrollLock() {
         <div class="startup-heading">
           <div class="flex items-center gap-2 flex-wrap">
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
-            <span class="update-version-pair"><span id="appVersionStartup">v18.0</span><button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-ghost rm-btn-icon candidate-version-update" data-update-state="idle" aria-label="Проверить обновления" aria-describedby="startupUpdateResult" title="Проверить обновления. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg></button></span>
+            <span class="update-version-pair"><span id="appVersionStartup">v18.1</span><button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-ghost rm-btn-icon candidate-version-update" data-update-state="idle" aria-label="Проверить обновления" aria-describedby="startupUpdateResult" title="Проверить обновления. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg></button></span>
           </div>
           <div id="startupUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
         </div>
