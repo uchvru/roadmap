@@ -12,10 +12,14 @@ import { basename, extname, join, relative, resolve } from 'node:path';
 import {publicUpdatePath,verifyUpdateAsset,historicalUpdateAssets,verifyHistoricalUpdateAsset} from './verify-update-asset.mjs';
 
 const args=process.argv.slice(2);
-const usage='Usage: node .quality/verify-public.mjs [root] [--local]\n--help, -h: справка без проверки файлов.';
+const usage='Usage: node .quality/verify-public.mjs [root] [--local | --inventory-for=X.Y]\n--help, -h: справка без проверки файлов.';
 if(args.includes('--help')||args.includes('-h')){console.log(usage);process.exit(0);}
-if(args.some(arg=>arg.startsWith('-')&&arg!=='--local')||args.filter(arg=>!arg.startsWith('-')).length>1||args.filter(arg=>arg==='--local').length>1){console.error(usage);process.exit(2);}
+const inventories=args.filter(arg=>/^--inventory-for=(?:0|[1-9]\d*)\.[0-9]$/.test(arg));
+if(args.some(arg=>arg.startsWith('-')&&arg!=='--local'&&!inventories.includes(arg))
+  ||args.filter(arg=>!arg.startsWith('-')).length>1
+  ||args.filter(arg=>arg==='--local').length+inventories.length>1){console.error(usage);process.exit(2);}
 const localOnly=args.includes('--local');
+const inventoryVersion=inventories[0]?.split('=')[1];
 const root = resolve(args.find(arg=>!arg.startsWith('--')) || process.cwd());
 if(localOnly)console.log('LOCAL ONLY: release readiness and update/app equivalence are not certified.');
 const failures = [];
@@ -53,7 +57,7 @@ function sha256(buffer) {
 function walk(dir = root) {
   const result = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    if (entry.name === '.git') continue;
+    if (dir === root && entry.name === '.git') continue;
     const absolute = join(dir, entry.name);
     if (entry.isDirectory()) result.push(...walk(absolute));
     else result.push(relative(root, absolute).replaceAll('\\', '/'));
@@ -128,6 +132,21 @@ for (let feature = 1; feature <= 47; feature += 1) {
   if (feature === 24) continue;
   for (const theme of ['light', 'dark']) allowedFiles.add(`catalog-img/f${String(feature).padStart(2, '0')}_${theme}.webp`);
 }
+if(inventoryVersion){
+  // This early mode checks names and entry types only. It is never a PASS for
+  // media, signatures, privacy content or release readiness.
+  const futureUpdate=publicUpdatePath(inventoryVersion);
+  if(futureUpdate)allowedFiles.add(futureUpdate);
+  // A pre-build tree may still contain the last published signed asset.
+  for(const path of Object.keys(historicalUpdateAssets))allowedFiles.add(path);
+  for(const path of allFiles){
+    if(!allowedFiles.has(path))fail('Файл вне публичного состава: '+JSON.stringify(path));
+    if(!lstatSync(file(path)).isFile())fail('Публичный путь не является обычным файлом: '+JSON.stringify(path));
+  }
+  console.log(JSON.stringify({ok:failures.length===0,inventoryOnly:true,files:allFiles.length,errors:failures}));
+  process.exit(failures.length===0?0:1);
+}
+
 const publicRelease = parseJson('release.json');
 try {
   const updatePath=publicUpdatePath(publicRelease?.version);
