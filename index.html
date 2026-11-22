@@ -40,6 +40,39 @@
     .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px}
     .card h3{font-size:17px;font-weight:600}.card p{font-size:14px;color:#52607a;margin-top:8px}
     .outcomes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;list-style:none}.outcomes li{min-width:0;padding-top:16px;border-top:1px solid #c7d2fe}.outcomes h3{font-size:21px;font-weight:600;line-height:1.3}.outcomes p{margin-top:12px;font-size:15px;color:#475569}
+    /* product-roadmap:start */
+    .product-roadmap{scroll-margin-top:16px}
+    .product-roadmap .sechead{margin-bottom:24px}
+    .product-roadmap-tools{display:flex;align-items:center;gap:8px 16px;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px}
+    .product-roadmap-range{font-size:.9375rem;font-weight:600;font-variant-numeric:tabular-nums;color:#334155}
+    .product-roadmap-nav{display:flex;flex-wrap:wrap;align-items:center;gap:8px;max-width:100%}
+    .product-roadmap-nav[hidden]{display:none}
+    .product-roadmap-month{max-width:100%;min-height:44px;padding:0 10px;border:1px solid #d6ddec;border-radius:13px;background:#fff;color:#334155;font:inherit;font-weight:600;cursor:pointer}
+    .product-roadmap-month:focus-visible{outline:3px solid var(--button-primary-hover);outline-offset:3px}
+    .product-roadmap-steps{display:flex;gap:8px}
+    .product-roadmap-nav .btn{height:44px;padding:0 14px;font-size:.875rem}
+    .product-roadmap-nav .btn:disabled{opacity:.5;cursor:default}
+    .product-roadmap-scroll{overflow-x:auto;overscroll-behavior-inline:contain;border:1px solid var(--line);border-radius:16px;scrollbar-color:#a5b4fc #f1f4fc}
+    .product-roadmap-scroll:focus-visible{outline:3px solid var(--button-primary-hover);outline-offset:3px}
+    .product-roadmap-chart{--day:2.25rem;--gutter:1rem;--lane:7.5rem;min-width:calc(var(--span-days) * var(--day) + 2 * var(--gutter));background:#fff}
+    .product-roadmap-axis{position:relative;height:44px;border-bottom:1px solid var(--line);background:var(--hero-wash);color:#334155;font-size:.875rem;font-weight:600;font-variant-numeric:tabular-nums}
+    .product-roadmap-axis time{position:absolute;left:calc(var(--gutter) + var(--offset) * var(--day));top:0;line-height:44px;white-space:nowrap;padding-left:8px}
+    .product-roadmap-axis time::after{content:"";position:absolute;top:100%;left:0;height:calc(2 * var(--lane));border-left:1px solid var(--line)}
+    .product-roadmap-axis time:last-child{translate:-100% 0;padding:0 8px 0 0}
+    .product-roadmap-axis time:last-child::after{left:auto;right:0}
+    .product-roadmap-lanes{position:relative;height:calc(2 * var(--lane));list-style:none}
+    .product-roadmap-lanes::before{content:"";position:absolute;inset-inline:0;top:var(--lane);border-top:1px solid var(--line)}
+    .product-roadmap-lane{position:absolute;inset-inline:0;top:calc(var(--row) * var(--lane));height:var(--lane);pointer-events:none}
+    .product-roadmap-pill{position:absolute;inset-block:8px;left:calc(var(--gutter) + var(--offset) * var(--day));width:calc(var(--days) * var(--day));padding:8px 10px;border:1px solid #c7d2fe;border-radius:18px;background:#eef2ff;display:flex;align-items:center;min-width:0;pointer-events:auto}
+    .product-roadmap-pill-body{position:sticky;left:10px;width:min(100%,28rem);overflow-wrap:anywhere}
+    .product-roadmap-pill h3{margin-top:3px;font-size:.9375rem;line-height:1.2;font-weight:600}
+    .product-roadmap-pill p{margin-top:3px;color:#475569;font-size:.875rem;line-height:1.3}
+    .product-roadmap-meta{display:flex;flex-wrap:wrap;gap:1px 8px;color:#475569;font-size:.8125rem;line-height:1.3;font-variant-numeric:tabular-nums}
+    .product-roadmap-meta>span:last-child{white-space:nowrap;font-weight:600}
+    .product-roadmap-point::before{content:"";position:absolute;top:calc(50% - 5px);left:calc(var(--gutter) + var(--offset) * var(--day) - 5px);width:10px;height:10px;border-radius:50%;background:var(--brand)}
+    .product-roadmap-point .product-roadmap-pill{margin-left:12px;width:17rem;border-color:#a5b4fc;background:#fff}
+    .product-roadmap-caption{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:2px 16px;margin-top:4px;color:var(--mut);font-size:.875rem}
+    /* product-roadmap:end */
     .how{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;margin:0 auto}.how .card{text-align:center}
     .faq{max-width:760px;margin:0 auto}.faq details{border-bottom:1px solid var(--line);padding:8px 0}.faq summary{cursor:pointer;padding:12px 0;font-size:17px;font-weight:600;line-height:1.5}.faq summary:focus-visible{outline:3px solid #4338ca;outline-offset:3px}.faq p{margin:0 0 16px;font-size:15px;color:#475569;line-height:1.65}.faq a{color:#4338ca;text-decoration:underline;text-underline-offset:3px}.difference{max-width:760px;margin:0 auto}.difference p{font-size:17px;line-height:1.65;color:#475569}.difference p+p{margin-top:16px}.difference strong{color:var(--ink)}
     .catcta{max-width:960px;margin:0 auto;background:var(--hero-wash);border:1px solid #dbe3f4;border-radius:20px;padding:32px 28px;box-shadow:none;text-align:center}.catcta p{color:var(--mut);margin:8px auto 0;max-width:680px}.catcta .cta{justify-content:center}
@@ -75,7 +108,7 @@
       <div>
         <h1>Дорожная карта — Roadmap v18.5</h1>
         <p class="lead">Задачи из Jira, сроки и команда — в одном плане. Гант, Канбан и Скрам в браузере, без установки. План сохраняется в файл.</p>
-        <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a><a class="story-link" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a></div>
+        <div class="cta"><a class="btn primary" href="app.html">Открыть демо</a><a class="btn ghost" href="catalog.html">Каталог функций</a><a class="story-link" href="https://vc.ru/life/3012066-planirovschik-dorozhnykh-kart-v-odnom-html-fayle" target="_blank" rel="noopener">Как появился проект</a><a class="story-link" href="#product-roadmap">История развития</a></div>
       </div>
       <aside class="heroright" id="author" aria-label="Связаться с автором"><div class="vhero"><div class="hd">Автор проекта</div><div class="rw"><div class="vava">ВУ<img src="avatar.jpg" alt="Владимир Учинин" width="64" height="64" onerror="this.remove()"></div><div><div class="nm">Владимир Учинин</div><div class="rl">Владелец продукта</div></div></div><div class="lk"><a href="mailto:uchv@ya.ru">uchv@ya.ru</a><button class="btn ghost purchase-open" id="purchase-open" type="button" aria-haspopup="dialog" aria-controls="purchase-dialog">Запросить рабочую версию</button></div><p class="author-note">Расскажите, для какой команды нужен план.</p></div></aside>
     </div>
@@ -106,6 +139,178 @@
 <li><h3>Свободный холст</h3><p>Разложите задачи, стикеры и идеи, добавьте стрелки и комментарии. Карточки связаны с тем же планом; стрелки холста не меняют сроки.</p></li>
 <li><h3>Бюджет, цели и риски</h3><p>Сопоставьте оценки и фактические часы, расходы и бюджет. Свяжите задачи с целями и ведите риски — когда это нужно вашему процессу.</p></li>
     </ol></div></section>
+
+    <section class="alt product-roadmap" id="product-roadmap" aria-labelledby="product-roadmap-title">
+      <div class="wrap">
+        <div class="sechead">
+          <h2 id="product-roadmap-title">Как развивался Roadmap</h2>
+          <p>Листайте вправо от новых выпусков к ранним.</p>
+        </div>
+        <figure>
+          <div class="product-roadmap-tools">
+            <span class="product-roadmap-range" id="product-roadmap-range" aria-label="Видимый период">Июль – ноябрь 2026</span>
+            <div class="product-roadmap-nav" hidden>
+              <select class="product-roadmap-month" aria-label="Перейти к месяцу" aria-controls="product-roadmap-scroll">
+                <option value="">К месяцу</option>
+              </select>
+              <div class="product-roadmap-steps">
+                <button class="btn ghost" type="button" data-step="-1" aria-controls="product-roadmap-scroll">Новее</button>
+                <button class="btn ghost" type="button" data-step="1" aria-controls="product-roadmap-scroll">Раньше</button>
+              </div>
+            </div>
+          </div>
+          <div class="product-roadmap-scroll" id="product-roadmap-scroll" role="region" tabindex="0" aria-label="Календарная шкала выпусков" aria-describedby="product-roadmap-range">
+            <div class="product-roadmap-chart" data-scale-start="2026-07-23" data-scale-end="2026-11-22" style="--span-days:122">
+              <div class="product-roadmap-axis" aria-hidden="true">
+                <time datetime="2026-11-22" style="--offset:0">22 ноя</time>
+                <time datetime="2026-11-15" style="--offset:7">15 ноя</time>
+                <time datetime="2026-11-08" style="--offset:14">8 ноя</time>
+                <time datetime="2026-11-01" style="--offset:21">1 ноя</time>
+                <time datetime="2026-10-25" style="--offset:28">25 окт</time>
+                <time datetime="2026-10-18" style="--offset:35">18 окт</time>
+                <time datetime="2026-10-11" style="--offset:42">11 окт</time>
+                <time datetime="2026-10-04" style="--offset:49">4 окт</time>
+                <time datetime="2026-09-27" style="--offset:56">27 сен</time>
+                <time datetime="2026-09-20" style="--offset:63">20 сен</time>
+                <time datetime="2026-09-13" style="--offset:70">13 сен</time>
+                <time datetime="2026-09-06" style="--offset:77">6 сен</time>
+                <time datetime="2026-08-30" style="--offset:84">30 авг</time>
+                <time datetime="2026-08-23" style="--offset:91">23 авг</time>
+                <time datetime="2026-08-16" style="--offset:98">16 авг</time>
+                <time datetime="2026-08-09" style="--offset:105">9 авг</time>
+                <time datetime="2026-08-02" style="--offset:112">2 авг</time>
+                <time datetime="2026-07-23" style="--offset:122">23 июл</time>
+              </div>
+              <ol class="product-roadmap-lanes" role="list">
+                <li class="product-roadmap-lane product-roadmap-point" data-start="2026-11-22" data-end="2026-11-22" style="--offset:0;--days:0;--row:0">
+                  <div class="product-roadmap-pill"><div class="product-roadmap-pill-body">
+                    <span class="product-roadmap-meta"><time datetime="2026-11-22">22 ноября</time><span>v18.4–v18.5</span></span>
+                    <h3>Обновить файл без повторной загрузки</h3>
+                    <p>Выберите другую папку. У каждого плана свои автокопии.</p>
+                  </div></div>
+                </li>
+                <li class="product-roadmap-lane" data-start="2026-11-18" data-end="2026-11-22" style="--offset:0;--days:4;--row:1">
+                  <div class="product-roadmap-pill"><div class="product-roadmap-pill-body">
+                    <span class="product-roadmap-meta"><span><time datetime="2026-11-18">18</time>–<time datetime="2026-11-22">22 ноября</time></span><span>v18.0–v18.3</span></span>
+                    <h3>Задачи внутри Story</h3>
+                    <p>Доска компактнее.</p>
+                  </div></div>
+                </li>
+                <li class="product-roadmap-lane" data-start="2026-10-21" data-end="2026-11-18" style="--offset:4;--days:28;--row:1">
+                  <div class="product-roadmap-pill"><div class="product-roadmap-pill-body">
+                    <span class="product-roadmap-meta"><span><time datetime="2026-10-21">21 октября</time> – <time datetime="2026-11-18">18 ноября</time></span><span>v17.17–v17.33</span></span>
+                    <h3>Собрать отчет по выбранным задачам</h3>
+                    <p>Фильтры действуют в отчете. Плановые и фактические даты раздельны.</p>
+                  </div></div>
+                </li>
+                <li class="product-roadmap-lane" data-start="2026-10-01" data-end="2026-10-18" style="--offset:35;--days:17;--row:0">
+                  <div class="product-roadmap-pill"><div class="product-roadmap-pill-body">
+                    <span class="product-roadmap-meta"><span><time datetime="2026-10-01">1</time>–<time datetime="2026-10-18">18 октября</time></span><span>v17.0–v17.15</span></span>
+                    <h3>Переносить весь план одним файлом</h3>
+                    <p>Задачи, архив и точки возврата в HTML. Копию можно защитить PIN.</p>
+                  </div></div>
+                </li>
+                <li class="product-roadmap-lane" data-start="2026-09-19" data-end="2026-09-27" style="--offset:56;--days:8;--row:1">
+                  <div class="product-roadmap-pill"><div class="product-roadmap-pill-body">
+                    <span class="product-roadmap-meta"><span><time datetime="2026-09-19">19</time>–<time datetime="2026-09-27">27 сентября</time></span><span>v16.1.0–v16.7.1</span></span>
+                    <h3>Заметить риск срыва сроков</h3>
+                    <p>Понятны причины риска и загрузка команды.</p>
+                  </div></div>
+                </li>
+                <li class="product-roadmap-lane" data-start="2026-08-19" data-end="2026-09-06" style="--offset:77;--days:18;--row:0">
+                  <div class="product-roadmap-pill"><div class="product-roadmap-pill-body">
+                    <span class="product-roadmap-meta"><span><time datetime="2026-08-19">19 августа</time> – <time datetime="2026-09-06">6 сентября</time></span><span>v15.0–v15.9</span></span>
+                    <h3>Начать со своих задач из Jira</h3>
+                    <p>Предпросмотр импорта и подсказки для первого плана.</p>
+                  </div></div>
+                </li>
+                <li class="product-roadmap-lane" data-start="2026-07-23" data-end="2026-07-31" style="--offset:114;--days:8;--row:1">
+                  <div class="product-roadmap-pill"><div class="product-roadmap-pill-body">
+                    <span class="product-roadmap-meta"><span><time datetime="2026-07-23">23</time>–<time datetime="2026-07-31">31 июля</time></span><span>v13.5.0–v14.6</span></span>
+                    <h3>Вести дорожную карту без установки</h3>
+                    <p>Гант, доска, связи и Jira CSV в одном HTML.</p>
+                  </div></div>
+                </li>
+              </ol>
+            </div>
+          </div>
+          <figcaption class="product-roadmap-caption">
+            <span>Точка: один день. Полосы: периоды между выпусками.</span>
+            <a class="story-link" href="RELEASE_NOTES.md">Заметки о выпусках</a>
+          </figcaption>
+        </figure>
+      </div>
+      <script id="product-roadmap-range-runtime">
+        (() => {
+          const root = document.getElementById('product-roadmap');
+          const viewport = root.querySelector('.product-roadmap-scroll');
+          const chart = root.querySelector('.product-roadmap-chart');
+          const range = root.querySelector('.product-roadmap-range');
+          const nav = root.querySelector('.product-roadmap-nav');
+          const monthSelect = root.querySelector('.product-roadmap-month');
+          const [newer, older] = nav.querySelectorAll('button');
+          const msPerDay = 86400000;
+          const dayStamp = value => Date.parse(value + 'T00:00:00Z');
+          const latest = dayStamp(chart.dataset.scaleEnd);
+          const oldest = dayStamp(chart.dataset.scaleStart);
+          const days = (latest - oldest) / msPerDay;
+          const format = new Intl.DateTimeFormat('ru-RU', {day:'numeric', month:'short', timeZone:'UTC'});
+          const monthFormat = new Intl.DateTimeFormat('ru-RU', {month:'long', timeZone:'UTC'});
+          const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+          const behavior = () => reducedMotion.matches ? 'auto' : 'smooth';
+          let oldestMonthOffset = 0;
+          for (let date = new Date(latest); date.getTime() >= oldest;
+            date = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 0))) {
+            const name = monthFormat.format(date);
+            const option = document.createElement('option');
+            oldestMonthOffset = (latest - date.getTime()) / msPerDay;
+            option.value = String(oldestMonthOffset);
+            option.textContent = name.charAt(0).toUpperCase() + name.slice(1) + ' ' + date.getUTCFullYear();
+            monthSelect.append(option);
+          }
+          let dayWidth, gutter, pending = false;
+          function update() {
+            pending = false;
+            const first = Math.max(0, Math.min(days, Math.floor((viewport.scrollLeft - gutter) / dayWidth)));
+            const last = Math.max(first, Math.min(days, Math.floor((viewport.scrollLeft + viewport.clientWidth - gutter) / dayWidth)));
+            const firstDate = new Date(latest - first * msPerDay);
+            const lastDate = new Date(latest - last * msPerDay);
+            const firstYear = firstDate.getUTCFullYear(), lastYear = lastDate.getUTCFullYear();
+            const label = 'На шкале: ' + format.format(firstDate) + (firstYear === lastYear ? '' : ' ' + firstYear)
+              + ' – ' + format.format(lastDate) + ' ' + lastYear;
+            if (range.textContent !== label) range.textContent = label;
+            newer.disabled = viewport.scrollLeft <= 1;
+            older.disabled = viewport.scrollLeft + viewport.clientWidth >= viewport.scrollWidth - 1;
+          }
+          function measure() {
+            const [left, right] = chart.querySelectorAll('.product-roadmap-axis time:first-child, .product-roadmap-axis time:last-child');
+            dayWidth = (right.getBoundingClientRect().right - left.getBoundingClientRect().left) / days;
+            gutter = left.getBoundingClientRect().left - chart.getBoundingClientRect().left;
+            update();
+          }
+          for (const button of [newer, older]) button.addEventListener('click', () => {
+            viewport.scrollBy({left: Number(button.dataset.step) * Math.floor(viewport.clientWidth / dayWidth) * dayWidth,
+              behavior: behavior()});
+          });
+          monthSelect.addEventListener('change', () => {
+            if (!monthSelect.value) return;
+            const offset = Number(monthSelect.value);
+            monthSelect.value = '';
+            if (!Number.isInteger(offset) || offset < 0 || offset > days) return;
+            let left = gutter + offset * dayWidth;
+            if (offset === 0) left = 0;
+            else if (offset === oldestMonthOffset) left = viewport.scrollWidth - viewport.clientWidth;
+            viewport.scrollTo({left, behavior: behavior()});
+          });
+          viewport.addEventListener('scroll', () => {
+            if (!pending) { pending = true; requestAnimationFrame(update); }
+          }, {passive:true});
+          window.addEventListener('resize', measure);
+          nav.hidden = false;
+          measure();
+        })();
+      </script>
+    </section>
 
     <section class="alt" aria-labelledby="difference-title"><div class="wrap"><div class="sechead"><h2 id="difference-title">Чем удобен такой формат</h2></div><div class="difference"><p><strong>Несколько видов, одни и те же задачи.</strong> Переключайтесь между списком, календарем, Канбаном и Скрамом. Не нужно переносить задачи из одного вида в другой или вести несколько планов.</p><p><strong>От короткого списка до подробного проекта.</strong> Начните с задач и сроков. Когда понадобится — добавьте связи, спринты, сведения о команде и свои поля.</p><p><strong>Рабочий план остается у вас.</strong> Сохраненную копию можно открыть без интернета или взять на другой компьютер. Это личный рабочий файл, а не общий документ с одновременным редактированием.</p></div></div></section>
 
