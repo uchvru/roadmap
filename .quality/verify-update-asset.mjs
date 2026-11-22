@@ -39,7 +39,9 @@ export const historicalUpdateAssets=Object.freeze({
   // Exact v18.5 bytes verified against GitHub Release and Pages.
   'updates/roadmap-v18.5.roadmap-update':'11e6bd600dca54b57032d58f67261bbb21479fa06b9399bf2afb6398ff730d56',
   // Exact v18.6 bytes verified against GitHub Release and Pages.
-  'updates/roadmap-v18.6.roadmap-update':'15e41991d52079f51bc1364c00b7e2b2444dc2a6b9f23a7f3cb81ef906b8e42d'
+  'updates/roadmap-v18.6.roadmap-update':'15e41991d52079f51bc1364c00b7e2b2444dc2a6b9f23a7f3cb81ef906b8e42d',
+  // Exact v18.7 bytes verified against GitHub Release and Pages.
+  'updates/roadmap-v18.7.roadmap-update':'85e350ff390c44c53642859f2cf328f3421bbc3f3b74d46a858e10b568943ac6'
 });
 export function verifyHistoricalUpdateAsset(path,text){
   if(!Object.hasOwn(historicalUpdateAssets,path)||typeof text!=='string'||Buffer.byteLength(text)>16*1024*1024

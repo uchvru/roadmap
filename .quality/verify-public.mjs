@@ -114,6 +114,27 @@ function parseJson(path) {
   }
 }
 
+function verifyFilmCatalogFrames(mediaManifest) {
+  const [major, minor] = typeof mediaManifest.version === 'string' ? mediaManifest.version.split('.').map(Number) : [];
+  // Older published manifests retain the eight inputs recorded at render time.
+  const compact = major > 18 || (major === 18 && minor >= 8);
+  if (compact) assert(mediaManifest.renderMode !== undefined, 'У нового ролика есть сведения о рендере');
+  if (mediaManifest.renderMode === undefined) return;
+  const required = compact
+    ? ['f01_light.webp','f05_light.webp','f15_light.webp','f45_light.webp','f46_light.webp','f47_light.webp']
+    : ['f01_light.webp','f04_light.webp','f05_light.webp','f15_light.webp','f44_light.webp','f45_light.webp','f46_light.webp','f47_light.webp'];
+  if (compact) {
+    const frames = Object.keys(mediaManifest.sources || {}).filter(name => name.startsWith('public/')).sort();
+    assert(JSON.stringify(frames) === JSON.stringify(required.map(name => 'public/' + name)),
+      'В манифесте ролика перечислены только кадры сцен');
+  }
+  for (const name of required) {
+    const frame = 'catalog-img/' + name;
+    assert(existsSync(file(frame)) && mediaManifest.sources?.['public/' + name] === sha256(read(frame)),
+      'Ролик использует точный кадр ' + name);
+  }
+}
+
 const allFiles = walk();
 
 // Pages publishes tracked files recursively. Keep its inventory closed so that
@@ -360,7 +381,6 @@ if (mediaManifest?.video && mediaManifest?.poster) {
   }
   assert(mediaManifest.video.audio === false, 'Демо-манифест явно фиксирует отсутствие аудио');
   if (mediaManifest.renderMode !== undefined) {
-    const filmFrames=['f01_light.webp','f04_light.webp','f05_light.webp','f15_light.webp','f44_light.webp','f45_light.webp','f46_light.webp','f47_light.webp'];
     const digest=/^[a-f0-9]{64}$/;
     const origin=mediaManifest.renderOrigin;
     assert(['fresh','reused'].includes(mediaManifest.renderMode)&&digest.test(mediaManifest.renderKey||'')
@@ -374,12 +394,8 @@ if (mediaManifest?.video && mediaManifest?.poster) {
       'Свежий рендер относится к текущему комплекту');
     assert(mediaManifest.catalogManifestSha256===sha256(read('catalog-img/media-manifest.json')),
       'Ролик сверен с текущим каталогом');
-    for(const name of filmFrames){
-      const frame='catalog-img/'+name;
-      assert(existsSync(file(frame))&&mediaManifest.sources?.['public/'+name]===sha256(read(frame)),
-        'Ролик использует точный кадр '+name);
-    }
   }
+  verifyFilmCatalogFrames(mediaManifest);
 }
 
 for (const legacy of ['demo.mp4', 'demo.webm', 'media/demo.mp4', 'media/demo.webm']) {

@@ -1,10 +1,10 @@
 {
-  "version": "18.7",
-  "generatedAt": "2026-11-22",
-  "renderedAt": "2026-11-22T20:56:54.092Z",
+  "version": "18.8",
+  "generatedAt": "2026-11-23",
+  "renderedAt": "2026-11-22T23:05:02.279Z",
   "source": "synthetic-demo-PAY-LK",
-  "appSha256": "c5c8cdeb6bc6e25a0f9e7395a8da5b2ed1284a544dd8d4519b7c34601c770827",
-  "catalogManifestSha256": "897832c5a9d837657982dc431385378dffea1ba9c9eb72df600123cdb1309513",
+  "appSha256": "d0eafb651a6f07a56af8e348c605a80f42717234ae1ce799d4220cbd4fd73700",
+  "catalogManifestSha256": "dda2bd704323f97cd8f8ddcb5b9ef4994d76d4a89cab0c86f2eba1885e84f4be",
   "renderer": "Remotion 4.0.529",
   "composition": "RoadmapFilm",
   "sources": {
@@ -26,19 +26,17 @@
     "src/scenes/Plan.tsx": "6321be3f395eb44595977366fd5bf3d3702f6ddb3d2a53907bab4ebe8a836ce7",
     "src/scenes/Risk.tsx": "848695e0be446fe29788d28a008b53f3eb73457ea72557abe0516160b3fabbe3",
     "src/scenes/Start.tsx": "f403a0834d8679ff9e4f07a5a5c45599a5a8f968e4da8e9ed8f59af9b4e94867",
-    "public/f01_light.webp": "d7016e2bbe86cdd75e4db8e4aa6adf4cb8eefb7f0eeb9211c892181b5b60f418",
-    "public/f04_light.webp": "853d06da9658bef8d403dd8bede4b20d1501be9b1571cd84313ac449e7036b7a",
-    "public/f05_light.webp": "e4f32539fff9ee61c72575486c80b2cca5b1b65be623f5b7a1f2b9078426d45f",
-    "public/f15_light.webp": "30dfb94de94421026e6145d52cf14102e1933c3f05799d79c81364bdf1588e7c",
-    "public/f44_light.webp": "1a836ecd06359448b1d2f324b01916154941e08484071be2e3e5f55ec675a00f",
-    "public/f45_light.webp": "65b1fcc455849129683587366c78fb6726e1f7884882bcb04d326b41a3981e83",
-    "public/f46_light.webp": "fff4e38c4e29992d8d5e5df86c5a2ba0fb9bdd59d94641aae5aa73b2bf52deab",
-    "public/f47_light.webp": "47af06139bc253be488ef56569c6a977685e03cd871a6cd68b58f4afc165ea01"
+    "public/f01_light.webp": "732ae3988e920f7a88b2aa360ddddf236eb61354d8fd12562bfa007685ae76b8",
+    "public/f05_light.webp": "47d32f5aa3a2e7eb1113a0c316e7425904d4968353b9aebd48aa7415a14ecb78",
+    "public/f15_light.webp": "30fafba02ac1d2e0ac9864b01e6c3c97cdbca22eef48c66f45ebe9066f49783f",
+    "public/f45_light.webp": "7646673a9b9175b739e41ae2511880d34d329b72d02039af2f661020e55e472a",
+    "public/f46_light.webp": "1afbd5d51899d2d542a4f0a35164df9d66ca32b619dfe4ad31f8dd50aaf8f435",
+    "public/f47_light.webp": "d6371183651d96de3955915cc474a4433d58f24df1b4dda05c3222867a11a6d1"
   },
   "buildSources": {
     "tools/build-remotion-video.mjs": "efaf99569e6110720463b21a237e22fb5c05222e5a245136c087d44c1d8e321e",
     "tools/lib/video-encoding.mjs": "4225c7a9ec248e6a7ea7e5d01701d8fc845b7b83e8c52ca208b90723cdfaa4cf",
-    "tools/lib/film-catalog-inputs.mjs": "63ae0a4e69d0e3610ba930e26d20a64a027b22fa8f91dfd16aef8c16c287a681"
+    "tools/lib/film-catalog-inputs.mjs": "d1c84efbfce18efd8b84acddcf59a9d65b41bc3fbd22bb610bdd890758c694ec"
   },
   "toolchain": {
     "node": "v22.23.2",
@@ -46,19 +44,19 @@
     "ffmpeg": "a90e3db6a3fd35f6074b013f948b1aa45b31c6375489d39e572bea3f18336584",
     "ffprobe": "5b592e56f87ff754d94dadf99f38b4d0fb7d463eb780b50e0ca061d668d0e3f7"
   },
-  "renderKey": "3a157980ef4834d264c57d7826eaa2b7a076ef7b261da45388dd3f6ee2e8ee26",
+  "renderKey": "c9b99f28af5279de32ddfa499a60c38ddaa17afe25baf2e3d0842ca42e861796",
   "renderMode": "fresh",
   "renderOrigin": {
-    "version": "18.7",
-    "generatedAt": "2026-11-22",
-    "renderedAt": "2026-11-22T20:56:54.092Z",
-    "appSha256": "c5c8cdeb6bc6e25a0f9e7395a8da5b2ed1284a544dd8d4519b7c34601c770827",
-    "catalogManifestSha256": "897832c5a9d837657982dc431385378dffea1ba9c9eb72df600123cdb1309513"
+    "version": "18.8",
+    "generatedAt": "2026-11-23",
+    "renderedAt": "2026-11-22T23:05:02.279Z",
+    "appSha256": "d0eafb651a6f07a56af8e348c605a80f42717234ae1ce799d4220cbd4fd73700",
+    "catalogManifestSha256": "dda2bd704323f97cd8f8ddcb5b9ef4994d76d4a89cab0c86f2eba1885e84f4be"
   },
   "video": {
     "file": "roadmap-demo.mp4",
-    "sha256": "d5c0591ce78feb5b4f810c62814821ddce2abd03d82a66027482be5ad8bfadc9",
-    "bytes": 4819818,
+    "sha256": "3e999e37956cac56097c3c95a8bee4b049c35c055c3daa37b73e2e280c4b5983",
+    "bytes": 4815026,
     "durationSeconds": 120,
     "width": 1440,
     "height": 810,
