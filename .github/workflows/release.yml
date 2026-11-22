@@ -2,7 +2,6 @@ name: Package or release static site
 
 on:
   push:
-    branches: [main]
     tags:
       - 'v*'
   workflow_dispatch:
@@ -17,7 +16,7 @@ on:
         default: false
         type: boolean
       deploy_pages:
-        description: 'Развернуть текущий commit в GitHub Pages'
+        description: 'Развернуть текущий commit ветки main в GitHub Pages'
         required: true
         default: false
         type: boolean
@@ -33,6 +32,9 @@ jobs:
     timeout-minutes: 12
     permissions:
       contents: read
+    outputs:
+      pages_artifact_name: ${{ steps.pages_payload.outputs.name }}
+      pages_artifact_id: ${{ steps.upload_pages.outputs.artifact_id }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -62,6 +64,28 @@ jobs:
           path: roadmap-site-public.zip
           if-no-files-found: error
           retention-days: 14
+      - name: Build tracked-only Pages artifact
+        id: pages_payload
+        if: github.event_name == 'workflow_dispatch' && inputs.deploy_pages == true && inputs.publish_release != true && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(git rev-parse HEAD)" == "$GITHUB_SHA" ]]
+          if git ls-tree -r HEAD | awk '$1 == "120000" { found=1 } END { exit found ? 0 : 1 }'; then
+            echo "Pages artifact не допускает символические ссылки." >&2
+            exit 1
+          fi
+          mkdir _site
+          git archive --format=tar HEAD | tar -xf - -C _site
+          echo "name=github-pages-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
+      - name: Upload Pages artifact
+        id: upload_pages
+        if: github.event_name == 'workflow_dispatch' && inputs.deploy_pages == true && inputs.publish_release != true && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        with:
+          name: ${{ steps.pages_payload.outputs.name }}
+          path: _site
+          retention-days: 1
 
   release:
     name: Reject legacy publication
@@ -79,10 +103,11 @@ jobs:
   pages:
     name: Deploy GitHub Pages
     needs: package
-    if: github.event_name == 'workflow_dispatch' && inputs.deploy_pages == true
+    if: github.event_name == 'workflow_dispatch' && inputs.deploy_pages == true && inputs.publish_release != true && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
+      actions: read
       contents: read
       pages: write
       id-token: write
@@ -90,32 +115,30 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Use Node.js 24
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          package-manager-cache: false
-      - name: Verify again before Pages
-        run: node .quality/verify-public.mjs
-      - name: Configure Pages
-        uses: actions/configure-pages@v6
-      - name: Build tracked-only Pages artifact
+      - name: Wait for the verified Pages artifact
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PAGES_ARTIFACT_NAME: ${{ needs.package.outputs.pages_artifact_name }}
+          PAGES_ARTIFACT_ID: ${{ needs.package.outputs.pages_artifact_id }}
         run: |
           set -euo pipefail
-          if git ls-tree -r HEAD | awk '$1 == "120000" { found=1 } END { exit found ? 0 : 1 }'; then
-            echo "Pages artifact не допускает символические ссылки." >&2
-            exit 1
-          fi
-          mkdir _site
-          git archive --format=tar HEAD | tar -xf - -C _site
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: _site
-          retention-days: 1
+          [[ "$PAGES_ARTIFACT_ID" =~ ^[0-9]+$ && "$PAGES_ARTIFACT_NAME" =~ ^github-pages-${GITHUB_RUN_ID}-[0-9]+$ ]]
+          for ((attempt=1; attempt<=8; attempt++)); do
+            if payload=$(timeout 5s gh api --method GET "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts" -f name="$PAGES_ARTIFACT_NAME" 2>/dev/null) &&
+              jq -e --arg id "$PAGES_ARTIFACT_ID" --arg name "$PAGES_ARTIFACT_NAME" --arg sha "$GITHUB_SHA" '
+                .total_count == 1 and (.artifacts[0] | (.id | tostring) == $id and .name == $name and .expired == false and .workflow_run.head_sha == $sha)
+              ' <<< "$payload" >/dev/null; then
+              exit 0
+            fi
+            [[ "$attempt" == 8 ]] || sleep 2
+          done
+          echo "::error::The verified Pages artifact is not available for this commit. Retry failed jobs only while the artifact is retained." >&2
+          exit 1
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
       - name: Deploy Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
+        with:
+          artifact_name: ${{ needs.package.outputs.pages_artifact_name }}

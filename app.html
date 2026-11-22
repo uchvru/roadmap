@@ -9111,7 +9111,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="relative no-image-export cursor-pointer transition-colors" title="Что нового">v18.5</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="relative no-image-export cursor-pointer transition-colors" title="Что нового">v18.6</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9987,7 +9987,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v18.5">
+<script data-roadmap-modules="v18.6">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -13202,7 +13202,7 @@ if (typeof globalThis !== 'undefined') {
   snapshotNamespace.createPortableSnapshotPreserver = createPortableSnapshotPreserver;
 }
 
-/* module:portable-app-runtime sha256:1771e52ea70caa552576d058e0f94b851dcfcb166d7f2410ee05b59aee4a07ad */
+/* module:portable-app-runtime sha256:86892ec3d7765f204994cd038cf9514430bffad4a1d7edfaf349ed169c41035d */
 /* bundled internal import: ./portable-document.mjs */
 /* bundled internal import: ./portable-save-controller.mjs */
 /* bundled internal import: ./portable-snapshot.mjs */
@@ -13217,7 +13217,7 @@ async function createPortableAppRuntime(host) {
   let ready = false, dirty = false, draftTimer, draftGeneration = 0;
   let checkpoint = '', activeProject = '', saving = false;
   let historyGeneration = 0, savedHistoryGeneration = 0;
-  let savedMessage = '', draftError = '', hasDownload = false;
+  let savedMessage = '', draftError = '', downloaded = null;
   const clean = value => JSON.parse(JSON.stringify(value));
   const signature = snapshot => {
     const copy = clean(snapshot);
@@ -13297,7 +13297,7 @@ async function createPortableAppRuntime(host) {
     });
   }
   function state() {
-    return { ready, dirty, saving, draftError, hasDownload,
+    return { ready, dirty, saving, draftError, hasDownload:!!downloaded,
       message: draftError || savedMessage || (dirty ? 'Есть изменения, не записанные в HTML.' : 'Открыта сохраненная копия.'),
       ...controller?.getState() };
   }
@@ -13418,10 +13418,13 @@ async function createPortableAppRuntime(host) {
   function changed(options = {}) {
     if (!ready || host.isEphemeral()) return;
     if (options.history) historyGeneration++;
-    try { dirty = signature(captureSnapshot()) !== checkpoint || historyGeneration !== savedHistoryGeneration; }
-    catch { dirty = true; }
+    try {
+      const current = signature(captureSnapshot());
+      dirty = current !== checkpoint || historyGeneration !== savedHistoryGeneration;
+      if (downloaded && (current !== downloaded.snapshot || historyGeneration !== downloaded.history)) downloaded = null;
+    } catch { dirty = true; downloaded = null; }
     // Предыдущая успешная запись не подтверждает появившиеся после нее правки.
-    if (dirty && !saving) savedMessage = '';
+    if (dirty && !saving && !downloaded) savedMessage = '';
     clearTimeout(draftTimer);
     if (dirty) draftTimer = setTimeout(writeDraft, 700);
     refresh();
@@ -13442,15 +13445,24 @@ async function createPortableAppRuntime(host) {
     const savingHistoryGeneration = historyGeneration;
     try {
       const result = await controller.save(options);
-      if (['written','download-started'].includes(result.status)) {
+      if (result.status === 'download-started') {
+        // The browser does not report download completion to this page. Keep
+        // the verified HTML checkpoint and all recovery drafts intact.
+        const snapshot = signature(result.savedSnapshot);
+        const exact = signature(captureSnapshot()) === snapshot && historyGeneration === savingHistoryGeneration;
+        downloaded = exact ? {snapshot,history:savingHistoryGeneration} : null;
+        savedMessage = 'Скачивание рабочего HTML началось. Проверьте файл в загрузках. Исходный HTML не заменен.';
+        if (!exact) savedMessage += ' Есть правки, которых нет в скачиваемой копии.';
+        status(savedMessage, 'info');
+        clearTimeout(draftTimer);
+        if (dirty) await writeDraft();
+      } else if (result.status === 'written') {
         draftError = '';
         checkpoint = signature(result.savedSnapshot);
         savedHistoryGeneration = savingHistoryGeneration;
         dirty = signature(captureSnapshot()) !== checkpoint || historyGeneration !== savedHistoryGeneration;
-        hasDownload = result.status === 'download-started';
-        savedMessage = hasDownload
-          ? 'Скачивание рабочего HTML началось. Переносите новую копию из загрузок, исходный файл не заменен.'
-          : 'Рабочий HTML записан и проверен. Этот файл можно перенести на другой компьютер.';
+        downloaded = null;
+        savedMessage = 'Рабочий HTML записан и проверен. Этот файл можно перенести на другой компьютер.';
         if (dirty) savedMessage += ' Более поздние правки еще не сохранены.';
         ++draftGeneration; clearTimeout(draftTimer);
         if (!dirty && storage && draftPrefix) {
@@ -16242,7 +16254,7 @@ if (typeof globalThis !== 'undefined') {
     finishJiraMergeSections, jiraMergeMessage});
 }
 
-/* module:storage-transactions sha256:997b0950f9a3cf286520ae5fe3559821d0deeddc6559d7e1447fce76deb6e9d6 */
+/* module:storage-transactions sha256:fdbfeb6830f6d258a50ced7ac3dae9554dcff398e11997ba2e6a8b1984b77b0e */
 // Extracted from the tested v17.0 implementation. Side effects are explicit dependencies.
 function persistStoragePairs(pairs, env) {
   // Память всегда обновляем , сессия не теряет правки даже при сбое localStorage (как и в read-only).
@@ -16296,13 +16308,17 @@ function enqueueStorageWrite(state, kind, operation, onError) {
 // Legacy backups in the selected root are never enumerated or rotated.
 function createProjectBackupWriter({signatureOf, serialize, makeName, cryptoApi=globalThis.crypto}){
   const namePattern=/^roadmap-backup-\d{4}-\d{2}-\d{2}-\d{6}-[a-z0-9]{3,}-[a-f0-9]{8}\.json$/;
+  const scopeName=async projectId=>'Roadmap-backups-'+Array.from(
+    new Uint8Array(await cryptoApi.subtle.digest('SHA-256',new TextEncoder().encode(projectId))),
+    byte=>byte.toString(16).padStart(2,'0')).join('');
+  const fileTime=file=>Number.isFinite(file.lastModified)&&file.lastModified>0?file.lastModified:null;
   let last=null;
-  async function readOwned(directory,name,projectId){
+  async function readOwned(directory,name,projectId,{rethrow=false}={}){
     try{
       const handle=await directory.getFileHandle(name);
-      const value=JSON.parse(await (await handle.getFile()).text());
-      return value?.projectId===projectId&&Array.isArray(value.roadmapData)?value:null;
-    }catch{return null;}
+      const file=await handle.getFile(),bytes=await file.text(),value=JSON.parse(bytes);
+      return value?.projectId===projectId&&Array.isArray(value.roadmapData)?{value,bytes,at:fileTime(file)}:null;
+    }catch(error){if(rethrow&&!(error instanceof SyntaxError)&&error?.name!=='NotFoundError')throw error;return null;}
   }
   async function namesIn(directory,reverse=false){
     const names=[];
@@ -16312,19 +16328,20 @@ function createProjectBackupWriter({signatureOf, serialize, makeName, cryptoApi=
     names.sort();
     return reverse?names.reverse():names;
   }
-  return async function write(root,snapshot,{keep,isCurrent=()=>true}={}){
+  async function write(root,snapshot,{keep,isCurrent=()=>true,onVerified}={}){
     const projectId=snapshot?.projectId;
     if(typeof projectId!=='string'||!projectId||!Array.isArray(snapshot.roadmapData)
       ||!Number.isSafeInteger(keep)||keep<1||!isCurrent())return false;
     const signature=signatureOf(snapshot);
-    if(last?.root===root&&last.projectId===projectId&&last.signature===signature)return true;
+    const verified=at=>{if(isCurrent()&&typeof onVerified==='function'){try{onVerified(at);}catch{}}};
     const savedAt=snapshot.savedAt;
     if(typeof root.queryPermission==='function'&&await root.queryPermission({mode:'readwrite'})!=='granted')return false;
     if(!isCurrent())return false;
-    const scope=Array.from(new Uint8Array(await cryptoApi.subtle.digest('SHA-256',new TextEncoder().encode(projectId))),
-      byte=>byte.toString(16).padStart(2,'0')).join('');
+    // An in-memory match avoids another write, but does not prove the file still exists.
+    if(last?.root===root&&last.projectId===projectId&&last.signature===signature)return true;
+    const scope=await scopeName(projectId);
     if(!isCurrent())return false;
-    const directory=await root.getDirectoryHandle('Roadmap-backups-'+scope,{create:true});
+    const directory=await root.getDirectoryHandle(scope,{create:true});
     if(!isCurrent())return false;
     // First write after reloading or changing folders may already have exactly
     // this snapshot on disk. Comparing its full contents never trusts names alone.
@@ -16332,8 +16349,9 @@ function createProjectBackupWriter({signatureOf, serialize, makeName, cryptoApi=
       const candidate=(await namesIn(directory,true))[0];
       const previous=candidate&&await readOwned(directory,candidate,projectId);
       if(!isCurrent())return false;
-      if(previous&&signatureOf(previous)===signature){
+      if(previous&&signatureOf(previous.value)===signature){
         last={root,projectId,signature};
+        verified(previous.at);
         return true;
       }
     }
@@ -16357,9 +16375,11 @@ function createProjectBackupWriter({signatureOf, serialize, makeName, cryptoApi=
       writable=null;
       // A closed stream might already contain a viable recovery copy. Never
       // discard it on verification or later rotation failure.
-      if(await (await handle.getFile()).text()!==bytes)throw new Error('Автокопия не прошла проверку записи');
+      const written=await handle.getFile();
+      if(await written.text()!==bytes)throw new Error('Автокопия не прошла проверку записи');
       if(!isCurrent())return false;
       last={root,projectId,signature};
+      verified(fileTime(written));
       const names=await namesIn(directory);
       // The new copy and the newest keep entries are never removed.
       for(const oldName of names.slice(0,Math.max(0,names.length-keep))){
@@ -16374,6 +16394,30 @@ function createProjectBackupWriter({signatureOf, serialize, makeName, cryptoApi=
       if(!closing&&handle){try{await directory.removeEntry(fileName);}catch{}}
     }
   };
+  // Настройки только читают. Не создаем папку, не запрашиваем доступ и не обновляем дату проверки вместо даты файла.
+  write.inspect=async function(root,projectId,{isCurrent=()=>true}={}){
+    if(!root||typeof projectId!=='string'||!projectId||!isCurrent())return {kind:'unavailable'};
+    const state=(kind,at=null)=>isCurrent()?{kind,at}:{kind:'unavailable'};
+    try{
+      if(typeof root.queryPermission==='function'&&await root.queryPermission({mode:'readwrite'})!=='granted')return state('denied');
+      const scope=await scopeName(projectId);
+      if(!isCurrent())return {kind:'unavailable'};
+      let directory;
+      try{directory=await root.getDirectoryHandle(scope);}
+      catch(error){if(error?.name==='NotFoundError')return state('empty');throw error;}
+      if(!isCurrent())return {kind:'unavailable'};
+      const names=await namesIn(directory,true);
+      let damaged=false;
+      for(const name of names){
+        if(!isCurrent())return {kind:'unavailable'};
+        const saved=await readOwned(directory,name,projectId,{rethrow:true});
+        if(saved&&serialize(saved.value)===saved.bytes)return state(damaged?'damaged':'ready',saved.at);
+        damaged=true;
+      }
+      return state(damaged?'damaged':'empty');
+    }catch(error){return state(error?.name==='NotAllowedError'?'denied':'failed');}
+  };
+  return write;
 }
 
 if (typeof globalThis !== 'undefined') {
@@ -18104,7 +18148,7 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '18.5';
+    const APP_VERSION = '18.6';
     const APP_VERSION_DATE = '22.11.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) { b.textContent = 'v' + APP_VERSION; b.title = APP_VERSION_DATE; } } catch (e) {}
@@ -19089,11 +19133,9 @@ if (typeof globalThis !== 'undefined') {
         const _kept = [];
         for (const r of list) {
           if (!r) continue;
-          let _same = false;
+          let _same = r.handle === handle;
           if (r.handle && typeof r.handle.isSameEntry === 'function') {
-            try { _same = await r.handle.isSameEntry(handle); } catch (e) { _same = (r.name === handle.name); }
-          } else {
-            _same = (r.name === handle.name); // нет ручки/метода , падаем на сравнение по имени
+            try { _same = _same || await r.handle.isSameEntry(handle); } catch (e) {}
           }
           if (!_same) _kept.push(r);
         }
@@ -19119,40 +19161,51 @@ if (typeof globalThis !== 'undefined') {
       const box = document.getElementById('startupRecents'); if (!box) return;
       const demo = (typeof DEMO_MODE !== 'undefined' && DEMO_MODE);
       if (READ_ONLY_MODE || demo || !('showOpenFilePicker' in window)) { box.classList.add('hidden'); box.innerHTML = ''; return; }
-      const list = await _getRecentFiles();
+      const list = (await _getRecentFiles()).filter(r => r?.handle && typeof r.handle.getFile === 'function').slice(0, RECENT_FILES_MAX);
       if (!list.length) { box.classList.add('hidden'); box.innerHTML = ''; return; }
       box.innerHTML = '<p class="text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-2">Недавние файлы</p>'
-        + '<div class="flex flex-col gap-1.5">' + list.slice(0, 5).map((r, i) =>
-          `<button type="button" onclick="openRecentFile(${i})" class="w-full flex items-center justify-between gap-2 bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl px-3 py-2 text-left transition-colors cursor-pointer" title="Открыть файл и продолжить работу с ним">
+        + '<div class="flex flex-col gap-1.5">' + list.map((r, i) =>
+          `<button type="button" data-recent-file="${i}" class="rm-btn rm-btn-secondary w-full justify-between gap-2 text-left" title="${escHtml(r.name || '')}">
             <span class="flex items-center gap-2 min-w-0"><svg aria-hidden="true" class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-245cc4dee9e7"></use></svg><span class="text-xs font-medium text-slate-700 truncate">${escHtml(r && r.name || '')}</span></span>
             <span class="text-[10px] text-slate-500 shrink-0">${escHtml(_recentRelDate(r && r.at))}</span>
-          </button>`).join('') + '</div>';
+          </button>`).join('') + '</div><div id="startupRecentsRecovery" class="hidden mt-2 text-sm text-slate-700 space-y-2"><p id="startupRecentsError" role="status"></p><button type="button" class="rm-btn rm-btn-secondary" onclick="startFromFile()">Выбрать JSON заново</button></div>';
+      box.querySelectorAll('[data-recent-file]').forEach(button => {
+        const record = list[Number(button.dataset.recentFile)];
+        button.addEventListener('click', () => openRecentFile(record));
+      });
       box.classList.remove('hidden');
     }
-    async function _dropRecentFile(idx) {
-      try { const list = await _getRecentFiles(); list.splice(idx, 1); await _setRecentFiles(list); } catch (e) {}
-      try { renderStartupRecents(); } catch (e) {}
-    }
-    // Клик по недавнему файлу: запрос прав требует жеста пользователя, поэтому все прямо в обработчике клика
-    async function openRecentFile(idx) {
-      if (typeof LEARNING_SCENARIO !== 'undefined' && LEARNING_SCENARIO) return false;
-      let rec = null;
+    // Используем именно запись отрисованной кнопки. Порядок списка может измениться, пока пользователь выбирает доступ.
+    async function openRecentFile(record) {
+      const request = (openRecentFile.request || 0) + 1;
+      openRecentFile.request = request;
+      const epoch = _projectTransitionToken;
+      const current = () => request === openRecentFile.request && epoch === _projectTransitionToken && !LEARNING_SCENARIO && !READ_ONLY_MODE && !DEMO_MODE;
+      if (!current() || !record?.handle) return false;
+      const recovery = document.getElementById('startupRecentsRecovery');
+      if (recovery) recovery.classList.add('hidden');
       try {
-        const list = await _getRecentFiles();
-        if (typeof LEARNING_SCENARIO !== 'undefined' && LEARNING_SCENARIO) return false;
-        rec = list[idx];
-        if (!rec) return;
-        const h = rec.handle;
-        if (!h || typeof h.getFile !== 'function') throw new Error('handle-missing');
+        const h = record.handle;
         if (typeof h.queryPermission === 'function') {
           let perm = await h.queryPermission({ mode: 'readwrite' });
+          if (!current()) return false;
           if (perm === 'prompt' && typeof h.requestPermission === 'function') perm = await h.requestPermission({ mode: 'readwrite' });
-          if (perm !== 'granted') throw new Error('permission-denied');
+          if (!current()) return false;
+          if (perm !== 'granted') throw Object.assign(new Error('Нет доступа'), {name:'NotAllowedError'});
         }
-        await loadFromHandle(h);
+        return await loadFromHandle(h);
       } catch (e) {
-        showToast('Не удалось открыть файл' + (rec && rec.name ? ' «' + rec.name + '»' : '') + ' — запись убрана из недавних', 'warn', 5000);
-        _dropRecentFile(idx);
+        // loadFromHandle начинает свой переход. Не скрываем его ошибку и не трогаем список файлов.
+        if (request !== openRecentFile.request || LEARNING_SCENARIO || READ_ONLY_MODE || DEMO_MODE) return false;
+        const reason = e?.name === 'AbortError' ? 'Открытие отменено.'
+          : e?.name === 'NotAllowedError' ? 'Нет доступа к файлу. Повторите попытку или выберите файл заново.'
+          : e?.name === 'NotFoundError' ? 'Файл не найден. Возможно, его переместили.'
+          : e?.name === 'SyntaxError' ? 'Не удалось прочитать JSON. Проверьте файл или выберите другую копию.'
+          : 'Не удалось открыть файл. Выберите его заново.';
+        const status = document.getElementById('startupRecentsError');
+        if (status && recovery) { status.textContent = reason; recovery.classList.remove('hidden'); }
+        else showToast(reason, 'warn', 5000);
+        return false;
       }
     }
     // --- История версий файла: локальные снимки в IndexedDB (п.3) ---
@@ -20104,7 +20157,7 @@ if (typeof globalThis !== 'undefined') {
       } catch (e) {}
     }
     // Вернуть стартовый экран (клик по логотипу) , выбор «новый / открыть файл / продолжить»
-    async function openStartupModal() {
+    async function openStartupModal(importChoices = false) {
       try { if (typeof dismissHelpHint === 'function') dismissHelpHint(); } catch (e) {}
       const m = document.getElementById('startupModal');
       if (!m) return;
@@ -20112,6 +20165,7 @@ if (typeof globalThis !== 'undefined') {
       m.classList.remove('hidden');
       _applyStartupBrowserHint();
       if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
+      if (importChoices === true) startupShowImportChoices(true);
       try {
         const handle = await getHandle();
         const b = document.getElementById('btnStartSaved');
@@ -20539,7 +20593,10 @@ if (typeof globalThis !== 'undefined') {
           const _backupBindProjectId = projectStorageId;
           getBackupDirHandle().then(h => {
             if (_backupBindToken !== _projectTransitionToken || _backupBindProjectId !== projectStorageId) return;
-            if (h && !DEMO_MODE && !LEARNING_SCENARIO) autoBackupDirHandle = h;
+            if (h && !autoBackupDirHandle && !DEMO_MODE && !LEARNING_SCENARIO) {
+              autoBackupDirHandle = h;
+              if (_isBackupSettingsOpen()) renderProjectBackupStatus();
+            }
           }).catch(() => {});
         }
       } catch (e) {}
@@ -20583,10 +20640,10 @@ if (typeof globalThis !== 'undefined') {
       })();
     }
 
-    function startupShowImportChoices() {
+    function startupShowImportChoices(forceOpen = false) {
       const p = document.getElementById('startupImportChoices'), b = document.getElementById('startupImportBtn');
       if (!p) return;
-      const open = p.classList.contains('hidden');
+      const open = forceOpen === true || p.classList.contains('hidden');
       p.classList.toggle('hidden', !open);
       if (b) b.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (open) { const first = p.querySelector('button'); if (first) setTimeout(() => first.focus(), 20); }
@@ -27239,7 +27296,7 @@ const m = document.getElementById('mineModeBtn');
       });
       const c = document.getElementById('settingsContent'); if (c) c.scrollTop = 0;
       if (activeTab) activeTab.scrollIntoView({block:'nearest', inline:'center'});
-      if (_settingsTab === 'storage') renderStorageDiagnostics();
+      if (_settingsTab === 'storage') { renderStorageDiagnostics(); renderProjectBackupStatus(); }
       requestAnimationFrame(syncSettingsTabsOverflow);
     }
     function saveAuthorNameInput(v) {
@@ -27413,8 +27470,8 @@ const m = document.getElementById('mineModeBtn');
       const s = _onboardingSnapshot(), config = ONBOARDING_SCENARIOS[_onboarding.scenario];
       const workingState = _portableSession?.getState();
       if (_onboarding.scenario === 'plan' && !DEMO_MODE) {
-        s.complete.save = !!(workingState && !workingState.dirty &&
-          (workingState.lastOutcome === 'written' || (workingState.hasDownload && _onboarding.events.workingConfirmed === workingState.revisionId)));
+        s.complete.save = !!(workingState && ((!workingState.dirty && workingState.lastOutcome === 'written') ||
+          (workingState.hasDownload && _onboarding.events.workingConfirmed === workingState.revisionId)));
         s.storage = workingState?.message || 'Сохраните рабочий HTML вместе с планом и историей.';
       }
       const current = config.steps[_onboarding.step], b = _onboardingButton;
@@ -27470,7 +27527,7 @@ const m = document.getElementById('mineModeBtn');
         s.storage,
         DEMO_MODE ? b('Понятно, где сохранять','storage',true) :
           b('Сохранить рабочий файл','working',true,locked || !_portableSession) +
-          (workingState?.hasDownload && !workingState.dirty && !s.complete.save ? b('HTML есть в загрузках','confirm-working',false,locked) : '') +
+          (workingState?.hasDownload && !s.complete.save ? b('HTML есть в загрузках','confirm-working',false,locked) : '') +
           '<details><summary>Дополнительно: JSON</summary><div class="onboarding-actions">' + content.save[3] + '</div></details>'
       ];
       const c = content[current];
@@ -27495,7 +27552,7 @@ const m = document.getElementById('mineModeBtn');
       }
       if (action === 'confirm-working') {
         const state = _portableSession?.getState();
-        if (state?.hasDownload && !state.dirty) _onboarding.events.workingConfirmed = state.revisionId;
+        if (state?.hasDownload) _onboarding.events.workingConfirmed = state.revisionId;
         renderOnboarding(); _onboardingPersist(); return;
       }
       if (action === 'confirm-download') {
@@ -36933,15 +36990,17 @@ const m = document.getElementById('mineModeBtn');
     function toggleListDensity(){ listDensity=listDensity==='compact'?'comfortable':'compact'; try{storage.set('gantt_list_density',listDensity);}catch(e){} applyListDensity(); renderRoadmap(true); }
     function renderRoadmapEmptyState(listContainer, barsContainer) {
       const emptyProject = (roadmapData || []).length === 0;
+      const canEdit = typeof READ_ONLY_MODE === 'undefined' || !READ_ONLY_MODE;
+      const canImport = canEdit && (typeof DEMO_MODE === 'undefined' || !DEMO_MODE) && (typeof LEARNING_SCENARIO === 'undefined' || !LEARNING_SCENARIO);
       const title = emptyProject ? 'Проект пуст' : 'Ничего не найдено';
       const description = emptyProject
-        ? 'Добавьте первую задачу или загрузите данные из Jira в меню «Данные».'
+        ? 'Задачи появятся здесь после добавления или импорта.'
         : 'Под текущие фильтры ни одна задача не подходит. Попробуйте сбросить параметры.';
       const icon = emptyProject
         ? 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
         : 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z';
       const action = emptyProject
-        ? `<div class="flex flex-wrap items-center justify-center gap-2"><button type="button" onclick="openModal()" class="inline-flex items-center gap-1.5 h-9 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer shadow-xs"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-41ab52eec4ee"></use></svg>Добавить задачу</button><button type="button" onclick="startDemo()" class="inline-flex items-center gap-1.5 h-9 px-3 bg-white hover:bg-violet-50 text-violet-600 border border-violet-200 text-xs font-semibold rounded-xl transition-colors cursor-pointer">Посмотреть пример</button></div>`
+        ? (canEdit ? `<div class="flex flex-wrap items-center justify-center gap-2"><button type="button" onclick="openModal()" class="rm-btn rm-btn-primary">Добавить задачу</button>${canImport ? '<button type="button" onclick="openStartupModal(true)" class="rm-btn rm-btn-secondary">Импортировать данные</button>' : ''}<button type="button" onclick="openLearningExample()" class="rm-btn rm-btn-ghost">Учебный пример ↗</button></div>` : '')
           : `<button type="button" onclick="resetAllFilters()" class="inline-flex items-center gap-1.5 h-9 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-xl border border-indigo-200/60 transition-colors cursor-pointer"><svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-995cbdc86b32"></use></svg>Сбросить фильтры</button>`;
       listContainer.innerHTML = `<div class="px-5 py-12 text-center bg-white"><div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl ${emptyProject ? 'bg-indigo-50 text-indigo-500' : 'bg-slate-100 text-slate-500'} mb-3"><svg aria-hidden="true" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="${icon}"></path></svg></div><div class="text-sm font-semibold text-slate-700 mb-1">${title}</div><div class="text-xs text-slate-500 mb-4 max-w-xs mx-auto">${description}</div>${action}</div>`;
 
@@ -41296,16 +41355,75 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       _downloadJsonFile(buildRoadmapSnapshot(), 'roadmap-backup-' + stamp + '.json', true);
       showToast('Скачана копия с датой — храните рядом с основным файлом', 'ok', 4000);
     }
+    let _projectBackupPickerRequest=0, _projectBackupStatusRead=0, _projectBackupStatus=null;
+    function _isBackupSettingsOpen() {
+      const modal = document.getElementById('settingsModal');
+      return _settingsTab === 'storage' && modal && !modal.classList.contains('hidden');
+    }
+    function _showProjectBackupStatus(kind, at = null) {
+      const state = document.getElementById('settingsProjectBackupStatus'), action = document.getElementById('settingsProjectBackupConnect');
+      if (!state || !action) return;
+      const when = Number.isFinite(at) && at > 0 ? new Date(at).toLocaleString('ru-RU', {dateStyle:'short',timeStyle:'short'}) : '';
+      const descriptions = {
+        unavailable:'Автокопии недоступны в этом режиме.', unsupported:'Для автокопий нужна поддержка выбора папки браузером.',
+        unconfigured:'Папка автокопий не выбрана.', checking:'Проверяем папку…', empty:'Папка подключена. Копий этого проекта пока нет.',
+        denied:'Нет доступа к папке автокопий.', failed:'Не удалось проверить папку автокопий.', damaged:'Не все автокопии удалось прочитать.',
+        writeFailed:'Не удалось записать автокопию.', ready:when?'':'Копия доступна. Дату записи определить не удалось.',
+      };
+      state.textContent = [descriptions[kind], when ? 'Последняя проверенная копия: ' + when + '.' : ''].filter(Boolean).join(' ');
+      action.classList.toggle('hidden', kind === 'unavailable' || kind === 'unsupported');
+      action.textContent = kind === 'unconfigured' ? 'Выбрать папку' : 'Переподключить папку';
+    }
+    function _currentProjectBackup(root, project, epoch) {
+      return autoBackupDirHandle === root && projectStorageId === project && _projectTransitionToken === epoch
+        && !READ_ONLY_MODE && !DEMO_MODE && !LEARNING_SCENARIO;
+    }
+    async function renderProjectBackupStatus() {
+      const request = ++_projectBackupStatusRead;
+      if (READ_ONLY_MODE || DEMO_MODE || LEARNING_SCENARIO) return _showProjectBackupStatus('unavailable');
+      if (!window.showDirectoryPicker) return _showProjectBackupStatus('unsupported');
+      const root = autoBackupDirHandle, project = projectStorageId, epoch = _projectTransitionToken;
+      if (!root) return _showProjectBackupStatus('unconfigured');
+      const isCurrent = () => request === _projectBackupStatusRead && _currentProjectBackup(root,project,epoch);
+      _showProjectBackupStatus('checking');
+      const status = await _projectBackupWriter.inspect(root,project,{isCurrent});
+      if (!isCurrent()) return;
+      const last = _projectBackupStatus;
+      const failed = last?.root === root && last.project === project && last.epoch === epoch && last.kind === 'writeFailed';
+      const kind = failed && ['ready','empty','damaged'].includes(status.kind) ? 'writeFailed' : status.kind;
+      _projectBackupStatus = {root,project,epoch,kind,at:status.at};
+      _showProjectBackupStatus(kind,status.at);
+    }
+    function _rememberProjectBackupStatus(root,project,epoch,kind,at) {
+      if (!_currentProjectBackup(root,project,epoch)) return;
+      const last = _projectBackupStatus;
+      const sameScope = last?.root === root && last.project === project && last.epoch === epoch;
+      if (at === undefined && sameScope) at = last.at;
+      if (sameScope && last.kind === kind && last.at === at) return;
+      _projectBackupStatus = {root,project,epoch,kind,at};
+      if (_isBackupSettingsOpen()) {
+        ++_projectBackupStatusRead;
+        _showProjectBackupStatus(kind,at);
+      }
+    }
     // Уровень 2 авто-бэкапа: выбрать папку (нужен жест пользователя и Chromium). Датированные копии пишутся туда фоном.
     async function setupAutoBackupDir() {
       if (typeof READ_ONLY_MODE !== 'undefined' && READ_ONLY_MODE) return;
       if ((typeof DEMO_MODE !== 'undefined' && DEMO_MODE) || (typeof LEARNING_SCENARIO !== 'undefined' && LEARNING_SCENARIO)) return;
       if (!window.showDirectoryPicker) { showToast('Браузер не поддерживает выбор папки — используйте «Скачать датированный бэкап»', 'warn', 6000); return; }
+      const request = ++_projectBackupPickerRequest, project = projectStorageId, epoch = _projectTransitionToken;
+      const isCurrent = () => request === _projectBackupPickerRequest && projectStorageId === project
+        && _projectTransitionToken === epoch && !READ_ONLY_MODE && !DEMO_MODE && !LEARNING_SCENARIO;
       try {
-        autoBackupDirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
-        await saveBackupDirHandle(autoBackupDirHandle);
+        const root = await window.showDirectoryPicker({ mode: 'readwrite' });
+        if (!isCurrent()) return;
+        await saveBackupDirHandle(root);
+        if (!isCurrent()) return;
+        autoBackupDirHandle = root;
+        _projectBackupStatus = null;
+        if (_isBackupSettingsOpen()) renderProjectBackupStatus();
         showToast('Папка выбрана. У каждого плана будут свои автокопии.', 'ok', 4000);
-      } catch (e) { if (e && e.name !== 'AbortError') showToast('Не удалось выбрать папку', 'error'); }
+      } catch (e) { if (isCurrent() && e?.name !== 'AbortError') showToast('Не удалось подключить папку автокопий.', 'error'); }
     }
     let _backupNameSequence = 0;
     function _backupSidecarFileName(now) {
@@ -41335,11 +41453,18 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       const root=autoBackupDirHandle;
       if (!root) return false;
       const project=projectStorageId, epoch=_projectTransitionToken;
-      return _projectBackupWriter(root,buildRoadmapSnapshot(),{
-        keep:AUTO_BACKUP_KEEP,
-        isCurrent:()=>autoBackupDirHandle===root&&projectStorageId===project&&_projectTransitionToken===epoch
-          &&!READ_ONLY_MODE&&!DEMO_MODE&&!LEARNING_SCENARIO,
-      });
+      try {
+        const ok = await _projectBackupWriter(root,buildRoadmapSnapshot(),{
+          keep:AUTO_BACKUP_KEEP,
+          isCurrent:()=>_currentProjectBackup(root,project,epoch),
+          onVerified:at=>_rememberProjectBackupStatus(root,project,epoch,'ready',at),
+        });
+        if (!ok) _rememberProjectBackupStatus(root,project,epoch,'writeFailed');
+        return ok;
+      } catch (error) {
+        _rememberProjectBackupStatus(root,project,epoch,'writeFailed');
+        throw error;
+      }
     }
     function writeBackupSidecar() {
       return _enqueueStorageWrite('backup-sidecar', () => _writeBackupSidecarNow());
@@ -45249,6 +45374,11 @@ function syncBodyScrollLock() {
        <p class="text-xs text-slate-600">Оценка локальная. Данные не отправляются и не удаляются.</p>
        <button type="button" onclick="__selfTest(true)" class="rm-btn rm-btn-secondary">Самопроверка приложения</button>
       </section>
+      <section class="border-t border-slate-200 pt-3 space-y-2" aria-labelledby="settingsProjectBackupTitle">
+       <h4 class="text-sm font-semibold text-slate-800" id="settingsProjectBackupTitle">Автокопии плана</h4>
+       <p id="settingsProjectBackupStatus" class="text-sm text-slate-700" role="status"></p>
+       <button id="settingsProjectBackupConnect" type="button" class="rm-btn rm-btn-secondary hidden" onclick="setupAutoBackupDir()">Выбрать папку</button>
+      </section>
       <section class="border-t border-slate-200 pt-3 space-y-2 no-print no-image-export">
        <h4 class="text-sm font-semibold text-slate-800">Опасная зона</h4>
        <p id="projectPurgeWarning" class="text-sm text-slate-700">Проект, настройки и локальные версии будут удалены из хранилища браузера. Действие необратимо. Файлы и автокопии на диске останутся.</p>
@@ -45606,7 +45736,7 @@ function syncBodyScrollLock() {
         <div class="startup-heading">
           <div class="flex items-center gap-2 flex-wrap">
             <h2 id="startupTitle" tabindex="-1" class="text-lg sm:text-xl font-semibold text-slate-800 leading-tight">Дорожная карта продукта</h2>
-            <span class="update-version-pair"><span id="appVersionBadge" title="22.11.2026">v18.5</span><button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-ghost rm-btn-icon candidate-version-update" data-update-state="idle" aria-label="Проверить обновления" aria-describedby="startupUpdateResult" title="Проверить обновления. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg></button></span>
+            <span class="update-version-pair"><span id="appVersionBadge" title="22.11.2026">v18.6</span><button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-ghost rm-btn-icon candidate-version-update" data-update-state="idle" aria-label="Проверить обновления" aria-describedby="startupUpdateResult" title="Проверить обновления. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg></button></span>
           </div>
           <div id="startupUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
         </div>
@@ -45659,7 +45789,35 @@ function syncBodyScrollLock() {
          <p class="text-sm">Сроки, задачи и связи в одном рабочем файле.</p>
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v18.5</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v18.6</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="download-keeps-draft" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-a2cc2f6ca479"></use></svg><h5 class="min-w-0 rn-title">Скачивание не стирает черновик</h5><span class="info-release-badge">ФАЙЛ</span></div>
+      <p class="text-xs text-slate-600">Если браузер прервет скачивание HTML, черновик и отметка о несохраненных правках останутся.</p>
+     </article>
+     <article data-release-card="backup-verified-status" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-93a24762eb6b"></use></svg><h5 class="min-w-0 rn-title">Видно, когда сделана автокопия</h5><span class="info-release-badge">РЕЗЕРВ</span></div>
+      <p class="text-xs text-slate-600">В настройках хранения есть дата последней проверенной копии плана и кнопка переподключения папки.</p>
+     </article>
+     <article data-release-card="recent-file-retry" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-19f3fbbcef75"></use></svg><h5 class="min-w-0 rn-title">Недавние файлы не пропадают при отказе</h5><span class="info-release-badge">СТАРТ</span></div>
+      <p class="text-xs text-slate-600">Если браузер не дал доступ, файл остается в списке. Можно повторить попытку или выбрать его заново.</p>
+     </article>
+     <article data-release-card="empty-plan-import" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-68e5f5e19a51"></use></svg><h5 class="min-w-0 rn-title">Импорт прямо из пустого плана</h5><span class="info-release-badge">ИМПОРТ</span></div>
+      <p class="text-xs text-slate-600">Откройте импорт из пустого плана. Учебный пример откроется отдельно и не заменит вашу вкладку.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v18.5</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="backup-project-folders" class="info-release-card rn-card rn-solid">
       <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-93a24762eb6b"></use></svg><h5 class="min-w-0 rn-title">Автокопии отдельно для каждого проекта</h5><span class="info-release-badge">РЕЗЕРВ</span></div>
@@ -45675,13 +45833,6 @@ function syncBodyScrollLock() {
      </article>
     </div>
    </div>
-
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v18.4</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -50127,7 +50278,7 @@ function syncBodyScrollLock() {
     <button type="button" onclick="clearBulkSelect()" class="h-8 px-3 hover:bg-white/10 rounded-lg text-xs cursor-pointer">Снять</button>
   </div>
 
-  <aside id="downloadReceipt" hidden role="status" aria-live="polite"><p><strong>Копия подготовлена к скачиванию</strong></p><p data-download-name></p><p>Перенесите её из «Загрузок» в рабочую папку. Браузер может добавить суффикс, если имя уже занято. Прежний файл не заменён.</p><button type="button" class="rm-btn rm-btn-secondary" onclick="document.getElementById('downloadReceipt').hidden=true">Понятно</button></aside>
+  <aside id="downloadReceipt" hidden role="status" aria-live="polite"><p><strong>Скачивание началось</strong></p><p data-download-name></p><p>Проверьте файл в «Загрузках» и откройте новую копию. Прежний HTML не заменен.</p><button type="button" class="rm-btn rm-btn-secondary" onclick="document.getElementById('downloadReceipt').hidden=true">Понятно</button></aside>
   <!-- Startup Modal -->
   <!-- Изменения из Jira: новые и обновленные задачи последнего импорта -->
   <div id="jiraChangesModal" role="dialog" aria-modal="true" aria-label="Изменения из Jira" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[1000] flex items-center justify-center hidden p-4" data-modal-backdrop>

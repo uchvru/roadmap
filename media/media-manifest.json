@@ -1,10 +1,10 @@
 {
-  "version": "18.5",
+  "version": "18.6",
   "generatedAt": "2026-11-22",
-  "renderedAt": "2026-11-22T13:17:06.436Z",
+  "renderedAt": "2026-11-22T18:30:31.147Z",
   "source": "synthetic-demo-PAY-LK",
-  "appSha256": "9792bf8dad9b5ffed71ddb8f4bae39fadf842d1f729e79d37b5027e29245b486",
-  "catalogManifestSha256": "6572974090b3eec3a24784c927030742478b232c9695ce5015fafa60ad747cf0",
+  "appSha256": "7c9ccbb98fb01f1b60e1b69b047ff64519815e7566ff533a5447567fb9142acc",
+  "catalogManifestSha256": "70cb07e4edd78cf0a5b2441f40e629103a5c450f13707b75b49098d4de2d4911",
   "renderer": "Remotion 4.0.529",
   "composition": "RoadmapFilm",
   "sources": {
@@ -26,14 +26,14 @@
     "src/scenes/Plan.tsx": "6321be3f395eb44595977366fd5bf3d3702f6ddb3d2a53907bab4ebe8a836ce7",
     "src/scenes/Risk.tsx": "848695e0be446fe29788d28a008b53f3eb73457ea72557abe0516160b3fabbe3",
     "src/scenes/Start.tsx": "f403a0834d8679ff9e4f07a5a5c45599a5a8f968e4da8e9ed8f59af9b4e94867",
-    "public/f01_light.webp": "043422ff441f805b9f4e92410a0fd2d960af0a4b98673f2c83c956e453af9f4c",
-    "public/f04_light.webp": "197f6384360c61aff385678fa8c1c01bffcfac92de4f4136aab12e73dc0b65c6",
-    "public/f05_light.webp": "c60921263212f63efa8481c5037648559e2a8c3cd0f0f95673f8bd366400ff5b",
-    "public/f09_light.webp": "6f12f01d9dda86a2d1132146f55cce5cd9e7674bb4685059337d9b5f5427f5d9",
-    "public/f44_light.webp": "e1cc10547ab01c74367e1c62c295df9914bf6a3457109cf9f3e5834607e218de",
-    "public/f45_light.webp": "29249b65a1a10adca3c85984c78b2b7ef1ca9c56416e4b40f0ed488f08d7defe",
+    "public/f01_light.webp": "8422af0b4b4d3b5e9268410623e151b1e7e712d7b17ff09ffebcce2619c56227",
+    "public/f04_light.webp": "d84dc787684ef832d527cb5671a0036f9c80d8d38d9106615d5045631805fb37",
+    "public/f05_light.webp": "4dbea0cf526ee345c7bd79ec0a64f5358648ea949c8eb38f27d77e35d2ccc4b0",
+    "public/f09_light.webp": "c8c82e4fc4a50d8e1ed570608ff0d03770371cb1e3ad95bbb4cfdd80e68bda1a",
+    "public/f44_light.webp": "bca6a4cb450184b893c4d4900dba7a985a89993fa685c40cc2da8e96b7dd156e",
+    "public/f45_light.webp": "246f11c86bf27fd3817b3d8d419ac5b23e6db6ae68202a662825824d1c3d3084",
     "public/f46_light.webp": "fff4e38c4e29992d8d5e5df86c5a2ba0fb9bdd59d94641aae5aa73b2bf52deab",
-    "public/f47_light.webp": "1f879cc7cdf92f05f3d426496df92bb6f0b02d552db7117c0efc31b85df886a2"
+    "public/f47_light.webp": "2cc2bc25cde6574bbf5cab411d66f2bd1c0ecd18f0559acfaf350cf0e0960705"
   },
   "buildSources": {
     "tools/build-remotion-video.mjs": "efaf99569e6110720463b21a237e22fb5c05222e5a245136c087d44c1d8e321e",
@@ -46,19 +46,19 @@
     "ffmpeg": "a90e3db6a3fd35f6074b013f948b1aa45b31c6375489d39e572bea3f18336584",
     "ffprobe": "5b592e56f87ff754d94dadf99f38b4d0fb7d463eb780b50e0ca061d668d0e3f7"
   },
-  "renderKey": "eefc36483e24d35ff62f8820941ba41aa0c5f44cffb5d89f8b9d280365e4d666",
+  "renderKey": "5da0e4793143ecec0f5e68fcce0f1a5254d39ff44acef23b51e40bd9eb394586",
   "renderMode": "fresh",
   "renderOrigin": {
-    "version": "18.5",
+    "version": "18.6",
     "generatedAt": "2026-11-22",
-    "renderedAt": "2026-11-22T13:17:06.436Z",
-    "appSha256": "9792bf8dad9b5ffed71ddb8f4bae39fadf842d1f729e79d37b5027e29245b486",
-    "catalogManifestSha256": "6572974090b3eec3a24784c927030742478b232c9695ce5015fafa60ad747cf0"
+    "renderedAt": "2026-11-22T18:30:31.147Z",
+    "appSha256": "7c9ccbb98fb01f1b60e1b69b047ff64519815e7566ff533a5447567fb9142acc",
+    "catalogManifestSha256": "70cb07e4edd78cf0a5b2441f40e629103a5c450f13707b75b49098d4de2d4911"
   },
   "video": {
     "file": "roadmap-demo.mp4",
-    "sha256": "ba1899dd519fa2ae302c0d39c3ace84fb7adc5a1f5253082b11ed038b2e884f2",
-    "bytes": 4885844,
+    "sha256": "12685d923a3224c5b41524f3f59f1f50ac9a1fa8b15e13cc771d5597a0cd8cf5",
+    "bytes": 4882766,
     "durationSeconds": 120,
     "width": 1440,
     "height": 810,
