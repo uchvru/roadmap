@@ -359,6 +359,27 @@ if (mediaManifest?.video && mediaManifest?.poster) {
     }
   }
   assert(mediaManifest.video.audio === false, 'Демо-манифест явно фиксирует отсутствие аудио');
+  if (mediaManifest.renderMode !== undefined) {
+    const filmFrames=['f01_light.webp','f04_light.webp','f05_light.webp','f09_light.webp','f44_light.webp','f45_light.webp','f46_light.webp','f47_light.webp'];
+    const digest=/^[a-f0-9]{64}$/;
+    const origin=mediaManifest.renderOrigin;
+    assert(['fresh','reused'].includes(mediaManifest.renderMode)&&digest.test(mediaManifest.renderKey||'')
+      &&/^\d+\.\d+$/.test(origin?.version||'')&&/^\d{4}-\d{2}-\d{2}$/.test(origin?.generatedAt||'')
+      &&Number.isFinite(Date.parse(origin?.renderedAt))&&origin.renderedAt===mediaManifest.renderedAt
+      &&digest.test(origin?.appSha256||'')&&digest.test(origin?.catalogManifestSha256||''),
+      'У ролика есть проверяемое происхождение, в том числе при повторном использовании');
+    assert(mediaManifest.renderMode!=='fresh'||origin?.version===mediaManifest.version
+      &&origin.generatedAt===mediaManifest.generatedAt&&origin.appSha256===mediaManifest.appSha256
+      &&origin.catalogManifestSha256===mediaManifest.catalogManifestSha256,
+      'Свежий рендер относится к текущему комплекту');
+    assert(mediaManifest.catalogManifestSha256===sha256(read('catalog-img/media-manifest.json')),
+      'Ролик сверен с текущим каталогом');
+    for(const name of filmFrames){
+      const frame='catalog-img/'+name;
+      assert(existsSync(file(frame))&&mediaManifest.sources?.['public/'+name]===sha256(read(frame)),
+        'Ролик использует точный кадр '+name);
+    }
+  }
 }
 
 for (const legacy of ['demo.mp4', 'demo.webm', 'media/demo.mp4', 'media/demo.webm']) {

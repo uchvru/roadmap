@@ -9111,7 +9111,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="relative no-image-export cursor-pointer transition-colors" title="Что нового">v18.4</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="relative no-image-export cursor-pointer transition-colors" title="Что нового">v18.5</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9987,7 +9987,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v18.4">
+<script data-roadmap-modules="v18.5">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -13569,7 +13569,7 @@ async function prepareProtectedUpdate(update,input,{pinSession,savedAt,cryptoApi
 }
 if(typeof globalThis!=='undefined')Object.assign(globalThis.RoadmapModules||(globalThis.RoadmapModules={}),{PROTECTED_UPDATE_KEYS,PROTECTED_UPDATE_MAX_BYTES,verifyProtectedUpdate,prepareProtectedUpdate,protectedUpdateFingerprint});
 
-/* module:protected-update-file sha256:0a313ebb10851034fe71fac8a5ae595eedb902662df56ec3d1dd360b490c8784 */
+/* module:protected-update-file sha256:ff7001fd6059d6d8384c98a29ef4ea3384a55a38f83f069435ae8612c4d74440 */
 /* bundled internal import: ./protected-update.mjs */
 /* bundled internal import: ./portable-document.mjs */
 // Filesystem and live model are explicit capabilities. No network, DOM,
@@ -13583,7 +13583,7 @@ async function installProtectedUpdateInPlace(update,options){
   const {directory,filename,pinSession,capture,verifyTarget,expectedFingerprint,backupId,savedAt,cryptoApi,onCommitted}=options||{};
   if(!directory?.getFileHandle||!directory?.getDirectoryHandle||!pinSession?.protected||typeof capture!=='function'||typeof verifyTarget!=='function')throw Error('Не подключен безопасный доступ к рабочему файлу.');
   if(typeof filename!=='string'||filename.length>180||!/^.+\.html$/i.test(filename)||/[\\/\x00-\x1f]/.test(filename)||!/^[A-Za-z0-9-]{1,70}$/.test(backupId||''))throw Error('Некорректное имя файла или резервной копии.');
-  let writer,target,original,candidateHtml='',commitAttempted=false,committed=false,backupName='',recoveryName='';
+  let writer,target,original,candidateHtml='',checkingTarget=false,commitAttempted=false,committed=false,backupName='',recoveryName='';
   const guard=async()=>{
     const input=await capture();
     if(protectedUpdateFingerprint(input)!==expectedFingerprint)throw Error('План изменился. Подготовьте обновление заново.');
@@ -13604,10 +13604,12 @@ async function installProtectedUpdateInPlace(update,options){
     candidateHtml=prepared.html;
     await guard();
     // The directory was chosen by the user; no arbitrary file is created here.
+    checkingTarget=true;
     target=await directory.getFileHandle(filename,{create:false});original=await read(target);
     if(await verifyTarget(original.html)!==true)throw Error('Рабочий файл не подтвержден. Обновление остановлено.');
     const old=await readPortableDocument(await pinSession.decodeHtml(original.html),{required:true,cryptoApi});
     if(old.documentId!==input.previous.documentId||old.projectId!==input.snapshot.projectId)throw Error('Выбран другой рабочий план.');
+    checkingTarget=false;
     const expectedDocument=await readPortableDocument(await pinSession.decodeHtml(prepared.html),{required:true,cryptoApi});
     if(portableCanonicalJson(expectedDocument.snapshot)!==portableCanonicalJson(input.snapshot)||portableCanonicalJson(expectedDocument.history.records)!==portableCanonicalJson(input.historyRecords))throw Error('Полный план или история не совпали.');
     await guard();
@@ -13649,6 +13651,9 @@ async function installProtectedUpdateInPlace(update,options){
     // if read-back cannot establish the original bytes; never announce success.
     if(commitAttempted&&!committed){try{const actual=await read(target);committed=actual.html===candidateHtml||actual.sha256!==original.sha256;}catch{committed=true;}}
     if(committed){error.updateCommitted=true;error.backupName=backupName;error.recoveryName=recoveryName;}
+    // Only resolving/reading/matching the selected file can leave the proposal
+    // reusable. Backups and the target writer have not been opened here.
+    else if(checkingTarget)error.updateRetryable=true;
     throw error;
   }
 }
@@ -16237,7 +16242,7 @@ if (typeof globalThis !== 'undefined') {
     finishJiraMergeSections, jiraMergeMessage});
 }
 
-/* module:storage-transactions sha256:a416ac6f1d6fbdad207ecf70b21b3a7c171561bbc176477da9c4b9b84810732c */
+/* module:storage-transactions sha256:997b0950f9a3cf286520ae5fe3559821d0deeddc6559d7e1447fce76deb6e9d6 */
 // Extracted from the tested v17.0 implementation. Side effects are explicit dependencies.
 function persistStoragePairs(pairs, env) {
   // Память всегда обновляем , сессия не теряет правки даже при сбое localStorage (как и в read-only).
@@ -16288,9 +16293,92 @@ function enqueueStorageWrite(state, kind, operation, onError) {
 
 }
 
+// Legacy backups in the selected root are never enumerated or rotated.
+function createProjectBackupWriter({signatureOf, serialize, makeName, cryptoApi=globalThis.crypto}){
+  const namePattern=/^roadmap-backup-\d{4}-\d{2}-\d{2}-\d{6}-[a-z0-9]{3,}-[a-f0-9]{8}\.json$/;
+  let last=null;
+  async function readOwned(directory,name,projectId){
+    try{
+      const handle=await directory.getFileHandle(name);
+      const value=JSON.parse(await (await handle.getFile()).text());
+      return value?.projectId===projectId&&Array.isArray(value.roadmapData)?value:null;
+    }catch{return null;}
+  }
+  async function namesIn(directory,reverse=false){
+    const names=[];
+    for await(const entry of directory.values()){
+      if(entry.kind==='file'&&namePattern.test(entry.name))names.push(entry.name);
+    }
+    names.sort();
+    return reverse?names.reverse():names;
+  }
+  return async function write(root,snapshot,{keep,isCurrent=()=>true}={}){
+    const projectId=snapshot?.projectId;
+    if(typeof projectId!=='string'||!projectId||!Array.isArray(snapshot.roadmapData)
+      ||!Number.isSafeInteger(keep)||keep<1||!isCurrent())return false;
+    const signature=signatureOf(snapshot);
+    if(last?.root===root&&last.projectId===projectId&&last.signature===signature)return true;
+    const savedAt=snapshot.savedAt;
+    if(typeof root.queryPermission==='function'&&await root.queryPermission({mode:'readwrite'})!=='granted')return false;
+    if(!isCurrent())return false;
+    const scope=Array.from(new Uint8Array(await cryptoApi.subtle.digest('SHA-256',new TextEncoder().encode(projectId))),
+      byte=>byte.toString(16).padStart(2,'0')).join('');
+    if(!isCurrent())return false;
+    const directory=await root.getDirectoryHandle('Roadmap-backups-'+scope,{create:true});
+    if(!isCurrent())return false;
+    // First write after reloading or changing folders may already have exactly
+    // this snapshot on disk. Comparing its full contents never trusts names alone.
+    if(last?.root!==root||last.projectId!==projectId){
+      const candidate=(await namesIn(directory,true))[0];
+      const previous=candidate&&await readOwned(directory,candidate,projectId);
+      if(!isCurrent())return false;
+      if(previous&&signatureOf(previous)===signature){
+        last={root,projectId,signature};
+        return true;
+      }
+    }
+    const fileName=makeName();
+    if(!namePattern.test(fileName))throw new Error('Недопустимое имя автокопии');
+    // The signature includes a frozen serialization with only savedAt blanked.
+    const bytes=serialize({...JSON.parse(signature),savedAt});
+    let handle=null,writable=null,closing=false;
+    try{
+      try{await directory.getFileHandle(fileName);throw new Error('Имя автокопии занято');}
+      catch(error){if(error?.name!=='NotFoundError')throw error;}
+      if(!isCurrent())return false;
+      handle=await directory.getFileHandle(fileName,{create:true});
+      if(!isCurrent())return false;
+      writable=await handle.createWritable({keepExistingData:false});
+      if(!isCurrent())return false;
+      await writable.write(bytes);
+      if(!isCurrent())return false;
+      closing=true;
+      await writable.close();
+      writable=null;
+      // A closed stream might already contain a viable recovery copy. Never
+      // discard it on verification or later rotation failure.
+      if(await (await handle.getFile()).text()!==bytes)throw new Error('Автокопия не прошла проверку записи');
+      if(!isCurrent())return false;
+      last={root,projectId,signature};
+      const names=await namesIn(directory);
+      // The new copy and the newest keep entries are never removed.
+      for(const oldName of names.slice(0,Math.max(0,names.length-keep))){
+        if(!isCurrent())break;
+        if(oldName!==fileName&&await readOwned(directory,oldName,projectId)&&isCurrent()){
+          try{await directory.removeEntry(oldName);}catch{}
+        }
+      }
+      return true;
+    }finally{
+      if(!closing&&writable){try{await writable.abort();}catch{}}
+      if(!closing&&handle){try{await directory.removeEntry(fileName);}catch{}}
+    }
+  };
+}
+
 if (typeof globalThis !== 'undefined') {
   globalThis.RoadmapModules = globalThis.RoadmapModules || {};
-  Object.assign(globalThis.RoadmapModules, {persistStoragePairs, enqueueStorageWrite});
+  Object.assign(globalThis.RoadmapModules, {persistStoragePairs, enqueueStorageWrite, createProjectBackupWriter});
 }
 
 /* module:public-roadmap-dto sha256:bd32000fbfa42cdc6416becfe644121a4ce5b2f8609adb96ba1b220eeb2b1a39 */
@@ -18016,7 +18104,7 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '18.4';
+    const APP_VERSION = '18.5';
     const APP_VERSION_DATE = '22.11.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) { b.textContent = 'v' + APP_VERSION; b.title = APP_VERSION_DATE; } } catch (e) {}
@@ -20993,19 +21081,19 @@ if (typeof globalThis !== 'undefined') {
       _openCandidateDialog('protectedUpdateModal','Обновить Roadmap',
         '<p>Версия '+escHtml(APP_VERSION)+'. План, история и PIN остаются на компьютере.</p>'
         +'<p id="protectedUpdateStatus" role="status" aria-live="polite">Проверяем обновления…</p>'
-        +'<div class="candidate-actions"><button id="protectedUpdateFetch" type="button" class="rm-btn rm-btn-primary" hidden disabled onclick="fetchProtectedUpdate()">Обновить</button>'
-        +'<button id="protectedUpdateDownload" type="button" class="rm-btn rm-btn-primary" hidden disabled onclick="downloadProtectedUpdate()">Скачать новую версию</button>'
-        +'<button id="protectedUpdateInstall" type="button" class="rm-btn rm-btn-primary" hidden disabled onclick="installCurrentProtectedUpdate()">Обновить этот файл</button>'
+        +'<div class="candidate-actions"><button id="protectedUpdateFetch" type="button" class="rm-btn rm-btn-primary" hidden disabled onclick="fetchProtectedUpdate()">Загрузить и проверить</button>'
+        +'<button id="protectedUpdateInstall" type="button" class="rm-btn rm-btn-primary" hidden disabled onclick="installCurrentProtectedUpdate()">Заменить рабочий файл</button>'
+        +'<button id="protectedUpdateDownload" type="button" class="rm-btn rm-btn-primary" hidden disabled onclick="downloadProtectedUpdate()">Скачать отдельную PIN-копию</button>'
         +'<button id="protectedUpdateRetry" type="button" class="rm-btn rm-btn-secondary" onclick="checkProtectedUpdate()">Проверить снова</button>'
         +'<button type="button" class="rm-btn rm-btn-secondary" onclick="closeProtectedUpdate()">Закрыть</button></div>'
-        +'<p>Выберите папку этого HTML. Другие вкладки плана должны быть закрыты. Сначала создадим резерв и проверим план. Без доступа к папке скачайте отдельную копию. План и PIN не отправляются.</p>', 'closeProtectedUpdate');
+        +'<p>Для замены файла закройте другие вкладки плана. Сначала создадим зашифрованные резервы.</p>', 'closeProtectedUpdate');
       return checkProtectedUpdate();
     }
     function closeProtectedUpdate(){
       if(_protectedUpdateInstalling||_protectedUpdateInstalled)return;
       // A prepared protected HTML belongs to this dialog. Closing discards it,
       // but does not erase a completed check, failure or download receipt.
-      if(_protectedUpdateRequest||_protectedUpdatePrepared)
+      if(_protectedUpdateRequest||(_protectedUpdatePrepared&&_updateIndicatorState.phase!=='download-started'))
         setUpdateIndicator(_protectedUpdateAvailable?'available':'idle',_protectedUpdateAvailable);
       ++_protectedUpdateGeneration;_protectedUpdateRequest?.abort();_protectedUpdateRequest=null;
       _protectedUpdateCopy=null;_protectedUpdatePrepared=null;_protectedUpdateAvailable=null;_closeCandidateDialog('protectedUpdateModal');
@@ -21061,6 +21149,25 @@ if (typeof globalThis !== 'undefined') {
         setUpdateIndicator('idle');
         result.textContent='Открыт другой проект. Проверьте обновления снова.';
       }else if(button)button.disabled=!_protectedUpdateAvailable;
+      if(retry)retry.hidden=!!_protectedUpdatePrepared||!!(_protectedUpdateAvailable&&_updateIndicatorState.phase!=='failed');
+    }
+    async function _protectedUpdateSnapshotMatches(prepared,result) {
+      const current=()=>prepared===_protectedUpdatePrepared&&prepared.epoch===_projectTransitionToken&&result.isConnected&&window.__roadmapPinSession?.protected;
+      if(!current())return false;
+      try{
+        const input=await _portableSession.captureForUpdate();
+        return current()&&prepared.fingerprint===RoadmapModules.protectedUpdateFingerprint(input);
+      }catch{return false;}
+    }
+    function _discardProtectedUpdatePrepared(prepared) {
+      _protectedUpdatePrepared=null;
+      if(prepared?.epoch!==_projectTransitionToken)_protectedUpdateAvailable=null;
+      for(const id of ['protectedUpdateDownload','protectedUpdateInstall']){
+        const button=document.getElementById(id);if(button){button.hidden=true;button.disabled=true;}
+      }
+      const fetchButton=document.getElementById('protectedUpdateFetch'),retry=document.getElementById('protectedUpdateRetry');
+      if(fetchButton){fetchButton.hidden=!_protectedUpdateAvailable;fetchButton.disabled=fetchButton.hidden;}
+      if(retry){retry.hidden=!!_protectedUpdateAvailable;retry.disabled=false;}
     }
     async function checkProtectedUpdate() {
       if(_protectedUpdateRequest||_protectedUpdateCopy||_protectedUpdateInstalling||_protectedUpdateInstalled)return;
@@ -21080,7 +21187,7 @@ if (typeof globalThis !== 'undefined') {
         const release=RoadmapModules.readPublicRelease(JSON.parse(text));
         const comparison=RoadmapModules.compareReleaseVersions(release.version,APP_VERSION);
         if(comparison>0){
-          _protectedUpdateAvailable=release.version;button.textContent='Обновить до '+release.version;button.hidden=false;
+          _protectedUpdateAvailable=release.version;button.textContent='Загрузить и проверить v'+release.version;button.hidden=false;
           setUpdateIndicator('available',release.version);
           result.textContent='Доступна версия '+release.version+'.';
         }else{setUpdateIndicator('current');result.textContent='У вас версия '+APP_VERSION+'. '+(comparison===0?'Новых выпусков нет.':'Опубликована более ранняя версия '+release.version+'. Понижение версии запрещено.');}
@@ -21119,13 +21226,14 @@ if (typeof globalThis !== 'undefined') {
         const fingerprint=RoadmapModules.protectedUpdateFingerprint(input);
         const prepared=await RoadmapModules.prepareProtectedUpdate(update,input,{pinSession:window.__roadmapPinSession,savedAt:new Date().toISOString(),cryptoApi:crypto});
         if(!current())return;
-        if(fingerprint!==RoadmapModules.protectedUpdateFingerprint(await _portableSession.captureForUpdate()))throw Error('План изменился во время подготовки. Нажмите «Обновить» еще раз.');
+        if(fingerprint!==RoadmapModules.protectedUpdateFingerprint(await _portableSession.captureForUpdate()))throw Error('План изменился во время подготовки. Загрузите обновление еще раз.');
         if(!current())return;
         _protectedUpdatePrepared={...prepared,update,fingerprint,epoch,generation};button.disabled=false;button.hidden=false;fetchButton.hidden=true;
         const install=document.getElementById('protectedUpdateInstall');
-        if(install){let local=false;try{local=!!RoadmapModules.protectedUpdateFileName(location.href);}catch{}install.hidden=!(local&&typeof window.showDirectoryPicker==='function');install.disabled=install.hidden;if(!install.hidden){button.classList.remove('rm-btn-primary');button.classList.add('rm-btn-secondary');}}
+        let filename='';try{filename=RoadmapModules.protectedUpdateFileName(location.href);}catch{}
+        if(install){install.textContent='Заменить рабочий файл';install.hidden=!(filename&&typeof window.showDirectoryPicker==='function');install.disabled=install.hidden;if(!install.hidden){button.classList.remove('rm-btn-primary');button.classList.add('rm-btn-secondary');}}
         setUpdateIndicator('ready',version);
-        result.textContent='Подпись проверена. Версия '+prepared.version+': задач — '+prepared.tasks+', записей истории — '+prepared.historyRecords+'.';
+        result.textContent='Подпись проверена. Версия '+prepared.version+': задач — '+prepared.tasks+', записей истории — '+prepared.historyRecords+'. '+(filename?'Файл «'+filename+'» не изменен.':'Исходный файл не изменен.')+(install?.hidden?' Чтобы обновиться, скачайте отдельную PIN-копию.':'');
       }catch(error){if(current()){setUpdateIndicator('failed',version);result.textContent=(error.message||'Не удалось подготовить обновление.')+' Исходный файл и текущий план не изменены.';}}
       finally{_finishProtectedUpdate(controller,generation,epoch,result);}
     }
@@ -21133,25 +21241,26 @@ if (typeof globalThis !== 'undefined') {
       if(_protectedUpdateCopy||_protectedUpdateInstalling||_protectedUpdateInstalled)return;
       const prepared=_protectedUpdatePrepared,result=document.getElementById('protectedUpdateStatus'),button=document.getElementById('protectedUpdateDownload');
       if(!prepared||!result||!button||button.disabled)return;button.disabled=true;_protectedUpdateCopy=prepared;
+      let matches=false;
       try{
-        const state=await _portableSession.captureForUpdate();
+        matches=await _protectedUpdateSnapshotMatches(prepared,result);
         if(prepared!==_protectedUpdatePrepared||!result.isConnected)return;
-        if(prepared.epoch!==_projectTransitionToken||prepared.fingerprint!==RoadmapModules.protectedUpdateFingerprint(state))throw Error('План изменился. Нажмите «Обновить» еще раз.');
+        if(!matches)throw Error('Не удалось подтвердить текущий план. Загрузите обновление еще раз.');
         const url=URL.createObjectURL(new Blob([prepared.html],{type:'text/html;charset=utf-8'}));
         const link=document.createElement('a');link.href=url;link.download=prepared.filename;document.body.appendChild(link);link.click();link.remove();
         setTimeout(()=>URL.revokeObjectURL(url),30000);
         setUpdateIndicator('download-started',prepared.version);
-        result.textContent='Скачивание '+prepared.filename+' началось. Откройте файл из «Загрузок» прежним PIN и работайте в нем. Правки в старой вкладке в него не попадут.';
+        result.textContent='Файл «'+prepared.filename+'» передан браузеру для скачивания. После скачивания откройте его прежним PIN. Исходный файл не изменен; новые правки выполняйте только в одной копии.';
         showWorkingDownloadReceipt(prepared.filename);
       }catch(error){
         if(prepared!==_protectedUpdatePrepared||!result.isConnected)return;
         setUpdateIndicator('failed',prepared.version);
         result.textContent=(error.message||'Скачивание не началось.')+' Исходный файл не изменен.';
+        if(!matches)_discardProtectedUpdatePrepared(prepared);
       }finally{
         if(_protectedUpdateCopy===prepared){
-          _protectedUpdateCopy=null;_protectedUpdatePrepared=null;button.hidden=true;
-          const install=document.getElementById('protectedUpdateInstall');if(install){install.hidden=true;install.disabled=true;}
-          const retry=document.getElementById('protectedUpdateFetch');if(retry){retry.hidden=false;retry.disabled=false;}
+          _protectedUpdateCopy=null;
+          if(_protectedUpdatePrepared===prepared&&result.isConnected)button.disabled=false;
         }
       }
     }
@@ -21176,21 +21285,41 @@ if (typeof globalThis !== 'undefined') {
         _protectedUpdatePrepared=null;modal.removeAttribute('aria-busy');
         setUpdateIndicator('installed',installed.version);
         modal.querySelector('.rm-dialog-close').hidden=true;
-        result.textContent='Версия '+installed.version+' записана в '+filename+'. Полный план и история проверены. Закройте эту вкладку и откройте тот же файл заново.';
-        modal.querySelector('.candidate-actions').innerHTML='<button id="protectedUpdateReload" type="button" class="rm-btn rm-btn-primary" onclick="reloadAfterProtectedUpdate()">Перезагрузить файл</button>';
+        result.textContent='Версия '+installed.version+' записана в «'+filename+'». План и история проверены.';
+        modal.querySelector('.candidate-actions').innerHTML='<button id="protectedUpdateReload" type="button" class="rm-btn rm-btn-primary" onclick="reloadAfterProtectedUpdate()">Открыть обновленный файл</button>';
         const note=modal.querySelector('.candidate-actions').nextElementSibling;
         note.textContent='Зашифрованные резервные копии находятся рядом, в '+installed.backupDirectory+'. Старая вкладка больше не записывает файл.';
         document.getElementById('protectedUpdateReload').focus();
       }catch(error){
         if(error.updateCommitted||_protectedUpdateInstalled){
-          _protectedUpdateInstalled=true;modal.removeAttribute('aria-busy');modal.querySelector('.rm-dialog-close').hidden=true;
+          _protectedUpdateInstalled=true;_protectedUpdatePrepared=null;modal.removeAttribute('aria-busy');modal.querySelector('.rm-dialog-close').hidden=true;
           setUpdateIndicator('failed',prepared.version);
           result.textContent=(error.message||'Проверка записи не завершена.')+' Не закрывайте вкладку. Резерв и готовая копия — в Roadmap-backups. Сохраните текущие правки отдельно.';
           modal.querySelector('.candidate-actions').innerHTML='<button id="protectedUpdateRecover" type="button" class="rm-btn rm-btn-primary" onclick="saveWorkingHtml(true)">Скачать план из этой вкладки</button>';
           document.getElementById('protectedUpdateRecover').focus();
-        }else if(error.name==='AbortError'&&!folderSelected){setUpdateIndicator('ready',prepared.version);result.textContent='Выбор папки отменен. Рабочий файл не заменен.';}
-        else{setUpdateIndicator('failed',prepared.version);result.textContent=(error.message||'Не удалось обновить файл.')+' Обновление не записано.';_protectedUpdatePrepared=null;document.getElementById('protectedUpdateFetch').hidden=false;document.getElementById('protectedUpdateDownload').hidden=true;document.getElementById('protectedUpdateInstall').hidden=true;}
-      }finally{_protectedUpdateInstalling=false;if(!_protectedUpdateInstalled)_lockProtectedUpdateInput(false);}
+        }else{
+          const cancelled=!folderSelected&&error.name==='AbortError';
+          const denied=!folderSelected&&['NotAllowedError','SecurityError'].includes(error.name);
+          const recoverable=cancelled||denied||error.updateRetryable===true;
+          if(recoverable&&await _protectedUpdateSnapshotMatches(prepared,result)){
+            setUpdateIndicator('ready',prepared.version);
+            if(!cancelled)document.getElementById('protectedUpdateInstall').textContent='Выбрать другую папку';
+            const reason=cancelled?'Выбор папки отменен.':['NotAllowedError','SecurityError'].includes(error.name)?'Нет доступа к папке.':error.name==='NotFoundError'?'В выбранной папке нет этого файла.':error.message||'Не удалось открыть рабочий файл.';
+            result.textContent=reason+' Файл «'+filename+'» не заменен. Выберите папку еще раз или скачайте копию.';
+          }else{
+            setUpdateIndicator('failed',prepared.version);
+            result.textContent=(recoverable?'Не удалось подтвердить текущий план. Загрузите обновление еще раз.':error.message||'Не удалось обновить файл.')+' Обновление не записано.';
+            _protectedUpdatePrepared=null;
+          }
+        }
+      }finally{
+        _protectedUpdateInstalling=false;
+        if(!_protectedUpdateInstalled){
+          _lockProtectedUpdateInput(false);
+          if(_protectedUpdatePrepared)document.getElementById('protectedUpdateInstall')?.focus({preventScroll:true});
+          else _discardProtectedUpdatePrepared(prepared);
+        }
+      }
     }
     function reloadAfterProtectedUpdate(){if(_protectedUpdateRestartReady)location.reload();}
     // Version checks and package downloads publish state, never start work from the indicator.
@@ -41175,7 +41304,7 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       try {
         autoBackupDirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
         await saveBackupDirHandle(autoBackupDirHandle);
-        showToast('Папка для авто-копий выбрана — датированные копии пойдут рядом', 'ok', 4000);
+        showToast('Папка выбрана. У каждого плана будут свои автокопии.', 'ok', 4000);
       } catch (e) { if (e && e.name !== 'AbortError') showToast('Не удалось выбрать папку', 'error'); }
     }
     let _backupNameSequence = 0;
@@ -41195,38 +41324,22 @@ ${dateRangeText}${(_aggEstDays * DAY_WIDTH > bounds.width + 0.5) ? '\nЗагру
       if (!entropy) entropy = Math.random().toString(36).slice(2, 10).padEnd(8, '0');
       return 'roadmap-backup-' + stamp + '-' + sequence + '-' + entropy + '.json';
     }
-    // Тихая запись датированного сайдкара в выбранную папку + ротация. Сбой НЕ должен ронять основной автосейв.
+    const _projectBackupWriter=RoadmapModules.createProjectBackupWriter({
+      signatureOf:snapshot=>_jsonStorage.snapshotContentSignature(snapshot),
+      serialize:snapshot=>_jsonStorage.serializeSnapshot(snapshot),
+      makeName:()=>_backupSidecarFileName(new Date()),
+    });
     async function _writeBackupSidecarNow() {
+      if (typeof READ_ONLY_MODE!=='undefined' && READ_ONLY_MODE) return false;
       if ((typeof DEMO_MODE !== 'undefined' && DEMO_MODE) || (typeof LEARNING_SCENARIO !== 'undefined' && LEARNING_SCENARIO)) return false;
-      if (!autoBackupDirHandle) return false;
-      let fileName = '';
-      let writable = null;
-      let committed = false;
-      try {
-        if (typeof autoBackupDirHandle.queryPermission === 'function') {
-          const perm = await autoBackupDirHandle.queryPermission({ mode: 'readwrite' });
-          if (perm !== 'granted') return false;
-        }
-        const snap = buildRoadmapSnapshot();
-        fileName = _backupSidecarFileName(new Date());
-        const fh = await autoBackupDirHandle.getFileHandle(fileName, { create: true });
-        writable = await fh.createWritable();
-        await writable.write(JSON.stringify(snap, null, 2));
-        await writable.close();
-        writable = null;
-        committed = true;
-        const names = [];
-        for await (const entry of autoBackupDirHandle.values()) { if (entry.kind === 'file' && /^roadmap-backup-.*\.json$/.test(entry.name)) names.push(entry.name); }
-        names.sort();
-        while (names.length > AUTO_BACKUP_KEEP) { const rm = names.shift(); try { await autoBackupDirHandle.removeEntry(rm); } catch (e) {} }
-        return true;
-      } catch (e) {
-        if (!committed) {
-          if (writable && typeof writable.abort === 'function') { try { await writable.abort(); } catch (abortError) {} }
-          if (fileName) { try { await autoBackupDirHandle.removeEntry(fileName); } catch (removeError) {} }
-        }
-        throw e;
-      }
+      const root=autoBackupDirHandle;
+      if (!root) return false;
+      const project=projectStorageId, epoch=_projectTransitionToken;
+      return _projectBackupWriter(root,buildRoadmapSnapshot(),{
+        keep:AUTO_BACKUP_KEEP,
+        isCurrent:()=>autoBackupDirHandle===root&&projectStorageId===project&&_projectTransitionToken===epoch
+          &&!READ_ONLY_MODE&&!DEMO_MODE&&!LEARNING_SCENARIO,
+      });
     }
     function writeBackupSidecar() {
       return _enqueueStorageWrite('backup-sidecar', () => _writeBackupSidecarNow());
@@ -45493,7 +45606,7 @@ function syncBodyScrollLock() {
         <div class="startup-heading">
           <div class="flex items-center gap-2 flex-wrap">
             <h2 id="startupTitle" tabindex="-1" class="text-lg sm:text-xl font-semibold text-slate-800 leading-tight">Дорожная карта продукта</h2>
-            <span class="update-version-pair"><span id="appVersionBadge" title="22.11.2026">v18.4</span><button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-ghost rm-btn-icon candidate-version-update" data-update-state="idle" aria-label="Проверить обновления" aria-describedby="startupUpdateResult" title="Проверить обновления. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg></button></span>
+            <span class="update-version-pair"><span id="appVersionBadge" title="22.11.2026">v18.5</span><button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-ghost rm-btn-icon candidate-version-update" data-update-state="idle" aria-label="Проверить обновления" aria-describedby="startupUpdateResult" title="Проверить обновления. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg></button></span>
           </div>
           <div id="startupUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
         </div>
@@ -45546,7 +45659,31 @@ function syncBodyScrollLock() {
          <p class="text-sm">Сроки, задачи и связи в одном рабочем файле.</p>
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v18.4</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v18.5</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="backup-project-folders" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-93a24762eb6b"></use></svg><h5 class="min-w-0 rn-title">Автокопии отдельно для каждого проекта</h5><span class="info-release-badge">РЕЗЕРВ</span></div>
+      <p class="text-xs text-slate-600">Выберите папку автокопий. Новые копии разных проектов сохраняются отдельно. Прежние остаются на месте.</p>
+     </article>
+     <article data-release-card="protected-update-retry" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-19f3fbbcef75"></use></svg><h5 class="min-w-0 rn-title">Обновление файла без повторной загрузки</h5><span class="info-release-badge">ФАЙЛ</span></div>
+      <p class="text-xs text-slate-600">Если папка не подошла, выберите другую. Повторно загружать пакет не нужно, пока план не изменился.</p>
+     </article>
+     <article data-release-card="protected-update-copy" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-a2cc2f6ca479"></use></svg><h5 class="min-w-0 rn-title">Отдельная PIN-копия вместо замены</h5><span class="info-release-badge">PIN</span></div>
+      <p class="text-xs text-slate-600">Если нет доступа к папке, скачайте обновленную копию. Исходный файл не меняется, а PIN остается прежним.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v18.4</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="welcome-one-window" class="info-release-card rn-card rn-solid">
       <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-77821656315a"></use></svg><h5 class="min-w-0 rn-title">Старт, справка и новости вместе</h5><span class="info-release-badge">СТАРТ</span></div>
@@ -45574,13 +45711,6 @@ function syncBodyScrollLock() {
      </article>
     </div>
    </div>
-
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v18.3</h4>
     <div class="info-release-grid grid gap-3 mb-6">

@@ -1,10 +1,10 @@
 {
-  "version": "18.4",
+  "version": "18.5",
   "generatedAt": "2026-11-22",
-  "renderedAt": "2026-11-22T11:59:02.399Z",
+  "renderedAt": "2026-11-22T13:17:06.436Z",
   "source": "synthetic-demo-PAY-LK",
-  "appSha256": "c9cea51ae400d6db48f1fd0915bd115a393b05927ad1e71598e81fb734ea3c0a",
-  "catalogManifestSha256": "61ded63cfccf89ea3631d5f8878ef019cf1b2340c7562fb2a498b30cff9c6596",
+  "appSha256": "9792bf8dad9b5ffed71ddb8f4bae39fadf842d1f729e79d37b5027e29245b486",
+  "catalogManifestSha256": "6572974090b3eec3a24784c927030742478b232c9695ce5015fafa60ad747cf0",
   "renderer": "Remotion 4.0.529",
   "composition": "RoadmapFilm",
   "sources": {
@@ -26,24 +26,39 @@
     "src/scenes/Plan.tsx": "6321be3f395eb44595977366fd5bf3d3702f6ddb3d2a53907bab4ebe8a836ce7",
     "src/scenes/Risk.tsx": "848695e0be446fe29788d28a008b53f3eb73457ea72557abe0516160b3fabbe3",
     "src/scenes/Start.tsx": "f403a0834d8679ff9e4f07a5a5c45599a5a8f968e4da8e9ed8f59af9b4e94867",
-    "public/f01_light.webp": "f90ed417a682e732faf12a5f653bbed8fe29ee5cc66d5119a829da057e8749e2",
-    "public/f04_light.webp": "a7b93899b1c6ce14bb15444279a806e9d91fd3e7cf01812da5586a2526ac9622",
-    "public/f05_light.webp": "309c5955af387fab4134fa14c4130f20839b4e12db719aac5845459f29e17d29",
-    "public/f09_light.webp": "e6de8f1d0a33fa52cdfde61368ccba273bc3d922275c05ca9600deda1dacf85a",
-    "public/f44_light.webp": "bf483fd802433f15cc35a2bad3738465a11e8d0d551afdc6ad289d8ee11ee8a4",
-    "public/f45_light.webp": "501ea2825ffaab6f0cae9cbe309dad5e335156a6cb34cec1a3d4f526579e06d9",
+    "public/f01_light.webp": "043422ff441f805b9f4e92410a0fd2d960af0a4b98673f2c83c956e453af9f4c",
+    "public/f04_light.webp": "197f6384360c61aff385678fa8c1c01bffcfac92de4f4136aab12e73dc0b65c6",
+    "public/f05_light.webp": "c60921263212f63efa8481c5037648559e2a8c3cd0f0f95673f8bd366400ff5b",
+    "public/f09_light.webp": "6f12f01d9dda86a2d1132146f55cce5cd9e7674bb4685059337d9b5f5427f5d9",
+    "public/f44_light.webp": "e1cc10547ab01c74367e1c62c295df9914bf6a3457109cf9f3e5834607e218de",
+    "public/f45_light.webp": "29249b65a1a10adca3c85984c78b2b7ef1ca9c56416e4b40f0ed488f08d7defe",
     "public/f46_light.webp": "fff4e38c4e29992d8d5e5df86c5a2ba0fb9bdd59d94641aae5aa73b2bf52deab",
-    "public/f47_light.webp": "3101619cefcb7a78c194a7cddf64e7e459193fb01445e0fba54463ffe7860740"
+    "public/f47_light.webp": "1f879cc7cdf92f05f3d426496df92bb6f0b02d552db7117c0efc31b85df886a2"
   },
   "buildSources": {
-    "tools/build-remotion-video.mjs": "61e9835c70d1eb1976d1568f460bce7ab7b7a038779f6f657f5d783b2ba4b962",
+    "tools/build-remotion-video.mjs": "efaf99569e6110720463b21a237e22fb5c05222e5a245136c087d44c1d8e321e",
     "tools/lib/video-encoding.mjs": "4225c7a9ec248e6a7ea7e5d01701d8fc845b7b83e8c52ca208b90723cdfaa4cf",
-    "tools/lib/film-catalog-inputs.mjs": "7efd11a7aee91a14de6261f87bca4611a78919581c9b326575f83fc822112722"
+    "tools/lib/film-catalog-inputs.mjs": "5bf8457c13cd207545038a0411e12454a1c2c18b629c801cc7776baad47a1d05"
+  },
+  "toolchain": {
+    "node": "v22.23.2",
+    "browser": "Google Chrome 158.0.8127.37",
+    "ffmpeg": "a90e3db6a3fd35f6074b013f948b1aa45b31c6375489d39e572bea3f18336584",
+    "ffprobe": "5b592e56f87ff754d94dadf99f38b4d0fb7d463eb780b50e0ca061d668d0e3f7"
+  },
+  "renderKey": "eefc36483e24d35ff62f8820941ba41aa0c5f44cffb5d89f8b9d280365e4d666",
+  "renderMode": "fresh",
+  "renderOrigin": {
+    "version": "18.5",
+    "generatedAt": "2026-11-22",
+    "renderedAt": "2026-11-22T13:17:06.436Z",
+    "appSha256": "9792bf8dad9b5ffed71ddb8f4bae39fadf842d1f729e79d37b5027e29245b486",
+    "catalogManifestSha256": "6572974090b3eec3a24784c927030742478b232c9695ce5015fafa60ad747cf0"
   },
   "video": {
     "file": "roadmap-demo.mp4",
-    "sha256": "189b172e0ec090121d84aa17206385170481d4dd249d4a925074aac8d9c761ef",
-    "bytes": 4886954,
+    "sha256": "ba1899dd519fa2ae302c0d39c3ace84fb7adc5a1f5253082b11ed038b2e884f2",
+    "bytes": 4885844,
     "durationSeconds": 120,
     "width": 1440,
     "height": 810,
