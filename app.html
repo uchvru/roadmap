@@ -8660,8 +8660,7 @@
 .tv-show{position:fixed;inset:0;z-index:20000;display:flex;flex-direction:column;background:var(--rm-surface,#fff);color:var(--rm-text)}
 .tv-show-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:12px;border-bottom:1px solid var(--rm-border);background:var(--rm-surface);flex-shrink:0}
 .tv-show-toolbar #tvShowStatus{flex:1 1 180px;font-size:14px;font-weight:600}
-.tv-show-toolbar label{display:flex;align-items:center;gap:8px;font-size:13px}
-.tv-show-toolbar button,.tv-show-toolbar select{min-height:44px!important;min-width:44px!important}
+.tv-show-toolbar button{min-height:44px!important;min-width:44px!important}
 .tv-show-stage{position:relative;flex:1;min-height:0;overflow:hidden}
 .tv-show-stage iframe{position:absolute;left:50%;top:50%;width:1123px;height:632px;border:0;transform-origin:center;pointer-events:none}
 #mobilePlanNav{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -8755,6 +8754,7 @@ body.theme-dark .wb-node[data-color="violet"]{background:#352957;color:#ede9fe;b
 .rm-drag-hint-coarse{display:none}
 @media(pointer:coarse){.rm-drag-hint-fine{display:none}.rm-drag-hint-coarse{display:inline}}
 @media(max-width:767px){body #planWorkspaceHeader #productContextNav{padding:8px;border-left:0}body #planWorkspaceHeader :is(.rm-btn,[role="tab"]){min-height:44px}}
+@media(min-width:360px) and (max-width:767px){[data-app-view=kanban] #unsavedFileStatus{flex-basis:auto;padding-inline:8px}}
 body[data-app-view="present"] #planWorkspaceHeader #productContextNav :is(.rm-btn,[role="tab"]){min-height:44px}
 /* Meeting modes keep one row on phones; the row scrolls, not the page. */
 @media(max-width:767px){
@@ -8825,7 +8825,7 @@ body.compact-workspace #planWorkspaceHeader .plan-history-controls{max-width:100
 .task-qr-code svg{display:block;width:100%;height:auto}
 .task-qr-copy{min-width:0;overflow-wrap:anywhere}
 #taskQrModal .candidate-body{grid-template-columns:minmax(0,1fr)}
-.baseline-movie-controls button,.baseline-movie-controls select{min-height:44px;min-width:44px}
+.baseline-movie-controls button{min-height:44px;min-width:44px}
 .baseline-movie-range{width:100%;min-height:44px}
 .baseline-movie-grid{overflow:auto;min-width:0;border:1px solid var(--rm-border);border-radius:var(--rm-radius-md);max-height:55vh}
 .baseline-movie-row{display:grid;grid-template-columns:220px minmax(360px,1fr);min-width:620px;border-top:1px solid var(--rm-border)}
@@ -9143,7 +9143,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M4 7h9M4 12h14M4 17h6"></path></svg>
               </span>
             </button>
-            <button type="button" id="appVerChip" onclick="openInfoModal()" class="relative no-image-export cursor-pointer transition-colors" title="Что нового">v18.2</button>
+            <button type="button" id="appVerChip" onclick="openInfoModal()" class="relative no-image-export cursor-pointer transition-colors" title="Что нового">v18.3</button>
           </div>
         <div class="relative max-w-md min-w-0">
         <div id="titleContainer" class="group/title flex items-center gap-1.5 min-w-0">
@@ -9923,7 +9923,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
                   <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-32bbc3efbd19"></use></svg>
                 </button>
               </div>
-              <button type="button" id="taskQrOpen" class="rm-btn rm-btn-secondary mt-2" onclick="openTaskQr()">QR для печати</button>
+              <button type="button" id="taskQrOpen" class="rm-btn rm-btn-secondary mt-2" onclick="openTaskQr()">QR-код Jira</button>
             </div>
             <div>
               <label class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider mb-1">Эпик в Jira</label>
@@ -10018,7 +10018,7 @@ body .candidate-body .overview-task{display:grid;grid-template-columns:minmax(0,
   </div>
 
   <!-- ROADMAP_MODULES:START -->
-<script data-roadmap-modules="v18.2">
+<script data-roadmap-modules="v18.3">
 if (window.__roadmapLearningIsolationError) throw new Error('Learning initialization stopped');
 /* Generated from _Служебное/src/modules.manifest.json. Do not edit this block. */
 (function () {
@@ -11547,10 +11547,9 @@ function encodeQrMatrix(text) {
 }
 if(typeof globalThis!=='undefined')Object.assign(globalThis.RoadmapModules||(globalThis.RoadmapModules={}),{encodeQrMatrix});
 
-/* module:task-qr sha256:bf02b427fdc3815ffb7e6537122a759ba8fe7a85619ffc0116805b39f2c9390f */
+/* module:task-qr sha256:fc796a8b673a59f25e193ff65cce6d3f2c51bee703f84076c0614014019fa744 */
 /* bundled internal import: ./qr-encoder.mjs */
 // Pure local rendering. URL is the only QR payload; no plan or credentials.
-function taskQrEscape(value) { return String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function taskQrUrl(value) {
   let url;
   try { url = new URL(value); }
@@ -11578,9 +11577,9 @@ function createTaskQr({name='',jira='',base=''}={}) {
     }
     url.search = ''; url.hash = '';
     const address = url.href;
-    if (new TextEncoder().encode(address).length > 1024) throw Error('Адрес слишком длинный для печатной карточки. Укажите короткую ссылку Jira.');
+    if (new TextEncoder().encode(address).length > 1024) throw Error('Адрес слишком длинный для QR-кода. Укажите короткую ссылку Jira.');
     const title = String(name || '').trim() || 'Без названия';
-    if (title.length > 1000) throw Error('Название слишком длинное для карточки. Сократите его перед печатью.');
+    if (title.length > 1000) throw Error('Название слишком длинное для просмотра QR-кода.');
     const {size,cells} = encodeQrMatrix(address), border = 4, side = size + border * 2;
     let path = '';
     for (let y=0;y<size;y++) for (let x=0;x<size;x++) if (cells[y][x]) path += 'M'+(x+border)+','+(y+border)+'h1v1h-1z';
@@ -11589,17 +11588,7 @@ function createTaskQr({name='',jira='',base=''}={}) {
   } catch(error) { return {error: error instanceof Error ? error.message : 'Не удалось создать QR-код.'}; }
 }
 
-function taskQrPrintHtml(model) {
-  if (!model || model.error || !model.url) throw Error('Сначала откройте QR-код задачи.');
-  // Regenerate from the validated URL; never accept caller-provided SVG/HTML.
-  const qr = createTaskQr({name:model.title,jira:model.url});
-  if (qr.error) throw Error(qr.error);
-  return '<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; base-uri \'none\'; form-action \'none\'"><title>'+taskQrEscape(qr.key)+' — карточка</title><style>'
-    + '@page{size:A4 portrait;margin:12mm}*{box-sizing:border-box}body{margin:0;background:#fff;color:#000;font-family:Arial,sans-serif}.qr-ticket{width:90mm;max-width:100%;border:1px solid #000;padding:5mm;break-inside:avoid}.qr-key{font-size:16pt;font-weight:700}h1{font-size:14pt;line-height:1.3;margin:3mm 0;overflow-wrap:anywhere}.qr-code{width:65mm;max-width:100%;margin:3mm auto}.qr-code svg{display:block;width:100%;height:auto}.qr-address{font-size:9pt;line-height:1.35;overflow-wrap:anywhere;margin:3mm 0 0}'
-    + '</style></head><body><article class="qr-ticket"><div class="qr-key">'+taskQrEscape(qr.key)+'</div><h1>'+taskQrEscape(qr.title)+'</h1><div class="qr-code" role="img" aria-label="QR-код ссылки Jira">'+qr.svg+'</div><p class="qr-address">'+taskQrEscape(qr.url)+'</p></article></body></html>';
-}
-
-if(typeof globalThis!=='undefined')Object.assign(globalThis.RoadmapModules||(globalThis.RoadmapModules={}),{createTaskQr,taskQrPrintHtml});
+if(typeof globalThis!=='undefined')Object.assign(globalThis.RoadmapModules||(globalThis.RoadmapModules={}),{createTaskQr});
 
 /* module:date-utils sha256:41d063fd48320b3295ca79e3b743b8cff5f4c3629c585327ae1f58cdb4fbd308 */
 // Shared date policies extracted without changing legacy arithmetic or parsing.
@@ -18061,8 +18050,8 @@ if (typeof globalThis !== 'undefined') {
     // Учебный пример открывается отдельно и не читает рабочие данные.
     const LEARNING_SCENARIO = /^#learn=(prepare|timing|present)$/.test(location.hash) ? location.hash.slice(7) : '';
     // Единый источник версии: меняем только здесь , в стартовом окне и бейдже справки проставится автоматически.
-    const APP_VERSION = '18.2';
-    const APP_VERSION_DATE = '20.11.2026';
+    const APP_VERSION = '18.3';
+    const APP_VERSION_DATE = '21.11.2026';
     function applyAppVersion() {
       try { const b = document.getElementById('appVersionBadge'); if (b) { b.textContent = 'v' + APP_VERSION; b.title = APP_VERSION_DATE; } } catch (e) {}
       try { const s = document.getElementById('appVersionStartup'); if (s) s.textContent = 'v' + APP_VERSION; } catch (e) {}
@@ -21337,32 +21326,15 @@ if (typeof globalThis !== 'undefined') {
       const focus=_candidateDialogFocus[id];delete _candidateDialogFocus[id];
       if(focus?.isConnected&&focus.getClientRects().length)focus.focus({preventScroll:true});
     }
-    var _taskQrState = null;
     function openTaskQr() {
       const card=document.getElementById('taskModal'),name=document.getElementById('taskName'),jira=document.getElementById('taskJira');
       if(!card||card.classList.contains('hidden')||!name||!jira)return;
       const base=String(getJiraCfg().base||''),model=RoadmapModules.createTaskQr({name:name.value,jira:jira.value,base});
-      _taskQrState={model,card,name,jira,nameValue:name.value,jiraValue:jira.value,base,taskId:document.getElementById('taskId').value,project:projectStorageId,epoch:_projectTransitionToken};
       const content=model.error?'<p role="alert" class="task-qr-copy">'+escHtml(model.error)+'</p>'
-        :'<div class="task-qr-copy"><strong>'+escHtml(model.key)+'</strong><p>'+escHtml(model.title)+'</p></div><div class="task-qr-code" role="img" aria-label="QR-код ссылки Jira">'+model.svg+'</div><p id="taskQrAddress" class="task-qr-copy">'+escHtml(model.url)+'</p><p class="candidate-hint" data-rm-hint="PDF">В окне печати выберите «Сохранить как PDF».</p>';
-      _openCandidateDialog('taskQrModal','QR задачи для печати',content+'<div class="candidate-actions"><button type="button" class="rm-btn rm-btn-secondary" onclick="closeTaskQr()">Закрыть</button>'+(model.error?'':'<button type="button" id="taskQrPrint" class="rm-btn rm-btn-primary" onclick="printTaskQr()">Печать / PDF</button>')+'</div>','closeTaskQr');
+        :'<div class="task-qr-copy"><strong>'+escHtml(model.key)+'</strong><p>'+escHtml(model.title)+'</p></div><div class="task-qr-code" role="img" aria-label="QR-код ссылки Jira">'+model.svg+'</div><p id="taskQrAddress" class="task-qr-copy">'+escHtml(model.url)+'</p>';
+      _openCandidateDialog('taskQrModal','QR-код Jira',content+'<div class="candidate-actions"><button type="button" class="rm-btn rm-btn-secondary" onclick="closeTaskQr()">Закрыть</button></div>','closeTaskQr');
     }
-    function _taskQrCurrent(state) {
-      return !!(state&&state===_taskQrState&&!state.model.error&&state.project===projectStorageId&&state.epoch===_projectTransitionToken
-        &&state.card.isConnected&&!state.card.classList.contains('hidden')&&state.name.isConnected&&state.jira.isConnected
-        &&state.name===document.getElementById('taskName')&&state.jira===document.getElementById('taskJira')
-        &&state.name.value===state.nameValue&&state.jira.value===state.jiraValue&&String(getJiraCfg().base||'')===state.base
-        &&document.getElementById('taskId').value===state.taskId&&document.getElementById('taskQrModal'));
-    }
-    function printTaskQr() {
-      if(!_taskQrCurrent(_taskQrState)){showToast('Карточка изменилась. Откройте QR заново.', 'warn', 6000);return;}
-      let html;try{html=RoadmapModules.taskQrPrintHtml(_taskQrState.model);}catch(error){showToast(error.message||'Не удалось подготовить печать.', 'error', 6000);return;}
-      const popup=window.open('', '_blank');
-      if(!popup){showToast('Разрешите всплывающее окно для печати карточки.', 'warn', 6000);return;}
-      try{popup.opener=null;popup.document.open();popup.document.write(html);popup.document.close();popup.focus();popup.print();}
-      catch(error){showToast('Не удалось открыть печать. Попробуйте еще раз.', 'error', 6000);}
-    }
-    function closeTaskQr() { _taskQrState=null;_closeCandidateDialog('taskQrModal'); }
+    function closeTaskQr() { _closeCandidateDialog('taskQrModal'); }
     var _smartDateContext = null;
     function _smartDateCurrent(context) {
       if (!context || READ_ONLY_MODE || context.project !== projectStorageId || context.epoch !== _projectTransitionToken) return false;
@@ -32597,7 +32569,7 @@ const m = document.getElementById('mineModeBtn');
       return '<section class="baseline-tools"><label><input type="checkbox" id="weeklyBaselineEnabled" onchange="setWeeklyBaselineEnabled(this.checked)"'+(settings.enabled ? ' checked' : '')+(blocked ? ' disabled' : '')+'>Сохранять версию по понедельникам</label>'
         +'<p>При первом открытии или возврате в понедельник. В закрытом файле не работает. Лимит — 12 версий. Заменяются только автоверсии; ручные и выбранная остаются.</p>'
         +(settings.lastWeek ? '<p>Последняя обработанная неделя: '+escHtml(settings.lastWeek)+'.</p>' : '')
-        +'<div class="candidate-actions"><button type="button" class="rm-btn rm-btn-secondary" id="baselineMovieOpen" onclick="openBaselineMovie()">Таймлапс плана</button></div></section>';
+        +'<div class="candidate-actions"><button type="button" class="rm-btn rm-btn-secondary" id="baselineMovieOpen" onclick="openBaselineMovie()">История базовых планов</button></div></section>';
     }
     function _weeklyBaselinePlan(settings) {
       const now = new Date();
@@ -32711,16 +32683,14 @@ const m = document.getElementById('mineModeBtn');
     function openBaselineMovie() {
       closeBaselineMovie();
       const versions = _snapshotClone(getBaselines(),[]),tasks = _snapshotClone(roadmapData,[]);
-      const media = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
-      const root = _openCandidateDialog('baselineMovieModal','Таймлапс плана','<p>Снимки сроков, названий, статусов, секций и релизов, а не всего проекта. Просмотр ничего не восстанавливает.</p>'
+      const root = _openCandidateDialog('baselineMovieModal','История базовых планов','<p>Снимки сроков, названий, статусов, секций и релизов, а не всего проекта. Просмотр ничего не восстанавливает.</p>'
         +'<label class="overview-check"><input id="baselineMovieHistorical" type="checkbox" onchange="setBaselineMovieScope(this.checked)">Включить исторические, скрытые и удаленные задачи</label>'
         +'<p>По умолчанию — видимые сейчас задачи. В старых кадрах могут быть скрытые имена. Отсутствие задачи в кадре не доказывает удаление.</p>'
-        +'<div class="baseline-movie-controls"><button type="button" class="rm-btn rm-btn-secondary" id="baselineMoviePrev" onclick="baselineMovieStep(-1)">Назад</button><button type="button" class="rm-btn rm-btn-primary" id="baselineMoviePlay" onclick="toggleBaselineMovie()">Проиграть</button><button type="button" class="rm-btn rm-btn-secondary" id="baselineMovieNext" onclick="baselineMovieStep(1)">Вперед</button><label>Кадр <select id="baselineMovieInterval" aria-label="Длительность кадра" onchange="setBaselineMovieInterval(this.value)"><option value="2000">2 с</option><option value="5000">5 с</option><option value="10000">10 с</option></select></label></div>'
+        +'<div class="baseline-movie-controls"><button type="button" class="rm-btn rm-btn-secondary" id="baselineMoviePrev" onclick="baselineMovieStep(-1)">Назад</button><button type="button" class="rm-btn rm-btn-secondary" id="baselineMovieNext" onclick="baselineMovieStep(1)">Вперед</button></div>'
         +'<input type="range" id="baselineMovieRange" class="baseline-movie-range" min="0" step="1" value="0" aria-label="Версия плана" oninput="selectBaselineMovieFrame(Number(this.value))">'
         +'<output id="baselineMovieStatus" aria-live="polite"></output><p id="baselineMovieNote" role="status"></p><p data-rm-hint="Навигация по кадру">На узком экране прокручивайте диаграмму по горизонтали.</p><div id="baselineMovieFrame"></div>'
         +'<div class="baseline-movie-controls"><button type="button" id="baselineMoviePagePrev" class="rm-btn rm-btn-secondary" onclick="baselineMoviePage(-1)">Предыдущие задачи</button><output id="baselineMoviePageStatus"></output><button type="button" id="baselineMoviePageNext" class="rm-btn rm-btn-secondary" onclick="baselineMoviePage(1)">Следующие задачи</button></div><p id="baselineMovieScopeNote"></p>','closeBaselineMovie');
-      _baselineMovieState = {root,versions,tasks,movie:RoadmapModules.buildBaselineMovie(versions,{currentTasks:tasks}),index:0,page:0,playing:false,timer:null,interval:2000,project:projectStorageId,epoch:_projectTransitionToken,media,reduced:!!media?.matches};
-      if (media?.addEventListener) media.addEventListener('change',_baselineMovieMotionChanged);
+      _baselineMovieState = {root,versions,tasks,movie:RoadmapModules.buildBaselineMovie(versions,{currentTasks:tasks}),index:0,page:0,project:projectStorageId,epoch:_projectTransitionToken};
       renderBaselineMovie();
     }
     function _baselineMovieAlive() {
@@ -32735,9 +32705,7 @@ const m = document.getElementById('mineModeBtn');
       state.index = Math.max(0,Math.min(max,state.index));const frame = movie.frames[state.index];
       root.querySelector('#baselineMovieRange').max = max;root.querySelector('#baselineMovieRange').value = state.index;root.querySelector('#baselineMovieRange').disabled = max === 0;
       const status = movie.frames.length ? (state.index+1)+' / '+movie.frames.length+' · '+frame.label+(!frame.current ? ' · '+_baselineMovieFrameDate(frame) : '') : 'Нет доступных кадров';
-      root.querySelector('#baselineMovieStatus').textContent = status;root.querySelector('#baselineMovieStatus').setAttribute('aria-live',state.playing ? 'off' : 'polite');root.querySelector('#baselineMovieRange').setAttribute('aria-valuetext',status);
-      root.querySelector('#baselineMoviePlay').textContent = state.playing ? 'Пауза' : (state.index === max && max ? 'Проиграть сначала' : 'Проиграть');
-      root.querySelector('#baselineMoviePlay').disabled = max === 0 || state.reduced;
+      root.querySelector('#baselineMovieStatus').textContent = status;root.querySelector('#baselineMovieRange').setAttribute('aria-valuetext',status);
       root.querySelector('#baselineMoviePrev').disabled = state.index === 0;root.querySelector('#baselineMovieNext').disabled = state.index === max;
       const host = root.querySelector('#baselineMovieFrame'),old = host.querySelector('.baseline-movie-grid'),position = old ? [old.scrollTop,old.scrollLeft] : [0,0];
       host.innerHTML = _baselineMovieHtml(movie,state.index,state.page);const next = host.querySelector('.baseline-movie-grid');if(next){next.scrollTop=position[0];next.scrollLeft=position[1];}
@@ -32745,52 +32713,24 @@ const m = document.getElementById('mineModeBtn');
       root.querySelector('#baselineMoviePageStatus').textContent = from+'–'+to+' из '+movie.rows.length+' задач';
       root.querySelector('#baselineMoviePagePrev').disabled = state.page === 0;root.querySelector('#baselineMoviePageNext').disabled = (state.page+1)*100 >= movie.rows.length;
       root.querySelector('#baselineMovieScopeNote').textContent = 'Ось дат общая для всех кадров. Записей вне состава: '+movie.omitted+'. Без корректного диапазона: '+movie.invalidRanges+'. Дублей ID: '+movie.duplicates+'. Версий без известной даты: '+movie.unknownFrameDates+'. На узком экране диаграмма прокручивается вправо.';
-      root.querySelector('#baselineMovieNote').textContent = state.reduced ? 'Автопоказ выключен настройкой уменьшения движения. Используйте бегунок или кнопки.' : (state.versions.length ? '' : 'Сохраненных версий пока нет. Сначала сохраните базовый план.');
-    }
-    function _pauseBaselineMovie() {
-      const state = _baselineMovieState;if (!state) return;
-      if (state.timer != null) clearTimeout(state.timer);state.timer = null;state.playing = false;
-    }
-    function _baselineMovieTick() {
-      if (!_baselineMovieAlive()) return;const state = _baselineMovieState;
-      if (document.visibilityState !== 'visible' || state.reduced) { _pauseBaselineMovie(); renderBaselineMovie(); return; }
-      state.index = Math.min(state.index+1,state.movie.frames.length-1);
-      if (state.index === state.movie.frames.length-1) _pauseBaselineMovie();
-      renderBaselineMovie();if(state.playing)state.timer=setTimeout(_baselineMovieTick,state.interval);
-    }
-    function toggleBaselineMovie() {
-      if (!_baselineMovieAlive()) return;const state = _baselineMovieState;
-      if (state.playing) { _pauseBaselineMovie();renderBaselineMovie();return; }
-      if (state.reduced || state.movie.frames.length<2 || document.visibilityState!=='visible') return;
-      if (state.index === state.movie.frames.length-1) state.index = 0;
-      state.playing = true;renderBaselineMovie();state.timer=setTimeout(_baselineMovieTick,state.interval);
+      root.querySelector('#baselineMovieNote').textContent = state.versions.length ? '' : 'Сохраненных версий пока нет. Сначала сохраните базовый план.';
     }
     function selectBaselineMovieFrame(index) {
       if (!_baselineMovieAlive() || !Number.isInteger(index) || index<0 || index>=_baselineMovieState.movie.frames.length) return;
-      _pauseBaselineMovie();_baselineMovieState.index=index;renderBaselineMovie();
+      _baselineMovieState.index=index;renderBaselineMovie();
     }
     function baselineMovieStep(delta) { if (_baselineMovieAlive()) selectBaselineMovieFrame(Math.max(0,Math.min(_baselineMovieState.movie.frames.length-1,_baselineMovieState.index+delta))); }
     function baselineMoviePage(delta) {
-      if (!_baselineMovieAlive()) return;const state=_baselineMovieState;_pauseBaselineMovie();state.page=Math.max(0,Math.min(Math.max(0,Math.ceil(state.movie.rows.length/100)-1),state.page+delta));renderBaselineMovie();
+      if (!_baselineMovieAlive()) return;const state=_baselineMovieState;state.page=Math.max(0,Math.min(Math.max(0,Math.ceil(state.movie.rows.length/100)-1),state.page+delta));renderBaselineMovie();
     }
     function setBaselineMovieScope(includeHistorical) {
-      if (!_baselineMovieAlive()) return;const state=_baselineMovieState;_pauseBaselineMovie();state.page=0;
+      if (!_baselineMovieAlive()) return;const state=_baselineMovieState;state.page=0;
       state.movie=RoadmapModules.buildBaselineMovie(state.versions,{currentTasks:state.tasks,includeHistorical:includeHistorical===true});renderBaselineMovie();
     }
-    function setBaselineMovieInterval(value) {
-      if (!_baselineMovieAlive() || ![2000,5000,10000].includes(Number(value))) return;
-      const state = _baselineMovieState;
-      const resume = state.playing && !state.reduced && document.visibilityState === 'visible';
-      _pauseBaselineMovie();state.interval=Number(value);state.playing=resume;renderBaselineMovie();
-      if (resume) state.timer=setTimeout(_baselineMovieTick,state.interval);
-    }
-    function _baselineMovieMotionChanged(event) { if (_baselineMovieState) { _baselineMovieState.reduced=!!event.matches;_pauseBaselineMovie();renderBaselineMovie(); } }
-    function _pauseBaselineMovieIfHidden() { if (document.visibilityState!=='visible' && _baselineMovieState) { _pauseBaselineMovie();renderBaselineMovie(); } }
     function closeBaselineMovie() {
-      const state=_baselineMovieState;if(!state)return;_pauseBaselineMovie();if(state.media?.removeEventListener)state.media.removeEventListener('change',_baselineMovieMotionChanged);
+      if(!_baselineMovieState)return;
       _baselineMovieState=null;_closeCandidateDialog('baselineMovieModal');
     }
-    document.addEventListener('visibilitychange',_pauseBaselineMovieIfHidden);
     window.addEventListener('pagehide',closeBaselineMovie);
     function setChartBaseline(id) { chartBaselineId = (chartBaselineId === id) ? '' : id; try { storage.set('gantt_chart_baseline', chartBaselineId); } catch (e) {} if (typeof renderBaselineList === 'function') renderBaselineList(); renderRoadmap(true); }
     function _chartBaselineMap() { if (!chartBaselineId) return null; const b = getBaselines().find(x => x.id === chartBaselineId); if (!b || !Array.isArray(b.tasks)) return null; const m = {}; b.tasks.forEach(t => { if (t && t.id != null) m[t.id] = t; }); return m; }
@@ -35039,7 +34979,7 @@ const m = document.getElementById('mineModeBtn');
     function openTvShow() {
       const project = projectStorageId, epoch = _projectTransitionToken;
       const returnFocus = document.activeElement;
-      openConfirm({title:'Показать план на экране?',desc:'Витрина циклически покажет весь нескрытый план, включая имена исполнителей, загрузку и доступные риски. Фильтры не ограничивают состав. Данные не отправляются. Для паузы или выхода используйте панель; Escape закрывает показ.',okText:'Показать',onOk:() => {
+      openConfirm({title:'Показать план на экране?',desc:'В показ войдет весь нескрытый план, включая имена исполнителей, загрузку и риски. Фильтры не ограничивают состав. Данные не отправляются.',okText:'Показать',onOk:() => {
         if (project !== projectStorageId || epoch !== _projectTransitionToken) { showToast('Проект изменился. Запустите показ заново.', 'warn', 5000); return; }
         _startTvShow(returnFocus);
       }});
@@ -35049,10 +34989,9 @@ const m = document.getElementById('mineModeBtn');
       const root = document.createElement('div'); root.id = 'tvShowModal'; root.className = 'tv-show';
       root.setAttribute('role','dialog'); root.setAttribute('aria-modal','true'); root.setAttribute('aria-label','Витрина плана'); root.setAttribute('data-modal-backdrop','');
       root.setAttribute('data-rm-surface','fullscreen-stage');
-      root.innerHTML = '<div class="tv-show-toolbar"><span id="tvShowStatus" role="status">Загрузка слайдов</span><button type="button" class="rm-btn rm-btn-secondary" onclick="_tvStep(-1)" aria-label="Предыдущий слайд">Назад</button><button id="tvShowPause" type="button" class="rm-btn rm-btn-secondary" onclick="toggleTvShow()">Пауза</button><button type="button" class="rm-btn rm-btn-secondary" onclick="_tvStep(1)" aria-label="Следующий слайд">Далее</button><label>Интервал, с <select class="rm-control" aria-label="Интервал показа в секундах" onchange="setTvInterval(this.value)"><option>5</option><option selected>15</option><option>30</option><option>60</option><option>120</option></select></label><button id="tvShowClose" type="button" class="rm-btn rm-btn-secondary" onclick="closeTvShow()">Выйти (Esc)</button></div><div class="tv-show-stage"><iframe title="Слайды текущего плана" sandbox="allow-same-origin" tabindex="-1" referrerpolicy="no-referrer"></iframe></div>';
+      root.innerHTML = '<div class="tv-show-toolbar"><span id="tvShowStatus" role="status">Загрузка слайдов</span><button type="button" class="rm-btn rm-btn-secondary" onclick="_tvStep(-1)" aria-label="Предыдущий слайд">Назад</button><button type="button" class="rm-btn rm-btn-secondary" onclick="_tvStep(1)" aria-label="Следующий слайд">Далее</button><button id="tvShowClose" type="button" class="rm-btn rm-btn-secondary" onclick="closeTvShow()">Выйти (Esc)</button></div><div class="tv-show-stage"><iframe title="Слайды текущего плана" sandbox="allow-same-origin" tabindex="-1" referrerpolicy="no-referrer"></iframe></div>';
       const frame = root.querySelector('iframe');
-      const reduced = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const state = {root,frame,slides:[],index:0,paused:!!reduced,userPaused:!!reduced,interval:15000,timer:null,project:projectStorageId,epoch:_projectTransitionToken,focus:returnFocus || document.activeElement};
+      const state = {root,frame,slides:[],index:0,project:projectStorageId,epoch:_projectTransitionToken,focus:returnFocus || document.activeElement};
       _tvState = state;
       frame.onload = function () {
         if (_tvState !== state) return;
@@ -35078,33 +35017,25 @@ const m = document.getElementById('mineModeBtn');
     }
     function _tvStep(delta) {
       const state = _tvState; if (!state) return;
-      clearTimeout(state.timer); state.timer = null;
       if (state.project !== projectStorageId || state.epoch !== _projectTransitionToken || !state.root.isConnected) { closeTvShow(); return; }
       if (!state.slides.length) return;
-      state.paused = !!state.userPaused || document.visibilityState !== 'visible';
       state.index = (state.index + delta + state.slides.length) % state.slides.length;
       state.slides.forEach((slide,index) => { slide.hidden = index !== state.index; });
-      state.root.querySelector('#tvShowStatus').textContent = 'Слайд ' + (state.index+1) + ' / ' + state.slides.length + (state.paused ? ' · Пауза' : ' · Автопоказ');
-      state.root.querySelector('#tvShowPause').textContent = state.paused ? 'Продолжить' : 'Пауза';
-      if (!state.paused) state.timer = setTimeout(() => { if (_tvState === state) _tvStep(1); },state.interval);
+      state.root.querySelector('#tvShowStatus').textContent = 'Слайд ' + (state.index+1) + ' / ' + state.slides.length;
     }
-    function toggleTvShow() { if (_tvState) { _tvState.userPaused = !_tvState.userPaused; _tvStep(0); } }
-    function setTvInterval(value) { if (_tvState && [5,15,30,60,120].includes(Number(value))) { _tvState.interval = Number(value)*1000; _tvStep(0); } }
     function closeTvShow() {
       const state = _tvState; if (!state) return;
-      _tvState = null; clearTimeout(state.timer); state.root.remove();
+      _tvState = null; state.root.remove();
       if (typeof syncBodyScrollLock === 'function') syncBodyScrollLock();
       if (state.focus && state.focus.isConnected && typeof state.focus.focus === 'function') state.focus.focus({preventScroll:true});
     }
     window.addEventListener('resize',_resizeTvShow);
     window.addEventListener('pagehide',closeTvShow);
-    function _pauseTvIfHidden() { if (_tvState) _tvStep(0); }
-    document.addEventListener('visibilitychange',_pauseTvIfHidden);
     function _tvKey(event) {
       const state = _tvState; if (!state) return;
       if (event.key === 'Escape') { event.preventDefault(); event.stopImmediatePropagation(); closeTvShow(); return; }
       if (event.key !== 'Tab') return;
-      const controls = Array.from(state.root.querySelectorAll('button:not([disabled]),select:not([disabled])')).filter(n => n.getClientRects().length);
+      const controls = Array.from(state.root.querySelectorAll('button:not([disabled])')).filter(n => n.getClientRects().length);
       if (!controls.length) return;
       const first = controls[0], last = controls[controls.length-1], active = document.activeElement;
       if (!state.root.contains(active) || (!event.shiftKey && active === last) || (event.shiftKey && active === first)) {
@@ -35126,7 +35057,7 @@ const m = document.getElementById('mineModeBtn');
         + _meetingActionHtml('exportPlanToXlsx','Таблица задач (XLSX)')
         + _meetingActionHtml('copyChatStatus','Статус для чата')
         + _meetingActionHtml('exportSlackReportPdf','Запас времени по задачам (PDF)')
-        + _meetingActionHtml('openTvShow','Витрина для экрана')
+        + _meetingActionHtml('openTvShow','Слайды на весь экран')
         + '</div></details>';
     }
     function _meetingResultHtml() {
@@ -45497,7 +45428,7 @@ function syncBodyScrollLock() {
   <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
    <div class="candidate-header-update info-header-main">
     <h3 id="infoModalTitle" tabindex="-1" class="text-lg font-semibold text-slate-800">Как работать с планом</h3>
-    <span class="update-version-pair"><span id="appVersionBadge" title="20.11.2026">v18.2</span><button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-ghost rm-btn-icon candidate-version-update" data-update-state="idle" aria-label="Проверить обновления" aria-describedby="infoUpdateResult" title="Проверить обновления. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg></button></span><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
+    <span class="update-version-pair"><span id="appVersionBadge" title="21.11.2026">v18.3</span><button id="infoCheckUpdates" type="button" class="rm-btn rm-btn-ghost rm-btn-icon candidate-version-update" data-update-state="idle" aria-label="Проверить обновления" aria-describedby="infoUpdateResult" title="Проверить обновления. План и PIN не отправляются." onclick="checkPublicUpdate('info')"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg></button></span><div id="infoUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
    </div>
    <div class="flex items-center gap-2 shrink-0">
     <button type="button" id="infoCloseBtn" onclick="closeInfoModal()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer" aria-label="Закрыть" title="Закрыть">
@@ -45521,7 +45452,27 @@ function syncBodyScrollLock() {
    </section>
 
    <div class="info-release-latest">
-    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v18.2</h4>
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что нового в v18.3</h4>
+    <div class="info-release-grid grid gap-3 mb-6">
+     <article data-release-card="compact-board" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-c2b76789950a"></use></svg><h5 class="min-w-0 rn-title">Больше места на Доске</h5><span class="info-release-badge">ДОСКА</span></div>
+      <p class="text-xs text-slate-600">На телефоне история и напоминание о сохранении занимают меньше места. Кнопки не уменьшились.</p>
+     </article>
+     <article data-release-card="site-navigation" class="info-release-card rn-card rn-solid">
+      <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-50634f35cc56"></use></svg><h5 class="min-w-0 rn-title">Меню каталога не перекрываются</h5><span class="info-release-badge">САЙТ</span></div>
+      <p class="text-xs text-slate-600">Выбор темы закрывает меню. Плеер на сайте сохраняет управление с клавиатуры.</p>
+     </article>
+    </div>
+   </div>
+
+  <details class="info-history">
+   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
+    <span>Показать историю версий</span>
+    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+   </summary>
+   <div class="mt-4 space-y-5">
+   <div class="info-release-previous">
+    <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v18.2</h4>
     <div class="info-release-grid grid gap-3 mb-6">
      <article data-release-card="release-process" class="info-release-card rn-card rn-solid">
       <div class="info-release-card-heading rn-heading-wrap"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use href="#rm-icon-c2b76789950a"></use></svg><h5 class="min-w-0 rn-title">Быстрее готовим выпуски</h5><span class="info-release-badge">СБОРКА</span></div>
@@ -45533,13 +45484,6 @@ function syncBodyScrollLock() {
      </article>
     </div>
    </div>
-
-  <details class="info-history">
-   <summary class="flex items-center justify-between gap-3 px-1 py-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer select-none">
-    <span>Показать историю версий</span>
-    <svg aria-hidden="true" class="info-history-chevron w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-   </summary>
-   <div class="mt-4 space-y-5">
    <div class="info-release-previous">
     <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-1">Что было в v18.1</h4>
     <div class="info-release-grid grid gap-3 mb-6">
@@ -49987,7 +49931,7 @@ function syncBodyScrollLock() {
         <div class="startup-heading">
           <div class="flex items-center gap-2 flex-wrap">
             <h2 id="startupTitle" class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight leading-tight">Дорожная карта продукта</h2>
-            <span class="update-version-pair"><span id="appVersionStartup">v18.2</span><button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-ghost rm-btn-icon candidate-version-update" data-update-state="idle" aria-label="Проверить обновления" aria-describedby="startupUpdateResult" title="Проверить обновления. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg></button></span>
+            <span class="update-version-pair"><span id="appVersionStartup">v18.3</span><button id="startupCheckUpdates" type="button" class="rm-btn rm-btn-ghost rm-btn-icon candidate-version-update" data-update-state="idle" aria-label="Проверить обновления" aria-describedby="startupUpdateResult" title="Проверить обновления. План и PIN не отправляются." onclick="checkPublicUpdate('startup')"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#rm-icon-19f3fbbcef75"></use></svg></button></span>
           </div>
           <div id="startupUpdateResult" class="candidate-header-result" role="status" aria-live="polite"></div>
         </div>
