@@ -360,7 +360,7 @@ if (mediaManifest?.video && mediaManifest?.poster) {
   }
   assert(mediaManifest.video.audio === false, 'Демо-манифест явно фиксирует отсутствие аудио');
   if (mediaManifest.renderMode !== undefined) {
-    const filmFrames=['f01_light.webp','f04_light.webp','f05_light.webp','f09_light.webp','f44_light.webp','f45_light.webp','f46_light.webp','f47_light.webp'];
+    const filmFrames=['f01_light.webp','f04_light.webp','f05_light.webp','f15_light.webp','f44_light.webp','f45_light.webp','f46_light.webp','f47_light.webp'];
     const digest=/^[a-f0-9]{64}$/;
     const origin=mediaManifest.renderOrigin;
     assert(['fresh','reused'].includes(mediaManifest.renderMode)&&digest.test(mediaManifest.renderKey||'')
